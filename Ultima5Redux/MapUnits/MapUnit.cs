@@ -699,6 +699,15 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.HorseWander:
                         WanderWithinN(virtualMap, timeOfDay, 4);
                         break;
+                    case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
+                        if (virtualMap.IsWantedManByThePoPo)
+                        {
+                            //BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                            GetCloserToAvatar(virtualMap, aStar);
+                        }
+
+                        // else they stay where they are
+                        break;
                     case NonPlayerCharacterSchedule.AiType.Begging:
                     case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
                     case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
@@ -780,6 +789,18 @@ namespace Ultima5Redux.MapUnits
                         // check to see how close we are - if we are too far, then just go to our scheduled location
                         // we should only try to get closer, not build a whole path
                         BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
+                        if (virtualMap.IsWantedManByThePoPo)
+                        {
+                            GetCloserToAvatar(virtualMap, aStar);
+                            //BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                        }
+                        else // get where you are going so you can be stationary
+                        {
+                            BuildPath(this, npcDestinationPosition.XY, aStar);
+                        }
+
                         break;
                     case NonPlayerCharacterSchedule.AiType.Begging:
                     case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:

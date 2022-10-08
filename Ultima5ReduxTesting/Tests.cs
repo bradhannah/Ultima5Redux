@@ -130,7 +130,7 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] [TestCase(SaveFiles.Britain, false)]
+        [Test] [TestCase(SaveFiles.Britain)]
         public void test_LoadMinocBuyFrigateAndCheck(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
@@ -3322,5 +3322,45 @@ namespace Ultima5ReduxTesting
                 // }
             }
         }
+
+        [Test] [TestCase(SaveFiles.fresh, false)] [TestCase(SaveFiles.fresh, true)]
+        public void test_WindmereDaemonGuards(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Yew, 0));
+
+            TurnResults turnResults = new();
+            world.AdvanceTime(2, turnResults);
+
+            foreach (NonPlayerCharacter npc in
+                     world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters)
+            {
+                _ = "";
+                // if (!npc.NPCRef.) continue;
+                // bool bFoundNonZero = false;
+                //
+                // world.State.TheVirtualMap.MoveAvatar(new Point2D(npc.MapUnitPosition.X - 1, npc.MapUnitPosition.Y));
+                // TurnResults turnResults = new();
+                //
+                // foreach (byte a in npc.NPCRef.Schedule.AiTypeList)
+                // {
+                //     if (a > 0) bFoundNonZero = true;
+                // }
+                //
+                // Assert.IsTrue(bFoundNonZero, $"ShoppeKeeper didn't have a non zero AI: {npc.FriendlyName}");
+                //
+                // List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                //     world.TryToTalk(MapUnitMovement.MovementCommandDirection.East, turnResults);
+                // // }
+            }
+        }
+
     }
 }

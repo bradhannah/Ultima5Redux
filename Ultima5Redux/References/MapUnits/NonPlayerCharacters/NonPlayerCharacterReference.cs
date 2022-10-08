@@ -80,6 +80,13 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     and <= (int)TileReference.SpriteIndex.Guard_KeyIndex + TileReference.N_TYPICAL_ANIMATION_FRAMES)
                     return SpecificNpcDialogType.Guard;
 
+                // daemons at Windemere are guards too
+                if (NPCKeySprite is (int)TileReference.SpriteIndex.Daemon1_KeyIndex
+                        and <= (int)TileReference.SpriteIndex.Daemon1_KeyIndex +
+                               TileReference.N_TYPICAL_ANIMATION_FRAMES
+                    && MapLocation == SmallMapReferences.SingleMapReference.Location.Windemere)
+                    return SpecificNpcDialogType.Guard;
+                
                 //if (NPCKeySprite is >= 368 and <= 371) return SpecificNpcDialogType.Guard;
                 // it's the Avatar
                 if (NPCKeySprite == 256) return SpecificNpcDialogType.None;

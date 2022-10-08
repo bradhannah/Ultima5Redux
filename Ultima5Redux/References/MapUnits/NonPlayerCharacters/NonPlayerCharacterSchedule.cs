@@ -54,7 +54,13 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             MerchantBuyingSelling = 106,
 
             // I THINK this is a merchant that sells, but also wanders a bit
-            MerchantBuyingSellingCustom = 107, MerchantBuyingSellingWander = 108
+            MerchantBuyingSellingCustom = 107,
+
+            // Merchants that wander their own store, but still sell
+            MerchantBuyingSellingWander = 108,
+
+            // They are Fixed unless wanted by the popo, at which time they seek and attack 
+            FixedExceptAttackWhenIsWantedByThePoPo = 109
 
         }
 
@@ -124,6 +130,18 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     continue;
                 }
 
+                // the daemon's at Windemere are really like guards
+                if (location == SmallMapReferences.SingleMapReference.Location.Windemere &&
+                    nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Daemon1_KeyIndex)
+                {
+                    AiTypeList[nIndex] = (int)AiType.FixedExceptAttackWhenIsWantedByThePoPo;
+                    continue;
+                }
+
+                // In the future, such as Blackthorne's castle, this is where we will
+                // will override AIs to have more specific 
+
+                
                 // Merchants always work on their 1 and 3 schedules, even though they are marked as 
                 // Fixed (0)
                 if (nonPlayerCharacterReference.IsShoppeKeeper && aiType == AiType.Fixed && nIndex is 1 or 3)
@@ -145,27 +163,34 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
                 if (aiType != AiType.CustomAi) continue;
 
-                // In the future, such as Blackthorne's castle, this is where we will
-                // will override AIs to have more specific 
                 if (nonPlayerCharacterReference.IsGuard &&
                     location == SmallMapReferences.SingleMapReference.Location.Minoc)
                 {
+                    // the guard at Minoc doesn't take the regular amount - instead he wants HALF!
                     AiTypeList[nIndex] = (int)AiType.HalfYourGoldExtortingGuard;
+                    continue;
                 }
-                else if (nonPlayerCharacterReference.IsGuard)
+
+                if (nonPlayerCharacterReference.IsGuard)
                 {
                     AiTypeList[nIndex] = (int)AiType.GenericExtortingGuard;
+                    continue;
+                    ;
                 }
-                else if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Beggar_KeyIndex)
+
+                if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Beggar_KeyIndex)
                 {
                     AiTypeList[nIndex] = (int)AiType.Begging;
+                    continue;
                 }
-                else if (nonPlayerCharacterReference.IsShoppeKeeper)
+
+                if (nonPlayerCharacterReference.IsShoppeKeeper)
                 {
                     AiTypeList[nIndex] = (int)AiType.MerchantBuyingSellingCustom;
                 }
                 else
                 {
+                    // just for quick debug
                     _ = "";
                 }
                 // Donn Piatt, Moonglow, DialogIndex==4 - a lord!?

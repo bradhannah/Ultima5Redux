@@ -986,7 +986,7 @@ namespace Ultima5Redux.Maps
                 mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
             }
 
-            // IF NPC is next to Avatar then we check for any AI behaviours such as arrests or extortions
+            // IF NPC is next to Avatar then we check for any AI behaviours such as arrests or extortion
             if (bNextToEachOther && aggressorMapUnit is NonPlayerCharacter nextToEachOtherNpc)
             {
                 NonPlayerCharacterSchedule.AiType aiType =
@@ -1024,6 +1024,11 @@ namespace Ultima5Redux.Maps
                             mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.WantsToChat);
                         }
 
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
+                        // wow - I just leaned how to do this goto
+                        // they only attack when you are wanted by the popo
+                        if (IsWantedManByThePoPo) goto case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing;
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
                         mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.EnemyAttackCombatMap);
