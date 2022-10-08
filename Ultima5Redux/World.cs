@@ -2093,18 +2093,8 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            // if (npc.OverrideAiType && npc.GetCurrentAiType(State.TheTimeOfDay) ==
-            //     NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain)
-            // {
-            //     turnResults.PushOutputToConsole(
-            //         GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings
-            //             .NO_RESPONSE), false,
-            //         false);
-            //     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            // }
-
             bool bHasNpcRef = npc.NPCRef != null;
-            bool bIsShoppeKeeper = bHasNpcRef && npc.NPCRef.IsShoppeKeeper;
+            // bool bIsShoppeKeeper = bHasNpcRef && npc.NPCRef.IsShoppeKeeper;
 
             if (State.TheVirtualMap.IsNPCInBed(npc))
             {
@@ -2144,11 +2134,12 @@ namespace Ultima5Redux
                 case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                 case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
                     turnResults.PushOutputToConsole("...", false);
-                    turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic));
+                    turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic,
+                        OddsAndLogic.GetGuardExtortionAmount(OddsAndLogic.GetEraByTurn(State.TurnsSinceStart))));
                     break;
                 case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
                     turnResults.PushOutputToConsole("...", false);
-                    turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold));
+                    turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold, 0));
                     break;
                 case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:
                 case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:

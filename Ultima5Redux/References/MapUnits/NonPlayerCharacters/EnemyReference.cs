@@ -43,7 +43,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         private const int N_RAW_BYTES = 2;
         public const int PIRATE_SHIP_NUMBER = 8;
 
-        internal readonly int[] BeginningOfEras = { 0, 10000, 30000 };
         private readonly EnemyReferences.AdditionalEnemyFlags _additionalEnemyFlags;
 
         private readonly Dictionary<EnemyAbility, bool> _enemyAbilities = new();
@@ -196,8 +195,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
         public int GetEraWeightByTurn(int nTurn)
         {
-            if (nTurn >= BeginningOfEras[2]) return _additionalEnemyFlags.Era3Weight;
-            if (nTurn >= BeginningOfEras[1]) return _additionalEnemyFlags.Era2Weight;
+            if (nTurn >= OddsAndLogic.BeginningOfEras[2]) return _additionalEnemyFlags.Era3Weight;
+            if (nTurn >= OddsAndLogic.BeginningOfEras[1]) return _additionalEnemyFlags.Era2Weight;
             return _additionalEnemyFlags.Era1Weight;
         }
 

@@ -55,6 +55,8 @@ namespace Ultima5Redux.Maps
 
         [DataMember] private MapOverrides TheMapOverrides { get; set; }
 
+        [DataMember] private bool HasBeenExtorted { get; set; }
+        
         /// <summary>
         ///     Detailed reference of current small map
         /// </summary>
@@ -683,18 +685,26 @@ namespace Ultima5Redux.Maps
                     }
                     case AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion:
                     {
+                        // we only extort once per load of a map, we aren't monsters after all!
+                        if (HasBeenExtorted) continue;
+                        HasBeenExtorted = true;
                         if (mapUnit is not NonPlayerCharacter npc)
                             throw new Ultima5ReduxException(
                                 $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
-                        turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold));
+                        turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold, 0));
                         continue;
                     }
                     case AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion:
                     {
+                        // we only extort once per load of a map, we aren't monsters after all!
+                        if (HasBeenExtorted) continue;
+                        HasBeenExtorted = true;
                         if (mapUnit is not NonPlayerCharacter npc)
                             throw new Ultima5ReduxException(
                                 $"A non-npc tried generic extortion. They are a {mapUnit.GetType()}");
-                        turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic));
+                        turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic,
+                            OddsAndLogic.GetGuardExtortionAmount(
+                                OddsAndLogic.GetEraByTurn(GameStateReference.State.TurnsSinceStart))));
                         continue;
                     }
                 }
@@ -2314,6 +2324,9 @@ namespace Ultima5Redux.Maps
             TheMapUnits.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;
 
             if (xy != null) CurrentPosition.XY = xy;
+
+            // we reset the extorted flag
+            HasBeenExtorted = false;
         }
 
         public void MoveAvatar(Point2D newPosition)

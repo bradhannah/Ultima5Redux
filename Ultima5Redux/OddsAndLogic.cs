@@ -208,6 +208,22 @@ namespace Ultima5Redux
         /// <returns></returns>
         public static NonAttackingUnit.TrapType GetNewDeadBodyTrapType() =>
             DeadBodyTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count];
+
+        internal static readonly int[] BeginningOfEras = { 0, 10000, 30000 };
+
+        public static int GetEraByTurn(int nTurn)
+        {
+            if (nTurn >= BeginningOfEras[2]) return 2;
+            if (nTurn >= BeginningOfEras[1]) return 1;
+            return 0;
+        }
+
+        public static int GetGuardExtortionAmount(int nEra)
+        {
+            if (nEra == 0) return 30;
+            if (nEra == 1) return 60;
+            return 90;
+        }
     }
 }
 
