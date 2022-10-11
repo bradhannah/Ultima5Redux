@@ -8,6 +8,7 @@ using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Dialogue;
+using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.Dialogue
@@ -268,7 +269,7 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.Pause:
                         EnqueueToOutputBuffer(item);
-                        await Task.Delay(TimeSpan.FromSeconds(0.5f)).ConfigureAwait(false);
+                        //await Task.Delay(TimeSpan.FromSeconds(0.5f)).ConfigureAwait(false);
                         break;
                     case TalkScript.TalkCommand.PlainString:
                         // we put it through the processor to change the text around if we are wrapped in a rune tag
@@ -632,6 +633,57 @@ namespace Ultima5Redux.Dialogue
 
         public TurnResults TheTurnResults { get; } = new();
 
+        public static TileReference.SpriteIndex GetSpriteForChangeGiveItem(TalkScript.ScriptItem scriptItem) =>
+            scriptItem.ItemAdditionalData switch
+            {
+                65 => // food
+                    TileReference.SpriteIndex.ItemFood,
+                67 => //keys
+                    TileReference.SpriteIndex.ItemKey,
+                75 => // skull key (serpents hold/Kristi) "skul"
+                    TileReference.SpriteIndex.ItemKey,
+                70 => // grapple (empath abbey/Lord Michael) "grap"
+                    TileReference.SpriteIndex.Nothing,
+                72 => //sextant (Lighthouse of Greyhaven/David) "sext"
+                    TileReference.SpriteIndex.Nothing,
+                73 => // spyglasses (Minor Keep/Seggallion) "spy" (virtue)
+                    TileReference.SpriteIndex.Telescope,
+                74 => // badge (Windmere/Elistaria) "oppr", "impera" 
+                    TileReference.SpriteIndex.Nothing,
+                8 => // jewelled sword (Minor Keep/Thrud) "jewe"
+                    TileReference.SpriteIndex.ItemWeapon,
+                28 => // jeweled shield (Minor Keep/Thrud) "jewe"
+                    TileReference.SpriteIndex.ItemShield,
+                _ => TileReference.SpriteIndex.Nothing
+            };
+
+        public static string GetNameForChangeGiveItem(TalkScript.ScriptItem scriptItem)
+        {
+            return scriptItem.ItemAdditionalData switch
+            {
+                65 => // food
+                    "food",
+                67 => //keys
+                    "key",
+                75 => // skull key (serpents hold/Kristi) "skul"
+                    "skull key",
+                70 => // grapple (empath abbey/Lord Michael) "grap"
+                    "grappling hook",
+                72 => //sextant (Lighthouse of Greyhaven/David) "sext"
+                    "sextant",
+                73 => // spyglasses (Minor Keep/Seggallion) "spy" (virtue)
+                    "telescope",
+                74 => // badge (Windmere/Elistaria) "oppr", "impera" 
+                    "black badge",
+                8 => // jewelled sword (Minor Keep/Thrud) "jewe"
+                    "jewelled sword",
+                28 => // jeweled shield (Minor Keep/Thrud) "jewe"
+                    "jewelled shield",
+                _ => "nothing"
+            };
+        }
+
+        
         public void ProcessScriptItem(TalkScript.ScriptItem scriptItem)
         {
             switch (scriptItem.Command)
@@ -681,7 +733,7 @@ namespace Ultima5Redux.Dialogue
                             _gameState.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Spyglass]
                                 .Quantity = 1;
                             break;
-                        case 74: // badge (Minor Keep/Elistaria) "oppr", "impera" 
+                        case 74: // badge (Windmere/Elistaria) "oppr", "impera" 
                             _gameState.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.BlackBadge]
                                 .Quantity = 1;
                             break;
