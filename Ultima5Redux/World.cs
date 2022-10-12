@@ -1549,6 +1549,8 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToMove(Point2D.Direction direction, bool bKlimb,
             bool bFreeMove, TurnResults turnResults, bool bManualMovement = true)
         {
+            int nTimeAdvanceFactor =
+                State.TheVirtualMap.LargeMapOverUnder == Map.Maps.Small ? 1 : N_DEFAULT_ADVANCE_TIME;
             int nTilesPerMapRow = State.TheVirtualMap.NumberOfRowTiles;
             int nTilesPerMapCol = State.TheVirtualMap.NumberOfColumnTiles;
 
@@ -1586,7 +1588,7 @@ namespace Ultima5Redux
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveChangeFrigateDirection));
 
                 List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
-                    AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                    AdvanceTime(nTimeAdvanceFactor, turnResults);
                 return aggressiveMapUnitInfos;
             }
 
@@ -1669,7 +1671,7 @@ namespace Ultima5Redux
                 }
 
                 // if it's not passable then we have no more business here
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                return AdvanceTime(nTimeAdvanceFactor, turnResults);
             }
 
             // the world is a circular - so when you get to the end, start over again
@@ -1695,7 +1697,7 @@ namespace Ultima5Redux
 
             bool bIsOnHorseOrCarpet =
                 State.TheVirtualMap.IsAvatarRidingCarpet || State.TheVirtualMap.IsAvatarRidingHorse;
-            int nTimeToPass = bIsOnHorseOrCarpet ? 1 : N_DEFAULT_ADVANCE_TIME;
+            int nTimeToPass = bIsOnHorseOrCarpet ? 1 : nTimeAdvanceFactor;
 
             // We are on a small map which means all movements use the time passing minutes
             // if we are on a big map then we may issue extra information about slow moving terrain
@@ -1713,7 +1715,7 @@ namespace Ultima5Redux
                     return new List<VirtualMap.AggressiveMapUnitInfo>();
                 }
 
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                return AdvanceTime(nTimeAdvanceFactor, turnResults);
             }
 
             // WE are DEFINITELY on a large map at this time
@@ -1735,6 +1737,8 @@ namespace Ultima5Redux
 
             int nDefaultMinutesToAdvance =
                 GameReferences.SpriteTileReferences.GetMinuteIncrement(newTileReference.Index);
+            if (State.TheVirtualMap.LargeMapOverUnder == Map.Maps.Small)
+                nDefaultMinutesToAdvance = Math.Max(1, nTimeAdvanceFactor / 2);
             // if avatar is on a horse or carpet then we cut it in half, but let's make sure we don't 
             // end up with zero minutes
             int nMinutesToAdvance;
@@ -2089,7 +2093,6 @@ namespace Ultima5Redux
                         .FUNNY_NO_RESPONSE), false,
                     false);
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NoOneToTalkTo));
-
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -2133,12 +2136,12 @@ namespace Ultima5Redux
                     break;
                 case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                 case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
-                    turnResults.PushOutputToConsole("...", false);
+                    // turnResults.PushOutputToConsole("...", false);
                     turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic,
                         OddsAndLogic.GetGuardExtortionAmount(OddsAndLogic.GetEraByTurn(State.TurnsSinceStart))));
                     break;
                 case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
-                    turnResults.PushOutputToConsole("...", false);
+                    // turnResults.PushOutputToConsole("...", false);
                     turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold, 0));
                     break;
                 case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:
@@ -2164,7 +2167,7 @@ namespace Ultima5Redux
                     {
                         // just a plain old conversation
                         turnResults.PushTurnResult(new NpcTalkInteraction(npc));
-                        break;
+                        return new List<VirtualMap.AggressiveMapUnitInfo>();
                     }
 
                     turnResults.PushOutputToConsole("They are not talkative...", false);

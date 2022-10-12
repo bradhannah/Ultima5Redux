@@ -439,7 +439,7 @@ Job: I try to lift people's spirits through my music!
 Bye: Good day to thee, friend!
 
 Questions: spir <OR> musi
-Answer: Once, this was a happy place, where all could come to shed the worries of the world for a brief time.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But now, times have changed and all that remains are memories!
+Answer: Once, this was a happy place, where all could come to shed the worries of the world for a brief time.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But now, times have changed and all that remains are memories!
 Questions: memo
 Answer: Memories of the good times.
 Questions: good <OR> time
@@ -480,7 +480,7 @@ Answer: All over!
 
 ---- SCRIPT for Treanna -----
 ---- BEGIN NEW SCRIPT -----
-Name: Treanna<Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel0><AskName>
+Name: Treanna<StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><AskName>
 Description: a young girl.
 Greeting: <DefineLabel0>
 Job: I am the stable girl.
@@ -493,17 +493,17 @@ Answer: <DefineLabel1>
 Questions: lord <OR> brit
 Answer: Alas, he is no longer with us.
 Questions: bree
-Answer: We have prime examples of most of the major breeds.<Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Answer: We have prime examples of most of the major breeds.<StartNewSection><NewLine><NewLine><DefineLabel1>
 Questions: smit
 Answer: <DefineLabel4>
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Greetings,<AvatarsName>, nice to see thee again.<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel0>Greetings,<AvatarsName>, nice to see thee again.<StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>What's thy favorite breed?
 Default Line(s): Never heard of that one, must be one of Blackthorn's new creations!
 Questions: val
-Answer: Hey, mine too!<Unknown_CodeA2><NewLine><NewLine><DefineLabel2>
+Answer: Hey, mine too!<StartNewSection><NewLine><NewLine><DefineLabel2>
 Questions: step <OR> plou <OR> moun
 Answer: Well, they're well enough I suppose, but they hath not any true spirit!
 Label #: 2
@@ -521,7 +521,7 @@ Answer: Not that one!
 Questions: smit
 Answer: <DefineLabel4>
 Label #: 4
-Initial Line: <DefaultMessage><DefineLabel4>That's it!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I have heard it lives in Iolo's barn, by his hut in the deep forest!<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel4>That's it!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>I have heard it lives in Iolo's barn, by his hut in the deep forest!<StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for Margaret -----
 ---- BEGIN NEW SCRIPT -----
@@ -550,16 +550,16 @@ Answer: Indeed it has!
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0><IfElseKnowsName><DefineLabel1>Art thou from around here?
-Default Line(s): Nice to have thee, friend.<Unknown_CodeA2><NewLine><NewLine><AskName>
+Default Line(s): Nice to have thee, friend.<StartNewSection><NewLine><NewLine><AskName>
 Questions: y
 Answer: I see.
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>'Tis a shame.<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1>'Tis a shame.<StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Wouldst thou like some hot broth?
 Default Line(s): Ah.
 Questions: y
-Answer: 'ere, 'ave some. It'll take the chill from thy bones on these cold days.<Unknown_CodeA2><NewLine><NewLine><Change><65><Pause><DefineLabel3>
+Answer: 'ere, 'ave some. It'll take the chill from thy bones on these cold days.<StartNewSection><NewLine><NewLine><Change><65><Pause><DefineLabel3>
 Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>Wouldst thou pay 5 crowns to 'elp offset the cost?
 Default Line(s): <KarmaMinusOne>Well, thanks anyway.
@@ -581,7 +581,7 @@ Answer: It's hard work, for we feed a lot of hungry mouths.
 Questions: feed <OR> hung <OR> mout
 Answer: Those guards eat like bottomless pits... But, none of them are as bad as Lord Stuart the Hungry!
 Questions: lord <OR> stu
-Answer: He travels around between the towns and castles and eats and eats until they throw him out!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I hear he's been working on a magic spell to create food!
+Answer: He travels around between the towns and castles and eats and eats until they throw him out!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I hear he's been working on a magic spell to create food!
 Questions: magi <OR> spel <OR> crea <OR> food
 Answer: It is not yet perfected, I'm told. Apparently, it only creates a small quantity, much too little for him!
 
@@ -591,7 +591,7 @@ Answer: It is not yet perfected, I'm told. Apparently, it only creates a small q
 Name: Drudgeworth
 Description: a unkempt and pitiful soul with a distant stare.<NewLine><NewLine><DefineLabel0>
 Greeting:
-Job: I didn't do it!<Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Job: I didn't do it!<StartNewSection><NewLine><NewLine><DefineLabel1>
 Bye: <DefineLabel3>
 
 Questions: sent
@@ -599,16 +599,16 @@ Answer: For a crime I did not commit.
 Questions: faul <OR> comm <OR> crim
 Answer: I didn't mean to kill 'er! Honest!
 Questions: who <OR> kill <OR> her
-Answer: Why doesn't they believes me?<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel1>
+Answer: Why doesn't they believes me?<StartNewSection><NewLine><NewLine><Pause><DefineLabel1>
 Questions: chuc
 Answer: 'Twer his fault really!
 Questions: help
 Answer: Why, I can show ye where it's hidden!
 Questions: it <OR> wher <OR> hidd
-Answer: Lets me out, I'll show ye.<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel2>
+Answer: Lets me out, I'll show ye.<StartNewSection><NewLine><NewLine><Pause><DefineLabel2>
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Hey, come 'ere!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Yer the first soul I've seen in months!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Won't ye stay and speak with me a while?
+Initial Line: <DefaultMessage><DefineLabel0>Hey, come 'ere!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Yer the first soul I've seen in months!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Won't ye stay and speak with me a while?
 Default Line(s): <DefineLabel3>
 Questions: y
 Answer: Chuckles 'ates me! Left me locked up 'ere well beyond me sentence!
@@ -621,9 +621,9 @@ Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Ye will let me out, won't ye?
 Default Line(s): <DefineLabel3>
 Questions: y
-Answer: Aye, let's go then.<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Aye, let's go then.<StartNewSection><NewLine><EndCoversation>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>Then go! On yer wretched way,<Rune>PIGDOG<Rune>! Just ye wait 'til I get outta this hole! I'll teach ye to mess with ol' Drudgeworth!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel3>Then go! On yer wretched way,<Rune>PIGDOG<Rune>! Just ye wait 'til I get outta this hole! I'll teach ye to mess with ol' Drudgeworth!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Saduj -----
 ---- BEGIN NEW SCRIPT -----
@@ -642,16 +642,16 @@ Answer: <DefineLabel0>
 Questions: blac <OR> obje <OR> hide <OR> brit <OR> cham
 Answer: I know not what it is, but it rests in a sandalwood box.
 Questions: sand <OR> box
-Answer: If destroyed, there shall be no chance for that scourge British to return!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel5>
+Answer: If destroyed, there shall be no chance for that scourge British to return!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel5>
 Questions: join
 Answer: <DefineLabel5>
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>What is the matter...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Dost thou not believe me?
-Default Line(s): I see.<Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Initial Line: <DefaultMessage><DefineLabel0>What is the matter...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Dost thou not believe me?
+Default Line(s): I see.<StartNewSection><NewLine><NewLine><DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>For that matter, what art thou doing here?
-Default Line(s): Likely story!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel2>
+Default Line(s): Likely story!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel2>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Art thou with the Oppression?
 Default Line(s): Neither am I.
@@ -659,7 +659,7 @@ Questions: y
 Answer: <DefineLabel3>
 Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>Prove it! What's the password?
-Default Line(s): Impostor!<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Impostor!<StartNewSection><NewLine><EndCoversation>
 Questions: impe
 Answer: <DefineLabel4>
 Label #: 4
@@ -671,7 +671,7 @@ Label #: 5
 Initial Line: <DefaultMessage><DefineLabel5>Might I join thee, that we might work together?
 Default Line(s): Later perhaps.
 Questions: y
-Answer: Good!<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: Good!<StartNewSection><NewLine><NewLine><JoinParty>
 
 ---- SCRIPT for Stillwelt -----
 ---- BEGIN NEW SCRIPT -----
@@ -683,17 +683,17 @@ Bye: Bye!
 
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Hey, you!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Dost thou not know that this is a restricted area?
+Initial Line: <DefaultMessage><DefineLabel0>Hey, you!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Dost thou not know that this is a restricted area?
 Default Line(s): <DefineLabel1>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>Shut up!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art not allowed up here!<Unknown_CodeA2><NewLine><NewLine><DefineLabel2>
+Initial Line: <DefaultMessage><DefineLabel1>Shut up!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art not allowed up here!<StartNewSection><NewLine><NewLine><DefineLabel2>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Art thou going to leave on thy own or must I throw thee off the battlements?
-Default Line(s): I didn't catch thy meaning. Didst thou understand me? I said...<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel2>
+Default Line(s): I didn't catch thy meaning. Didst thou understand me? I said...<StartNewSection><NewLine><NewLine><Pause><DefineLabel2>
 Questions: thro <OR> n
-Answer: <CallGuards>Thou hadst thy chance!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: <CallGuards>Thou hadst thy chance!<StartNewSection><NewLine><EndCoversation>
 Questions: own <OR> leav <OR> y
-Answer: Get off the roof, NOW!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Get off the roof, NOW!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Chuckles -----
 ---- BEGIN NEW SCRIPT -----
@@ -704,7 +704,7 @@ Job: I am here to welcome and try to entertain!
 Bye: Let me know if I might entertain thee again!
 
 Questions: welc
-Answer: Welcome, welcome, welcome.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Welcome to the castle of His Royal Majesty, His Eminence, The Immortal, currently missing, feared dead, Lord Cantabrigian British!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And, his trustworthy, loyal, helpful, friendly, courteous, kind, obedient, cheerful, thrifty, brave, clean, and reverent...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>...Jester, Chuckles the Bumble...<Unknown_CodeA2><NewLine><NewLine><KeyWait>...That's ME!
+Answer: Welcome, welcome, welcome.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Welcome to the castle of His Royal Majesty, His Eminence, The Immortal, currently missing, feared dead, Lord Cantabrigian British!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And, his trustworthy, loyal, helpful, friendly, courteous, kind, obedient, cheerful, thrifty, brave, clean, and reverent...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>...Jester, Chuckles the Bumble...<StartNewSection><NewLine><NewLine><KeyWait>...That's ME!
 Questions: ente
 Answer: <DefineLabel0>
 Questions: roya <OR> maje <OR> emin <OR> immo <OR> miss <OR> dead <OR> cant <OR> brit
@@ -715,8 +715,8 @@ Questions: drud
 Answer: Who?
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Ho eyo he hum!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Ho eyo he hum!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Ho eyo he hum!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Bounce, bounce, bounce, bounce!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Didst thou enjoy that?
-Default Line(s): Oh, I'll do it better this time!<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel0>
+Initial Line: <DefaultMessage><DefineLabel0>Ho eyo he hum!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Ho eyo he hum!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Ho eyo he hum!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Bounce, bounce, bounce, bounce!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Didst thou enjoy that?
+Default Line(s): Oh, I'll do it better this time!<StartNewSection><NewLine><NewLine><Pause><DefineLabel0>
 Questions: y
 Answer: I thought thou might!
 
@@ -730,22 +730,22 @@ Bye:
 
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Greetings,<AvatarsName>, what an unexpected pleasure!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Wilt thou be staying with us long?
-Default Line(s): I beg to differ!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>So very kind of thee to deliver thyself unto me!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Prepare now to meet thy fate!<CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel0>Greetings,<AvatarsName>, what an unexpected pleasure!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Wilt thou be staying with us long?
+Default Line(s): I beg to differ!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>So very kind of thee to deliver thyself unto me!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Prepare now to meet thy fate!<CallGuards><StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: <DefineLabel2>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Hast thou joined us in the Oppression?
-Default Line(s): Then how considerate of thee to turn thyself in...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Guards! Seize this infidel!<CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Then how considerate of thee to turn thyself in...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Guards! Seize this infidel!<CallGuards><StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: <DefineLabel3>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>Then, surely, thou dost know our password....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What is it?
-Default Line(s): No, I'm afraid that is not it...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Guards! Seize this infidel!<CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel3>Then, surely, thou dost know our password....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>What is it?
+Default Line(s): No, I'm afraid that is not it...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Guards! Seize this infidel!<CallGuards><StartNewSection><NewLine><EndCoversation>
 Questions: impe
-Answer: Fine! With thee on our side, we shall be invincible!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Please, feel free to roam my castle and grounds!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Fine! With thee on our side, we shall be invincible!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Please, feel free to roam my castle and grounds!<StartNewSection><NewLine><EndCoversation>
 Label #: 4
-Initial Line: <DefaultMessage><DefineLabel4>Who dares approach the mighty Blackthorn?<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Pause><Unknown_CodeA2>I think not, let's try again!<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel4>
+Initial Line: <DefaultMessage><DefineLabel4>Who dares approach the mighty Blackthorn?<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Pause><StartNewSection>I think not, let's try again!<StartNewSection><NewLine><NewLine><Pause><DefineLabel4>
 
 ---- SCRIPT for Gorn -----
 ---- BEGIN NEW SCRIPT -----
@@ -757,26 +757,26 @@ Bye: Take care.
 
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Ah, Brohm be praised! A soul to share my cell!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>With me for an escape?
-Default Line(s): Fool!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel0>Ah, Brohm be praised! A soul to share my cell!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>With me for an escape?
+Default Line(s): Fool!<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: <DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>If I helps thee, wilt thou take me with thee?
-Default Line(s): Hmmm.<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Hmmm.<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: <DefineLabel2>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>I've escaped many times, and been caught as many. I knows this castle likes the backs of me hands!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
+Initial Line: <DefaultMessage><DefineLabel2>I've escaped many times, and been caught as many. I knows this castle likes the backs of me hands!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>In the dead of night we must go out through a secret door that's here behinds me.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Climbs up onto the roof and sneaks down the northern ladder.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>In Blackthorn's bedroom, go through a secret door, down the ladder on t'other side.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Through the secret door to the north, down another ladder and out the back gates!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Wait there 'til morning when the drawbridge is lowered and flee for our lives!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Get all that down?
+Initial Line: <DefaultMessage><DefineLabel3>In the dead of night we must go out through a secret door that's here behinds me.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Climbs up onto the roof and sneaks down the northern ladder.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>In Blackthorn's bedroom, go through a secret door, down the ladder on t'other side.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Through the secret door to the north, down another ladder and out the back gates!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Wait there 'til morning when the drawbridge is lowered and flee for our lives!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Get all that down?
 Default Line(s): <DefineLabel3>
 Questions: y
-Answer: Get the keys I hid in the brazier and let's be off!<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: Get the keys I hid in the brazier and let's be off!<StartNewSection><NewLine><NewLine><JoinParty>
 
 ---- SCRIPT for .... -----
 ---- BEGIN NEW SCRIPT -----
-Name: ....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+Name: ....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 Description: a scraggly, tortured soul in tattered garb.
 Greeting:
 Job: I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -794,7 +794,7 @@ Answer: They defile the foundations of Virtue!
 
 ---- SCRIPT for .... -----
 ---- BEGIN NEW SCRIPT -----
-Name: ....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+Name: ....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 Description: a scraggly, tortured soul in tattered garb.
 Greeting:
 Job: I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -812,7 +812,7 @@ Answer: They defile the foundations of Virtue!
 
 ---- SCRIPT for .... -----
 ---- BEGIN NEW SCRIPT -----
-Name: ....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+Name: ....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 Description: a scraggly, tortured soul in tattered garb.
 Greeting:
 Job: I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -830,7 +830,7 @@ Answer: They defile the foundations of Virtue!
 
 ---- SCRIPT for .... -----
 ---- BEGIN NEW SCRIPT -----
-Name: ....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+Name: ....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 Description: a scraggly, tortured soul in tattered garb.
 Greeting:
 Job: I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -848,7 +848,7 @@ Answer: They defile the foundations of Virtue!
 
 ---- SCRIPT for .... -----
 ---- BEGIN NEW SCRIPT -----
-Name: ....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+Name: ....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 Description: a scraggly, tortured soul in tattered garb.
 Greeting:
 Job: I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -866,7 +866,7 @@ Answer: They defile the foundations of Virtue!
 
 ---- SCRIPT for .... -----
 ---- BEGIN NEW SCRIPT -----
-Name: ....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+Name: ....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 Description: a scraggly, tortured soul in tattered garb.
 Greeting:
 Job: I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -893,7 +893,7 @@ Bye: Farewell.
 Questions: hors <OR> tend
 Answer: Yes, we have a fine stable of thoroughbreds.
 Questions: stab <OR> thor
-Answer: Indeed, the finest. Why, we have not only the plough and mountain breeds, but even the purest breed of the High Steppes.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>We lack only the Valorian warhorse, which we still seek!
+Answer: Indeed, the finest. Why, we have not only the plough and mountain breeds, but even the purest breed of the High Steppes.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>We lack only the Valorian warhorse, which we still seek!
 Questions: val
 Answer: That breed we still lack.
 Questions: step <OR> plou <OR> moun
@@ -938,13 +938,13 @@ Questions: stab
 Answer: Take the ladder down.
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Please sign in.<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Initial Line: <DefaultMessage><DefineLabel0>Please sign in.<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><DefineLabel1>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>Where or whom dost thou seek?<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1>Where or whom dost thou seek?<StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for .... -----
 ---- BEGIN NEW SCRIPT -----
-Name: ....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+Name: ....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 Description: a scraggly, tortured soul in tattered garb.
 Greeting:
 Job: I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -962,7 +962,7 @@ Answer: They defile the foundations of Virtue!
 
 ---- SCRIPT for .... -----
 ---- BEGIN NEW SCRIPT -----
-Name: ....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+Name: ....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 Description: a scraggly, tortured soul in tattered garb.
 Greeting:
 Job: I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -987,7 +987,7 @@ Job: I make the slop that feeds this lot of mangy dogs.
 Bye: Oh, bugger off then.
 
 Questions: food <OR> slop
-Answer: A little ol' horse meat, a few young children, that sort of thing.<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: A little ol' horse meat, a few young children, that sort of thing.<StartNewSection><NewLine><NewLine><DefineLabel0>
 Questions: meat <OR> hors
 Answer: It's cheap an' plentiful!
 Questions: youn <OR> chil
@@ -1001,7 +1001,7 @@ Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Care to try some?
 Default Line(s): Don't touch the stuff meself.
 Questions: y
-Answer: Gulp...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Choke...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Gag...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Spit...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Aye, goes down a bit rough.
+Answer: Gulp...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Choke...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Gag...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Spit...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Aye, goes down a bit rough.
 
 ---- SCRIPT for Foulwell -----
 ---- BEGIN NEW SCRIPT -----
@@ -1014,11 +1014,11 @@ Bye: Jingle, jingle!
 Questions: tale <OR> inqu
 Answer: Why, just the other day, we had a marvelous time, watching a young lady being drawn and quartered!
 Questions: lady <OR> draw <OR> quar
-Answer: She refused to humble herself to a guard's advances!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: She refused to humble herself to a guard's advances!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Isn't that a riot?
-Default Line(s): Perhaps then, thou wouldst find more humorous the one about the visitor who failed to laugh at the Royal Jester's stories.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The cook's young nephew was a little brat. He didn't laugh at my jokes, so we threw 'im in the vat!<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel2>
+Default Line(s): Perhaps then, thou wouldst find more humorous the one about the visitor who failed to laugh at the Royal Jester's stories.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The cook's young nephew was a little brat. He didn't laugh at my jokes, so we threw 'im in the vat!<StartNewSection><NewLine><NewLine><Pause><DefineLabel2>
 Questions: y
 Answer: <DefineLabel1>
 Label #: 1
@@ -1027,7 +1027,7 @@ Default Line(s): Just watch thyself, friend!
 Questions: y
 Answer: I'll be sure to look ye up.
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>Ho, ho, ha, ha, he, he...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>How 'bout that one, like it?
+Initial Line: <DefaultMessage><DefineLabel2>Ho, ho, ha, ha, he, he...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>How 'bout that one, like it?
 Default Line(s): <CallGuards>GUARDS!
 Questions: y
 Answer: I thank thee.
@@ -1059,12 +1059,12 @@ Default Line(s): Then what dost thou want?
 Questions: y
 Answer: Oh, good.
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>Who is there?<Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><Pause>What dost thou want?<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1>Who is there?<StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><Pause>What dost thou want?<StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>I know of the Great Council, but what maketh thee ask me?
 Default Line(s): I know nothing about it!
 Questions: kaik
-Answer: She is a fine woman. If she has told thee of me, she must have great faith in thee.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
+Answer: She is a fine woman. If she has told thee of me, she must have great faith in thee.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
 Questions: dawn
 Answer: <DefineLabel3>
 Label #: 3
@@ -1079,7 +1079,7 @@ Name: Camile
 Description: a young woman.
 Greeting: <DefineLabel0>
 Job: I keep the fields.
-Bye: <IfElseKnowsName><DefineLabel2>Oh, by the way...<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><EndCoversation>
+Bye: <IfElseKnowsName><DefineLabel2>Oh, by the way...<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><EndCoversation>
 
 Questions: fiel
 Answer: Unlike the unfortunates living in other parts of the land, our crops grow true and strong!
@@ -1101,12 +1101,12 @@ Initial Line: <DefaultMessage><DefineLabel0><AvatarsName>, how art thou doing on
 Default Line(s): <DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Hmmm... How hath thy journeys fared?
-Default Line(s): I see, what canst I do for thee today?<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Default Line(s): I see, what canst I do for thee today?<StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>Farewell, and a good day to thee,<AvatarsName>.<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel2>Farewell, and a good day to thee,<AvatarsName>.<StartNewSection><NewLine><EndCoversation>
 Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>Surely, thou dost agree Lord British is the rightful ruler?
-Default Line(s): Begone, foolish knave!<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Begone, foolish knave!<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: Good.
 
@@ -1116,7 +1116,7 @@ Name: Phillip
 Description: a sweaty and soiled farmer.
 Greeting: Aye up lad, what's goin' on?
 Job: I work these fields, with me chum Dibbs.
-Bye: <IfElseKnowsName><DefineLabel0><AskName><Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Bye: <IfElseKnowsName><DefineLabel0><AskName><StartNewSection><NewLine><NewLine><DefineLabel0>
 
 Questions: chum <OR> dibb
 Answer: That's just me nickname for Christopher.
@@ -1130,7 +1130,7 @@ Questions: arti
 Answer: 'Till then I'll just keep workin' 'ere!
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Cheerio!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel0>Cheerio!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Christopher -----
 ---- BEGIN NEW SCRIPT -----
@@ -1155,28 +1155,28 @@ Answer: I'm currently working on an epic called 'Times of Lore!'
 Questions: time <OR> lore
 Answer: I hope to have it published soon.
 Questions: soon <OR> publ
-Answer: Through Origin, of course.<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: Through Origin, of course.<StartNewSection><NewLine><NewLine><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Wilt thou buy it?
 Default Line(s): Then I'll be of little help to thee in the future!
 Questions: y
-Answer: Good!<Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel1><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Enchanted, I'm sure, to have met such an enlightened soul.
+Answer: Good!<StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel1><AskName><StartNewSection><NewLine><NewLine><StartNewSection>Enchanted, I'm sure, to have met such an enlightened soul.
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>What a nice chap thou art.<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1>What a nice chap thou art.<StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for Thentis -----
 ---- BEGIN NEW SCRIPT -----
 Name: Thentis
 Description: a young farmer.
 Greeting:
-Job: I am a farmer.<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Job: I am a farmer.<StartNewSection><NewLine><NewLine><DefineLabel0>
 Bye: Good journeys.
 
 Questions: resi
 Answer: Never heard of it.
 Questions: blac
-Answer: A fine man...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Cough, cough!
+Answer: A fine man...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Cough, cough!
 Questions: dawn
 Answer: To the others!
 
@@ -1188,7 +1188,7 @@ Initial Line: <DefaultMessage><DefineLabel1>Dost thou like it?
 Default Line(s): <DefineLabel2>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Art thou helped, or hindered by the new laws?
-Default Line(s): I said...<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel2>
+Default Line(s): I said...<StartNewSection><NewLine><NewLine><Pause><DefineLabel2>
 Questions: help
 Answer: Oh.
 Questions: hind
@@ -1226,11 +1226,11 @@ Default Line(s): Hmmm...
 Questions: dawn
 Answer: <DefineLabel9>
 Label #: 9
-Initial Line: <DefaultMessage><DefineLabel9>Good...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Sorry about all the questions, but we've got to be careful.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>If thou art with us, meet us by the well at midnight!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Mention the password to those attending, but no one else, for spies abound!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel9>Good...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Sorry about all the questions, but we've got to be careful.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If thou art with us, meet us by the well at midnight!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Mention the password to those attending, but no one else, for spies abound!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Joshua -----
 ---- BEGIN NEW SCRIPT -----
-Name: Joshua<Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Name: Joshua<StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 Description: a soiled farmer.
 Greeting: Greetings<AvatarsName>!
 Job: I am a farmer, of course!
@@ -1251,17 +1251,17 @@ Default Line(s): Oh.
 Questions: dawn
 Answer: <DefineLabel1>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1><IfElseKnowsName><DefineLabel2><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1><IfElseKnowsName><DefineLabel2><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Unknown_FF>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Dost thou serve the Resistance?
 Default Line(s): Oh.
 Questions: y
-Answer: Good!<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel3>
+Answer: Good!<StartNewSection><NewLine><NewLine><Pause><DefineLabel3>
 Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>Shall I tell thee what I know?
 Default Line(s): O.K.
 Questions: y
-Answer: I've heard much of the Shadowlords.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>If faced in combat, thou art drawn into their plane of existance to do battle.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It seems that they cannot be killed by normal means, so most who fight them die quickly.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A few souls have lived to tell that if a Shadowlord is struck down, it will vanish into thin air!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Soon after, its twisted soul shall return anew!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>One named Sutek knows how to destroy them, he lives on a remote isle in the south of the Great Sea!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: I've heard much of the Shadowlords.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If faced in combat, thou art drawn into their plane of existance to do battle.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It seems that they cannot be killed by normal means, so most who fight them die quickly.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A few souls have lived to tell that if a Shadowlord is struck down, it will vanish into thin air!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Soon after, its twisted soul shall return anew!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>One named Sutek knows how to destroy them, he lives on a remote isle in the south of the Great Sea!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Leof -----
 ---- BEGIN NEW SCRIPT -----
@@ -1281,7 +1281,7 @@ Questions: resi
 Answer: <DefineLabel1>
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Yes, sunrise is beautiful.<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hard to Resist, wouldst thou not agree?
+Initial Line: <DefaultMessage><DefineLabel0>Yes, sunrise is beautiful.<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hard to Resist, wouldst thou not agree?
 Default Line(s): Indeed!
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Whom dost thou resist?
@@ -1289,8 +1289,8 @@ Default Line(s): I see.
 Questions: blac
 Answer: <DefineLabel2>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>We too resist his foul, oppressive regime!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Hast thou ever faced a Shadowlord?
-Default Line(s): We have heard that here upon the very surface of Britannia there is a place where their energies focus!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Just where it is we have not learned, but thou might learn more if thou dost seek out Sir Sean, who lives...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Ah yes, in the Lycaeum on Dagger Isle.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>If thou canst find him, ask of Stonegate!Mayhap those Spectres can be dispatched from this plane of existence!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel2>We too resist his foul, oppressive regime!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Hast thou ever faced a Shadowlord?
+Default Line(s): We have heard that here upon the very surface of Britannia there is a place where their energies focus!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Just where it is we have not learned, but thou might learn more if thou dost seek out Sir Sean, who lives...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Ah yes, in the Lycaeum on Dagger Isle.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If thou canst find him, ask of Stonegate!Mayhap those Spectres can be dispatched from this plane of existence!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Vigil -----
 ---- BEGIN NEW SCRIPT -----
@@ -1307,7 +1307,7 @@ Answer: That was before!
 Questions: befo
 Answer: Never mind.
 Questions: neve
-Answer: That's right! Never mind!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: That's right! Never mind!<StartNewSection><NewLine><EndCoversation>
 Questions: dawn
 Answer: <DefineLabel1>
 Questions: them <OR> frie
@@ -1320,12 +1320,12 @@ Questions: shad
 Answer: My friends and I learned much about them before we retired. Talk to them!
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>I do now, but once I roamed the land as a warrior!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Dost thou believe me?
-Default Line(s): Try me then, fool!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel0>I do now, but once I roamed the land as a warrior!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Dost thou believe me?
+Default Line(s): Try me then, fool!<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: Thou art perceptive!
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>Hmmm...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I guess that thou art with the Resistance, yes?
+Initial Line: <DefaultMessage><DefineLabel1>Hmmm...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>I guess that thou art with the Resistance, yes?
 Default Line(s): O.K. have it your way.
 Questions: y
 Answer: <DefineLabel2>
@@ -1333,11 +1333,11 @@ Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Canst thou prove it?
 Default Line(s): <DefineLabel2>
 Questions: y
-Answer: I doubt it!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: I doubt it!<StartNewSection><NewLine><EndCoversation>
 Questions: n
 Answer: <DefineLabel3>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>At least thou art honest!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I feel thou art trustworthy.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Before, when my friends and I were a band of stalwart adventurers, we learned much!<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel3>At least thou art honest!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I feel thou art trustworthy.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Before, when my friends and I were a band of stalwart adventurers, we learned much!<StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for Kurt -----
 ---- BEGIN NEW SCRIPT -----
@@ -1362,7 +1362,7 @@ Answer: It's hard work but I enjoy the horses.
 Questions: hors
 Answer: We have many breeds.
 Questions: bree
-Answer: Well....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>We have Ploughhorses, the Mountain breed, and those from the Steppes!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Unfortunately, we don't have any Valorian purebreds, But they do over in the castle!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Well....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>We have Ploughhorses, the Mountain breed, and those from the Steppes!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Unfortunately, we don't have any Valorian purebreds, But they do over in the castle!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Questions: plou <OR> moun <OR> step
 Answer: We have those.
 Questions: val <OR> cast <OR> Trea
@@ -1383,7 +1383,7 @@ Bye: Come back anytime, I'll be here.
 Questions: part <OR> forg <OR> ship
 Answer: Nowadays, they're turnin' to all this newfangled magical stuff to run ships, an' away from the days of sweat and iron!
 Questions: swea <OR> iron <OR> stuf <OR> magi <OR> days
-Answer: In my younger days, we thought it queer to use aught but what grew by the beaches in the vessels we made.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And proud we were indeed of our handiwork, even when it sank.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Then, just as I learned the craft, we began to make use of more iron and steel than wood. An' things were just fine up 'til now.
+Answer: In my younger days, we thought it queer to use aught but what grew by the beaches in the vessels we made.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And proud we were indeed of our handiwork, even when it sank.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then, just as I learned the craft, we began to make use of more iron and steel than wood. An' things were just fine up 'til now.
 Questions: til <OR> unti <OR> now
 Answer: Now with all that magic, no one knows what's goin' on!
 
@@ -1405,11 +1405,11 @@ Answer: 'Twas Squire Jimmy's fault, indeed. I told him to keep that torch away f
 Questions: expe <OR> idea
 Answer: I found that a mixture of sulfur ash, mandrake, and the powder they fire cannons with will unleash great power when burned!
 Questions: unle <OR> powe
-Answer: Enough to make a ship sail sixscore knots faster!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>For a second or two, anyway.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Enough to make a ship sail sixscore knots faster!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>For a second or two, anyway.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>This could be a great breakthrough, dost thou agree?
-Default Line(s): Hmph!<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Hmph!<StartNewSection><NewLine><EndCoversation>
 Questions: Y
 Answer: I wish I could convince Master Hawkins.
 
@@ -1428,13 +1428,13 @@ Answer: His grandfather designed the HMS Cape, fastest ship that ever sailed! No
 Questions: trad <OR> serv <OR> fami
 Answer: Shipbuilding!
 Questions: Cape <OR> HMS
-Answer: Master Hawkins misplaced the plans for 'er long ago, and nothing since has been so fast. Still, we try many new ideas!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_FF>
+Answer: Master Hawkins misplaced the plans for 'er long ago, and nothing since has been so fast. Still, we try many new ideas!<StartNewSection><NewLine><NewLine><KeyWait><Unknown_FF>
 Questions: idea
 Answer: Ask Sir Adam!
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>I say, thou dost seem rather well-travelled. What news of the world hath thee?
-Default Line(s): Ah, that's the same news as anyone else's. They teach us in school that 'tis all for the common good. I suppose that we're to believe what we're taught.<Unknown_CodeA2><NewLine><NewLine><KeyWait><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Default Line(s): Ah, that's the same news as anyone else's. They teach us in school that 'tis all for the common good. I suppose that we're to believe what we're taught.<StartNewSection><NewLine><NewLine><KeyWait><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for Glinkie -----
 ---- BEGIN NEW SCRIPT -----
@@ -1453,7 +1453,7 @@ Answer: I fear it was destroyed!
 Questions: dest
 Answer: <DefineLabel0>
 Questions: word <OR> powe
-Answer: Whilst at the destroyed shrine, yell the word of power.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Then meditate upon the Shrine's virtue with the proper Mantra for three cycles.
+Answer: Whilst at the destroyed shrine, yell the word of power.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then meditate upon the Shrine's virtue with the proper Mantra for three cycles.
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Dost thou know where to find it?
@@ -1474,7 +1474,7 @@ Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>At midnight?
 Default Line(s): Oh.
 Questions: y
-Answer: Oh, no wonder I never found it!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Well, that one is likely safe then...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But, should thou see one destroyed...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Remember they can be restored with the Words of Power!
+Answer: Oh, no wonder I never found it!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Well, that one is likely safe then...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But, should thou see one destroyed...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Remember they can be restored with the Words of Power!
 
 ---- SCRIPT for Bandaii -----
 ---- BEGIN NEW SCRIPT -----
@@ -1489,9 +1489,9 @@ Answer: Since the last age, rumours abound of a legendary horse!
 Questions: rumo <OR> lege <OR> hors
 Answer: I search for Smith, the notorious talking horse!
 Questions: smit <OR> talk
-Answer: I do not doubt the rumours, but this I must see for myself!<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: I do not doubt the rumours, but this I must see for myself!<StartNewSection><NewLine><NewLine><DefineLabel0>
 Questions: fly <OR> carp
-Answer: Yes, I once had a magic flying carpet.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I wilt tell thee where it was, if thou wilt help me find the talking horse!
+Answer: Yes, I once had a magic flying carpet.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I wilt tell thee where it was, if thou wilt help me find the talking horse!
 Questions: iolo <OR> hut
 Answer: <DefineLabel2>
 
@@ -1527,7 +1527,7 @@ Answer: The Temple of Virtue.
 Questions: sist
 Answer: Leona.
 Questions: virt
-Answer: Here, we hold the Eight Virtues sacred.<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: Here, we hold the Eight Virtues sacred.<StartNewSection><NewLine><NewLine><DefineLabel0>
 Questions: eigh <OR> sacr
 Answer: Indeed we do.
 Questions: fals <OR> shar
@@ -1541,7 +1541,7 @@ Default Line(s): Do as thou wilt.
 Questions: y
 Answer: <DefineLabel1>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1><IfElseKnowsName><DefineLabel2>We welcome thee.<Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel3><DefineLabel2>
+Initial Line: <DefaultMessage><DefineLabel1><IfElseKnowsName><DefineLabel2>We welcome thee.<StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel3><DefineLabel2>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>We ask for 5 gold crowns, wilt thou give?
 Default Line(s): As thou wilt.
@@ -1554,7 +1554,7 @@ Questions: y
 Answer: <Gold>005<KarmaPlusOne><KarmaPlusOne><KarmaPlusOne><KarmaPlusOne><KarmaPlusOne>We thank thee.
 Label #: 4
 Initial Line: <DefaultMessage><DefineLabel4>Art thou the Avatar of legend?
-Default Line(s): Virtue makes no mistakes.<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>We shall tell thee what we know of the Shard of Falsehood.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Ask my sister of her vision!
+Default Line(s): Virtue makes no mistakes.<StartNewSection><NewLine><NewLine><Pause><StartNewSection>We shall tell thee what we know of the Shard of Falsehood.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Ask my sister of her vision!
 
 ---- SCRIPT for Leona -----
 ---- BEGIN NEW SCRIPT -----
@@ -1571,7 +1571,7 @@ Answer: Ava.
 Questions: fals <OR> virt <OR> shar
 Answer: Talk with my sister.
 Questions: visi
-Answer: In the deep of night, many moons ago, a vision came unto my sister and I...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>We saw the Shard of Falsehood deep below a dungeon named Deceit.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The path that was revealed traveled first southwest across many high peaks, opening to a large system of caverns.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Then the way led southwest. At a major intersection it turned northwest, soon branching northeast.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>After a long journey northward, the passage turned west. Here the path went on to rocky hills to the southwest, then turned northwest.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Over a lake it ran, unto a massive series of great falls, ending in a larger lake.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Here, upon a small isle, lies the Shard of Falsehood!
+Answer: In the deep of night, many moons ago, a vision came unto my sister and I...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>We saw the Shard of Falsehood deep below a dungeon named Deceit.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The path that was revealed traveled first southwest across many high peaks, opening to a large system of caverns.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then the way led southwest. At a major intersection it turned northwest, soon branching northeast.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>After a long journey northward, the passage turned west. Here the path went on to rocky hills to the southwest, then turned northwest.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Over a lake it ran, unto a massive series of great falls, ending in a larger lake.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Here, upon a small isle, lies the Shard of Falsehood!
 
 
 ---- SCRIPT for Ambrose -----
@@ -1591,7 +1591,7 @@ Answer: I had heard that they lay at the foundation of the Great Abyss!
 Questions: abys
 Answer: Though the Abyss is gone, I descended through the mines of Hythloth to search out the mystics.
 Questions: sear <OR> mine <OR> hyth
-Answer: Within the Underworld, where the Abyss once was, the lava still flows, north of the underground entrance of Hythloth.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Tis there, northward across cavernous peaks from the dungeon, amidst the boiling lava, that the mystic arms are said to lie!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Within the Underworld, where the Abyss once was, the lava still flows, north of the underground entrance of Hythloth.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Tis there, northward across cavernous peaks from the dungeon, amidst the boiling lava, that the mystic arms are said to lie!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Dost thou seek the fate of Lord British?
@@ -1620,9 +1620,9 @@ Answer: Sharp swords and nasty daggers!
 Questions: rive <OR> bind <OR> ship
 Answer: Only the best.
 Questions: swor
-Answer: Good fer slitt'n the gullet of a fat merchant.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Good fer slitt'n the gullet of a fat merchant.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Questions: dagg
-Answer: Sharp 'n deadly!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Sharp 'n deadly!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Interested in makin' a purchase?
@@ -1630,7 +1630,7 @@ Default Line(s): <DefineLabel0>
 Questions: n
 Answer: Too bad.
 Questions: y
-Answer: Talk to Kitiara, I'm sure ye'll be more'n satisfied!<Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName>
+Answer: Talk to Kitiara, I'm sure ye'll be more'n satisfied!<StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName>
 
 ---- SCRIPT for Scally -----
 ---- BEGIN NEW SCRIPT -----
@@ -1641,7 +1641,7 @@ Job: Likin' ye might expect, I entertain.
 Bye: Farewell.
 
 Questions: expe <OR> ente
-Answer: Why, I is the best singer 'ere in this whole towne!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Course, I is the only singer in this whole towne...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>No matter...<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Why, I is the best singer 'ere in this whole towne!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Course, I is the only singer in this whole towne...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>No matter...<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Questions: pira <OR> davi
 Answer: A real nasty ol' bloke I 'ear!
 Questions: nast <OR> blok <OR> crot <OR> misb
@@ -1649,7 +1649,7 @@ Answer: Aye, but I've also 'eard he was a great inventor!
 Questions: inve
 Answer: Some say he's made a strange tool to aid in navigation.
 Questions: tool <OR> navi
-Answer: I believes he called it a...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Err...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Ahh...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Umm...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>...Sextant.
+Answer: I believes he called it a...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Err...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Ahh...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Umm...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>...Sextant.
 Questions: sext <OR> wher
 Answer: No one knows just where ol' David's off to, but I've 'eard some speculat'n he's runnin' a lighthouse.
 
@@ -1659,7 +1659,7 @@ Default Line(s): <DefineLabel0>
 Questions: n
 Answer: Ah.
 Questions: y
-Answer: <Unknown_CodeA2>There once was a pirate named David, so crotchety and misbehav'd.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And then one day, he sailed away, only to where, he would not say.
+Answer: <StartNewSection>There once was a pirate named David, so crotchety and misbehav'd.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And then one day, he sailed away, only to where, he would not say.
 
 ---- SCRIPT for Bidney -----
 ---- BEGIN NEW SCRIPT -----
@@ -1670,15 +1670,15 @@ Job: I loves to drink!
 Bye: Hic.
 
 Questions: drin
-Answer: Rum, that's me favorite.<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hic!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>'Scuse me.
+Answer: Rum, that's me favorite.<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>'Scuse me.
 Questions: rum
 Answer: Yo ho ho!
 Questions: ho <OR> yo
 Answer: And a bottle of rum!
 Questions: bott
-Answer: Of rum!<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel0>
+Answer: Of rum!<StartNewSection><NewLine><NewLine><Pause><DefineLabel0>
 Questions: moun <OR> clim <OR> grap
-Answer: Grapple of Rum!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hic!<Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel3>
+Answer: Grapple of Rum!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic!<StartNewSection><NewLine><NewLine><Pause><DefineLabel3>
 Questions: pira
 Answer: <DefineLabel4>
 
@@ -1699,9 +1699,9 @@ Questions: y
 Answer: Aye, thanks mate!... Hic!
 Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>Didst ye ask me 'bout mountain climb'n?
-Default Line(s): I used to be a...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hic...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Mountain climber...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Gave it up...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Too dangerous...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>So, I 'came a pirate!
+Default Line(s): I used to be a...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Mountain climber...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Gave it up...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Too dangerous...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>So, I 'came a pirate!
 Label #: 4
-Initial Line: <DefaultMessage><DefineLabel4>Gave me grapple to a man named Lord Michael...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Lived o'er at the Emapthical Abbeyneyney...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hic... Zzzzz...<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel4>Gave me grapple to a man named Lord Michael...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Lived o'er at the Emapthical Abbeyneyney...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic... Zzzzz...<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Sven -----
 ---- BEGIN NEW SCRIPT -----
@@ -1718,9 +1718,9 @@ Answer: Used to make fine and wonderful things, I did.
 Questions: fine <OR> wond <OR> thin
 Answer: Oh, sculptures, crystals and the like.
 Questions: scul <OR> crys <OR> like
-Answer: Aye, fine they were too.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But, there were'nt much money in it, so I 'came a pirate!
+Answer: Aye, fine they were too.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But, there were'nt much money in it, so I 'came a pirate!
 Questions: swor <OR> weap
-Answer: I once tried to make glass weapons, but all my attempts failed.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I have heard, though, of magically enhanced crystalline swords of great power!
+Answer: I once tried to make glass weapons, but all my attempts failed.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I have heard, though, of magically enhanced crystalline swords of great power!
 Questions: magi <OR> enha <OR> grea <OR> powe
 Answer: They were said to have been lost in the Serpent's Spine by the captain of a great airship.
 Questions: capt <OR> air <OR> ship
@@ -1730,7 +1730,7 @@ Answer: Airships sound like a heap of nonsense if thou wert to ask me!
 ---- SCRIPT for Lord Dalgrin -----
 ---- BEGIN NEW SCRIPT -----
 Name: Lord Dalgrin
-Description: a tall man in pirate attire.<NewLine><NewLine><IfElseKnowsName><DefineLabel1><Unknown_CodeA2>Greet'ns stranger, I am Lord Dalgrin.<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Description: a tall man in pirate attire.<NewLine><NewLine><IfElseKnowsName><DefineLabel1><StartNewSection>Greet'ns stranger, I am Lord Dalgrin.<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 Greeting:
 Job: <DefineLabel0>
 Bye: Watch out fer them keel haulin' seadogs of that Blackthorn feller.
@@ -1744,19 +1744,19 @@ Answer: I been 'round the world many a time!
 Questions: dead <OR> foes
 Answer: I've had my share.
 Questions: roun <OR> worl <OR> time <OR> shar
-Answer: More'n I can count.<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>But today, I thinks I'll just relax an 'ave a drink with Tierra!
+Answer: More'n I can count.<StartNewSection><NewLine><NewLine><Pause><StartNewSection>But today, I thinks I'll just relax an 'ave a drink with Tierra!
 Questions: drin
 Answer: Rum, me thinks.
 Questions: rum
 Answer: Smart arse!
 Questions: tier
-Answer: Aye, she's a feisty wench...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>But, give'r a drink and she'll oft'n 'ave a bit a news fer ya.
+Answer: Aye, she's a feisty wench...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>But, give'r a drink and she'll oft'n 'ave a bit a news fer ya.
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Avast ye mate, surely thou dost know who I am, don't ye?
 Default Line(s): Why, I am the most bloodthirsty pirate to sail the seas.
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>Why, shiver me timbers, if it ain't ol'<AvatarsName>!<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1>Why, shiver me timbers, if it ain't ol'<AvatarsName>!<StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for Tierra -----
 ---- BEGIN NEW SCRIPT -----
@@ -1769,33 +1769,33 @@ Bye: <IfElseKnowsName><DefineLabel1>Beat it!
 Questions: busi
 Answer: None of yours.
 Questions: drin
-Answer: Sure, I'll drinks with ye...<Unknown_CodeA2><NewLine><NewLine><Pause>If'n I canst only find my glass.
+Answer: Sure, I'll drinks with ye...<StartNewSection><NewLine><NewLine><Pause>If'n I canst only find my glass.
 Questions: glas
 Answer: I left it round 'ere somewhere.
 Questions: roun <OR> ere <OR> some
 Answer: I canst not seem to remember.
 Questions: reme
-Answer: Speak'n of which...<Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Pause><Unknown_CodeA2>I canst not remember yer name...<Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Unknown_FF>
+Answer: Speak'n of which...<StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Pause><StartNewSection>I canst not remember yer name...<StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Unknown_FF>
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0><AvatarsName>, thou ought to know by now.<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel0><AvatarsName>, thou ought to know by now.<StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>See ya later,<AvatarsName>.<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel1>See ya later,<AvatarsName>.<StartNewSection><NewLine><EndCoversation>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Dost ye think me pretty?
 Default Line(s): <DefineLabel2>
 Questions: n
-Answer: Thou hast the beauty of an orc thyself!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Thou hast the beauty of an orc thyself!<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: <DefineLabel3>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>I likes thee, perhaps I canst help thee!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Dost ye wish ye couldst climb mountains?
-Default Line(s): Well, Bidney here used to...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Talk to him 'bout mountain climb'n.
+Initial Line: <DefaultMessage><DefineLabel3>I likes thee, perhaps I canst help thee!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Dost ye wish ye couldst climb mountains?
+Default Line(s): Well, Bidney here used to...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Talk to him 'bout mountain climb'n.
 
 ---- SCRIPT for Geoffrey -----
 ---- BEGIN NEW SCRIPT -----
 Name: Geoffrey
-Description: a large and impressive fighter.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2><AvatarsName>!<Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Greetings, and well met!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Tis I, Geoffrey, thy old friend of battles past!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Description: a large and impressive fighter.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection><AvatarsName>!<StartNewSection><NewLine><NewLine><StartNewSection>Greetings, and well met!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Tis I, Geoffrey, thy old friend of battles past!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Greeting:
 Job: I await thy request to join with thee in battle!
 Bye: Come for me soon!
@@ -1815,11 +1815,11 @@ Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Have the years treated thee well?
 Default Line(s): <DefineLabel0>
 Questions: n
-Answer: That is unfortunate.<Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Answer: That is unfortunate.<StartNewSection><NewLine><NewLine><DefineLabel1>
 Questions: y
-Answer: Ah, that is good.<Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Answer: Ah, that is good.<StartNewSection><NewLine><NewLine><DefineLabel1>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>I presume thou hast heard of our troubles.<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1>I presume thou hast heard of our troubles.<StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Is it time we set off against them?
 Default Line(s): <DefineLabel2>
@@ -1833,7 +1833,7 @@ Default Line(s): <DefineLabel3>
 Questions: n
 Answer: Soon, I hope.
 Questions: y
-Answer: I am eager for battle!<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: I am eager for battle!<StartNewSection><NewLine><NewLine><JoinParty>
 Custom
 
 ---- SCRIPT for Jennifer -----
@@ -1881,7 +1881,7 @@ Answer: I've heard rumours of great whirlpools, caused by the collapse of cavern
 Questions: unde <OR> cave <OR> whir
 Answer: There are some who say that the ships they drag under lie beached deep within the recesses of the earth.
 Questions: deep <OR> rece <OR> eart
-Answer: They are even those who claim that some survive the perilous journey below.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Only to be killed and eaten by the horrible creatures that dwell in the dark recesses.
+Answer: They are even those who claim that some survive the perilous journey below.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Only to be killed and eaten by the horrible creatures that dwell in the dark recesses.
 Questions: rum
 Answer: Aye, 'tis my favorite.
 
@@ -1936,7 +1936,7 @@ Answer: He was a fine sailor.
 Questions: was <OR> sail
 Answer: That was before the accident.
 Questions: acci
-Answer: His best shipmate died in a storm whilst trying to reach this port.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Since that day, Windmire has dedicated his life to protecting these shipping lanes.
+Answer: His best shipmate died in a storm whilst trying to reach this port.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Since that day, Windmire has dedicated his life to protecting these shipping lanes.
 Questions: prot <OR> ship <OR> lane
 Answer: He arranged for the construction of this lighthouse, as well as the breakwater around the pier area.
 Questions: mate
@@ -1970,7 +1970,7 @@ Answer: Blackthorn's Eight Laws of Virtue!
 Questions: blac <OR> eigh <OR> laws
 Answer: I must learn to recite them.
 Questions: reci
-Answer: I can't yet.<Unknown_CodeA2><NewLine><NewLine><KeyWait><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
+Answer: I can't yet.<StartNewSection><NewLine><NewLine><KeyWait><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Dost thou live by Virtue?
@@ -1991,7 +1991,7 @@ Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>Why, are his laws in error?
 Default Line(s): Then thou art not being very kind!
 Questions: y
-Answer: I do not believe thee! He would not lie to us!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: I do not believe thee! He would not lie to us!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Charlotte -----
 ---- BEGIN NEW SCRIPT -----
@@ -2018,7 +2018,7 @@ Answer: I ponder the virtues of Avatarhood.
 Questions: virt <OR> avat
 Answer: Indeed, I believe there is a lot of merit in the premise of Blackthorn's First Law.
 Questions: prem <OR> law <OR> firs <OR> one
-Answer: We must look at the very roots of dishonesty, and see it comes from the twisted tongues of liars.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And, surely, one cannot lie without a tongue!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: We must look at the very roots of dishonesty, and see it comes from the twisted tongues of liars.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And, surely, one cannot lie without a tongue!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Wouldst thou agree, the teachings of Blackthorn are meaningful and true?
@@ -2053,15 +2053,15 @@ Default Line(s): 'Den what are ye babbling 'bout!
 Questions: y
 Answer: <DefineLabel1>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>Obviously, thou art a person of exceptional wisdom!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>So, me matey, does ya think me invention were a good one?
-Default Line(s): What dost thou know!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel1>Obviously, thou art a person of exceptional wisdom!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>So, me matey, does ya think me invention were a good one?
+Default Line(s): What dost thou know!<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: <DefineLabel2>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>Thou dost speak true!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Wouldst thou like one I've made with me own hands?
-Default Line(s): Harumph!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel2>Thou dost speak true!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Wouldst thou like one I've made with me own hands?
+Default Line(s): Harumph!<StartNewSection><NewLine><EndCoversation>
 Questions: y
-Answer: <Change><72>'ere ye are mate, use it wisely and thou shalt profit by it!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: <Change><72>'ere ye are mate, use it wisely and thou shalt profit by it!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Lord Kenneth -----
 ---- BEGIN NEW SCRIPT -----
@@ -2072,7 +2072,7 @@ Job: I am the Court Composer.
 Bye: Bye.
 
 Questions: cour <OR> comp
-Answer: I travel throughout Britannia teaching my craft.<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: I travel throughout Britannia teaching my craft.<StartNewSection><NewLine><NewLine><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Dost thou wish to learn the harpsichord?
@@ -2080,17 +2080,17 @@ Default Line(s): Alas.
 Questions: y
 Answer: <DefineLabel2>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>Open the Book of Lore to the Music section and study the score for the piece 'Stones'.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
+Initial Line: <DefaultMessage><DefineLabel2>Open the Book of Lore to the Music section and study the score for the piece 'Stones'.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>The notes are like a series of square marks upon a four-line staff. Their positions, either on one or between two lines, marks their pitch.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A letter C marks the second line of the staff as the pitch 'C'. The first 3 notes are 'ABC'.<Unknown_CodeA2><NewLine><NewLine><KeyWait>What are the next 3?
-Default Line(s): No, try again.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
+Initial Line: <DefaultMessage><DefineLabel3>The notes are like a series of square marks upon a four-line staff. Their positions, either on one or between two lines, marks their pitch.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A letter C marks the second line of the staff as the pitch 'C'. The first 3 notes are 'ABC'.<StartNewSection><NewLine><NewLine><KeyWait>What are the next 3?
+Default Line(s): No, try again.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
 Questions: dcb
-Answer: Good!<Unknown_CodeA2><NewLine><NewLine><DefineLabel4>
+Answer: Good!<StartNewSection><NewLine><NewLine><DefineLabel4>
 Label #: 4
 Initial Line: <DefaultMessage><DefineLabel4>Many keyboards are marked with numbers, so that ABC would be 678.What would the next 3 be?
-Default Line(s): No, try again.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel4>
+Default Line(s): No, try again.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel4>
 Questions: 987
-Answer: Good! So the first phrase goes 678 987 8767653! Now thou must practice!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Good! So the first phrase goes 678 987 8767653! Now thou must practice!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Sir Arbuthnot -----
 ---- BEGIN NEW SCRIPT -----
@@ -2101,7 +2101,7 @@ Job: I am the Royal Coinmaker!
 Bye: Fare thee well.
 
 Questions: roya <OR> coin
-Answer: Well...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>That is to say I was, before I became a wanted man!
+Answer: Well...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>That is to say I was, before I became a wanted man!
 Questions: was <OR> want <OR> man
 Answer: I am afraid I did something that was not taken too well by the current regime.
 Questions: take <OR> well <OR> curr <OR> regi
@@ -2126,12 +2126,12 @@ Answer: <DefineLabel2>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Art thou the one true Avatar?
 Default Line(s): Oh.
-Default Line(s): 'Tis indeed an honor!<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Default Line(s): 'Tis indeed an honor!<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for Gregory -----
 ---- BEGIN NEW SCRIPT -----
 Name: Gregory
-Description: a tall, heavily scarred man.<NewLine><NewLine><Unknown_CodeA2>What in the name of Mondain art ye doing in me lighthouse!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Description: a tall, heavily scarred man.<NewLine><NewLine><StartNewSection>What in the name of Mondain art ye doing in me lighthouse!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Greeting:
 Job: Now that's a real poser!
 Bye: And a good riddance, too.
@@ -2144,14 +2144,14 @@ Initial Line: <DefaultMessage><DefineLabel0>Didst ye not know this is private pr
 Default Line(s): <DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Were ye born that ugly, or didst ye lose a fight with a frying pan?
-Default Line(s): Not only ugly, but yer stupid too!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What dost ye want anyway?
+Default Line(s): Not only ugly, but yer stupid too!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>What dost ye want anyway?
 
 ---- SCRIPT for Jacqueline -----
 ---- BEGIN NEW SCRIPT -----
 Name: Jacqueline
 Description: a bony woman with a blank stare.
 Greeting:
-Job: I, uh...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>don't remember.
+Job: I, uh...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>don't remember.
 Bye: Uh, bye....
 
 Questions: reme
@@ -2169,35 +2169,35 @@ Answer: Mmmmm, my favorite!
 Name: Smith
 Description: a strangely familiar horse.<NewLine><NewLine><IfElseKnowsName><DefineLabel3><DefineLabel0>
 Greeting:
-Job: Well...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I eat hay.
+Job: Well...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>I eat hay.
 Bye: Come back and see me again. Really!
 
 Questions: eat <OR> hay
-Answer: Yep.<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Oh, I'm also here to ask you something.
+Answer: Yep.<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Oh, I'm also here to ask you something.
 Questions: ask
 Answer: <DefineLabel4>
 Questions: forg <OR> tell
-Answer: Yea...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The answer...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It was...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2><Rune>INFINITY<Rune>!
+Answer: Yea...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The answer...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It was...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection><Rune>INFINITY<Rune>!
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Hey...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>You look familiar, have we met?
+Initial Line: <DefaultMessage><DefineLabel0>Hey...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>You look familiar, have we met?
 Default Line(s): <DefineLabel1>
 Questions: y
 Answer: <DefineLabel2>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>Oh...<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1>Oh...<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>I thought so...<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel2>I thought so...<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>Hello,<AvatarsName>...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>You know what?
-Default Line(s): Way back...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Way, way back...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I forgot to tell you something!
+Initial Line: <DefaultMessage><DefineLabel3>Hello,<AvatarsName>...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>You know what?
+Default Line(s): Way back...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Way, way back...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I forgot to tell you something!
 Label #: 4
 Initial Line: <DefaultMessage><DefineLabel4>Lord British wanted me to ask you if you were enjoying this game?
 Default Line(s): <DefineLabel4>
 Questions: n
 Answer: Well, if you have any complaints, write to him at Origin. He would really like to know.
 Questions: y
-Answer: He will be so glad to hear it...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Of course, he won't ever know unless you write to him at Origin and tell him so.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I know first hand he'd like that.
+Answer: He will be so glad to hear it...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Of course, he won't ever know unless you write to him at Origin and tell him so.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I know first hand he'd like that.
 
 ---- SCRIPT for Sutek -----
 ---- BEGIN NEW SCRIPT -----
@@ -2209,12 +2209,12 @@ Bye:
 
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Greetings, I am Sutek.<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel1><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel0>Greetings, I am Sutek.<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel1><EndCoversation>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Art thou the Avatar of legend?
-Default Line(s): Oh.<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Oh.<StartNewSection><NewLine><EndCoversation>
 Questions: y
-Answer: I have been scrying for the nature of the three Shards!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I have learned they were formed at the time of the first Dark Lord.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>When Mondain's Gem of Immortality was destroyed, its shards still harbored unspeakable evil!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>They lay festering deep within the earth, but now their malevolent power has been unleashed upon the world.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards and the Shadowlords can and must be destroyed!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards must be recovered from their resting places in the boundless Underworld, and cast into the Eternal Flames of Truth, Love, and Courage...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Even as each respective Shadowlord stands nigh upon the flame of the Principle it opposes.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Take now this knowledge and use it well!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: I have been scrying for the nature of the three Shards!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I have learned they were formed at the time of the first Dark Lord.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>When Mondain's Gem of Immortality was destroyed, its shards still harbored unspeakable evil!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>They lay festering deep within the earth, but now their malevolent power has been unleashed upon the world.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards and the Shadowlords can and must be destroyed!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards must be recovered from their resting places in the boundless Underworld, and cast into the Eternal Flames of Truth, Love, and Courage...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Even as each respective Shadowlord stands nigh upon the flame of the Principle it opposes.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Take now this knowledge and use it well!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Sin'Vraal -----
 ---- BEGIN NEW SCRIPT -----
@@ -2233,55 +2233,55 @@ Answer: No longer do I serve Evil, for deep below the earth did the Once and Tru
 Questions: virt <OR> king <OR> belo <OR> eart <OR> deep
 Answer: I can only tell thee that he has turned me from the ways of darkness, but he'll have no such luck with the Shadowlords!
 Questions: shar
-Answer: The accursed Shard of Hatred that spawned my former master lies within the underworld at the location thou wouldst call<Rune>I<Rune>'<Rune>A<Rune><Unknown_CodeA2>,<Rune>I<Rune>'<Rune>A<Rune><Unknown_CodeA2><Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Enter through the dungeons by Lost Hope Bay!
+Answer: The accursed Shard of Hatred that spawned my former master lies within the underworld at the location thou wouldst call<Rune>I<Rune>'<Rune>A<Rune><StartNewSection>,<Rune>I<Rune>'<Rune>A<Rune><StartNewSection><StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Enter through the dungeons by Lost Hope Bay!
 
 
 ---- SCRIPT for Grendel -----
 ---- BEGIN NEW SCRIPT -----
 Name: Grendel
-Description: a giant rat!<NewLine><NewLine><Unknown_CodeA2>Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What dost thou want?<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Description: a giant rat!<NewLine><NewLine><StartNewSection>Squeek...<StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><StartNewSection>Squeek...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>What dost thou want?<StartNewSection><NewLine><NewLine><Unknown_FF>
 Greeting:
 Job: I once was a great alchemist!
 Bye: Squeek!
 
 Questions: alch
-Answer: Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>That was before my accident!
+Answer: Squeek...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>That was before my accident!
 Questions: acci
-Answer: Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I was working on a spell called:<NewLine><Rune>VAS REL XEN BET<Rune><NewLine>It got a little out of hand.
+Answer: Squeek...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>I was working on a spell called:<NewLine><Rune>VAS REL XEN BET<Rune><NewLine>It got a little out of hand.
 Questions: spel <OR> hand <OR> vas
 Answer: It was to be an enchantment to turn foes into rats.
 Questions: rat
-Answer: Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>During an early experiment I was transformed into a rat!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I have since perfected a lesser version.
+Answer: Squeek...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>During an early experiment I was transformed into a rat!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>I have since perfected a lesser version.
 Questions: less <OR> vers <OR> perf
-Answer: I call it<Rune>REL XEN BET<Rune>. It is of the Sixth Circle, and will turn one being into a rat for fair time!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: I call it<Rune>REL XEN BET<Rune>. It is of the Sixth Circle, and will turn one being into a rat for fair time!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Wouldst thou like the formula?
 Default Line(s): O.K.
 Questions: y
-Answer: It requires that one part spider silk be mixed with a pinch of sulfurous ash...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>...with a crushed root of mandrake and spores scraped from a nightshade cap.
+Answer: It requires that one part spider silk be mixed with a pinch of sulfurous ash...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>...with a crushed root of mandrake and spores scraped from a nightshade cap.
 
 ---- SCRIPT for Johne, Captain Johne. -----
 ---- BEGIN NEW SCRIPT -----
 Name: Johne, Captain Johne.
-Description: an unkempt mage in tattered robes.<NewLine><NewLine><Unknown_CodeA2>At long last, another living soul!<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Description: an unkempt mage in tattered robes.<NewLine><NewLine><StartNewSection>At long last, another living soul!<StartNewSection><NewLine><NewLine><Unknown_FF>
 Greeting:
 Job: I fear the Shadowlords!
 Bye: Beware!
 
 Questions: fear <OR> shad
-Answer: Years ago, my ship was swallowed by a massive whirlpool. The remains of my ship washed up on this isle with myself and three others.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>When I recovered, I explored my surroundings, and found a great gem broken into three shards.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards, full of evil, drove me to kill my three companions, and from their blood sprang the three Shadowlords.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Taking the Shards deep into this underworld, they entrapped Lord British, and hold Blackthorn in their power.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>They spare me only to taunt me with such news until my dying day.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Years ago, my ship was swallowed by a massive whirlpool. The remains of my ship washed up on this isle with myself and three others.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>When I recovered, I explored my surroundings, and found a great gem broken into three shards.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards, full of evil, drove me to kill my three companions, and from their blood sprang the three Shadowlords.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Taking the Shards deep into this underworld, they entrapped Lord British, and hold Blackthorn in their power.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>They spare me only to taunt me with such news until my dying day.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Wilt thou save Britannia?
-Default Line(s): Pity.<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Pity.<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: <DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Might I join thee?
-Default Line(s): Pity.<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Pity.<StartNewSection><NewLine><EndCoversation>
 Questions: y
-Answer: Let me avenge my wrongdoing.<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: Let me avenge my wrongdoing.<StartNewSection><NewLine><NewLine><JoinParty>
 
 ---- SCRIPT for Sir Simon -----
 ---- BEGIN NEW SCRIPT -----
@@ -2294,7 +2294,7 @@ Bye: Farewell!
 Questions: keep
 Answer: We fled here when the tyrant Blackthorn began to spread his self-righteous rule.
 Questions: blac <OR> rule
-Answer: The land has not been the same since the loss of Lord British.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A good friend. I wish I knew of a way to help him.
+Answer: The land has not been the same since the loss of Lord British.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A good friend. I wish I knew of a way to help him.
 Questions: brit <OR> help
 Answer: All I know is that his crown jewels, the Crown, the Sceptre and the Amulet must be recovered.
 Questions: crow
@@ -2302,7 +2302,7 @@ Answer: A powerful artifact. Lord British once told me of its ability.
 Questions: abil
 Answer: When worn, it absorbs all magical forms of attack, no matter how powerful.
 Questions: scep
-Answer: A mighty item of immense power. It is said that when used it can disperse all magical barriers, even in the ethereal plane.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I hear 'tis held by the Shadowlords themselves, in their earthly fortress!
+Answer: A mighty item of immense power. It is said that when used it can disperse all magical barriers, even in the ethereal plane.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I hear 'tis held by the Shadowlords themselves, in their earthly fortress!
 Questions: amul
 Answer: Of that, my wife knows more than I.
 
@@ -2326,14 +2326,14 @@ Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>I see it in thy eyes, but tell me, dost thou support Blackthorn's rule?
 Default Line(s): I see.
 Questions: n
-Answer: I knew that one who has tread the path of Virtue could not agree with the current state of affairs.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
+Answer: I knew that one who has tread the path of Virtue could not agree with the current state of affairs.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>I have seen the Amulet which Lord British once bore. It lies forgotten in the Underworld, amongst the graves of valiant warriors.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>With only this can thee find thy path in a place of unholy darkness, which I have forseen shall block thy way.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Tis beyond such a place that thou must search, if thou art to mend the injustice wrought upon the world by Blackthorn and his spectres!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel1>I have seen the Amulet which Lord British once bore. It lies forgotten in the Underworld, amongst the graves of valiant warriors.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>With only this can thee find thy path in a place of unholy darkness, which I have forseen shall block thy way.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Tis beyond such a place that thou must search, if thou art to mend the injustice wrought upon the world by Blackthorn and his spectres!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Dupre -----
 ---- BEGIN NEW SCRIPT -----
 Name: Dupre
-Description: a paladin, shining with Virtue.<NewLine><NewLine><Unknown_CodeA2>Ah,<AvatarsName>!<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Description: a paladin, shining with Virtue.<NewLine><NewLine><StartNewSection>Ah,<AvatarsName>!<StartNewSection><NewLine><NewLine><DefineLabel0>
 Greeting:
 Job: Sentri and I live here in Bordermarch. We await thy call for us to join thee!
 Bye: Farewell. Return soon with good news.
@@ -2347,9 +2347,9 @@ Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>That is thee, yes?
 Default Line(s): <DefineLabel0>
 Questions: n
-Answer: I am sorry, I have mistaken thee for an old friend.<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: I am sorry, I have mistaken thee for an old friend.<StartNewSection><NewLine><EndCoversation>
 Questions: y
-Answer: I hardly recognize thee, it has been so long.<Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Answer: I hardly recognize thee, it has been so long.<StartNewSection><NewLine><NewLine><DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Hast thou returned to Britannia to set things straight?
 Default Line(s): Then we are doomed!
@@ -2359,7 +2359,7 @@ Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Shall I join with thee again?
 Default Line(s): As thou wisheth.
 Questions: y
-Answer: Good, it will be good to fight by thy side again!<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: Good, it will be good to fight by thy side again!<StartNewSection><NewLine><NewLine><JoinParty>
 Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>Wanna buy a duck?
 Default Line(s): They're cheap.
@@ -2386,7 +2386,7 @@ Answer: <DefineLabel2>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Have we not met before?
-Default Line(s): Ah yes, I remember, 'twas before the dark times!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
+Default Line(s): Ah yes, I remember, 'twas before the dark times!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Thou art the Avatar of legend, art thou not?
 Default Line(s): Oh, I could have sworn it was thee.
@@ -2401,7 +2401,7 @@ Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>I would be honored to join thee, wilt thou have me?
 Default Line(s): I understand.
 Questions: y
-Answer: It is indeed an honor to fight with thee.<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: It is indeed an honor to fight with thee.<StartNewSection><NewLine><NewLine><JoinParty>
 
 ---- SCRIPT for Lord Seggallion -----
 ---- BEGIN NEW SCRIPT -----
@@ -2416,15 +2416,15 @@ Answer: A fine homestead, furnished with the proceeds from my old profession.
 Questions: home <OR> prof <OR> proc <OR> old
 Answer: Many years ago, I carved my living from the seafaring trade routes of Britannia.
 Questions: trad <OR> rout <OR> livi
-Answer: You know...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I demanded a fair toll for passage through my waters...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The fact that this usually amounted to all of their belongings is irrelevant!
+Answer: You know...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I demanded a fair toll for passage through my waters...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The fact that this usually amounted to all of their belongings is irrelevant!
 Questions: star <OR> spy
-Answer: I used my spyglass to study the stars.<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: I used my spyglass to study the stars.<StartNewSection><NewLine><NewLine><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Wouldst thou like to see it?
 Default Line(s): I see.
 Questions: y
-Answer: I used it on many nights for navigational purposes. I use it but rarely now.<Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Answer: I used it on many nights for navigational purposes. I use it but rarely now.<StartNewSection><NewLine><NewLine><DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Dost thou study the stars?
 Default Line(s): Too bad.
@@ -2450,21 +2450,21 @@ Job: I am a mage of great repute!
 Bye: Nice talking shoppe.
 
 Questions: grea <OR> repu
-Answer: Modesty was never one of my great virtues. But, I am actually quite good.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Modesty was never one of my great virtues. But, I am actually quite good.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Questions: spel <OR> thin <OR> near <OR> disa
 Answer: I know I've got the words right, but I may have mixed the reagents improperly, I think.
 Questions: word
-Answer: I use the chant...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Now, don't tell anyone else...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2><Rune>AN YLEM<Rune>!
+Answer: I use the chant...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Now, don't tell anyone else...<StartNewSection><NewLine><NewLine><Pause><StartNewSection><Rune>AN YLEM<Rune>!
 Questions: an ylem
 Answer: Not now, fool! Am I still here?
 Questions: y
 Answer: Good, watch it!
 Questions: reag
-Answer: I think it was Ash and Mandrake...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But, then again, perhaps it was Garlic and Blood Moss...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Oh, I don't know. I've never had a very good memory.
+Answer: I think it was Ash and Mandrake...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But, then again, perhaps it was Garlic and Blood Moss...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Oh, I don't know. I've never had a very good memory.
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Would ye be impressed if I told thee that I can cast a spell that CREATES light even on the darkest night?
-Default Line(s): Well I've done better.<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Well I've done better.<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: Well! If ye think that's good, I've NEARLY made things disappear!
 
@@ -2483,7 +2483,7 @@ Answer: I am lucky enough to be chosen as understudy to the Great Mage Temme, so
 Questions: powe <OR> spel
 Answer: Beyond imagining! Why, one day I even saw her nearly kill a Giant Rat with a single spell.
 Questions: gian <OR> rat
-Answer: Yes, 'tis true, I saw it with my own eyes!<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: Yes, 'tis true, I saw it with my own eyes!<StartNewSection><NewLine><NewLine><DefineLabel0>
 Questions: spy
 Answer: Lord Seggallion uses it to study the stars! If thou ask, he might show it unto thee.
 
@@ -2510,11 +2510,11 @@ Answer: They have to be good, or else the Lord will order Temme to turn me into 
 Questions: lord
 Answer: Seggallion.
 Questions: resi <OR> abod
-Answer: A mixed bunch with an interesting history, Before he retired, my lord was a famous pirate. Now, even he fears Blackthorn.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But, I mustn't gossip!
+Answer: A mixed bunch with an interesting history, Before he retired, my lord was a famous pirate. Now, even he fears Blackthorn.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But, I mustn't gossip!
 Questions: blac
 Answer: I mustn't gossip.
 Questions: goss
-Answer: Like I said, I don't wish to tell tales, but if thou dost have an ear for gossip, I've never heard anyone who talks as much as my friend Telila.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>She lives in the city of Britain, ask her for some rumours or gossip!
+Answer: Like I said, I don't wish to tell tales, but if thou dost have an ear for gossip, I've never heard anyone who talks as much as my friend Telila.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>She lives in the city of Britain, ask her for some rumours or gossip!
 
 
 ---- SCRIPT for Thrud -----
@@ -2534,17 +2534,17 @@ Answer: <DefineLabel1>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Surely thou hast heard of the time when I butchered an entire village?
-Default Line(s): I had just returned from a war across the sea, when on my way home, I stopped at an inn.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The meal I ate there gave me indigestion for two days! Upon recovery, I killed the innkeeper and his entire staff.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The ensuing outcry forced me to dispense with the rest of the village!
+Default Line(s): I had just returned from a war across the sea, when on my way home, I stopped at an inn.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The meal I ate there gave me indigestion for two days! Upon recovery, I killed the innkeeper and his entire staff.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The ensuing outcry forced me to dispense with the rest of the village!
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>The Jeweled Sword and Shield are fine weapons indeed! Wouldst thou like them?
 Default Line(s): Thy loss!
 Questions: y
 Answer: <DefineLabel2>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>I will let thee have these great weapons for the Resistance's password, which thou hast so cleverly discovered.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Tell me, what is it?
-Default Line(s): Liar! Guards!<CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel2>I will let thee have these great weapons for the Resistance's password, which thou hast so cleverly discovered.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Tell me, what is it?
+Default Line(s): Liar! Guards!<CallGuards><StartNewSection><NewLine><EndCoversation>
 Questions: dawn
-Answer: May they serve thee well!<Change><8><Change><28><Unknown_CodeA2><NewLine><EndCoversation>
+Answer: May they serve thee well!<Change><8><Change><28><StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Elistaria -----
 ---- BEGIN NEW SCRIPT -----
@@ -2573,10 +2573,10 @@ Default Line(s): <DefineLabel8>
 Questions: impera
 Answer: <DefineLabel3>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>Ah yes, now I remember. Thou art the one infiltrating the Resistance.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Here, wear this badge when thou doth wish to show thou art with Blackthorn and the Oppression!<Unknown_CodeA2><NewLine><NewLine><Change><74><KeyWait><Unknown_CodeA2>It may be that Thrud has some items that may be useful in your mission.<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel3>Ah yes, now I remember. Thou art the one infiltrating the Resistance.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Here, wear this badge when thou doth wish to show thou art with Blackthorn and the Oppression!<StartNewSection><NewLine><NewLine><Change><74><KeyWait><StartNewSection>It may be that Thrud has some items that may be useful in your mission.<StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 8
-Initial Line: <DefaultMessage><DefineLabel8>Daemons! Kill this wretch!<CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
-Default Line(s): <Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel8>Daemons! Kill this wretch!<CallGuards><StartNewSection><NewLine><EndCoversation>
+Default Line(s): <StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Balinor -----
 ---- BEGIN NEW SCRIPT -----
@@ -2588,15 +2588,15 @@ Bye:
 
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Foul mortal, thou hast disturbed my peaceful rest!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>My bound duty is to prevent intruders from passing! And so I shall!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But first, thou dost seem an educated person and so I offer thee an educated solution to the problem at hand...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I suggest a battle of wits for thy passage. If I win, I shall slay thee, if thou dost win, I shall let thee pass to face the perils within!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Dost thou accept?
-Default Line(s): So be it!<CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel0>Foul mortal, thou hast disturbed my peaceful rest!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>My bound duty is to prevent intruders from passing! And so I shall!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But first, thou dost seem an educated person and so I offer thee an educated solution to the problem at hand...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I suggest a battle of wits for thy passage. If I win, I shall slay thee, if thou dost win, I shall let thee pass to face the perils within!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Dost thou accept?
+Default Line(s): So be it!<CallGuards><StartNewSection><NewLine><EndCoversation>
 Questions: y
-Answer: Ah good, I've not tested my wit for some time!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
+Answer: Ah good, I've not tested my wit for some time!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>What is as tall as a house, round as a cup, and all the king's horses can't draw it up?
-Default Line(s): Hah! Thou hast failed! Now to keep my part of the bargain!<CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Hah! Thou hast failed! Now to keep my part of the bargain!<CallGuards><StartNewSection><NewLine><EndCoversation>
 Questions: well
-Answer: Thou hast guessed well, foolish one, but thou hast committed a fatal blunder!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Never trust a Daemon's word! Hah, hah, hah!<CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Thou hast guessed well, foolish one, but thou hast committed a fatal blunder!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Never trust a Daemon's word! Hah, hah, hah!<CallGuards><StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Lady Janell -----
 ---- BEGIN NEW SCRIPT -----
@@ -2613,7 +2613,7 @@ Answer: Though the days grow darker, there are many who still seek the light of 
 Questions: seek <OR> ligh <OR> trut
 Answer: I know of two sisters, ascetics of a temple of Virtue, who know of the evil artifact which most opposes Truth!
 Questions: arti <OR> evil <OR> temp <OR> oppo
-Answer: Seek out the twin sisters in the hidden city of Cove, and ask them of the Shard of Falsehood!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Seek out the twin sisters in the hidden city of Cove, and ask them of the Shard of Falsehood!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Dost thou meditate at shrines?
@@ -2629,7 +2629,7 @@ Answer: Enter one of the mystic moongates at precisely midnight. Then shalt thou
 ---- SCRIPT for Lord Shalineth -----
 ---- BEGIN NEW SCRIPT -----
 Name: Lord Shalineth
-Description: a tall man with a bearing of wisdom and power.<NewLine><NewLine><KeyWait><IfElseKnowsName><DefineLabel1><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Well met, worthy servant of Truth!<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Description: a tall man with a bearing of wisdom and power.<NewLine><NewLine><KeyWait><IfElseKnowsName><DefineLabel1><AskName><StartNewSection><NewLine><NewLine><StartNewSection>Well met, worthy servant of Truth!<StartNewSection><NewLine><NewLine><Unknown_FF>
 Greeting:
 Job: I am the Lord of the Keep of Truth.
 Bye: Go, abandon not thy quest for Light!
@@ -2643,7 +2643,7 @@ Answer: It is Truth that lends our arts the power to overcome all Evil, if we bu
 Questions: evil
 Answer: A creature of great Evil must hide its name, for it is at the mercy of one armed with such a simple truth.
 Questions: merc <OR> simp <OR> name
-Answer: Through the exercise of great magic and scrying, I have gleaned the name of the Shadowlord of Falsehood.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Through the exercise of great magic and scrying, I have gleaned the name of the Shadowlord of Falsehood.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Dost thou swear not to use it foolishly?
@@ -2651,9 +2651,9 @@ Default Line(s): <DefineLabel0>
 Questions: y
 Answer: The Name of this dread lord is<Rune>FAULINEI<Rune>. Speak it not, for only at thy bidding can he enter our hallowed Keep.
 Questions: n
-Answer: Thou fool.<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Thou fool.<StartNewSection><NewLine><EndCoversation>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>A pleasure to see thee again,<AvatarsName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1>A pleasure to see thee again,<AvatarsName><StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for Sir Sean -----
 ---- BEGIN NEW SCRIPT -----
@@ -2680,7 +2680,7 @@ Default Line(s): <DefineLabel0>
 Questions: y
 Answer: Coward.
 Questions: n
-Answer: Sail first thy ship unto the southernmost part of Lost Hope Bay. Travel so far as thy skiff will take thee.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Some speak of a special implement that can be used to cross the mountains. Find first this equipment!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Then climb thyway through the mountains to the south.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>There thou shalt find the black keep Stonegate, guarded by Balinor, foulest of daemons!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>This is the earthly domain of the three Shadowlords, from which few have returned!
+Answer: Sail first thy ship unto the southernmost part of Lost Hope Bay. Travel so far as thy skiff will take thee.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Some speak of a special implement that can be used to cross the mountains. Find first this equipment!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then climb thyway through the mountains to the south.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>There thou shalt find the black keep Stonegate, guarded by Balinor, foulest of daemons!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>This is the earthly domain of the three Shadowlords, from which few have returned!
 
 ---- SCRIPT for Lady Hayden. -----
 ---- BEGIN NEW SCRIPT -----
@@ -2695,13 +2695,13 @@ Answer: Yes, I study here with my companion, Lord R'hien.
 Questions: comp <OR> rhie <OR> lord <OR> r'hi
 Answer: He is the Keeper of the Royal Horses, and a fine man.
 Questions: roya <OR> hors
-Answer: I find peace in riding our sturdy mounts through the forests to the south.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It helps me think of my magic and happier times.
+Answer: I find peace in riding our sturdy mounts through the forests to the south.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It helps me think of my magic and happier times.
 Questions: moun <OR> ridi
 Answer: Horses.
 Questions: magi
 Answer: We once wrought our spells for learning, not to save our lives when confronted by evil creatures. Peace is a more valuable part of our lives now.
 Questions: happ <OR> time <OR> peac
-Answer: If only one still unafraid to fight for Virtue walked the land...<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: If only one still unafraid to fight for Virtue walked the land...<StartNewSection><NewLine><NewLine><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Art thou afraid?
@@ -2748,7 +2748,7 @@ Answer: 'Tis here that the journal of Lord British's expedition into the underwo
 Questions: jour <OR> lord <OR> expe <OR> unde <OR> auth
 Answer: Yes, 'tis sad, but 'twould seem that there is little hope for his return.
 Questions: writ <OR> work <OR> publ
-Answer: I compiled the reference work known as 'The Book of Lore.'<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: I compiled the reference work known as 'The Book of Lore.'<StartNewSection><NewLine><NewLine><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Hast thou seen it?
@@ -2766,7 +2766,7 @@ Answer: I thank thee, kind soul.
 ---- SCRIPT for Mariah -----
 ---- BEGIN NEW SCRIPT -----
 Name: Mariah
-Description: a weak and frail friend.<NewLine><NewLine><Unknown_CodeA2><AvatarsName>, my old friend.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Tis I, Mariah!<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Description: a weak and frail friend.<NewLine><NewLine><StartNewSection><AvatarsName>, my old friend.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Tis I, Mariah!<StartNewSection><NewLine><NewLine><Unknown_FF>
 Greeting:
 Job: I have been quite ill, for many days.
 Bye: Please, return and take me with thee when thou canst.
@@ -2774,7 +2774,7 @@ Bye: Please, return and take me with thee when thou canst.
 Questions: ill <OR> day
 Answer: The healers here, in the Lycaeum, canst heal even the wound of a Shadowlord quickly.
 Questions: shad
-Answer: I met one in Moonglow some time back, but did escape with my life!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: I met one in Moonglow some time back, but did escape with my life!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Questions: join
 Answer: <DefineLabel2>
 
@@ -2798,7 +2798,7 @@ Default Line(s): <DefineLabel2>
 Questions: n
 Answer: Soon, I hope.
 Questions: y
-Answer: I am honored to be with thee again!<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: I am honored to be with thee again!<StartNewSection><NewLine><NewLine><JoinParty>
 
 ---- SCRIPT for Lord Michael -----
 ---- BEGIN NEW SCRIPT -----
@@ -2817,13 +2817,13 @@ Answer: The Shadowlords dare not desecrate this holy place, not even the Shadowl
 Questions: shad <OR> hate
 Answer: Seek out the daemon who lives in the great eastern desert. He knows much of the Lord of Hatred!
 Questions: moun <OR> clim <OR> grap
-Answer: I have the grapple used to climb mountains.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Though it allows passage through many mountains, there are some peaks which still cannot be crossed!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And, one can still fall whilst using it if one is not nimble enough!<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: I have the grapple used to climb mountains.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Though it allows passage through many mountains, there are some peaks which still cannot be crossed!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And, one can still fall whilst using it if one is not nimble enough!<StartNewSection><NewLine><NewLine><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Wouldst thou like it?
 Default Line(s): Oh.
 Questions: y
-Answer: Use it well, and be careful!<Change><70><Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Use it well, and be careful!<Change><70><StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Cory -----
 ---- BEGIN NEW SCRIPT -----
@@ -2852,7 +2852,7 @@ Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Ah! A connoisseur! Wouldst thou like to try some?
 Default Line(s): Thy loss.
 Questions: y
-Answer: Here, eat this..<Unknown_CodeA2><NewLine><NewLine><Pause>You put the morsel in your mouth...<NewLine><NewLine><Pause>Such food as this you've never tasted! It melts in your mouth, tasting of a thousand different spices, all perfectly matched!<Change><65><KeyWait><NewLine><NewLine><Unknown_CodeA2>Good, huh!
+Answer: Here, eat this..<StartNewSection><NewLine><NewLine><Pause>You put the morsel in your mouth...<NewLine><NewLine><Pause>Such food as this you've never tasted! It melts in your mouth, tasting of a thousand different spices, all perfectly matched!<Change><65><KeyWait><NewLine><NewLine><StartNewSection>Good, huh!
 
 ---- SCRIPT for Hardluck -----
 ---- BEGIN NEW SCRIPT -----
@@ -2865,7 +2865,7 @@ Bye: May fate smile brightly on you!
 Questions: Jest
 Answer: I juggle and sing fine songs!
 Questions: sing <OR> song
-Answer: Blackthorn once was a fine ol' man.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Upon fine principles he would stand.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But then came the Shadowlords, full of evil.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Blackthorn's soul they came to steal.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>All at once the Tyranny began.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>All because of Fate's dark hand!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Blackthorn once was a fine ol' man.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Upon fine principles he would stand.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But then came the Shadowlords, full of evil.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Blackthorn's soul they came to steal.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>All at once the Tyranny began.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>All because of Fate's dark hand!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Questions: abbe
 Answer: Empath Abbey!
 Questions: empa
@@ -2877,7 +2877,7 @@ Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Like it?
 Default Line(s): Oh.
 Questions: y
-Answer: Thou may have noticed that it points out that Blackthorn himself is not responsible for the evils he imposes.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Rather, he is trapped, as we are, under the control of the truly evil Shadowlords, only more so.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A pity.
+Answer: Thou may have noticed that it points out that Blackthorn himself is not responsible for the evils he imposes.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Rather, he is trapped, as we are, under the control of the truly evil Shadowlords, only more so.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A pity.
 
 ---- SCRIPT for Barbra -----
 ---- BEGIN NEW SCRIPT -----
@@ -2902,7 +2902,7 @@ Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Thou dost know it is thy duty to try and recover what this kingdom has lost. Dost thou intend to?
 Default Line(s): Too bad.
 Questions: y
-Answer: Then perhaps I have a vision that may help thee.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I saw a great man in a distant place.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I saw him as if through a looking glass.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I saw naught but his reflection.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>More I do not know.<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Then perhaps I have a vision that may help thee.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I saw a great man in a distant place.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I saw him as if through a looking glass.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I saw naught but his reflection.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>More I do not know.<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Tim -----
 ---- BEGIN NEW SCRIPT -----
@@ -2923,7 +2923,7 @@ Answer: Tra-la-la!
 Questions: cour <OR> comp <OR> trav <OR> ken
 Answer: He trades music lessons for melodies. He is compiling a collection of Britannian folkmusic.
 Questions: less <OR> melo <OR> coll <OR> folk
-Answer: Recently he gave a recital in Trinsic, and then headed south.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>He often teaches a piece by Iolo and Gweno. 'Tis a favorite of Lord British.
+Answer: Recently he gave a recital in Trinsic, and then headed south.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>He often teaches a piece by Iolo and Gweno. 'Tis a favorite of Lord British.
 Questions: Iolo <OR> teac <OR> piec <OR> favo
 Answer: Some even say that to play the piece on the finest instrument may cause magical occurrences.
 Questions: fine <OR> inst <OR> magi <OR> occu
@@ -2952,17 +2952,17 @@ Answer: Here I learn how love can exist in a world filled with such evil!
 Questions: evil
 Answer: I learn how it can be overcome.
 Questions: over <OR> lear
-Answer: Thou doth show much interest in the Principle of Love.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Perhaps, thou should study here at the abbey...<Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><Unknown_FF><KeyWait><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
+Answer: Thou doth show much interest in the Principle of Love.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Perhaps, thou should study here at the abbey...<StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><KeyWait><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
 Questions: join
 Answer: <DefineLabel0>
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>I would like to join thee on thy quest!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Might I join thee?
+Initial Line: <DefaultMessage><DefineLabel0>I would like to join thee on thy quest!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Might I join thee?
 Default Line(s): <DefineLabel0>
 Questions: n
 Answer: I am saddened.
 Questions: y
-Answer: A great honor indeed!<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: A great honor indeed!<StartNewSection><NewLine><NewLine><JoinParty>
 
 ---- SCRIPT for Julia -----
 ---- BEGIN NEW SCRIPT -----
@@ -2975,7 +2975,7 @@ Bye: Farewell, good Avatar!
 Questions: shad
 Answer: They hunt all of us who helped thee on the quest. Blackthorn fears us!
 Questions: blac <OR> fear
-Answer: He feared we would find a way to bring thee back. Which is, of course, exactly what we did!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
+Answer: He feared we would find a way to bring thee back. Which is, of course, exactly what we did!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 Questions: join
 Answer: <DefineLabel2>
 
@@ -2993,7 +2993,7 @@ Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Shall I join with thee now?
 Default Line(s): Just let me know.
 Questions: y
-Answer: At last, we begin anew!<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: At last, we begin anew!<StartNewSection><NewLine><NewLine><JoinParty>
 
 ---- SCRIPT for Toede -----
 ---- BEGIN NEW SCRIPT -----
@@ -3008,18 +3008,18 @@ Answer: A nicer overlord I've never met!
 Questions: buil <OR> cast
 Answer: The largest, strongest, most impregnable fortress ever constructed in the history of Britannia.
 Questions: larg <OR> stro <OR> fort <OR> impr
-Answer: Built on the isle of three volcanoes, in the southeast of Britannia.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Yes, I was the foreman for trap-door construction. There are many placed on common passageways.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Blackthorn's castle, beware! If thou doth fall....<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Think of me!
+Answer: Built on the isle of three volcanoes, in the southeast of Britannia.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Yes, I was the foreman for trap-door construction. There are many placed on common passageways.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Blackthorn's castle, beware! If thou doth fall....<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Think of me!
 Questions: capt
 Answer: <DefineLabel0>
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>I was shipwrecked on this isle and captured by ones who did not share my belief in the righteousness of Blackthorn's rule.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Dost thou support Blackthorn?
-Default Line(s): Heretic!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel0>I was shipwrecked on this isle and captured by ones who did not share my belief in the righteousness of Blackthorn's rule.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Dost thou support Blackthorn?
+Default Line(s): Heretic!<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: <DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Good! Wilt thou help me escape?
-Default Line(s): <Rune>PIGDOG<Rune>!<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): <Rune>PIGDOG<Rune>!<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: Then free me from these manacles!
 
@@ -3058,7 +3058,7 @@ Answer: I am ze best! As an enfant I learned fencing from my father who was tuto
 Questions: land <OR> dist
 Answer: I lived zere in my childhood, and came to Britannia upon a magical carpet!
 Questions: magi <OR> carp
-Answer: Ah, an interesting tale. Unfortunately, I zold it zoon after my arrival in Britannia.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I did not know zey were so scarce here, or I would not have zold it.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: Ah, an interesting tale. Unfortunately, I zold it zoon after my arrival in Britannia.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I did not know zey were so scarce here, or I would not have zold it.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Monsieur, dost thou seek to discover ze fate of Lord British?
@@ -3067,7 +3067,7 @@ Questions: y
 Answer: <DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Perhaps zen my magic carpet would be of some use?
-Default Line(s): I zold it to a mage named Bandaii. He lived in a village named Paws.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Strange fellow, he was looking for a talking horse!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>If thou canst find him, he might be willing to zell thee my carpet!
+Default Line(s): I zold it to a mage named Bandaii. He lived in a village named Paws.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Strange fellow, he was looking for a talking horse!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If thou canst find him, he might be willing to zell thee my carpet!
 
 ---- SCRIPT for Kristi -----
 ---- BEGIN NEW SCRIPT -----
@@ -3084,19 +3084,19 @@ Answer: The inhabitants, as well as any visitors.
 Questions: inha
 Answer: And visitors.
 Questions: visi
-Answer: We don't have too many these days...<Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
+Answer: We don't have too many these days...<StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
 Questions: skul <OR> keys
 Answer: <IfElseKnowsName><DefineLabel2><DefineLabel0>
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>A few weeks ago there was a strange, silent mage who ate here. He gave me 5 skull keys as payment.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>He said they are magic and powerful, worth many gold pieces. I have no use for them.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
+Initial Line: <DefaultMessage><DefineLabel0>A few weeks ago there was a strange, silent mage who ate here. He gave me 5 skull keys as payment.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>He said they are magic and powerful, worth many gold pieces. I have no use for them.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>I will sell them to thee for 100 gold crowns. Wouldst thou like to buy them?
 Default Line(s): Thy loss.
 Questions: y
 Answer: <Gold>100<Change><75><Change><75><Change><75><Change><75><Change><75>The mage said that they could open even magically locked doors.
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>I have no more, but the mage told me that he acquired them from an armourer named Shenstone!<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel2>I have no more, but the mage told me that he acquired them from an armourer named Shenstone!<StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for Gardner -----
 ---- BEGIN NEW SCRIPT -----
@@ -3113,16 +3113,16 @@ Answer: Within the flames I often see visions!
 Questions: visi
 Answer: Avatar, I can offer thee my vision of the Shard of Cowardice to aid thee on thy quest.
 Questions: shar <OR> cowa <OR> ques
-Answer: Upon the Isle of the Avatar, there lies a dungeon. At its bottom lies a small, cavernous room of the Underworld.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>However, there are many more such small chambers, near enough to be reached by one with the proper magic!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>With many uses of such magic, and a great deal of exploration, one may find the Shard of Cowardice.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It lies at the location which upon the surface would be recorded as<Rune>L<Rune>'<Rune>A<Rune><Unknown_CodeA2>,<Rune>L<Rune>'<Rune>I<Rune><Unknown_CodeA2>.
+Answer: Upon the Isle of the Avatar, there lies a dungeon. At its bottom lies a small, cavernous room of the Underworld.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>However, there are many more such small chambers, near enough to be reached by one with the proper magic!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>With many uses of such magic, and a great deal of exploration, one may find the Shard of Cowardice.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It lies at the location which upon the surface would be recorded as<Rune>L<Rune>'<Rune>A<Rune><StartNewSection>,<Rune>L<Rune>'<Rune>I<Rune><StartNewSection>.
 
 
 ---- SCRIPT for Maxwell -----
 ---- BEGIN NEW SCRIPT -----
 Name: Maxwell
 Description: a strong, yet sleek fighter.
-Greeting: Ah,<AvatarsName>, my good friend!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Monsieur Loubet has been telling me of thy quest.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Greeting: Ah,<AvatarsName>, my good friend!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Monsieur Loubet has been telling me of thy quest.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Job: I am a student here at Serpent's Hold.
-Bye: Farewell.<Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel1><AskName><Unknown_CodeA2><NewLine><EndCoversation>
+Bye: Farewell.<StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel1><AskName><StartNewSection><NewLine><EndCoversation>
 
 Questions: serp <OR> hold
 Answer: Here we study the Principle of Courage.
@@ -3143,7 +3143,7 @@ Default Line(s): <DefineLabel0>
 Questions: n
 Answer: A pity.
 Questions: y
-Answer: 'Tis indeed a great honor!<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Answer: 'Tis indeed a great honor!<StartNewSection><NewLine><NewLine><JoinParty>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1><EndCoversation>
 
@@ -3192,7 +3192,7 @@ Answer: I've heard rumours of great whirlpools, caused by the collapse of cavern
 Questions: unde <OR> cave <OR> whir
 Answer: There are some who say that the ships they drag under lie beached deep within the recesses of the earth.
 Questions: deep <OR> rece <OR> eart
-Answer: They are even those who claim that some survive the perilous journey below.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Only to be killed and eaten by the horrible creatures that dwell in the dark recesses.
+Answer: They are even those who claim that some survive the perilous journey below.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Only to be killed and eaten by the horrible creatures that dwell in the dark recesses.
 Questions: rum
 Answer: Aye, 'tis my favorite.
 
@@ -3247,7 +3247,7 @@ Answer: He was a fine sailor.
 Questions: was <OR> sail
 Answer: That was before the accident.
 Questions: acci
-Answer: His best shipmate died in a storm whilst trying to reach this port.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Since that day, Windmire has dedicated his life to protecting these shipping lanes.
+Answer: His best shipmate died in a storm whilst trying to reach this port.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Since that day, Windmire has dedicated his life to protecting these shipping lanes.
 Questions: prot <OR> ship <OR> lane
 Answer: He arranged for the construction of this lighthouse, as well as the breakwater around the pier area.
 Questions: mate
@@ -3281,7 +3281,7 @@ Answer: Blackthorn's Eight Laws of Virtue!
 Questions: blac <OR> eigh <OR> laws
 Answer: I must learn to recite them.
 Questions: reci
-Answer: I can't yet.<Unknown_CodeA2><NewLine><NewLine><KeyWait><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
+Answer: I can't yet.<StartNewSection><NewLine><NewLine><KeyWait><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Dost thou live by Virtue?
@@ -3302,7 +3302,7 @@ Label #: 3
 Initial Line: <DefaultMessage><DefineLabel3>Why, are his laws in error?
 Default Line(s): Then thou art not being very kind!
 Questions: y
-Answer: I do not believe thee! He would not lie to us!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: I do not believe thee! He would not lie to us!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Charlotte -----
 ---- BEGIN NEW SCRIPT -----
@@ -3329,7 +3329,7 @@ Answer: I ponder the virtues of Avatarhood.
 Questions: virt <OR> avat
 Answer: Indeed, I believe there is a lot of merit in the premise of Blackthorn's First Law.
 Questions: prem <OR> law <OR> firs <OR> one
-Answer: We must look at the very roots of dishonesty, and see it comes from the twisted tongues of liars.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And, surely, one cannot lie without a tongue!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: We must look at the very roots of dishonesty, and see it comes from the twisted tongues of liars.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And, surely, one cannot lie without a tongue!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Wouldst thou agree, the teachings of Blackthorn are meaningful and true?
@@ -3364,15 +3364,15 @@ Default Line(s): 'Den what are ye babbling 'bout!
 Questions: y
 Answer: <DefineLabel1>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>Obviously, thou art a person of exceptional wisdom!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>So, me matey, does ya think me invention were a good one?
-Default Line(s): What dost thou know!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel1>Obviously, thou art a person of exceptional wisdom!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>So, me matey, does ya think me invention were a good one?
+Default Line(s): What dost thou know!<StartNewSection><NewLine><EndCoversation>
 Questions: y
 Answer: <DefineLabel2>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>Thou dost speak true!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Wouldst thou like one I've made with me own hands?
-Default Line(s): Harumph!<Unknown_CodeA2><NewLine><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel2>Thou dost speak true!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Wouldst thou like one I've made with me own hands?
+Default Line(s): Harumph!<StartNewSection><NewLine><EndCoversation>
 Questions: y
-Answer: <Change><72>'ere ye are mate, use it wisely and thou shalt profit by it!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: <Change><72>'ere ye are mate, use it wisely and thou shalt profit by it!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Lord Kenneth -----
 ---- BEGIN NEW SCRIPT -----
@@ -3383,7 +3383,7 @@ Job: I am the Court Composer.
 Bye: Bye.
 
 Questions: cour <OR> comp
-Answer: I travel throughout Britannia teaching my craft.<Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Answer: I travel throughout Britannia teaching my craft.<StartNewSection><NewLine><NewLine><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Dost thou wish to learn the harpsichord?
@@ -3391,17 +3391,17 @@ Default Line(s): Alas.
 Questions: y
 Answer: <DefineLabel2>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>Open the Book of Lore to the Music section and study the score for the piece 'Stones'.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
+Initial Line: <DefaultMessage><DefineLabel2>Open the Book of Lore to the Music section and study the score for the piece 'Stones'.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>The notes are like a series of square marks upon a four-line staff. Their positions, either on one or between two lines, marks their pitch.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A letter C marks the second line of the staff as the pitch 'C'. The first 3 notes are 'ABC'.<Unknown_CodeA2><NewLine><NewLine><KeyWait>What are the next 3?
-Default Line(s): No, try again.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
+Initial Line: <DefaultMessage><DefineLabel3>The notes are like a series of square marks upon a four-line staff. Their positions, either on one or between two lines, marks their pitch.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A letter C marks the second line of the staff as the pitch 'C'. The first 3 notes are 'ABC'.<StartNewSection><NewLine><NewLine><KeyWait>What are the next 3?
+Default Line(s): No, try again.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
 Questions: dcb
-Answer: Good!<Unknown_CodeA2><NewLine><NewLine><DefineLabel4>
+Answer: Good!<StartNewSection><NewLine><NewLine><DefineLabel4>
 Label #: 4
 Initial Line: <DefaultMessage><DefineLabel4>Many keyboards are marked with numbers, so that ABC would be 678.What would the next 3 be?
-Default Line(s): No, try again.<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel4>
+Default Line(s): No, try again.<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel4>
 Questions: 987
-Answer: Good! So the first phrase goes 678 987 8767653! Now thou must practice!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: Good! So the first phrase goes 678 987 8767653! Now thou must practice!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Sir Arbuthnot -----
 ---- BEGIN NEW SCRIPT -----
@@ -3412,7 +3412,7 @@ Job: I am the Royal Coinmaker!
 Bye: Fare thee well.
 
 Questions: roya <OR> coin
-Answer: Well...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>That is to say I was, before I became a wanted man!
+Answer: Well...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>That is to say I was, before I became a wanted man!
 Questions: was <OR> want <OR> man
 Answer: I am afraid I did something that was not taken too well by the current regime.
 Questions: take <OR> well <OR> curr <OR> regi
@@ -3437,12 +3437,12 @@ Answer: <DefineLabel2>
 Label #: 2
 Initial Line: <DefaultMessage><DefineLabel2>Art thou the one true Avatar?
 Default Line(s): Oh.
-Default Line(s): 'Tis indeed an honor!<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Default Line(s): 'Tis indeed an honor!<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 
 ---- SCRIPT for Gregory -----
 ---- BEGIN NEW SCRIPT -----
 Name: Gregory
-Description: a tall, heavily scarred man.<NewLine><NewLine><Unknown_CodeA2>What in the name of Mondain art ye doing in me lighthouse!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Description: a tall, heavily scarred man.<NewLine><NewLine><StartNewSection>What in the name of Mondain art ye doing in me lighthouse!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 Greeting:
 Job: Now that's a real poser!
 Bye: And a good riddance, too.
@@ -3455,14 +3455,14 @@ Initial Line: <DefaultMessage><DefineLabel0>Didst ye not know this is private pr
 Default Line(s): <DefineLabel1>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Were ye born that ugly, or didst ye lose a fight with a frying pan?
-Default Line(s): Not only ugly, but yer stupid too!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What dost ye want anyway?
+Default Line(s): Not only ugly, but yer stupid too!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>What dost ye want anyway?
 
 ---- SCRIPT for Jacqueline -----
 ---- BEGIN NEW SCRIPT -----
 Name: Jacqueline
 Description: a bony woman with a blank stare.
 Greeting:
-Job: I, uh...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>don't remember.
+Job: I, uh...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>don't remember.
 Bye: Uh, bye....
 
 Questions: reme
@@ -3480,35 +3480,35 @@ Answer: Mmmmm, my favorite!
 Name: Smith
 Description: a strangely familiar horse.<NewLine><NewLine><IfElseKnowsName><DefineLabel3><DefineLabel0>
 Greeting:
-Job: Well...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I eat hay.
+Job: Well...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>I eat hay.
 Bye: Come back and see me again. Really!
 
 Questions: eat <OR> hay
-Answer: Yep.<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Oh, I'm also here to ask you something.
+Answer: Yep.<StartNewSection><NewLine><NewLine><Pause><StartNewSection>Oh, I'm also here to ask you something.
 Questions: ask
 Answer: <DefineLabel4>
 Questions: forg <OR> tell
-Answer: Yea...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The answer...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It was...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2><Rune>INFINITY<Rune>!
+Answer: Yea...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The answer...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It was...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection><Rune>INFINITY<Rune>!
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Hey...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>You look familiar, have we met?
+Initial Line: <DefaultMessage><DefineLabel0>Hey...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>You look familiar, have we met?
 Default Line(s): <DefineLabel1>
 Questions: y
 Answer: <DefineLabel2>
 Label #: 1
-Initial Line: <DefaultMessage><DefineLabel1>Oh...<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel1>Oh...<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 2
-Initial Line: <DefaultMessage><DefineLabel2>I thought so...<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Initial Line: <DefaultMessage><DefineLabel2>I thought so...<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>Hello,<AvatarsName>...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>You know what?
-Default Line(s): Way back...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Way, way back...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I forgot to tell you something!
+Initial Line: <DefaultMessage><DefineLabel3>Hello,<AvatarsName>...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>You know what?
+Default Line(s): Way back...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Way, way back...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I forgot to tell you something!
 Label #: 4
 Initial Line: <DefaultMessage><DefineLabel4>Lord British wanted me to ask you if you were enjoying this game?
 Default Line(s): <DefineLabel4>
 Questions: n
 Answer: Well, if you have any complaints, write to him at Origin. He would really like to know.
 Questions: y
-Answer: He will be so glad to hear it...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Of course, he won't ever know unless you write to him at Origin and tell him so.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I know first hand he'd like that.
+Answer: He will be so glad to hear it...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Of course, he won't ever know unless you write to him at Origin and tell him so.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I know first hand he'd like that.
 
 ---- SCRIPT for Sutek -----
 ---- BEGIN NEW SCRIPT -----
@@ -3520,12 +3520,12 @@ Bye:
 
 
 Label #: 0
-Initial Line: <DefaultMessage><DefineLabel0>Greetings, I am Sutek.<Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel1><EndCoversation>
+Initial Line: <DefaultMessage><DefineLabel0>Greetings, I am Sutek.<StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel1><EndCoversation>
 Label #: 1
 Initial Line: <DefaultMessage><DefineLabel1>Art thou the Avatar of legend?
-Default Line(s): Oh.<Unknown_CodeA2><NewLine><EndCoversation>
+Default Line(s): Oh.<StartNewSection><NewLine><EndCoversation>
 Questions: y
-Answer: I have been scrying for the nature of the three Shards!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I have learned they were formed at the time of the first Dark Lord.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>When Mondain's Gem of Immortality was destroyed, its shards still harbored unspeakable evil!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>They lay festering deep within the earth, but now their malevolent power has been unleashed upon the world.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards and the Shadowlords can and must be destroyed!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards must be recovered from their resting places in the boundless Underworld, and cast into the Eternal Flames of Truth, Love, and Courage...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Even as each respective Shadowlord stands nigh upon the flame of the Principle it opposes.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Take now this knowledge and use it well!<Unknown_CodeA2><NewLine><EndCoversation>
+Answer: I have been scrying for the nature of the three Shards!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I have learned they were formed at the time of the first Dark Lord.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>When Mondain's Gem of Immortality was destroyed, its shards still harbored unspeakable evil!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>They lay festering deep within the earth, but now their malevolent power has been unleashed upon the world.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards and the Shadowlords can and must be destroyed!<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards must be recovered from their resting places in the boundless Underworld, and cast into the Eternal Flames of Truth, Love, and Courage...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Even as each respective Shadowlord stands nigh upon the flame of the Principle it opposes.<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Take now this knowledge and use it well!<StartNewSection><NewLine><EndCoversation>
 
 ---- SCRIPT for Sin'Vraal -----
 ---- BEGIN NEW SCRIPT -----
@@ -3544,30 +3544,30 @@ Answer: No longer do I serve Evil, for deep below the earth did the Once and Tru
 Questions: virt <OR> king <OR> belo <OR> eart <OR> deep
 Answer: I can only tell thee that he has turned me from the ways of darkness, but he'll have no such luck with the Shadowlords!
 Questions: shar
-Answer: The accursed Shard of Hatred that spawned my former master lies within the underworld at the location thou wouldst call<Rune>I<Rune>'<Rune>A<Rune><Unknown_CodeA2>,<Rune>I<Rune>'<Rune>A<Rune><Unknown_CodeA2><Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Enter through the dungeons by Lost Hope Bay!
+Answer: The accursed Shard of Hatred that spawned my former master lies within the underworld at the location thou wouldst call<Rune>I<Rune>'<Rune>A<Rune><StartNewSection>,<Rune>I<Rune>'<Rune>A<Rune><StartNewSection><StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Enter through the dungeons by Lost Hope Bay!
 
 
 ---- SCRIPT for Grendel -----
 ---- BEGIN NEW SCRIPT -----
 Name: Grendel
-Description: a giant rat!<NewLine><NewLine><Unknown_CodeA2>Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What dost thou want?<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Description: a giant rat!<NewLine><NewLine><StartNewSection>Squeek...<StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><StartNewSection>Squeek...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>What dost thou want?<StartNewSection><NewLine><NewLine><Unknown_FF>
 Greeting:
 Job: I once was a great alchemist!
 Bye: Squeek!
 
 Questions: alch
-Answer: Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>That was before my accident!
+Answer: Squeek...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>That was before my accident!
 Questions: acci
-Answer: Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I was working on a spell called:<NewLine><Rune>VAS REL XEN BET<Rune><NewLine>It got a little out of hand.
+Answer: Squeek...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>I was working on a spell called:<NewLine><Rune>VAS REL XEN BET<Rune><NewLine>It got a little out of hand.
 Questions: spel <OR> hand <OR> vas
 Answer: It was to be an enchantment to turn foes into rats.
 Questions: rat
-Answer: Squeek...<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>During an early experiment I was transformed into a rat!<Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I have since perfected a lesser version.
+Answer: Squeek...<StartNewSection><NewLine><NewLine><Pause><StartNewSection>During an early experiment I was transformed into a rat!<StartNewSection><NewLine><NewLine><Pause><StartNewSection>I have since perfected a lesser version.
 Questions: less <OR> vers <OR> perf
-Answer: I call it<Rune>REL XEN BET<Rune>. It is of the Sixth Circle, and will turn one being into a rat for fair time!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Answer: I call it<Rune>REL XEN BET<Rune>. It is of the Sixth Circle, and will turn one being into a rat for fair time!<StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0>Wouldst thou like the formula?
 Default Line(s): O.K.
 Questions: y
-Answer: It requires that one part spider silk be mixed with a pinch of sulfurous ash...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>...with a crushed root of mandrake and spores scraped from a nightshade cap.
+Answer: It requires that one part spider silk be mixed with a pinch of sulfurous ash...<StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>...with a crushed root of mandrake and spores scraped from a nightshade cap.

@@ -433,7 +433,7 @@ namespace Ultima5Redux.Dialogue
             _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Greeting));
 
             // some of these operations can be expensive, so let's call them once and store instead
-            bool npcKnowsAvatar = TheNonPlayerCharacterState.HasMetAvatar;
+            //bool npcKnowsAvatar = TheNonPlayerCharacterState.HasMetAvatar;
 
             // the index into conversationOrder
             int nConversationIndex = 0;
@@ -503,7 +503,7 @@ namespace Ultima5Redux.Dialogue
                 // If an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether
                 // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
                 // OR if the Name line contains an IfElseKnowsName (#Eb)
-                if (!npcKnowsAvatar &&
+                if (!TheNonPlayerCharacterState.HasMetAvatar &&
                     _conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting &&
                     (currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) || _script
                         .GetScriptLine(TalkScript.TalkConstants.Name)
@@ -533,7 +533,8 @@ namespace Ultima5Redux.Dialogue
                     // Sept 23, 2019 - if we are in a label, but don't know the Avatar's name, then we just move on
                     // if we don't then (#Eb) can expect an answer to a question that we never show the user because
                     // they don't know the Avatar
-                    if (scriptLabel.InitialLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !npcKnowsAvatar)
+                    if (scriptLabel.InitialLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) &&
+                        !TheNonPlayerCharacterState.HasMetAvatar)
                     {
                         nConversationIndex++;
                         continue;

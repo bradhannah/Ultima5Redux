@@ -91,7 +91,8 @@ namespace U5ConversationSimulator
             World = new World(true, "/Users/bradhannah/games/u5tests/b_carpet");
 
             World.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Yew,
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn,
                     0));
 
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
@@ -104,9 +105,9 @@ namespace U5ConversationSimulator
             //     _world.NpcRefs.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
 
             var location =
-                SmallMapReferences.SingleMapReference.Location.Yew;
+                SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn;
             NonPlayerCharacterState npcState =
-                World.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 8);
+                World.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 5);
             var convo = new Conversation(World.State, npcState); // delwyn
 
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb

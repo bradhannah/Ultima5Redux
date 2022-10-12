@@ -130,8 +130,7 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] [TestCase(SaveFiles.Britain)]
-        public void test_LoadMinocBuyFrigateAndCheck(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain)] public void test_LoadMinocBuyFrigateAndCheck(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
@@ -3343,24 +3342,7 @@ namespace Ultima5ReduxTesting
                      world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters)
             {
                 _ = "";
-                // if (!npc.NPCRef.) continue;
-                // bool bFoundNonZero = false;
-                //
-                // world.State.TheVirtualMap.MoveAvatar(new Point2D(npc.MapUnitPosition.X - 1, npc.MapUnitPosition.Y));
-                // TurnResults turnResults = new();
-                //
-                // foreach (byte a in npc.NPCRef.Schedule.AiTypeList)
-                // {
-                //     if (a > 0) bFoundNonZero = true;
-                // }
-                //
-                // Assert.IsTrue(bFoundNonZero, $"ShoppeKeeper didn't have a non zero AI: {npc.FriendlyName}");
-                //
-                // List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
-                //     world.TryToTalk(MapUnitMovement.MovementCommandDirection.East, turnResults);
-                // // }
             }
         }
-
     }
 }
