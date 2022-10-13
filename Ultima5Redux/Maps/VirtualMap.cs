@@ -55,7 +55,7 @@ namespace Ultima5Redux.Maps
 
         [DataMember] private MapOverrides TheMapOverrides { get; set; }
 
-        [DataMember] private bool HasBeenExtorted { get; set; }
+        //[DataMember] private bool HasBeenExtorted { get; set; }
         
         /// <summary>
         ///     Detailed reference of current small map
@@ -686,22 +686,22 @@ namespace Ultima5Redux.Maps
                     case AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion:
                     {
                         // we only extort once per load of a map, we aren't monsters after all!
-                        if (HasBeenExtorted) continue;
-                        HasBeenExtorted = true;
                         if (mapUnit is not NonPlayerCharacter npc)
                             throw new Ultima5ReduxException(
                                 $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
+                        if (npc.NPCState.HasExtortedAvatar) continue;
+                        npc.NPCState.HasExtortedAvatar = true;
                         turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold, 0));
                         continue;
                     }
                     case AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion:
                     {
                         // we only extort once per load of a map, we aren't monsters after all!
-                        if (HasBeenExtorted) continue;
-                        HasBeenExtorted = true;
                         if (mapUnit is not NonPlayerCharacter npc)
                             throw new Ultima5ReduxException(
                                 $"A non-npc tried generic extortion. They are a {mapUnit.GetType()}");
+                        if (npc.NPCState.HasExtortedAvatar) continue;
+                        npc.NPCState.HasExtortedAvatar = true;
                         turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic,
                             OddsAndLogic.GetGuardExtortionAmount(
                                 OddsAndLogic.GetEraByTurn(GameStateReference.State.TurnsSinceStart))));
@@ -2280,6 +2280,7 @@ namespace Ultima5Redux.Maps
         /// <param name="map"></param>
         public void LoadLargeMap(Map.Maps map)
         {
+            ClearSmallMapFlags();
             LargeMapOverUnder = map;
             switch (map)
             {
@@ -2306,6 +2307,22 @@ namespace Ultima5Redux.Maps
             IsWantedManByThePoPo = false;
         }
 
+        private void ClearSmallMapFlags()
+        {
+            // if you are somehow transported between two different small map locations, then the guards
+            // forget about your transgressions
+            IsWantedManByThePoPo = false;
+
+            if (LargeMapOverUnder == Map.Maps.Small)
+            {
+                // as we exit the Small Map we must make sure we reset the extorted flag 
+                // most maps only have one jerky guard, but Blackthorn's is crawling with them
+                // and when you give them your password, they tend to leave you alone after unless
+                // you engage in conversation with them
+                TheMapUnits?.CurrentMapUnits.NonPlayerCharacters.All(n => n.NPCState.HasExtortedAvatar = false);
+            }
+        }
+        
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null,
             bool bLoadFromDisk = false)
         {
@@ -2313,9 +2330,7 @@ namespace Ultima5Redux.Maps
                                         throw new Ultima5ReduxException(
                                             "Tried to load a small map, but null map reference was given");
 
-            // if you are somehow transported between two different small map locations, then the guards
-            // forget about your transgressions
-            if (CurrentSingleMapReference.MapLocation != singleMapReference.MapLocation) IsWantedManByThePoPo = false;
+            ClearSmallMapFlags();
 
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
 
@@ -2330,8 +2345,6 @@ namespace Ultima5Redux.Maps
 
             if (xy != null) CurrentPosition.XY = xy;
 
-            // we reset the extorted flag
-            HasBeenExtorted = false;
         }
 
         public void MoveAvatar(Point2D newPosition)

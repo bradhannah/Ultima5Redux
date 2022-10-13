@@ -12,6 +12,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         [DataMember] internal int PissedOffCountDown { get; set; } = -1;
         [DataMember] internal bool OverrideAiType { get; private set; }
 
+        [DataMember] internal bool HasExtortedAvatar { get; set; }
+
         [DataMember]
         public NonPlayerCharacterSchedule.AiType OverridenAiType { get; private set; } =
             NonPlayerCharacterSchedule.AiType.Fixed;
