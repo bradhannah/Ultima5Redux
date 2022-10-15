@@ -106,10 +106,11 @@ namespace Ultima5Redux.References.Dialogue
 
             foreach (byte byteWord in _talkRefs[smallMapRef][index])
             {
-                // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters so that a space is not inserted next line
+                // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters
+                // so that a space is not inserted next line
                 // bh: Sept 21, 2019 - had to add a disgusting hack to account for what appears to be broken
-                //   data or a misunderstood algorithm - they seem to have an end of script line in the middle of a response
-                //   there could be a rule I simply don't understand, but for now - i hack 
+                // data or a misunderstood algorithm - they seem to have an end of script line in the middle of a response
+                // there could be a rule I simply don't understand, but for now - i hack 
                 if (byteWord == END_OF_SCRIPTLINE_BYTE && !buildAWord.EndsWith("to give unto charity!"))
                 {
                     buildAWord += "\n";
@@ -127,16 +128,19 @@ namespace Ultima5Redux.References.Dialogue
                 bool usePhraseLookup = false; // did we do a phrase lookup (else we are typing single letters)
                 bool useCompressedWord = false; // did we successfully use a compressed word?
 
-                // if it's one of the bytes that requires a subtraction of 0x80 (128)
-                if (byteWord >= 165 && byteWord <= 218)
-                    tempByte -= TALK_OFFSET_ADJUST;
-                else if (byteWord >= 225 && byteWord <= 250)
-                    tempByte -= TALK_OFFSET_ADJUST;
-                else if (byteWord >= 160 && byteWord <= 161)
-                    tempByte -= TALK_OFFSET_ADJUST;
-                else
+                switch (byteWord)
+                {
+                    // if it's one of the bytes that requires a subtraction of 0x80 (128)
+                    case >= 165 and <= 218:
+                    case >= 225 and <= 250:
+                    case >= 160 and <= 161:
+                        tempByte -= TALK_OFFSET_ADJUST;
+                        break;
                     // it didn't match which means that it's one the special phrases and we will perform a lookup
-                    usePhraseLookup = true;
+                    default:
+                        usePhraseLookup = true;
+                        break;
+                }
 
                 // it wasn't a special phrase which means that the words are being typed one word at a time
                 if (!usePhraseLookup)
@@ -184,7 +188,7 @@ namespace Ultima5Redux.References.Dialogue
 
                         // if the tempByte is within these boundaries then it is a label
                         // it is up to us to determine if it a Label or a GotoLabel
-                        if (tempByte >= TalkScript.MIN_LABEL && tempByte <= TalkScript.MAX_LABEL)
+                        if (tempByte is >= TalkScript.MIN_LABEL and <= TalkScript.MAX_LABEL)
                         {
                             // create an offset starting at 0 for label numbering
                             int offset = tempByte - TalkScript.MIN_LABEL;

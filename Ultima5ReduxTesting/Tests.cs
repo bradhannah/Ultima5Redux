@@ -3344,5 +3344,34 @@ namespace Ultima5ReduxTesting
                 _ = "";
             }
         }
+
+        [Test] [TestCase(SaveFiles.fresh, false)] [TestCase(SaveFiles.fresh, true)]
+        public void test_BuildConversationAndTest(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Yew, 0));
+
+            TurnResults turnResults = new();
+            world.AdvanceTime(2, turnResults);
+
+            foreach (NonPlayerCharacter npc in
+                     world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters)
+            {
+                _ = "";
+            }
+
+            var talkScript = new TalkScript();
+            talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, "Derpy the guard");
+            talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, "a smelly guard");
+            talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString,
+                "Hey, what are you doing here? What's the password?");
+        }
     }
 }
