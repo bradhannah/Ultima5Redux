@@ -20,7 +20,7 @@ namespace U5ConversationSimulator
             switch (item.Command)
             {
                 case TalkScript.TalkCommand.PlainString:
-                    Console.Write(item.Str);
+                    Console.Write(item.StringData);
                     break;
                 case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
                     Console.Write(

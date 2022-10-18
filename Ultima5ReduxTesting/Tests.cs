@@ -653,7 +653,7 @@ namespace Ultima5ReduxTesting
             switch (item.Command)
             {
                 case TalkScript.TalkCommand.PlainString:
-                    Debug.WriteLine(item.Str);
+                    Debug.WriteLine(item.StringData);
                     break;
                 case TalkScript.TalkCommand.AvatarsName:
                     break;
@@ -2805,7 +2805,7 @@ namespace Ultima5ReduxTesting
             switch (item.Command)
             {
                 case TalkScript.TalkCommand.PlainString:
-                    Debug.WriteLine(item.Str);
+                    Debug.WriteLine(item.StringData);
                     break;
                 case TalkScript.TalkCommand.Gold:
                     _ = "";
@@ -3367,11 +3367,11 @@ namespace Ultima5ReduxTesting
                 _ = "";
             }
 
-            var talkScript = new TalkScript();
-            talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, "Derpy the guard");
-            talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, "a smelly guard");
-            talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString,
-                "Hey, what are you doing here? What's the password?");
+            string talkScripts = GameReferences.TalkScriptsRef.Serialize();
+
+            TalkScript bguardTalkScript = GameReferences.TalkScriptsRef.GetCustomTalkScript("BlackthornGuard");
+            Assert.IsNotNull(bguardTalkScript);
+            Assert.IsTrue(bguardTalkScript.NumberOfScriptLines > 5);
         }
     }
 }

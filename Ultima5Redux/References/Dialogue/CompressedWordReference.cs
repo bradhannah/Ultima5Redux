@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Ultima5Redux.Data;
 
@@ -53,7 +52,6 @@ namespace Ultima5Redux.References.Dialogue
         /// <param name="offset">the offset to add or subtract (positive or negative)</param>
         private void AddByteLookupMapping(byte indexStart, byte indexStop, int offset)
         {
-            Debug.Assert(indexStop <= 255);
             for (int i = indexStart; i <= indexStop; i++)
             {
                 _compressWordLookupMap.Add((byte)i, (byte)(i + offset));
@@ -65,20 +63,18 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         /// <param name="character"></param>
         /// <returns>true if it is acceptable</returns>
-        private bool IsAcceptableLettersOrDigits(char character) =>
-            (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z') ||
-            (character >= '0' && character <= '9');
+        private static bool IsAcceptableLettersOrDigits(char character) =>
+            character is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9';
 
         /// <summary>
         ///     Is it expected punctuation (not replacement characters though)
         /// </summary>
         /// <param name="character"></param>
         /// <returns>true if it is acceptable</returns>
-        private bool IsAcceptablePunctuation(char character) =>
-            character == ' ' || character == '"' || character == '!' || character == ',' || character == '\'' ||
-            character == '.' || character == '-' || character == '?' || character == '\n' || character == ';';
+        private static bool IsAcceptablePunctuation(char character) =>
+            character is ' ' or '"' or '!' or ',' or '\'' or '.' or '-' or '?' or '\n' or ';';
 
-        private bool IsReplacementCharacter(char character) =>
+        private static bool IsReplacementCharacter(char character) =>
             // % is gold
             // & is current piece of equipment
             // # current business (maybe with apostrophe s)
@@ -86,8 +82,7 @@ namespace Ultima5Redux.References.Dialogue
             // @ barkeeps food/drink etc
             // * location of thing
             // ^ quantity of thing (ie. reagent)
-            character == '%' || character == '&' || character == '$' || character == '#' || character == '@' ||
-            character == '*' || character == '^';
+            character is '%' or '&' or '$' or '#' or '@' or '*' or '^';
 
         /// <summary>
         ///     Get a compressed word with an index

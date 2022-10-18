@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Ultima5Redux.Properties;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
@@ -11,8 +14,16 @@ namespace Ultima5Redux.References.Dialogue
     /// <summary>
     ///     TalkScripts represents all of the in game talking scripts for all NPCs
     /// </summary>
-    public class TalkScripts
+    [DataContract] public class TalkScripts
     {
+        public string Serialize()
+        {
+            string scripts = JsonConvert.SerializeObject(this, Formatting.Indented);
+            return scripts;
+        }
+
+        [DataMember] private Dictionary<string, TalkScript> _customTalkScripts;
+
         /// <summary>
         ///     a null byte signifies the end of the script line
         /// </summary>
@@ -29,11 +40,12 @@ namespace Ultima5Redux.References.Dialogue
         private readonly bool _bIsDebug = false;
 
         // all of the compressed words that are referenced in the .tlk files
-        private readonly CompressedWordReference _compressedWordRef;
+        [DataMember] private readonly CompressedWordReference _compressedWordRef;
 
         /// <summary>
         ///     Dictionary that refers to the raw bytes for each NPC based on Map master file and NPC index
         /// </summary>
+        [IgnoreDataMember]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>>
             _talkRefs =
                 new(
@@ -42,7 +54,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     Dictionary that refers to the fully interpreted TalkScripts for each NPC based on Master map file and NPC index
         /// </summary>
-        private readonly
+        [DataMember] private readonly
             Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>
             _talkScriptRefs = new();
 
@@ -65,6 +77,8 @@ namespace Ultima5Redux.References.Dialogue
                 SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Dwelling
             };
 
+            _customTalkScripts = DeserializeCustomDialogue();
+
             // for each of the maps we are going to initialize
             foreach (SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapRef in smallMapRefs)
             {
@@ -81,6 +95,13 @@ namespace Ultima5Redux.References.Dialogue
                     if (_bIsDebug) Console.WriteLine(@"TalkScript in " + mapRef + @" with #" + key);
                 }
             }
+        }
+
+        private static Dictionary<string, TalkScript> DeserializeCustomDialogue()
+        {
+            Dictionary<string, TalkScript> state =
+                JsonConvert.DeserializeObject<Dictionary<string, TalkScript>>(Resources.CustomDialogue);
+            return state;
         }
 
         /// <summary>
@@ -295,6 +316,14 @@ namespace Ultima5Redux.References.Dialogue
                             chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
                 }
             }
+        }
+
+        public TalkScript GetCustomTalkScript(string talkScriptKey)
+        {
+            if (_customTalkScripts.ContainsKey(talkScriptKey))
+                return _customTalkScripts[talkScriptKey];
+
+            throw new Ultima5ReduxException($"Requested custom talk script \"{talkScriptKey}\" but it doesn't exists");
         }
 
         public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)

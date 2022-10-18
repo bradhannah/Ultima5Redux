@@ -388,7 +388,7 @@ namespace Ultima5Redux.Dialogue
                 case TalkScript.TalkCommand.NewLine:
                     return "\n";
                 case TalkScript.TalkCommand.PlainString:
-                    return item.Str;
+                    return item.StringData;
                 case TalkScript.TalkCommand.Rune:
                     _runeMode = !_runeMode;
                     return _runeMode ? " " : string.Empty;

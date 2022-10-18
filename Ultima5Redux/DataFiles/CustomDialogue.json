@@ -1,0 +1,299 @@
+{
+  "BlackthornGuard": {
+    "ScriptLines": [
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "Blackthorn Guard\n",
+            "Comment": "name"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX a grumpy and oppressed guard.\n",
+            "Comment": "description"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "A fine day to thee ",
+            "Comment": "greeting"
+          },
+          {
+            "Command": "AvatarsName",
+            "StringData": ""
+          },
+          {
+            "Command": "PlainString",
+            "StringData": "!\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Guard will never tell you his job\n",
+            "Comment": "ask JOB"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Guard should never say goodbye this way\n",
+            "Comment": "say BYE"
+          },
+          {
+            "Command": "EndConversation",
+            "StringData": ""
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "spir\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "Or",
+            "StringData": ""
+          },
+          {
+            "Command": "PlainString",
+            "StringData": "\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "musi\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "Once, this was a happy place, where all could come to shed the worries of the world for a brief time. "
+          },
+          {
+            "Command": "StartNewSection",
+            "StringData": ""
+          },
+          {
+            "Command": "NewLine",
+            "StringData": ""
+          },
+          {
+            "Command": "NewLine",
+            "StringData": ""
+          },
+          {
+            "Command": "KeyWait",
+            "StringData": ""
+          },
+          {
+            "Command": "StartNewSection",
+            "StringData": ""
+          },
+          {
+            "Command": "PlainString",
+            "StringData": "But now, times have changed and all that remains are memories!\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "memo\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "Memories of the good times.\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "good\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "Or",
+            "StringData": ""
+          },
+          {
+            "Command": "PlainString",
+            "StringData": "\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "time\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "When Lord British ruled this land with a firm but just hand.\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "just\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "Or",
+            "StringData": ""
+          },
+          {
+            "Command": "PlainString",
+            "StringData": "\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "hand\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "'Tis hard for a monarch to walk the line of power and fairness.\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "line\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "Or",
+            "StringData": ""
+          },
+          {
+            "Command": "PlainString",
+            "StringData": "\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "mona\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "Or",
+            "StringData": ""
+          },
+          {
+            "Command": "PlainString",
+            "StringData": "\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "powe\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "Or",
+            "StringData": ""
+          },
+          {
+            "Command": "PlainString",
+            "StringData": "\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "fair\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "We miss the true ruler, and yet hope for his return!\n"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition",
+            "StringData": ""
+          },
+          {
+            "Command": "Unknown_Enter",
+            "StringData": ""
+          }
+        ]
+      }
+    ]
+  }
+}

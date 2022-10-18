@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 // ReSharper disable InvalidXmlDocComment
 
 namespace Ultima5Redux.References.Dialogue
 {
+    [DataContract]
     public class TalkScript
     {
         /// <summary>
         ///     Specific talk command
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum TalkCommand
         {
             PlainString = 0x00, AvatarsName = 0x81, EndConversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85,
@@ -49,24 +54,39 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     All of the ScriptLines
         /// </summary>
+        [DataMember(Name = "ScriptLines")]
         private readonly List<ScriptLine> _scriptLines = new();
 
         /// <summary>
         ///     Non label specific Q & A
         /// </summary>
+        [IgnoreDataMember]
         private readonly ScriptQuestionAnswers _scriptQuestionAnswers = new();
 
         /// <summary>
         ///     Script talk labels contain all the labels, their Q & A and default responses
         /// </summary>
+        [IgnoreDataMember]
         private readonly ScriptTalkLabels _scriptTalkLabels = new();
 
+        /// <summary>
+        ///     We only capture the bare minimum when deserializing scripts and process them after
+        ///     Just like when we load from the raw file
+        /// </summary>
+        /// <param name="context"></param>
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            //_currentScriptLine = _scriptLines[0];
+            InitScript();
+        }
+        
         // tracking the current script line
-        private ScriptLine _currentScriptLine = new();
+        [IgnoreDataMember] private ScriptLine _currentScriptLine; //= new();
 
         /// <summary>
         ///     The number of ScriptLines in the Script
         /// </summary>
+        [IgnoreDataMember]
         public int NumberOfScriptLines => _scriptLines.Count;
 
         /// <summary>
@@ -86,7 +106,31 @@ namespace Ultima5Redux.References.Dialogue
         {
             // let's add it immediately instead of waiting for someone to commit it
             // note; this will fail if the currentScriptLine is not a reference - but I'm pretty sure it is
-            _scriptLines.Add(_currentScriptLine);
+            //_scriptLines.Add(_currentScriptLine);
+        }
+
+        public TalkScript(IEnumerable<ScriptItem> name, IEnumerable<ScriptItem> description,
+            IEnumerable<ScriptItem> greeting, IEnumerable<ScriptItem> jobResponse, List<ScriptItem> byeResponse)
+        {
+            void addToCurrent(IEnumerable<ScriptItem> commands)
+            {
+                foreach (ScriptItem command in commands)
+                {
+                    _currentScriptLine.AddScriptItem(command);
+                }
+            }
+
+            // these are fixed positions and do not change
+            addToCurrent(name);
+            NextLine();
+            addToCurrent(description);
+            NextLine();
+            addToCurrent(greeting);
+            NextLine();
+            addToCurrent(jobResponse);
+            NextLine();
+            addToCurrent(byeResponse);
+            NextLine();
         }
 
         /// <summary>
@@ -98,6 +142,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <param name="talkCommand"></param>
         public void AddTalkCommand(TalkCommand talkCommand)
         {
+            _currentScriptLine ??= new ScriptLine();
             _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
         }
 
@@ -111,6 +156,11 @@ namespace Ultima5Redux.References.Dialogue
         /// <param name="talkStr"></param>
         public void AddTalkCommand(TalkCommand talkCommand, string talkStr)
         {
+            if (_currentScriptLine == null)
+            {
+                _currentScriptLine = new ScriptLine();
+                _scriptLines.Add(_currentScriptLine);
+            }
             _currentScriptLine.AddScriptItem(talkCommand == TalkCommand.PlainString
                 ? new ScriptItem(talkCommand, talkStr)
                 : new ScriptItem(talkCommand));
@@ -162,6 +212,8 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         public void InitScript()
         {
+            // if (_scriptLines.Count == 0) _scriptLines.Add(_currentScriptLine);
+            
             // we keep track of the index into the ScriptLines all the way through the entire method
             int nIndex = END_BASE_INDEXES + 1;
 
@@ -186,7 +238,7 @@ namespace Ultima5Redux.References.Dialogue
                     break;
 
                 // first time around we KNOW there is a first question, all NPCs have at least one question
-                question = line.GetScriptItem(0).Str;
+                question = line.GetScriptItem(0).StringData;
 
                 // dumb little thing - there are some scripts that have the same keyword multiple times
                 // the game favours the one it sees first (see "Camile" in West Brittany as an example)
@@ -198,7 +250,7 @@ namespace Ultima5Redux.References.Dialogue
                 {
                     nIndex += 2;
                     line = _scriptLines[nIndex];
-                    question = line.GetScriptItem(0).Str;
+                    question = line.GetScriptItem(0).StringData;
                     // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
                     if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question)) currQuestions.Add(question);
                 }
@@ -285,7 +337,7 @@ namespace Ultima5Redux.References.Dialogue
                             {
                                 line = _scriptLines[nIndex + 1];
                                 Debug.Assert(line.IsQuestion);
-                                question = line.GetScriptItem(0).Str;
+                                question = line.GetScriptItem(0).StringData;
                                 // just in case they try to add the same question twice - this is kind of a
                                 // bug in the data since the game just favours the first question it sees
                                 if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
@@ -295,7 +347,7 @@ namespace Ultima5Redux.References.Dialogue
 
                             line = _scriptLines[++nIndex];
                             Debug.Assert(line.IsQuestion);
-                            question = line.GetScriptItem(0).Str;
+                            question = line.GetScriptItem(0).StringData;
                             // just in case they try to add the same question twice - this is kind of a
                             // bug in the data since the game just favours the first question it sees
                             if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
@@ -307,7 +359,7 @@ namespace Ultima5Redux.References.Dialogue
                             // get the Avatar's response line
                             line = _scriptLines[++nIndex];
 
-                            question = line.GetScriptItem(0).Str;
+                            question = line.GetScriptItem(0).StringData;
                             Debug.Assert(ScriptItem.IsQuestion(question));
                             currQuestions.Add(question);
                         }
@@ -406,7 +458,7 @@ namespace Ultima5Redux.References.Dialogue
                     switch (item.Command)
                     {
                         case TalkCommand.PlainString:
-                            Console.Write(item.Str);
+                            Console.Write(item.StringData);
                             break;
                         case TalkCommand.DefineLabel:
                         case TalkCommand.GotoLabel:
@@ -648,9 +700,13 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     A single instance of a question and answer for dialog
         /// </summary>
+        [DataContract]
         protected internal class ScriptQuestionAnswer
         {
+            [DataMember]
             public ScriptLine Answer { get; }
+
+            [DataMember]
             public List<string> Questions { get; }
 
             public ScriptQuestionAnswer(List<string> questions, ScriptLine answer)
@@ -663,26 +719,34 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     Represents a single script component
         /// </summary>
+        [DataContract]
         public class ScriptItem
         {
+            [IgnoreDataMember]
             private string _str = string.Empty;
 
             /// <summary>
             ///     command issued
             /// </summary>
-            public TalkCommand Command { get; }
+            [DataMember]
+            public TalkCommand Command { get; private set; }
 
+            [DataMember] public string Comment { get; private set; } = "";
+
+            [DataMember(EmitDefaultValue = false)]
             public int ItemAdditionalData { get; set; }
 
             /// <summary>
             ///     If there is a label, then this is a zero based index
             /// </summary>
-            public int LabelNum { get; }
-
+            [DataMember(EmitDefaultValue = false)]
+            public int LabelNum { get; private set; }
+            
             /// <summary>
             ///     Associated string (can be empty)
             /// </summary>
-            public string Str
+            [DataMember(EmitDefaultValue = false)]
+            public string StringData
             {
                 get
                 {
@@ -700,6 +764,10 @@ namespace Ultima5Redux.References.Dialogue
             /// </summary>
             /// <param name="command"></param>
             public ScriptItem(TalkCommand command) : this(command, string.Empty)
+            {
+            }
+
+            public ScriptItem()
             {
             }
 
@@ -735,12 +803,13 @@ namespace Ultima5Redux.References.Dialogue
             ///     is this script item a question that the player asks an NPC?
             /// </summary>
             /// <returns></returns>
-            public bool IsQuestion() => IsQuestion(Str);
+            public bool IsQuestion() => IsQuestion(StringData);
         }
 
         /// <summary>
         ///     Special scriptline that identifies that it has been split in sections
         /// </summary>
+        [DataContract]
         protected internal class SplitScriptLine : ScriptLine
         {
         }
@@ -749,26 +818,22 @@ namespace Ultima5Redux.References.Dialogue
         ///     Represents a single line of a script
         ///     This script line can be in a "split mode" or non-splitmode
         /// </summary>
+        [DataContract]
         protected internal class ScriptLine
         {
             /// <summary>
             ///     a list of all associated ScriptItems, in a particular order
             /// </summary>
+            [DataMember(Name = "ScriptItems")]
             private readonly List<ScriptItem> _scriptItems = new();
 
             /// <summary>
             ///     Does this line represent the end of all Labels in the NPC talk script (end of script)
             /// </summary>
             /// <returns></returns>
-            public bool IsEndOfLabelSection
-            {
-                get
-                {
-                    if (GetScriptItem(0).Command == TalkCommand.StartLabelDefinition &&
-                        GetScriptItem(1).Command == TalkCommand.Unknown_Enter) return true;
-                    return false;
-                }
-            }
+            public bool IsEndOfLabelSection =>
+                GetScriptItem(0).Command == TalkCommand.StartLabelDefinition &&
+                GetScriptItem(1).Command == TalkCommand.Unknown_Enter;
 
             /// <summary>
             ///     Is this script line a user input based question
@@ -792,17 +857,12 @@ namespace Ultima5Redux.References.Dialogue
 
                 foreach (ScriptItem item in _scriptItems)
                 {
-                    if (item.Command == TalkCommand.PlainString)
+                    scriptLine += item.Command switch
                     {
-                        scriptLine += item.Str.Trim();
-                    }
-                    else
-                    {
-                        if (item.Command is TalkCommand.DefineLabel or TalkCommand.GotoLabel)
-                            scriptLine += "<" + item.Command + item.LabelNum + ">";
-                        else
-                            scriptLine += "<" + item.Command + ">";
-                    }
+                        TalkCommand.PlainString => item.StringData.Trim(),
+                        TalkCommand.DefineLabel or TalkCommand.GotoLabel => "<" + item.Command + item.LabelNum + ">",
+                        _ => "<" + item.Command + ">"
+                    };
                 }
 
                 return scriptLine;
@@ -907,7 +967,7 @@ namespace Ultima5Redux.References.Dialogue
                             nSection++;
 
                             // the next three characters are a 3 digit string that describes how much gold we are giving the NPC
-                            item.ItemAdditionalData = int.Parse(GetScriptItem(i + 1).Str.Substring(0, 3));
+                            item.ItemAdditionalData = int.Parse(GetScriptItem(i + 1).StringData.Substring(0, 3));
                             lines[nSection].AddScriptItem(item);
 
                             i++;

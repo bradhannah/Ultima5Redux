@@ -59,7 +59,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public string Name =>
             Script == null
                 ? string.Empty
-                : Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str.Trim();
+                : Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).StringData.Trim();
 
         /// <summary>
         ///     They are either a merchant or they have a speaking role

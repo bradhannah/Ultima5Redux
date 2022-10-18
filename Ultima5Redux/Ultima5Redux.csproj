@@ -334,6 +334,7 @@
         <EmbeddedResource Include="DataFiles\InventoryDetails.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+        <EmbeddedResource Include="DataFiles\CustomDialogue.json" />
         <Content Include="DataFiles\DungeonCombatMapDetails.csv" />
         <Content Include="DataFiles\DungeonCombatMapReferences.csv" />
         <EmbeddedResource Include="DataFiles\InitialSaveGame\INIT.GAM" />

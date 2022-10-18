@@ -644,7 +644,7 @@ Good day to thee, friend!
 spir
 <Or>
 musi
-Once, this was a happy place, where all could come to shed the worries of the world for a brief time. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But now, times have changed and all that remains are memories!
+Once, this was a happy place, where all could come to shed the worries of the world for a brief time. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But now, times have changed and all that remains are memories!
 memo
 Memories of the good times.
 good
@@ -699,7 +699,7 @@ regi
 All over!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Treanna
-Treanna <Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel0><AskName>
+Treanna <StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><AskName>
 a young girl.
 <DefineLabel0>
 I am the stable girl.
@@ -713,14 +713,14 @@ lord
 brit
 Alas, he is no longer with us.
 bree
-We have prime examples of most of the major breeds. <Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+We have prime examples of most of the major breeds. <StartNewSection><NewLine><NewLine><DefineLabel1>
 smit
 <DefineLabel4>
-<DefaultMessage><DefineLabel0>Greetings,  <AvatarsName>, nice to see thee again. <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel0>Greetings,  <AvatarsName>, nice to see thee again. <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><DefineLabel1>What's thy favorite breed?
 Never heard of that one, must be one of Blackthorn's new creations!
 val
-Hey, mine too! <Unknown_CodeA2><NewLine><NewLine><DefineLabel2>
+Hey, mine too! <StartNewSection><NewLine><NewLine><DefineLabel2>
 step
 <Or>
 plou
@@ -739,7 +739,7 @@ ed
 Not that one!
 smit
 <DefineLabel4>
-<DefaultMessage><DefineLabel4>That's it! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I have heard it <122>in Iolo's barn, by his hut in the deep forest! <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel4>That's it! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>I have heard it <122>in Iolo's barn, by his hut in the deep forest! <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Margaret
 
@@ -774,15 +774,15 @@ weat
 <Or>
 shad
 Indeed it has!
-<DefaultMessage><DefineLabel0><SetFlag><DefineLabel1>Art thou from around here?
-Nice to have thee, friend. <Unknown_CodeA2><NewLine><NewLine><AskName>
+<DefaultMessage><DefineLabel0><IfElseKnowsName><DefineLabel1>Art thou from around here?
+Nice to have thee, friend. <StartNewSection><NewLine><NewLine><AskName>
 y
 I see.
-<DefaultMessage><DefineLabel1>'Tis a shame. <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel1>'Tis a shame. <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><DefineLabel2>Wouldst thou like some hot broth?
 Ah.
 y
-'ere, 'ave some. It'll take the chill from thy bones on these cold days. <Unknown_CodeA2><NewLine><NewLine><Change><65><Pause><DefineLabel3>
+'ere, 'ave some. It'll take the chill from thy bones on these cold days. <StartNewSection><NewLine><NewLine><Change><65><Pause><DefineLabel3>
 <DefaultMessage><DefineLabel3>Wouldst thou pay 5 crowns to 'elp offset the cost?
 <KarmaMinusOne>Well, thanks anyway.
 y
@@ -810,7 +810,7 @@ Those guards eat like bottomless pits... But, none of them are as bad as Lord St
 lord
 <Or>
 stu
-He travels around between the towns and castles and eats and eats until they throw him out! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I hear he's been working on a magic spell to create food!
+He travels around between the towns and castles and eats and eats until they throw him out! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I hear he's been working on a magic spell to create food!
 magi
 <Or>
 spel
@@ -825,7 +825,7 @@ It is not yet perfected, I'm told. Apparently, it only creates a small quantity,
 Drudgeworth
 a unkempt and pitiful soul with a distant stare. <NewLine><NewLine><DefineLabel0>
 
-I didn't do it! <Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+I didn't do it! <StartNewSection><NewLine><NewLine><DefineLabel1>
 <DefineLabel3>
 sent
 For a crime I did not commit.
@@ -840,7 +840,7 @@ who
 kill
 <Or>
 her
-Why doesn't they believes me? <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel1>
+Why doesn't they believes me? <StartNewSection><NewLine><NewLine><Pause><DefineLabel1>
 chuc
 'Twer his fault really!
 help
@@ -850,8 +850,8 @@ it
 wher
 <Or>
 hidd
-Lets me out, I'll show ye. <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel2>
-<DefaultMessage><DefineLabel0>Hey, come 'ere! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Yer the first soul <127>seen in months! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Won't ye stay and speak with me a while?
+Lets me out, I'll show ye. <StartNewSection><NewLine><NewLine><Pause><DefineLabel2>
+<DefaultMessage><DefineLabel0>Hey, come 'ere! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Yer the first soul <127>seen in months! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Won't ye stay and speak with me a while?
 <DefineLabel3>
 y
 Chuckles 'ates me! Left me locked up 'ere well beyond me sentence!
@@ -862,8 +862,8 @@ Then let me out. I can helps ye!
 <DefaultMessage><DefineLabel2>Ye will let me out, won't ye?
 <DefineLabel3>
 y
-Aye, let's go then. <Unknown_CodeA2><NewLine><EndCoversation>
-<DefaultMessage><DefineLabel3>Then go! On yer wretched way,  <Rune>PIGDOG <Rune>! Just ye wait 'til I get outta this hole! I'll teach ye to mess with ol' Drudgeworth! <Unknown_CodeA2><NewLine><EndCoversation>
+Aye, let's go then. <StartNewSection><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel3>Then go! On yer wretched way,  <Rune>PIGDOG <Rune>! Just ye wait 'til I get outta this hole! I'll teach ye to mess with ol' Drudgeworth! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Saduj
 
@@ -895,19 +895,19 @@ I know not what it is, but it rests in a sandalwood box.
 sand
 <Or>
 box
-If destroyed, there shall be no chance for that scourge British to return! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel5>
+If destroyed, there shall be no chance for that scourge British to return! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel5>
 join
 <DefineLabel5>
-<DefaultMessage><DefineLabel0>What is the matter... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Dost thou not believe me?
-I see. <Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+<DefaultMessage><DefineLabel0>What is the matter... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Dost thou not believe me?
+I see. <StartNewSection><NewLine><NewLine><DefineLabel1>
 <DefaultMessage><DefineLabel1>For that matter, what art thou doing here?
-Likely story! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel2>
+Likely story! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel2>
 <DefaultMessage><DefineLabel2>Art thou with the Oppression?
 Neither am I.
 y
 <DefineLabel3>
 <DefaultMessage><DefineLabel3>Prove it! What's the password?
-Impostor! <Unknown_CodeA2><NewLine><EndCoversation>
+Impostor! <StartNewSection><NewLine><EndCoversation>
 impe
 <DefineLabel4>
 <DefaultMessage><DefineLabel4>Greetings friend! Knowest thou of my mission?
@@ -917,7 +917,7 @@ Blackthorn himself sent me here to find an object hidden in Lord British's chamb
 <DefaultMessage><DefineLabel5>Might I join thee, that we might <128>together?
 Later perhaps.
 y
-Good! <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Good! <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Stillwelt
 
@@ -926,21 +926,21 @@ a big, mean, nasty, ugly guard! <NewLine><NewLine><DefineLabel0>
 
 
 Bye!
-<DefaultMessage><DefineLabel0>Hey, you! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Dost thou not know that this is a restricted area?
+<DefaultMessage><DefineLabel0>Hey, you! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Dost thou not know that this is a restricted area?
 <DefineLabel1>
-<DefaultMessage><DefineLabel1>Shut up! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art not allowed up here! <Unknown_CodeA2><NewLine><NewLine><DefineLabel2>
+<DefaultMessage><DefineLabel1>Shut up! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art not allowed up here! <StartNewSection><NewLine><NewLine><DefineLabel2>
 <DefaultMessage><DefineLabel2>Art thou going to leave on thy own or must I throw thee off the battlements?
-I didn't catch thy meaning. Didst thou understand me? I said... <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel2>
+I didn't catch thy meaning. Didst thou understand me? I said... <StartNewSection><NewLine><NewLine><Pause><DefineLabel2>
 thro
 <Or>
 n
-<CallGuards>Thou hadst thy chance! <Unknown_CodeA2><NewLine><EndCoversation>
+<CallGuards>Thou hadst thy chance! <StartNewSection><NewLine><EndCoversation>
 own
 <Or>
 leav
 <Or>
 y
-Get off the roof, NOW! <Unknown_CodeA2><NewLine><EndCoversation>
+Get off the roof, NOW! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Chuckles
 
@@ -950,7 +950,7 @@ a bouncing jester!
 I am here to welcome and try to entertain!
 Let me know if I might entertain thee again!
 welc
-Welcome, welcome, welcome. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Welcome to the castle of His Royal Majesty, His Eminence, The Immortal, currently missing, feared dead, Lord Cantabrigian British! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And, his trustworthy, loyal, helpful, friendly, courteous, kind, obedient, cheerful, thrifty, brave, clean, and reverent... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>...Jester, Chuckles the Bumble... <Unknown_CodeA2><NewLine><NewLine><KeyWait>...That's ME!
+Welcome, welcome, welcome. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Welcome to the castle of His Royal Majesty, His Eminence, The Immortal, currently missing, feared dead, Lord Cantabrigian British! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And, his trustworthy, loyal, helpful, friendly, courteous, kind, obedient, cheerful, thrifty, brave, clean, and reverent... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>...Jester, Chuckles the Bumble... <StartNewSection><NewLine><NewLine><KeyWait>...That's ME!
 ente
 <DefineLabel0>
 roya
@@ -973,31 +973,31 @@ cast
 This one.
 drud
 Who?
-<DefaultMessage><DefineLabel0>Ho eyo he hum! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Ho eyo he hum! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Ho eyo he hum! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Bounce, bounce, bounce, bounce! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Didst thou enjoy that?
-Oh, I'll do it better this time! <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel0>
+<DefaultMessage><DefineLabel0>Ho eyo he hum! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Ho eyo he hum! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Ho eyo he hum! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Bounce, bounce, bounce, bounce! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Didst thou enjoy that?
+Oh, I'll do it better this time! <StartNewSection><NewLine><NewLine><Pause><DefineLabel0>
 y
 I thought thou might!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Blackthorn
 
 Blackthorn
-the Dark Lord himself! <NewLine><NewLine><Pause><SetFlag><DefineLabel0><DefineLabel4>
+the Dark Lord himself! <NewLine><NewLine><Pause><IfElseKnowsName><DefineLabel0><DefineLabel4>
+ 
 
 
-
-<DefaultMessage><DefineLabel0>Greetings,  <AvatarsName>, what an unexpected pleasure! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Wilt thou be staying with us long?
-I beg to differ! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>So <120>kind of thee to deliver thyself unto me! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Prepare now to meet thy fate! <CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel0>Greetings,  <AvatarsName>, what an unexpected pleasure! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Wilt thou be staying with us long?
+I beg to differ! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>So <120>kind of thee to deliver thyself unto me! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Prepare now to meet thy fate! <CallGuards><StartNewSection><NewLine><EndCoversation>
 y
 <DefineLabel2>
 <DefaultMessage><DefineLabel2>Hast thou joined us in the Oppression?
-Then how considerate of thee to turn thyself in... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Guards! Seize this infidel! <CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Then how considerate of thee to turn thyself in... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Guards! Seize this infidel! <CallGuards><StartNewSection><NewLine><EndCoversation>
 y
 <DefineLabel3>
-<DefaultMessage><DefineLabel3>Then, surely, thou dost know our password.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What is it?
-No, I'm afraid that is not it... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Guards! Seize this infidel! <CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel3>Then, surely, thou dost know our password.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>What is it?
+No, I'm afraid that is not it... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Guards! Seize this infidel! <CallGuards><StartNewSection><NewLine><EndCoversation>
 impe
-Fine! With thee on our side, we shall be invincible! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Please, feel free to roam my castle and grounds! <Unknown_CodeA2><NewLine><EndCoversation>
-<DefaultMessage><DefineLabel4>Who dares approach the mighty Blackthorn? <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel0><Pause><Unknown_CodeA2>I think not, let's try again! <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel4>
+Fine! With thee on our side, we shall be invincible! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Please, feel free to roam my castle and grounds! <StartNewSection><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel4>Who dares approach the mighty Blackthorn? <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Pause><StartNewSection>I think not, let's try again! <StartNewSection><NewLine><NewLine><Pause><DefineLabel4>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Gorn
 
@@ -1006,22 +1006,22 @@ a mighty-thewed barbarian. <NewLine><NewLine><DefineLabel0>
 
 <DefineLabel0>
 Take care.
-<DefaultMessage><DefineLabel0>Ah, Brohm be praised! A soul to share my cell! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>With me for an escape?
-Fool! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel0>Ah, Brohm be praised! A soul to share my cell! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>With me for an escape?
+Fool! <StartNewSection><NewLine><EndCoversation>
 y
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>If I helps thee, wilt thou take me with thee?
-Hmmm. <Unknown_CodeA2><NewLine><EndCoversation>
+Hmmm. <StartNewSection><NewLine><EndCoversation>
 y
 <DefineLabel2>
-<DefaultMessage><DefineLabel2>I've escaped many times, and been caught as many. I knows this castle likes the backs of me hands! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
-<DefaultMessage><DefineLabel3>In the dead of night we must go out through a secret door that's here behinds me. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Climbs up onto the roof and sneaks down the northern ladder. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>In Blackthorn's bedroom, go through a secret door, down the ladder on t'other side. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Through the secret door to the north, down another ladder and out the back gates! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Wait there 'til morning when the drawbridge is lowered and flee for our lives! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Get all that down?
+<DefaultMessage><DefineLabel2>I've escaped many times, and been caught as many. I knows this castle likes the backs of me hands! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
+<DefaultMessage><DefineLabel3>In the dead of night we must go out through a secret door that's here behinds me. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Climbs up onto the roof and sneaks down the northern ladder. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>In Blackthorn's bedroom, go through a secret door, down the ladder on t'other side. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Through the secret door to the north, down another ladder and out the back gates! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Wait there 'til morning when the drawbridge is lowered and flee for our lives! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Get all that down?
 <DefineLabel3>
 y
-Get the keys I hid in the brazier and let's be off! <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Get the keys I hid in the brazier and let's be off! <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for ....
-.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
 
 I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -1046,7 +1046,7 @@ trav
 They defile the foundations of Virtue!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for ....
-.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
 
 I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -1071,7 +1071,7 @@ trav
 They defile the foundations of Virtue!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for ....
-.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
 
 I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -1096,7 +1096,7 @@ trav
 They defile the foundations of Virtue!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for ....
-.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
 
 I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -1121,7 +1121,7 @@ trav
 They defile the foundations of Virtue!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for ....
-.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
 
 I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -1146,7 +1146,7 @@ trav
 They defile the foundations of Virtue!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for ....
-.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
 
 I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -1184,7 +1184,7 @@ Yes, we have a fine stable of thoroughbreds.
 stab
 <Or>
 thor
-Indeed, the finest. Why, we have not only the plough and mountain breeds, but even the purest breed of the High Steppes.  <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>We lack only the Valorian warhorse, <124>we still seek!
+Indeed, the finest. Why, we have not only the plough and mountain breeds, but even the purest breed of the High Steppes.  <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>We lack only the Valorian warhorse, <124>we still seek!
 val
 That breed we still lack.
 step
@@ -1229,11 +1229,11 @@ roof
 Climb up a corner tower from the dungeon level.
 stab
 Take the ladder down.
-<DefaultMessage><DefineLabel0>Please sign in. <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
-<DefaultMessage><DefineLabel1>Where or whom dost thou seek? <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel0>Please sign in. <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><DefineLabel1>
+<DefaultMessage><DefineLabel1>Where or whom dost thou seek? <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for ....
-.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
 
 I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -1258,7 +1258,7 @@ trav
 They defile the foundations of Virtue!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for ....
-.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Thou art in grave danger!
+.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
 
 I've been here oh so many months, and all for the breaking of a Law of Virtue!
@@ -1292,7 +1292,7 @@ Oh, bugger off then.
 food
 <Or>
 slop
-A little ol' horse meat, a few young children, that sort of thing. <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+A little ol' horse meat, a few young children, that sort of thing. <StartNewSection><NewLine><NewLine><DefineLabel0>
 meat
 <Or>
 hors
@@ -1312,7 +1312,7 @@ Well, they <121>not really be dogs, but they sure is mangy!
 <DefaultMessage><DefineLabel0>Care to try some?
 Don't touch the stuff meself.
 y
-Gulp... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Choke... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Gag... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Spit... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Aye, goes down a bit rough.
+Gulp... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Choke... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Gag... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Spit... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Aye, goes down a bit rough.
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Foulwell
 
@@ -1330,16 +1330,16 @@ lady
 draw
 <Or>
 quar
-She refused to humble herself to a guard's advances! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+She refused to humble herself to a guard's advances! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Isn't that a riot?
-Perhaps then, thou wouldst find more humorous the one about the visitor who failed to laugh at the Royal Jester's stories. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The cook's young nephew was a little brat. He didn't laugh at my jokes, so we threw 'im in the vat! <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel2>
+Perhaps then, thou wouldst find more humorous the one about the visitor who failed to laugh at the Royal Jester's stories. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The cook's young nephew was a little brat. He didn't laugh at my jokes, so we threw 'im in the vat! <StartNewSection><NewLine><NewLine><Pause><DefineLabel2>
 y
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>Wouldst thou like to join us next time?
 Just watch thyself, friend!
 y
 I'll be sure to look ye up.
-<DefaultMessage><DefineLabel2>Ho, ho, ha, ha, he, he... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>How 'bout that one, like it?
+<DefaultMessage><DefineLabel2>Ho, ho, ha, ha, he, he... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>How 'bout that one, like it?
 <CallGuards>GUARDS!
 y
 I thank thee.
@@ -1347,7 +1347,7 @@ I thank thee.
 ---- SCRIPT for Hassad
 
 Hassad
-an old and blind wizard. <NewLine><NewLine><SetFlag><DefineLabel0><DefineLabel1>
+an old and blind wizard. <NewLine><NewLine><IfElseKnowsName><DefineLabel0><DefineLabel1>
 
 I am a prisoner, just as thou art now.
 Farewell.
@@ -1374,16 +1374,16 @@ powe
 word
 <Or>
 coun
-<SetFlag><DefineLabel2>I don't know of what thou dost speak.
+<IfElseKnowsName><DefineLabel2>I don't know of what thou dost speak.
 <DefaultMessage><DefineLabel0>Is that thee <AvatarsName>?
 Then what dost thou want?
 y
 Oh, good.
-<DefaultMessage><DefineLabel1>Who is there? <Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><Pause>What dost thou want? <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel1>Who is there? <StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><Pause>What dost thou want? <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><DefineLabel2>I know of the Great Council, but what maketh thee ask me?
 I know nothing about it!
 kaik
-She is a fine woman. If she has told thee of me, she must have great faith in thee. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
+She is a fine woman. If she has told thee of me, she must have great faith in thee. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
 dawn
 <DefineLabel3>
 <DefaultMessage><DefineLabel3>I presume thou dost seek the Word of Power for the dungeon Hythloth. Are we where I <121>speak freely?
@@ -1397,7 +1397,7 @@ Camile
 a young woman.
 <DefineLabel0>
 I keep the fields.
-<SetFlag><DefineLabel2>Oh, by the way... <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><EndCoversation>
+<IfElseKnowsName><DefineLabel2>Oh, by the way... <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><EndCoversation>
 fiel
 Unlike the unfortunates living in other parts of the land, our crops grow true and strong!
 crop
@@ -1433,10 +1433,10 @@ mast
 <DefaultMessage><DefineLabel0><AvatarsName>, how art thou doing on this fine day?
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>Hmmm... How hath thy journeys fared?
-I see, what <123>I do for thee today? <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><DefineLabel2>Farewell, and a good day to thee, <AvatarsName>. <Unknown_CodeA2><NewLine><EndCoversation>
+I see, what <123>I do for thee today? <StartNewSection><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel2>Farewell, and a good day to thee, <AvatarsName>. <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><DefineLabel3>Surely, thou dost agree Lord British is the rightful ruler?
-Begone, foolish knave! <Unknown_CodeA2><NewLine><EndCoversation>
+Begone, foolish knave! <StartNewSection><NewLine><EndCoversation>
 y
 Good.
 <DefaultMessage><Unknown_Enter>
@@ -1446,7 +1446,7 @@ Phillip
 a sweaty and soiled farmer.
 Aye up lad, what's goin' on?
 I <128>these fields, with me chum Dibbs.
-<SetFlag><DefineLabel0><AskName><Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+<IfElseKnowsName><DefineLabel0><AskName><StartNewSection><NewLine><NewLine><DefineLabel0>
 chum
 <Or>
 dibb
@@ -1465,7 +1465,7 @@ grin
 I've plans to become an artist!
 arti
 'Till then I'll just keep workin' 'ere!
-<DefaultMessage><DefineLabel0>Cheerio! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel0>Cheerio! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Christopher
 
@@ -1501,24 +1501,24 @@ I hope to have it published soon.
 soon
 <Or>
 publ
-Through Origin, of course. <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Through Origin, of course. <StartNewSection><NewLine><NewLine><DefineLabel0>
 <DefaultMessage><DefineLabel0>Wilt thou buy it?
 Then I'll be of little help to thee in the future!
 y
-Good! <Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel1><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Enchanted, I'm sure, to have met <119>an enlightened soul.
-<DefaultMessage><DefineLabel1>What a nice chap thou art. <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Good! <StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel1><AskName><StartNewSection><NewLine><NewLine><StartNewSection>Enchanted, I'm sure, to have met <119>an enlightened soul.
+<DefaultMessage><DefineLabel1>What a nice chap thou art. <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Thentis
 
 Thentis
 a young farmer.
 
-I am a farmer. <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+I am a farmer. <StartNewSection><NewLine><NewLine><DefineLabel0>
 Good journeys.
 resi
 Never heard of it.
 blac
-A fine man... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Cough, cough!
+A fine man... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Cough, cough!
 dawn
 To the others!
 <DefaultMessage><DefineLabel0>What dost thou do?
@@ -1526,7 +1526,7 @@ To the others!
 <DefaultMessage><DefineLabel1>Dost thou like it?
 <DefineLabel2>
 <DefaultMessage><DefineLabel2>Art thou helped, or hindered by the new laws?
-I said... <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel2>
+I said... <StartNewSection><NewLine><NewLine><Pause><DefineLabel2>
 help
 Oh.
 hind
@@ -1557,10 +1557,10 @@ dawn
 Hmmm...
 dawn
 <DefineLabel9>
-<DefaultMessage><DefineLabel9>Good... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Sorry about all the questions, but we've got to be careful. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>If thou art with us, meet us by the well at midnight! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Mention the password to those attending, but no one else, for spies abound! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel9>Good... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Sorry about all the questions, but we've got to be careful. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If thou art with us, meet us by the well at midnight! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Mention the password to those attending, but no one else, for spies abound! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Joshua
-Joshua <Unknown_CodeA2><NewLine><NewLine><SetFlag><Unknown_FF><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Joshua <StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 a soiled farmer.
 Greetings  <AvatarsName>!
 I am a farmer, of course!
@@ -1577,15 +1577,15 @@ dawn
 Oh.
 dawn
 <DefineLabel1>
-<DefaultMessage><DefineLabel1><SetFlag><DefineLabel2><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel2><Unknown_FF>
+<DefaultMessage><DefineLabel1><IfElseKnowsName><DefineLabel2><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Unknown_FF>
 <DefaultMessage><DefineLabel2>Dost thou serve the Resistance?
 Oh.
 y
-Good! <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel3>
+Good! <StartNewSection><NewLine><NewLine><Pause><DefineLabel3>
 <DefaultMessage><DefineLabel3>Shall I tell thee what I know?
 O.K.
 y
-I've heard much of the Shadowlords. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>If faced in combat, thou art drawn into their plane of existance to do battle. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It seems that they cannot be killed by normal means, so most who fight them die quickly. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A few souls have lived to tell that if a Shadowlord is struck down, it will vanish into thin air! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Soon after, its twisted soul shall return anew! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>One named Sutek knows how to destroy them, he <122>on a remote isle in the south of the Great Sea! <Unknown_CodeA2><NewLine><EndCoversation>
+I've heard much of the Shadowlords. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If faced in combat, thou art drawn into their plane of existance to do battle. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It seems that they cannot be killed by normal means, so most who fight them die quickly. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A few souls have lived to tell that if a Shadowlord is struck down, it will vanish into thin air! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Soon after, its twisted soul shall return anew! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>One named Sutek knows how to destroy them, he <122>on a remote isle in the south of the Great Sea! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Leof
 
@@ -1604,14 +1604,14 @@ dawn
 <DefineLabel0>
 resi
 <DefineLabel1>
-<DefaultMessage><DefineLabel0>Yes, sunrise is beautiful. <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hard to Resist, wouldst thou not agree?
+<DefaultMessage><DefineLabel0>Yes, sunrise is beautiful. <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hard to Resist, wouldst thou not agree?
 Indeed!
 <DefaultMessage><DefineLabel1>Whom dost thou resist?
 I see.
 blac
 <DefineLabel2>
-<DefaultMessage><DefineLabel2>We too resist his foul, oppressive regime! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Hast thou ever faced a Shadowlord?
-We have heard that here upon the <120>surface of Britannia there is a place where their energies focus! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Just where it is we have not learned, but thou might learn more if thou dost seek out Sir Sean, who lives... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Ah yes, in the Lycaeum on Dagger Isle. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>If thou <123>find him, ask of Stonegate!Mayhap those Spectres can be dispatched from this plane of existence! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel2>We too resist his foul, oppressive regime! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Hast thou ever faced a Shadowlord?
+We have heard that here upon the <120>surface of Britannia there is a place where their energies focus! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Just where it is we have not learned, but thou might learn more if thou dost seek out Sir Sean, who lives... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Ah yes, in the Lycaeum on Dagger Isle. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If thou <123>find him, ask of Stonegate!Mayhap those Spectres can be dispatched from this plane of existence! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Vigil
 
@@ -1635,7 +1635,7 @@ That was before!
 befo
 Never mind.
 neve
-That's right! Never mind! <Unknown_CodeA2><NewLine><EndCoversation>
+That's right! Never mind! <StartNewSection><NewLine><EndCoversation>
 dawn
 <DefineLabel1>
 them
@@ -1654,21 +1654,21 @@ much
 That was before the Shadowlords!
 shad
 My friends and I learned much about them before we retired. Talk to them!
-<DefaultMessage><DefineLabel0>I do now, but once I roamed the land as a warrior! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Dost thou believe me?
-Try me then, fool! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel0>I do now, but once I roamed the land as a warrior! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Dost thou believe me?
+Try me then, fool! <StartNewSection><NewLine><EndCoversation>
 y
 Thou art perceptive!
-<DefaultMessage><DefineLabel1>Hmmm... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I guess that thou art with the Resistance, yes?
+<DefaultMessage><DefineLabel1>Hmmm... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>I guess that thou art with the Resistance, yes?
 O.K. have it your way.
 y
 <DefineLabel2>
 <DefaultMessage><DefineLabel2>Canst thou prove it?
 <DefineLabel2>
 y
-I doubt it! <Unknown_CodeA2><NewLine><EndCoversation>
+I doubt it! <StartNewSection><NewLine><EndCoversation>
 n
 <DefineLabel3>
-<DefaultMessage><DefineLabel3>At least thou art honest! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I feel thou art trustworthy. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Before, when my friends and I were a band of stalwart adventurers, we learned much! <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel3>At least thou art honest! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I feel thou art trustworthy. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Before, when my friends and I were a band of stalwart adventurers, we learned much! <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Kurt
 
@@ -1694,7 +1694,7 @@ It's hard <128>but I enjoy the horses.
 hors
 We have many breeds.
 bree
-Well.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>We have Ploughhorses, the Mountain breed, and those from the Steppes! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Unfortunately, we don't have any Valorian purebreds, But they do over in the castle! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Well.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>We have Ploughhorses, the Mountain breed, and those from the Steppes! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Unfortunately, we don't have any Valorian purebreds, But they do over in the castle! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 plou
 <Or>
 moun
@@ -1732,7 +1732,7 @@ stuf
 magi
 <Or>
 days
-In my younger days, we thought it queer to use aught but what grew by the beaches in the vessels we made. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And proud we were indeed of our handiwork, even when it sank. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Then, just as I learned the craft, we began to make use of more iron and steel than wood. An' things were just fine up 'til now.
+In my younger days, we thought it queer to use aught but what grew by the beaches in the vessels we made. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And proud we were indeed of our handiwork, even when it sank. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then, just as I learned the craft, we began to make use of more iron and steel than wood. An' things were just fine up 'til now.
 til
 <Or>
 unti
@@ -1768,16 +1768,16 @@ I found that a mixture of sulfur ash, mandrake, and the powder they fire cannons
 unle
 <Or>
 powe
-Enough to make a ship sail sixscore knots faster! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>For a second or two, anyway. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Enough to make a ship sail sixscore knots faster! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>For a second or two, anyway. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>This could be a great breakthrough, dost thou agree?
-Hmph! <Unknown_CodeA2><NewLine><EndCoversation>
+Hmph! <StartNewSection><NewLine><EndCoversation>
 Y
 I wish I could convince Master Hawkins.
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Squire Jimmy
 
 Squire Jimmy
-a wide-eyed young boy <NewLine><NewLine><SetFlag><Unknown_FF><DefineLabel0>
+a wide-eyed young boy <NewLine><NewLine><IfElseKnowsName><Unknown_FF><DefineLabel0>
 
 I am apprenticed to Master Hawkins!
 Come back and see us ever and anon!
@@ -1798,11 +1798,11 @@ Shipbuilding!
 Cape
 <Or>
 HMS
-Master Hawkins misplaced the plans for 'er long ago, and nothing <125>has been so fast. Still, we try many new ideas! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_FF>
+Master Hawkins misplaced the plans for 'er long ago, and nothing <125>has been so fast. Still, we try many new ideas! <StartNewSection><NewLine><NewLine><KeyWait><Unknown_FF>
 idea
 Ask Sir Adam!
 <DefaultMessage><DefineLabel0>I say, thou dost seem rather well-travelled. What news of the world hath thee?
-Ah, that's the same news as anyone else's. They teach us in school that 'tis all for the common good. I suppose that we're to believe what we're taught. <Unknown_CodeA2><NewLine><NewLine><KeyWait><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Ah, that's the same news as anyone else's. They teach us in school that 'tis all for the common good. I suppose that we're to believe what we're taught. <StartNewSection><NewLine><NewLine><KeyWait><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Glinkie
 
@@ -1824,7 +1824,7 @@ dest
 word
 <Or>
 powe
-Whilst at the destroyed shrine, yell the word of power. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Then meditate upon the Shrine's virtue with the proper Mantra for three cycles.
+Whilst at the destroyed shrine, yell the word of power. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then meditate upon the Shrine's virtue with the proper Mantra for three cycles.
 <DefaultMessage><DefineLabel0>Dost thou know where to find it?
 Too bad.
 y
@@ -1846,7 +1846,7 @@ y
 <DefaultMessage><DefineLabel3>At midnight?
 Oh.
 y
-Oh, no wonder I never found it! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Well, that one is likely safe then... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But, should thou see one destroyed... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Remember they can be restored with the Words of Power!
+Oh, no wonder I never found it! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Well, that one is likely safe then... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But, should thou see one destroyed... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Remember they can be restored with the Words of Power!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Bandaii
 
@@ -1868,13 +1868,13 @@ I search for Smith, the notorious talking horse!
 smit
 <Or>
 talk
-I do not doubt the rumours, but this I must see for myself! <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+I do not doubt the rumours, but this I must see for myself! <StartNewSection><NewLine><NewLine><DefineLabel0>
 magi
 <Or>
 fly
 <Or>
 carp
-Yes, I once had a magic flying carpet. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I wilt tell thee where it was, if thou wilt help me find the talking horse!
+Yes, I once had a magic flying carpet. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I wilt tell thee where it was, if thou wilt help me find the talking horse!
 iolo
 <Or>
 hut
@@ -1896,7 +1896,7 @@ Unlikely.
 iolo
 <Or>
 hut
-At last! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>For thy efforts I will tell thee that I gave a magical carpet to Lord British himself! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>He kept it in his private chamber atop his castle! If thou can get it, I'm sure thou can use it. <Unknown_CodeA2><NewLine><EndCoversation>
+At last! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>For thy efforts I will tell thee that I gave a magical carpet to Lord British himself! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>He kept it in his private chamber atop his castle! If thou can get it, I'm sure thou can use it. <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Ava
 
@@ -1910,7 +1910,7 @@ The Temple of Virtue.
 sist
 Leona.
 virt
-Here, we hold the Eight Virtues sacred. <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Here, we hold the Eight Virtues sacred. <StartNewSection><NewLine><NewLine><DefineLabel0>
 eigh
 <Or>
 sacr
@@ -1925,7 +1925,7 @@ Ask my sister!
 Do as thou wilt.
 y
 <DefineLabel1>
-<DefaultMessage><DefineLabel1><SetFlag><DefineLabel2>We welcome thee. <Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel3><DefineLabel2>
+<DefaultMessage><DefineLabel1><IfElseKnowsName><DefineLabel2>We welcome thee. <StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel3><DefineLabel2>
 <DefaultMessage><DefineLabel2>We ask for 5 gold crowns, wilt thou give?
 As thou wilt.
 y
@@ -1935,7 +1935,7 @@ As thou wilt.
 y
 <Gold>005 <KarmaPlusOne><KarmaPlusOne><KarmaPlusOne><KarmaPlusOne><KarmaPlusOne>We thank thee.
 <DefaultMessage><DefineLabel4>Art thou the Avatar of legend?
-Virtue makes no mistakes. <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>We shall tell thee what we know of the Shard of Falsehood. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Ask my sister of her vision!
+Virtue makes no mistakes. <StartNewSection><NewLine><NewLine><Pause><StartNewSection>We shall tell thee what we know of the Shard of Falsehood. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Ask my sister of her vision!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Leona
 
@@ -1955,7 +1955,7 @@ virt
 shar
 Talk with my sister.
 visi
-In the deep of night, many moons ago, a vision came unto my sister and I... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>We saw the Shard of Falsehood deep below a dungeon named Deceit. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The path that was revealed traveled first southwest across many high peaks, opening to a large system of caverns. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Then the way led southwest. At a major intersection it turned northwest, soon branching northeast. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>After a long journey northward, the passage turned west. Here the path went on to rocky hills to the southwest, then turned northwest. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Over a lake it ran, unto a massive series of great falls, ending in a larger lake. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Here, upon a small isle, lies the Shard of Falsehood!
+In the deep of night, many moons ago, a vision came unto my sister and I... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>We saw the Shard of Falsehood deep below a dungeon named Deceit. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The path that was revealed traveled first southwest across many high peaks, opening to a large system of caverns. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then the way led southwest. At a major intersection it turned northwest, soon branching northeast. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>After a long journey northward, the passage turned west. Here the path went on to rocky hills to the southwest, then turned northwest. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Over a lake it ran, unto a massive series of great falls, ending in a larger lake. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Here, upon a small isle, lies the Shard of Falsehood!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Ambrose
 
@@ -1985,7 +1985,7 @@ sear
 mine
 <Or>
 hyth
-Within the Underworld, where the Abyss once was, the lava still flows, north of the underground entrance of Hythloth. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Tis there, northward across cavernous peaks from the dungeon, amidst the boiling lava, that the mystic arms are said to lie! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Within the Underworld, where the Abyss once was, the lava still flows, north of the underground entrance of Hythloth. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Tis there, northward across cavernous peaks from the dungeon, amidst the boiling lava, that the mystic arms are said to lie! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Dost thou seek the fate of Lord British?
 I see.
 y
@@ -2023,15 +2023,15 @@ bind
 ship
 Only the best.
 swor
-Good fer slitt'n the gullet of a fat merchant. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Good fer slitt'n the gullet of a fat merchant. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 dagg
-Sharp 'n deadly! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Sharp 'n deadly! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Interested in makin' a purchase?
 <DefineLabel0>
 n
 Too bad.
 y
-Talk to Kitiara, I'm sure ye'll be more'n satisfied! <Unknown_CodeA2><NewLine><NewLine><SetFlag><Unknown_FF><AskName>
+Talk to Kitiara, I'm sure ye'll be more'n satisfied! <StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Scally
 
@@ -2043,7 +2043,7 @@ Farewell.
 expe
 <Or>
 ente
-Why, I is the best singer 'ere in this whole towne! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Course, I is the only singer in this whole towne... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>No matter... <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Why, I is the best singer 'ere in this whole towne! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Course, I is the only singer in this whole towne... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>No matter... <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 pira
 <Or>
 davi
@@ -2061,7 +2061,7 @@ Some say he's made a strange tool to aid in navigation.
 tool
 <Or>
 navi
-I believes he called it a... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Err... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Ahh... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Umm... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>...Sextant.
+I believes he called it a... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Err... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Ahh... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Umm... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>...Sextant.
 sext
 <Or>
 wher
@@ -2071,7 +2071,7 @@ No one knows just where ol' David's off to, but <127>'eard some speculat'n he's 
 n
 Ah.
 y
-<Unknown_CodeA2>There once was a pirate named David, so crotchety and misbehav'd. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And then one day, he sailed away, only to where, he would not say.
+<StartNewSection>There once was a pirate named David, so crotchety and misbehav'd. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And then one day, he sailed away, only to where, he would not say.
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Bidney
 
@@ -2081,7 +2081,7 @@ a scruffy, smelly man.
 I loves to drink!
 Hic.
 drin
-Rum, that's me favorite. <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hic! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>'Scuse me.
+Rum, that's me favorite. <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>'Scuse me.
 rum
 Yo ho ho!
 ho
@@ -2089,13 +2089,13 @@ ho
 yo
 And a bottle of rum!
 bott
-Of rum! <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel0>
+Of rum! <StartNewSection><NewLine><NewLine><Pause><DefineLabel0>
 moun
 <Or>
 clim
 <Or>
 grap
-Grapple of Rum! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hic! <Unknown_CodeA2><NewLine><NewLine><Pause><DefineLabel3>
+Grapple of Rum! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic! <StartNewSection><NewLine><NewLine><Pause><DefineLabel3>
 pira
 <DefineLabel4>
 <DefaultMessage><DefineLabel0>Ey, got any?
@@ -2111,8 +2111,8 @@ Grumble... Hic!
 y
 Aye, thanks mate!... Hic!
 <DefaultMessage><DefineLabel3>Didst ye ask me 'bout mountain climb'n?
-I used to be a... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hic... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Mountain climber... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Gave it up... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Too dangerous... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>So, I 'came a pirate!
-<DefaultMessage><DefineLabel4>Gave me grapple to a man named Lord Michael... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Lived o'er at the Emapthical Abbeyneyney... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Hic... Zzzzz... <Unknown_CodeA2><NewLine><EndCoversation>
+I used to be a... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Mountain climber... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Gave it up... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Too dangerous... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>So, I 'came a pirate!
+<DefaultMessage><DefineLabel4>Gave me grapple to a man named Lord Michael... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Lived o'er at the Emapthical Abbeyneyney... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic... Zzzzz... <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Sven
 
@@ -2136,13 +2136,13 @@ scul
 crys
 <Or>
 like
-Aye, fine they were too. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But, there were'nt much money in it, so I 'came a pirate!
+Aye, fine they were too. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But, there were'nt much money in it, so I 'came a pirate!
 glas
 <Or>
 swor
 <Or>
 weap
-I once tried to make glass weapons, but all my attempts failed. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I have heard, though, of magically enhanced crystalline swords of great power!
+I once tried to make glass weapons, but all my attempts failed. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I have heard, though, of magically enhanced crystalline swords of great power!
 magi
 <Or>
 enha
@@ -2163,7 +2163,7 @@ Airships sound like a heap of nonsense if thou wert to ask me!
 ---- SCRIPT for Lord Dalgrin
 
 Lord Dalgrin
-a tall man in pirate attire. <NewLine><NewLine><SetFlag><DefineLabel1><Unknown_CodeA2>Greet'ns stranger, I am Lord Dalgrin. <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+a tall man in pirate attire. <NewLine><NewLine><IfElseKnowsName><DefineLabel1><StartNewSection>Greet'ns stranger, I am Lord Dalgrin. <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 
 <DefineLabel0>
 Watch out fer them keel haulin' seadogs of that Blackthorn feller.
@@ -2186,28 +2186,28 @@ worl
 time
 <Or>
 shar
-More'n I can count. <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>But today, I thinks I'll just relax an 'ave a drink with Tierra!
+More'n I can count. <StartNewSection><NewLine><NewLine><Pause><StartNewSection>But today, I thinks I'll just relax an 'ave a drink with Tierra!
 drin
 Rum, me thinks.
 rum
 Smart arse!
 tier
-Aye, she's a feisty wench... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>But, give'r a drink and she'll oft'n 'ave a bit a news fer ya.
+Aye, she's a feisty wench... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>But, give'r a drink and she'll oft'n 'ave a bit a news fer ya.
 <DefaultMessage><DefineLabel0>Avast ye mate, surely thou dost know who I am, don't ye?
 Why, I am the most bloodthirsty pirate to sail the seas.
-<DefaultMessage><DefineLabel1>Why, shiver me timbers, if it ain't ol'  <AvatarsName>! <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel1>Why, shiver me timbers, if it ain't ol'  <AvatarsName>! <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Tierra
 
 Tierra
 a feisty wench.
 A goodly day unto thee <AvatarsName>.
-<SetFlag><DefineLabel0>What makes ye think it's any o'thee business?
-<SetFlag><DefineLabel1>Beat it!
+<IfElseKnowsName><DefineLabel0>What makes ye think it's any o'thee business?
+<IfElseKnowsName><DefineLabel1>Beat it!
 busi
 None of yours.
 drin
-Sure, I'll drinks with ye... <Unknown_CodeA2><NewLine><NewLine><Pause>If'n I <123>only find my glass.
+Sure, I'll drinks with ye... <StartNewSection><NewLine><NewLine><Pause>If'n I <123>only find my glass.
 glas
 I left it round 'ere somewhere.
 roun
@@ -2217,22 +2217,22 @@ ere
 some
 I <123>not seem to remember.
 reme
-Speak'n of which... <Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel2><Pause><Unknown_CodeA2>I <123>not remember yer name... <Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel2><Unknown_FF>
-<DefaultMessage><DefineLabel0><AvatarsName>, thou ought to know by now. <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><DefineLabel1>See ya later,  <AvatarsName>. <Unknown_CodeA2><NewLine><EndCoversation>
+Speak'n of which... <StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Pause><StartNewSection>I <123>not remember yer name... <StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Unknown_FF>
+<DefaultMessage><DefineLabel0><AvatarsName>, thou ought to know by now. <StartNewSection><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel1>See ya later,  <AvatarsName>. <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><DefineLabel2>Dost ye think me pretty?
 <DefineLabel2>
 n
-Thou hast the beauty of an orc thyself! <Unknown_CodeA2><NewLine><EndCoversation>
+Thou hast the beauty of an orc thyself! <StartNewSection><NewLine><EndCoversation>
 y
 <DefineLabel3>
-<DefaultMessage><DefineLabel3>I likes thee, perhaps I <123>help thee! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Dost ye wish ye couldst climb mountains?
-Well, Bidney here used to... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Talk to him 'bout mountain climb'n.
+<DefaultMessage><DefineLabel3>I likes thee, perhaps I <123>help thee! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Dost ye wish ye couldst climb mountains?
+Well, Bidney here used to... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Talk to him 'bout mountain climb'n.
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Geoffrey
 
 Geoffrey
-a large and impressive fighter. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2><AvatarsName>! <Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Greetings, and well met! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Tis I, Geoffrey, thy old friend of battles past! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+a large and impressive fighter. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection><AvatarsName>! <StartNewSection><NewLine><NewLine><StartNewSection>Greetings, and well met! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Tis I, Geoffrey, thy old friend of battles past! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 I await thy request to join with thee in battle!
 Come for me soon!
@@ -2253,10 +2253,10 @@ join
 <DefaultMessage><DefineLabel0>Have the years treated thee well?
 <DefineLabel0>
 n
-That is unfortunate. <Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+That is unfortunate. <StartNewSection><NewLine><NewLine><DefineLabel1>
 y
-Ah, that is good. <Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
-<DefaultMessage><DefineLabel1>I presume thou hast heard of our troubles. <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Ah, that is good. <StartNewSection><NewLine><NewLine><DefineLabel1>
+<DefaultMessage><DefineLabel1>I presume thou hast heard of our troubles. <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><DefineLabel2>Is it time we set off against them?
 <DefineLabel2>
 n
@@ -2268,7 +2268,7 @@ y
 n
 Soon, I hope.
 y
-I am eager for battle! <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+I am eager for battle! <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><Unknown_Enter>Custom
 
 ---- SCRIPT for Jennifer
@@ -2333,7 +2333,7 @@ deep
 rece
 <Or>
 eart
-They are even those who claim that some survive the perilous journey below. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Only to be killed and eaten by the horrible creatures that dwell in the dark recesses.
+They are even those who claim that some survive the perilous journey below. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Only to be killed and eaten by the horrible creatures that dwell in the dark recesses.
 rum
 Aye, 'tis my favorite.
 <DefaultMessage><DefineLabel0>Ahoy there, matey. Care to join me for a tot of rum?
@@ -2401,7 +2401,7 @@ was
 sail
 That was before the accident.
 acci
-His best shipmate died in a storm whilst trying to reach this port. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Since that day, Windmire has dedicated his life to protecting these shipping lanes.
+His best shipmate died in a storm whilst trying to reach this port. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Since that day, Windmire has dedicated his life to protecting these shipping lanes.
 prot
 <Or>
 ship
@@ -2447,7 +2447,7 @@ eigh
 laws
 I must learn to recite them.
 reci
-I can't yet. <Unknown_CodeA2><NewLine><NewLine><KeyWait><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel0><Unknown_FF>
+I can't yet. <StartNewSection><NewLine><NewLine><KeyWait><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
 <DefaultMessage><DefineLabel0>Dost thou live by Virtue?
 Then thou art a bad person!
 y
@@ -2463,7 +2463,7 @@ Good!
 <DefaultMessage><DefineLabel3>Why, are his laws in error?
 Then thou art not being <120>kind!
 y
-I do not believe thee! He would not lie to us! <Unknown_CodeA2><NewLine><EndCoversation>
+I do not believe thee! He would not lie to us! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Charlotte
 
@@ -2501,7 +2501,7 @@ law
 firs
 <Or>
 one
-We must look at the <120>roots of dishonesty, and see it comes from the twisted tongues of liars. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And, surely, one cannot lie without a tongue! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+We must look at the <120>roots of dishonesty, and see it comes from the twisted tongues of liars. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And, surely, one cannot lie without a tongue! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Wouldst thou agree, the teachings of Blackthorn are meaningful and true?
 Hold thy tongue, heretic, or thou shalt lose it!
 y
@@ -2542,14 +2542,14 @@ sext
 'Den what are ye babbling 'bout!
 y
 <DefineLabel1>
-<DefaultMessage><DefineLabel1>Obviously, thou art a person of exceptional wisdom! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>So, me matey, does ya think me invention were a good one?
-What dost thou know! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel1>Obviously, thou art a person of exceptional wisdom! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>So, me matey, does ya think me invention were a good one?
+What dost thou know! <StartNewSection><NewLine><EndCoversation>
 y
 <DefineLabel2>
-<DefaultMessage><DefineLabel2>Thou dost speak true! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Wouldst thou like one <127>made with me own hands?
-Harumph! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel2>Thou dost speak true! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Wouldst thou like one <127>made with me own hands?
+Harumph! <StartNewSection><NewLine><EndCoversation>
 y
-<Change><72>'ere ye are mate, use it wisely and thou shalt profit by it! <Unknown_CodeA2><NewLine><EndCoversation>
+<Change><72>'ere ye are mate, use it wisely and thou shalt profit by it! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Lord Kenneth
 
@@ -2561,20 +2561,20 @@ Bye.
 cour
 <Or>
 comp
-I travel throughout Britannia teaching my craft. <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+I travel throughout Britannia teaching my craft. <StartNewSection><NewLine><NewLine><DefineLabel0>
 <DefaultMessage><DefineLabel0>Dost thou wish to learn the harpsichord?
 Alas.
 y
 <DefineLabel2>
-<DefaultMessage><DefineLabel2>Open the Book of Lore to the Music section and study the score for the piece 'Stones'. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
-<DefaultMessage><DefineLabel3>The notes are like a series of square marks upon a four-line staff. Their positions, either on one or between two lines, marks their pitch. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A letter C marks the second line of the staff as the pitch 'C'. The first 3 notes are 'ABC'. <Unknown_CodeA2><NewLine><NewLine><KeyWait>What are the next 3?
-No, try again. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
+<DefaultMessage><DefineLabel2>Open the Book of Lore to the Music section and study the score for the piece 'Stones'. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
+<DefaultMessage><DefineLabel3>The notes are like a series of square marks upon a four-line staff. Their positions, either on one or between two lines, marks their pitch. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A letter C marks the second line of the staff as the pitch 'C'. The first 3 notes are 'ABC'. <StartNewSection><NewLine><NewLine><KeyWait>What are the next 3?
+No, try again. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
 dcb
-Good! <Unknown_CodeA2><NewLine><NewLine><DefineLabel4>
+Good! <StartNewSection><NewLine><NewLine><DefineLabel4>
 <DefaultMessage><DefineLabel4>Many keyboards are marked with numbers, so that ABC would be 678.What would the next 3 be?
-No, try again. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel4>
+No, try again. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel4>
 987
-Good! So the first phrase goes 678 987 8767653! Now thou must practice! <Unknown_CodeA2><NewLine><EndCoversation>
+Good! So the first phrase goes 678 987 8767653! Now thou must practice! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Sir Arbuthnot
 
@@ -2586,7 +2586,7 @@ Fare thee well.
 roya
 <Or>
 coin
-Well... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>That is to say I was, before I became a wanted man!
+Well... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>That is to say I was, before I became a wanted man!
 was
 <Or>
 want
@@ -2621,12 +2621,12 @@ y
 <DefineLabel2>
 <DefaultMessage><DefineLabel2>Art thou the one true Avatar?
 Oh.
-'Tis indeed an honor! <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+'Tis indeed an honor! <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Gregory
 
 Gregory
-a tall, heavily scarred man. <NewLine><NewLine><Unknown_CodeA2>What in the name of Mondain art ye doing in me lighthouse! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+a tall, heavily scarred man. <NewLine><NewLine><StartNewSection>What in the name of Mondain art ye doing in me lighthouse! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Now that's a real poser!
 And a good riddance, too.
@@ -2635,14 +2635,14 @@ Yes, ye did guess it, ya bloomin' plonker!
 <DefaultMessage><DefineLabel0>Didst ye not know this is private property?
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>Were ye born that ugly, or didst ye lose a fight with a frying pan?
-Not only ugly, but yer stupid too! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What dost ye want anyway?
+Not only ugly, but yer stupid too! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>What dost ye want anyway?
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Jacqueline
 
 Jacqueline
 a bony woman with a blank stare.
 
-I, uh... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>don't remember.
+I, uh... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>don't remember.
 Uh, bye....
 reme
 Remember what?
@@ -2656,34 +2656,34 @@ Mmmmm, my favorite!
 ---- SCRIPT for Smith
 
 Smith
-a strangely familiar horse. <NewLine><NewLine><SetFlag><DefineLabel3><DefineLabel0>
+a strangely familiar horse. <NewLine><NewLine><IfElseKnowsName><DefineLabel3><DefineLabel0>
 
-Well... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I eat hay.
+Well... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>I eat hay.
 Come back and see me again. Really!
 eat
 <Or>
 hay
-Yep. <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Oh, I'm also here to ask you something.
+Yep. <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Oh, I'm also here to ask you something.
 ask
 <DefineLabel4>
 forg
 <Or>
 tell
-Yea... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The answer... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It was... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2><Rune>INFINITY <Rune>!
-<DefaultMessage><DefineLabel0>Hey... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>You look familiar, have we met?
+Yea... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The answer... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It was... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection><Rune>INFINITY <Rune>!
+<DefaultMessage><DefineLabel0>Hey... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>You look familiar, have we met?
 <DefineLabel1>
 y
 <DefineLabel2>
-<DefaultMessage><DefineLabel1>Oh... <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><DefineLabel2>I thought so... <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><DefineLabel3>Hello,  <AvatarsName>... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>You know what?
-Way back... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Way, way back... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I forgot to tell you something!
+<DefaultMessage><DefineLabel1>Oh... <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel2>I thought so... <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel3>Hello,  <AvatarsName>... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>You know what?
+Way back... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Way, way back... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I forgot to tell you something!
 <DefaultMessage><DefineLabel4>Lord British wanted me to ask you if you were enjoying this game?
 <DefineLabel4>
 n
 Well, if you have any complaints, write to him at Origin. He would really like to know.
 y
-He will be so glad to hear it... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Of course, he won't ever know unless you write to him at Origin and tell him so. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I know first hand he'd like that.
+He will be so glad to hear it... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Of course, he won't ever know unless you write to him at Origin and tell him so. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I know first hand he'd like that.
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Sutek
 
@@ -2692,11 +2692,11 @@ a young, solemn mage. <NewLine><NewLine><DefineLabel0>
 
 
 
-<DefaultMessage><DefineLabel0>Greetings, I am Sutek. <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel1><EndCoversation>
+<DefaultMessage><DefineLabel0>Greetings, I am Sutek. <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel1><EndCoversation>
 <DefaultMessage><DefineLabel1>Art thou the Avatar of legend?
-Oh. <Unknown_CodeA2><NewLine><EndCoversation>
+Oh. <StartNewSection><NewLine><EndCoversation>
 y
-I have been scrying for the nature of the three Shards! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I have learned they were formed at the time of the first Dark Lord. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>When Mondain's Gem of Immortality was destroyed, its shards still harbored unspeakable evil! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>They lay festering deep within the earth, but now their malevolent power has been unleashed upon the world. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards and the Shadowlords can and must be destroyed! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards must be recovered from their resting places in the boundless Underworld, and cast into the Eternal Flames of Truth, Love, and Courage... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Even as each respective Shadowlord stands nigh upon the flame of the Principle it opposes. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Take now this knowledge and use it well! <Unknown_CodeA2><NewLine><EndCoversation>
+I have been scrying for the nature of the three Shards! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I have learned they were formed at the time of the first Dark Lord. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>When Mondain's Gem of Immortality was destroyed, its shards still harbored unspeakable evil! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>They lay festering deep within the earth, but now their malevolent power has been unleashed upon the world. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards and the Shadowlords can and must be destroyed! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards must be recovered from their resting places in the boundless Underworld, and cast into the Eternal Flames of Truth, Love, and Courage... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Even as each respective Shadowlord stands nigh upon the flame of the Principle it opposes. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Take now this knowledge and use it well! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Sin'Vraal
 
@@ -2732,19 +2732,19 @@ eart
 deep
 I can only tell thee that he has turned me from the ways of darkness, but he'll have no <119>luck with the Shadowlords!
 shar
-The accursed Shard of Hatred that spawned my former master lies within the underworld at the location thou wouldst call  <Rune>I <Rune>' <Rune>A <Rune><Unknown_CodeA2>,  <Rune>I <Rune>' <Rune>A <Rune><Unknown_CodeA2><Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Enter through the dungeons by Lost Hope Bay!
+The accursed Shard of Hatred that spawned my former master lies within the underworld at the location thou wouldst call  <Rune>I <Rune>' <Rune>A <Rune><StartNewSection>,  <Rune>I <Rune>' <Rune>A <Rune><StartNewSection><StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Enter through the dungeons by Lost Hope Bay!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Grendel
 
 Grendel
-a giant rat! <NewLine><NewLine><Unknown_CodeA2>Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What dost thou want? <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+a giant rat! <NewLine><NewLine><StartNewSection>Squeek... <StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><StartNewSection>Squeek... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>What dost thou want? <StartNewSection><NewLine><NewLine><Unknown_FF>
 
 I once was a great alchemist!
 Squeek!
 alch
-Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>That was before my accident!
+Squeek... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>That was before my accident!
 acci
-Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I was working on a spell called: <NewLine><Rune>VAS REL XEN BET <Rune><NewLine>It got a little out of hand.
+Squeek... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>I was working on a spell called: <NewLine><Rune>VAS REL XEN BET <Rune><NewLine>It got a little out of hand.
 spel
 <Or>
 hand
@@ -2752,37 +2752,37 @@ hand
 vas
 It was to be an enchantment to turn foes into rats.
 rat
-Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>During an early experiment I was transformed into a rat! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I have <125>perfected a lesser version.
+Squeek... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>During an early experiment I was transformed into a rat! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>I have <125>perfected a lesser version.
 less
 <Or>
 vers
 <Or>
 perf
-I call it <Rune>REL XEN BET <Rune>. It is of the Sixth Circle, and will turn one being into a rat for fair time! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+I call it <Rune>REL XEN BET <Rune>. It is of the Sixth Circle, and will turn one being into a rat for fair time! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Wouldst thou like the formula?
 O.K.
 y
-It requires that one part spider silk be mixed with a pinch of sulfurous ash... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>...with a crushed root of mandrake and spores scraped from a nightshade cap.
+It requires that one part spider silk be mixed with a pinch of sulfurous ash... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>...with a crushed root of mandrake and spores scraped from a nightshade cap.
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Johne, Captain Johne.
 
 Johne, Captain Johne.
-an unkempt mage in tattered robes. <NewLine><NewLine><Unknown_CodeA2>At long last, another living soul! <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+an unkempt mage in tattered robes. <NewLine><NewLine><StartNewSection>At long last, another living soul! <StartNewSection><NewLine><NewLine><Unknown_FF>
 
 I fear the Shadowlords!
 Beware!
 fear
 <Or>
 shad
-Years ago, my ship was swallowed by a massive whirlpool. The remains of my ship washed up on this isle with myself and three others. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>When I recovered, I explored my surroundings, and found a great gem broken into three shards. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards, full of evil, drove me to kill my three companions, and from their blood sprang the three Shadowlords.  <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Taking the Shards deep into this underworld, they entrapped Lord British, and hold Blackthorn in their power. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>They spare me only to taunt me with <119>news until my dying day. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Years ago, my ship was swallowed by a massive whirlpool. The remains of my ship washed up on this isle with myself and three others. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>When I recovered, I explored my surroundings, and found a great gem broken into three shards. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards, full of evil, drove me to kill my three companions, and from their blood sprang the three Shadowlords.  <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Taking the Shards deep into this underworld, they entrapped Lord British, and hold Blackthorn in their power. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>They spare me only to taunt me with <119>news until my dying day. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Wilt thou save Britannia?
-Pity. <Unknown_CodeA2><NewLine><EndCoversation>
+Pity. <StartNewSection><NewLine><EndCoversation>
 y
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>Might I join thee?
-Pity. <Unknown_CodeA2><NewLine><EndCoversation>
+Pity. <StartNewSection><NewLine><EndCoversation>
 y
-Let me avenge my wrongdoing. <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Let me avenge my wrongdoing. <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Sir Simon
 
@@ -2796,7 +2796,7 @@ We fled here when the tyrant Blackthorn began to spread his self-righteous rule.
 blac
 <Or>
 rule
-The land has not been the same <125>the loss of Lord British. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A good friend. I wish I knew of a way to help him.
+The land has not been the same <125>the loss of Lord British. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A good friend. I wish I knew of a way to help him.
 brit
 <Or>
 help
@@ -2806,7 +2806,7 @@ A powerful artifact. Lord British once told me of its ability.
 abil
 When worn, it absorbs all magical forms of attack, no matter how powerful.
 scep
-A mighty item of immense power. It is said that when used it can disperse all magical barriers, even in the ethereal plane. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I hear 'tis held by the Shadowlords themselves, in their earthly fortress!
+A mighty item of immense power. It is said that when used it can disperse all magical barriers, even in the ethereal plane. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I hear 'tis held by the Shadowlords themselves, in their earthly fortress!
 amul
 Of that, my wife knows more than I.
 <DefaultMessage><Unknown_Enter>
@@ -2832,13 +2832,13 @@ amul
 <DefaultMessage><DefineLabel0>I see it in thy eyes, but tell me, dost thou support Blackthorn's rule?
 I see.
 n
-I knew that one who has tread the path of Virtue could not agree with the current state of affairs. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
-<DefaultMessage><DefineLabel1>I have seen the Amulet <124>Lord British once bore. It lies forgotten in the Underworld, amongst the graves of valiant warriors. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>With only this can thee find thy path in a place of unholy darkness, <124>I have forseen shall block thy way. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Tis beyond <119>a place that thou must search, if thou art to mend the injustice wrought upon the world by Blackthorn and his spectres! <Unknown_CodeA2><NewLine><EndCoversation>
+I knew that one who has tread the path of Virtue could not agree with the current state of affairs. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
+<DefaultMessage><DefineLabel1>I have seen the Amulet <124>Lord British once bore. It lies forgotten in the Underworld, amongst the graves of valiant warriors. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>With only this can thee find thy path in a place of unholy darkness, <124>I have forseen shall block thy way. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Tis beyond <119>a place that thou must search, if thou art to mend the injustice wrought upon the world by Blackthorn and his spectres! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Dupre
 
 Dupre
-a paladin, shining with Virtue. <NewLine><NewLine><Unknown_CodeA2>Ah,  <AvatarsName>! <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+a paladin, shining with Virtue. <NewLine><NewLine><StartNewSection>Ah,  <AvatarsName>! <StartNewSection><NewLine><NewLine><DefineLabel0>
 
 Sentri and I live here in Bordermarch. We await thy call for us to join thee!
 Farewell. Return soon with good news.
@@ -2849,9 +2849,9 @@ duck
 <DefaultMessage><DefineLabel0>That is thee, yes?
 <DefineLabel0>
 n
-I am sorry, I have mistaken thee for an old friend. <Unknown_CodeA2><NewLine><EndCoversation>
+I am sorry, I have mistaken thee for an old friend. <StartNewSection><NewLine><EndCoversation>
 y
-I hardly recognize thee, it has been so long. <Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+I hardly recognize thee, it has been so long. <StartNewSection><NewLine><NewLine><DefineLabel1>
 <DefaultMessage><DefineLabel1>Hast thou returned to Britannia to set things straight?
 Then we are doomed!
 y
@@ -2859,7 +2859,7 @@ y
 <DefaultMessage><DefineLabel2>Shall I join with thee again?
 As thou wisheth.
 y
-Good, it will be good to fight by thy side again! <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Good, it will be good to fight by thy side again! <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><DefineLabel3>Wanna buy a duck?
 They're cheap.
 y
@@ -2883,7 +2883,7 @@ Spectres of Evil!
 join
 <DefineLabel2>
 <DefaultMessage><DefineLabel0>Have we not met before?
-Ah yes, I remember, 'twas before the dark times! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
+Ah yes, I remember, 'twas before the dark times! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 <DefaultMessage><DefineLabel1>Thou art the Avatar of legend, art thou not?
 Oh, I could have sworn it was thee.
 y
@@ -2895,7 +2895,7 @@ y
 <DefaultMessage><DefineLabel3>I would be honored to join thee, wilt thou have me?
 I understand.
 y
-It is indeed an honor to fight with thee. <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+It is indeed an honor to fight with thee. <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Lord Seggallion
 
@@ -2919,15 +2919,15 @@ trad
 rout
 <Or>
 livi
-You know... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I demanded a fair toll for passage through my waters... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The fact that this usually amounted to all of their belongings is irrelevant!
+You know... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I demanded a fair toll for passage through my waters... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The fact that this usually amounted to all of their belongings is irrelevant!
 star
 <Or>
 spy
-I used my spyglass to study the stars. <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+I used my spyglass to study the stars. <StartNewSection><NewLine><NewLine><DefineLabel0>
 <DefaultMessage><DefineLabel0>Wouldst thou like to see it?
 I see.
 y
-I used it on many nights for navigational purposes. I use it but rarely now. <Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+I used it on many nights for navigational purposes. I use it but rarely now. <StartNewSection><NewLine><NewLine><DefineLabel1>
 <DefaultMessage><DefineLabel1>Dost thou study the stars?
 Too bad.
 y
@@ -2951,7 +2951,7 @@ Nice talking shoppe.
 grea
 <Or>
 repu
-Modesty was never one of my great virtues. But, I am actually quite good. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Modesty was never one of my great virtues. But, I am actually quite good. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 spel
 <Or>
 thin
@@ -2961,15 +2961,15 @@ near
 disa
 I know <127>got the words right, but I <121>have mixed the reagents improperly, I think.
 word
-I use the chant...  <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Now, don't tell anyone else... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2><Rune>AN YLEM <Rune>!
+I use the chant...  <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Now, don't tell anyone else... <StartNewSection><NewLine><NewLine><Pause><StartNewSection><Rune>AN YLEM <Rune>!
 an ylem
 Not now, fool! Am I still here?
 y
 Good, watch it!
 reag
-I think it was Ash and Mandrake... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But, then again, perhaps it was Garlic and Blood Moss... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Oh, I don't know. <127>never had a <120>good memory.
+I think it was Ash and Mandrake... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But, then again, perhaps it was Garlic and Blood Moss... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Oh, I don't know. <127>never had a <120>good memory.
 <DefaultMessage><DefineLabel0>Would ye be impressed if I told thee that I can cast a spell that CREATES light even on the darkest night?
-Well <127>done better. <Unknown_CodeA2><NewLine><EndCoversation>
+Well <127>done better. <StartNewSection><NewLine><EndCoversation>
 y
 Well! If ye think that's good, <127>NEARLY made things disappear!
 <DefaultMessage><Unknown_Enter>
@@ -2995,7 +2995,7 @@ Beyond imagining! Why, one day I even saw her nearly kill a Giant Rat with a sin
 gian
 <Or>
 rat
-Yes, 'tis true, I saw it with my own eyes! <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+Yes, 'tis true, I saw it with my own eyes! <StartNewSection><NewLine><NewLine><DefineLabel0>
 spy
 Lord Seggallion uses it to study the stars! If thou ask, he might show it unto thee.
 <DefaultMessage><DefineLabel0>Would ye like me to tell thee something really amazing?
@@ -3023,11 +3023,11 @@ Seggallion.
 resi
 <Or>
 abod
-A mixed bunch with an interesting history, Before he retired, my lord was a famous pirate. Now, even he fears Blackthorn. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But, I mustn't gossip!
+A mixed bunch with an interesting history, Before he retired, my lord was a famous pirate. Now, even he fears Blackthorn. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But, I mustn't gossip!
 blac
 I mustn't gossip.
 goss
-Like I said, I don't wish to tell tales, but if thou dost have an ear for gossip, <127>never heard anyone who talks as much as my friend Telila. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>She <122>in the city of Britain, ask her for some rumours or gossip!
+Like I said, I don't wish to tell tales, but if thou dost have an ear for gossip, <127>never heard anyone who talks as much as my friend Telila. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>She <122>in the city of Britain, ask her for some rumours or gossip!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Thrud
 
@@ -3051,15 +3051,15 @@ jewe
 weap
 <DefineLabel1>
 <DefaultMessage><DefineLabel0>Surely thou hast heard of the time when I butchered an entire village?
-I had just returned from a war across the sea, when on my way home, I stopped at an inn. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The meal I ate there gave me indigestion for two days! Upon recovery, I killed the innkeeper and his entire staff. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The ensuing outcry forced me to dispense with the rest of the village!
+I had just returned from a war across the sea, when on my way home, I stopped at an inn. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The meal I ate there gave me indigestion for two days! Upon recovery, I killed the innkeeper and his entire staff. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The ensuing outcry forced me to dispense with the rest of the village!
 <DefaultMessage><DefineLabel1>The Jeweled Sword and Shield are fine weapons indeed! Wouldst thou like them?
 Thy loss!
 y
 <DefineLabel2>
-<DefaultMessage><DefineLabel2>I will let thee have these great weapons for the Resistance's password, <124>thou hast so cleverly discovered. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Tell me, what is it?
-Liar! Guards! <CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel2>I will let thee have these great weapons for the Resistance's password, <124>thou hast so cleverly discovered. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Tell me, what is it?
+Liar! Guards! <CallGuards><StartNewSection><NewLine><EndCoversation>
 dawn
-May they serve thee well! <Change><8><Change><28><Unknown_CodeA2><NewLine><EndCoversation>
+May they serve thee well! <Change><8><Change><28><StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Elistaria
 
@@ -3096,9 +3096,9 @@ The Jeweled Weapons of course! Ask Thrud for them!
 <DefineLabel8>
 impera
 <DefineLabel3>
-<DefaultMessage><DefineLabel3>Ah yes, now I remember. Thou art the one infiltrating the Resistance. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Here, wear this badge when thou doth wish to show thou art with Blackthorn and the Oppression! <Unknown_CodeA2><NewLine><NewLine><Change><74><KeyWait><Unknown_CodeA2>It <121>be that Thrud has some items that <121>be useful in your mission. <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><DefineLabel8>Daemons! Kill this wretch! <CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
-<Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel3>Ah yes, now I remember. Thou art the one infiltrating the Resistance. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Here, wear this badge when thou doth wish to show thou art with Blackthorn and the Oppression! <StartNewSection><NewLine><NewLine><Change><74><KeyWait><StartNewSection>It <121>be that Thrud has some items that <121>be useful in your mission. <StartNewSection><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel8>Daemons! Kill this wretch! <CallGuards><StartNewSection><NewLine><EndCoversation>
+<StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Balinor
 
@@ -3107,14 +3107,14 @@ a leather-winged abomination <NewLine><NewLine><DefineLabel0>
 
 
 
-<DefaultMessage><DefineLabel0>Foul mortal, thou hast disturbed my peaceful rest! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>My bound duty is to prevent intruders from passing! And so I shall! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But first, thou dost seem an educated person and so I offer thee an educated solution to the problem at hand... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I suggest a battle of wits for thy passage. If I win, I shall slay thee, if thou dost win, I shall let thee pass to face the perils within! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Dost thou accept?
-So be it! <CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel0>Foul mortal, thou hast disturbed my peaceful rest! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>My bound duty is to prevent intruders from passing! And so I shall! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But first, thou dost seem an educated person and so I offer thee an educated solution to the problem at hand... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I suggest a battle of wits for thy passage. If I win, I shall slay thee, if thou dost win, I shall let thee pass to face the perils within! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Dost thou accept?
+So be it! <CallGuards><StartNewSection><NewLine><EndCoversation>
 y
-Ah good, <127>not tested my wit for some time! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
+Ah good, <127>not tested my wit for some time! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 <DefaultMessage><DefineLabel1>What is as tall as a house, round as a cup, and all the king's horses can't draw it up?
-Hah! Thou hast failed! Now to keep my part of the bargain! <CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Hah! Thou hast failed! Now to keep my part of the bargain! <CallGuards><StartNewSection><NewLine><EndCoversation>
 well
-Thou hast guessed well, foolish one, but thou hast committed a fatal blunder! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Never trust a Daemon's word! Hah, hah, hah! <CallGuards><Unknown_CodeA2><NewLine><EndCoversation>
+Thou hast guessed well, foolish one, but thou hast committed a fatal blunder! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Never trust a Daemon's word! Hah, hah, hah! <CallGuards><StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Lady Janell
 
@@ -3150,7 +3150,7 @@ evil
 temp
 <Or>
 oppo
-Seek out the twin sisters in the hidden city of Cove, and ask them of the Shard of Falsehood! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Seek out the twin sisters in the hidden city of Cove, and ask them of the Shard of Falsehood! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Dost thou meditate at shrines?
 I see.
 y
@@ -3163,7 +3163,7 @@ Enter one of the mystic moongates at precisely midnight. Then shalt thou find th
 ---- SCRIPT for Lord Shalineth
 
 Lord Shalineth
-a tall man with a bearing of wisdom and power. <NewLine><NewLine><KeyWait><SetFlag><DefineLabel1><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Well met, worthy servant of Truth! <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+a tall man with a bearing of wisdom and power. <NewLine><NewLine><KeyWait><IfElseKnowsName><DefineLabel1><AskName><StartNewSection><NewLine><NewLine><StartNewSection>Well met, worthy servant of Truth! <StartNewSection><NewLine><NewLine><Unknown_FF>
 
 I am the Lord of the Keep of Truth.
 Go, abandon not thy quest for Light!
@@ -3180,14 +3180,14 @@ merc
 simp
 <Or>
 name
-Through the exercise of great magic and scrying, I have gleaned the name of the Shadowlord of Falsehood. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Through the exercise of great magic and scrying, I have gleaned the name of the Shadowlord of Falsehood. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Dost thou swear not to use it foolishly?
 <DefineLabel0>
 y
 The Name of this dread lord is <Rune>FAULINEI <Rune>. Speak it not, for only at thy bidding can he enter our hallowed Keep.
 n
-Thou fool. <Unknown_CodeA2><NewLine><EndCoversation>
-<DefaultMessage><DefineLabel1>A pleasure to see thee again,  <AvatarsName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Thou fool. <StartNewSection><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel1>A pleasure to see thee again,  <AvatarsName><StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Sir Sean
 
@@ -3223,7 +3223,7 @@ ston
 y
 Coward.
 n
-Sail first thy ship unto the southernmost part of Lost Hope Bay. Travel so far as thy skiff will take thee. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Some speak of a special implement that can be used to cross the mountains. Find first this equipment! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Then climb thyway through the mountains to the south. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>There thou shalt find the black keep Stonegate, guarded by Balinor, foulest of daemons! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>This is the earthly domain of the three Shadowlords, from <124>few have returned!
+Sail first thy ship unto the southernmost part of Lost Hope Bay. Travel so far as thy skiff will take thee. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Some speak of a special implement that can be used to cross the mountains. Find first this equipment! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then climb thyway through the mountains to the south. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>There thou shalt find the black keep Stonegate, guarded by Balinor, foulest of daemons! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>This is the earthly domain of the three Shadowlords, from <124>few have returned!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Lady Hayden.
 
@@ -3249,7 +3249,7 @@ He is the Keeper of the Royal Horses, and a fine man.
 roya
 <Or>
 hors
-I find peace in riding our sturdy mounts through the forests to the south. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It helps me think of my magic and happier times.
+I find peace in riding our sturdy mounts through the forests to the south. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It helps me think of my magic and happier times.
 moun
 <Or>
 ridi
@@ -3261,7 +3261,7 @@ happ
 time
 <Or>
 peac
-If only one still unafraid to fight for Virtue walked the land... <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+If only one still unafraid to fight for Virtue walked the land... <StartNewSection><NewLine><NewLine><DefineLabel0>
 <DefaultMessage><DefineLabel0>Art thou afraid?
 I see.
 n
@@ -3331,7 +3331,7 @@ writ
 work
 <Or>
 publ
-I compiled the reference <128>known as 'The Book of Lore.' <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+I compiled the reference <128>known as 'The Book of Lore.' <StartNewSection><NewLine><NewLine><DefineLabel0>
 <DefaultMessage><DefineLabel0>Hast thou seen it?
 Too bad.
 y
@@ -3346,7 +3346,7 @@ I thank thee, kind soul.
 ---- SCRIPT for Mariah
 
 Mariah
-a weak and frail friend. <NewLine><NewLine><Unknown_CodeA2><AvatarsName>, my old friend. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Tis I, Mariah! <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+a weak and frail friend. <NewLine><NewLine><StartNewSection><AvatarsName>, my old friend. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Tis I, Mariah! <StartNewSection><NewLine><NewLine><Unknown_FF>
 
 I have been quite ill, for many days.
 Please, return and take me with thee when thou canst.
@@ -3355,7 +3355,7 @@ ill
 day
 The healers here, in the Lycaeum, <123>heal even the wound of a Shadowlord quickly.
 shad
-I met one in Moonglow some time back, but did escape with my life! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+I met one in Moonglow some time back, but did escape with my life! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 join
 <DefineLabel2>
 <DefaultMessage><DefineLabel0>So, art thou here to set things right?
@@ -3375,7 +3375,7 @@ y
 n
 Soon, I hope.
 y
-I am honored to be with thee again! <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+I am honored to be with thee again! <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Lord Michael
 
@@ -3411,11 +3411,11 @@ moun
 clim
 <Or>
 grap
-I have the grapple used to climb mountains. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Though it allows passage through many mountains, there are some peaks <124>still cannot be crossed! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And, one can still fall whilst using it if one is not nimble enough! <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+I have the grapple used to climb mountains. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Though it allows passage through many mountains, there are some peaks <124>still cannot be crossed! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And, one can still fall whilst using it if one is not nimble enough! <StartNewSection><NewLine><NewLine><DefineLabel0>
 <DefaultMessage><DefineLabel0>Wouldst thou like it?
 Oh.
 y
-Use it well, and be careful! <Change><70><Unknown_CodeA2><NewLine><EndCoversation>
+Use it well, and be careful! <Change><70><StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Cory
 
@@ -3457,7 +3457,7 @@ I wish he would return!
 <DefaultMessage><DefineLabel0>Ah! A connoisseur! Wouldst thou like to try some?
 Thy loss.
 y
-Here, eat this.. <Unknown_CodeA2><NewLine><NewLine><Pause>You put the morsel in your mouth... <NewLine><NewLine><Pause>Such food as this you've never tasted! It melts in your mouth, tasting of a thousand different spices, all perfectly matched! <Change><65><KeyWait><NewLine><NewLine><Unknown_CodeA2>Good, huh!
+Here, eat this.. <StartNewSection><NewLine><NewLine><Pause>You put the morsel in your mouth... <NewLine><NewLine><Pause>Such food as this you've never tasted! It melts in your mouth, tasting of a thousand different spices, all perfectly matched! <Change><65><KeyWait><NewLine><NewLine><StartNewSection>Good, huh!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Hardluck
 
@@ -3471,7 +3471,7 @@ I juggle and sing fine songs!
 sing
 <Or>
 song
-Blackthorn once was a fine ol' man. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Upon fine principles he would stand. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>But then came the Shadowlords, full of evil. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Blackthorn's soul they came to steal. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>All at once the Tyranny began. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>All because of Fate's dark hand! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Blackthorn once was a fine ol' man. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Upon fine principles he would stand. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But then came the Shadowlords, full of evil. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Blackthorn's soul they came to steal. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>All at once the Tyranny began. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>All because of Fate's dark hand! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 abbe
 Empath Abbey!
 empa
@@ -3481,7 +3481,7 @@ Nah, not in the mood.
 <DefaultMessage><DefineLabel0>Like it?
 Oh.
 y
-Thou <121>have noticed that it points out that Blackthorn himself is not responsible for the evils he imposes. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Rather, he is trapped, as we are, under the control of the truly evil Shadowlords, only more so. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A pity.
+Thou <121>have noticed that it points out that Blackthorn himself is not responsible for the evils he imposes. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Rather, he is trapped, as we are, under the control of the truly evil Shadowlords, only more so. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A pity.
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Barbra
 
@@ -3517,7 +3517,7 @@ They oppose the basic fabric of Virtue!
 <DefaultMessage><DefineLabel0>Thou dost know it is thy duty to try and recover what this kingdom has lost. Dost thou intend to?
 Too bad.
 y
-Then perhaps I have a vision that <121>help thee. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I saw a great man in a distant place. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I saw him as if through a looking glass. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I saw naught but his reflection. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>More I do not know. <Unknown_CodeA2><NewLine><EndCoversation>
+Then perhaps I have a vision that <121>help thee. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I saw a great man in a distant place. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I saw him as if through a looking glass. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I saw naught but his reflection. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>More I do not know. <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Tim
 
@@ -3551,7 +3551,7 @@ melo
 coll
 <Or>
 folk
-Recently he gave a recital in Trinsic, and then headed south. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>He often teaches a piece by Iolo and Gweno. 'Tis a favorite of Lord British.
+Recently he gave a recital in Trinsic, and then headed south. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>He often teaches a piece by Iolo and Gweno. 'Tis a favorite of Lord British.
 Iolo
 <Or>
 bard
@@ -3599,15 +3599,15 @@ I learn how it can be overcome.
 over
 <Or>
 lear
-Thou doth show much interest in the Principle of Love. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Perhaps, thou should study here at the abbey... <Unknown_CodeA2><NewLine><NewLine><SetFlag><Unknown_FF><KeyWait><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel0><Unknown_FF>
+Thou doth show much interest in the Principle of Love. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Perhaps, thou should study here at the abbey... <StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><KeyWait><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
 join
 <DefineLabel0>
-<DefaultMessage><DefineLabel0>I would like to join thee on thy quest! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Might I join thee?
+<DefaultMessage><DefineLabel0>I would like to join thee on thy quest! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Might I join thee?
 <DefineLabel0>
 n
 I am saddened.
 y
-A great honor indeed! <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+A great honor indeed! <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Julia
 
@@ -3621,7 +3621,7 @@ They hunt all of us who helped thee on the quest. Blackthorn fears us!
 blac
 <Or>
 fear
-He feared we would find a way to bring thee back. Which is, of course, exactly what we did! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
+He feared we would find a way to bring thee back. Which is, of course, exactly what we did! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 join
 <DefineLabel2>
 <DefaultMessage><DefineLabel0><AvatarsName>, it is thee, is it not?
@@ -3635,7 +3635,7 @@ y
 <DefaultMessage><DefineLabel2>Shall I join with thee now?
 Just let me know.
 y
-At last, we begin anew! <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+At last, we begin anew! <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Toede
 
@@ -3657,15 +3657,15 @@ stro
 fort
 <Or>
 impr
-Built on the isle of three volcanoes, in the southeast of Britannia. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Yes, I was the foreman for trap-door construction. There are many placed on common passageways. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Blackthorn's castle, beware! If thou doth fall.... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Think of me!
+Built on the isle of three volcanoes, in the southeast of Britannia. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Yes, I was the foreman for trap-door construction. There are many placed on common passageways. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Blackthorn's castle, beware! If thou doth fall.... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Think of me!
 capt
 <DefineLabel0>
-<DefaultMessage><DefineLabel0>I was shipwrecked on this isle and captured by ones who did not share my belief in the righteousness of Blackthorn's rule. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Dost thou support Blackthorn?
-Heretic! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel0>I was shipwrecked on this isle and captured by ones who did not share my belief in the righteousness of Blackthorn's rule. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Dost thou support Blackthorn?
+Heretic! <StartNewSection><NewLine><EndCoversation>
 y
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>Good! Wilt thou help me escape?
-<Rune>PIGDOG <Rune>! <Unknown_CodeA2><NewLine><EndCoversation>
+<Rune>PIGDOG <Rune>! <StartNewSection><NewLine><EndCoversation>
 y
 Then free me from these manacles!
 <DefaultMessage><Unknown_Enter>
@@ -3723,13 +3723,13 @@ I lived zere in my childhood, and came to Britannia upon a magical carpet!
 magi
 <Or>
 carp
-Ah, an interesting tale. Unfortunately, I zold it zoon after my arrival in Britannia. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I did not know zey were so scarce here, or I would not have zold it. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Ah, an interesting tale. Unfortunately, I zold it zoon after my arrival in Britannia. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I did not know zey were so scarce here, or I would not have zold it. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Monsieur, dost thou seek to discover ze fate of Lord British?
 Oh.
 y
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>Perhaps zen my magic carpet would be of some use?
-I zold it to a mage named Bandaii. He lived in a village named Paws. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Strange fellow, he was looking for a talking horse! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>If thou <123>find him, he might be willing to zell thee my carpet!
+I zold it to a mage named Bandaii. He lived in a village named Paws. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Strange fellow, he was looking for a talking horse! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If thou <123>find him, he might be willing to zell thee my carpet!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Kristi
 
@@ -3753,17 +3753,17 @@ The inhabitants, as well as any visitors.
 inha
 And visitors.
 visi
-We don't have too many these days... <Unknown_CodeA2><NewLine><NewLine><SetFlag><Unknown_FF><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel0><Unknown_FF>
+We don't have too many these days... <StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
 skul
 <Or>
 keys
-<SetFlag><DefineLabel2><DefineLabel0>
-<DefaultMessage><DefineLabel0>A few weeks ago there was a strange, silent mage who ate here. He gave me 5 skull keys as payment. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>He said they are magic and powerful, worth many gold pieces. I have no use for them. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel1>
+<IfElseKnowsName><DefineLabel2><DefineLabel0>
+<DefaultMessage><DefineLabel0>A few weeks ago there was a strange, silent mage who ate here. He gave me 5 skull keys as payment. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>He said they are magic and powerful, worth many gold pieces. I have no use for them. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 <DefaultMessage><DefineLabel1>I will sell them to thee for 100 gold crowns. Wouldst thou like to buy them?
 Thy loss.
 y
 <Gold>100 <Change><75><Change><75><Change><75><Change><75><Change><75>The mage said that they could open even magically locked doors.
-<DefaultMessage><DefineLabel2>I have no more, but the mage told me that he acquired them from an armourer named Shenstone! <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel2>I have no more, but the mage told me that he acquired them from an armourer named Shenstone! <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Gardner
 
@@ -3791,15 +3791,15 @@ shar
 cowa
 <Or>
 ques
-Upon the Isle of the Avatar, there lies a dungeon. At its bottom lies a small, cavernous room of the Underworld. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>However, there are many more <119>small chambers, near enough to be reached by one with the proper magic! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>With many uses of <119>magic, and a great deal of exploration, one <121>find the Shard of Cowardice. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It lies at the location <124>upon the surface would be recorded as <Rune>L <Rune>' <Rune>A <Rune><Unknown_CodeA2>, <Rune>L <Rune>' <Rune>I <Rune><Unknown_CodeA2>.
+Upon the Isle of the Avatar, there lies a dungeon. At its bottom lies a small, cavernous room of the Underworld. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>However, there are many more <119>small chambers, near enough to be reached by one with the proper magic! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>With many uses of <119>magic, and a great deal of exploration, one <121>find the Shard of Cowardice. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It lies at the location <124>upon the surface would be recorded as <Rune>L <Rune>' <Rune>A <Rune><StartNewSection>, <Rune>L <Rune>' <Rune>I <Rune><StartNewSection>.
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Maxwell
 
 Maxwell
 a strong, yet sleek fighter.
-Ah,  <AvatarsName>, my good friend! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Monsieur Loubet has been telling me of thy quest. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Ah,  <AvatarsName>, my good friend! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Monsieur Loubet has been telling me of thy quest. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 I am a student here at Serpent's Hold.
-Farewell. <Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel1><AskName><Unknown_CodeA2><NewLine><EndCoversation>
+Farewell. <StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel1><AskName><StartNewSection><NewLine><EndCoversation>
 serp
 <Or>
 hold
@@ -3833,7 +3833,7 @@ join
 n
 A pity.
 y
-'Tis indeed a great honor! <Unknown_CodeA2><NewLine><NewLine><JoinParty>
+'Tis indeed a great honor! <StartNewSection><NewLine><NewLine><JoinParty>
 <DefaultMessage><DefineLabel1><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Jennifer
@@ -3898,7 +3898,7 @@ deep
 rece
 <Or>
 eart
-They are even those who claim that some survive the perilous journey below. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Only to be killed and eaten by the horrible creatures that dwell in the dark recesses.
+They are even those who claim that some survive the perilous journey below. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Only to be killed and eaten by the horrible creatures that dwell in the dark recesses.
 rum
 Aye, 'tis my favorite.
 <DefaultMessage><DefineLabel0>Ahoy there, matey. Care to join me for a tot of rum?
@@ -3966,7 +3966,7 @@ was
 sail
 That was before the accident.
 acci
-His best shipmate died in a storm whilst trying to reach this port. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Since that day, Windmire has dedicated his life to protecting these shipping lanes.
+His best shipmate died in a storm whilst trying to reach this port. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Since that day, Windmire has dedicated his life to protecting these shipping lanes.
 prot
 <Or>
 ship
@@ -4012,7 +4012,7 @@ eigh
 laws
 I must learn to recite them.
 reci
-I can't yet. <Unknown_CodeA2><NewLine><NewLine><KeyWait><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel0><Unknown_FF>
+I can't yet. <StartNewSection><NewLine><NewLine><KeyWait><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Unknown_FF>
 <DefaultMessage><DefineLabel0>Dost thou live by Virtue?
 Then thou art a bad person!
 y
@@ -4028,7 +4028,7 @@ Good!
 <DefaultMessage><DefineLabel3>Why, are his laws in error?
 Then thou art not being <120>kind!
 y
-I do not believe thee! He would not lie to us! <Unknown_CodeA2><NewLine><EndCoversation>
+I do not believe thee! He would not lie to us! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Charlotte
 
@@ -4066,7 +4066,7 @@ law
 firs
 <Or>
 one
-We must look at the <120>roots of dishonesty, and see it comes from the twisted tongues of liars. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>And, surely, one cannot lie without a tongue! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+We must look at the <120>roots of dishonesty, and see it comes from the twisted tongues of liars. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And, surely, one cannot lie without a tongue! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Wouldst thou agree, the teachings of Blackthorn are meaningful and true?
 Hold thy tongue, heretic, or thou shalt lose it!
 y
@@ -4107,14 +4107,14 @@ sext
 'Den what are ye babbling 'bout!
 y
 <DefineLabel1>
-<DefaultMessage><DefineLabel1>Obviously, thou art a person of exceptional wisdom! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>So, me matey, does ya think me invention were a good one?
-What dost thou know! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel1>Obviously, thou art a person of exceptional wisdom! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>So, me matey, does ya think me invention were a good one?
+What dost thou know! <StartNewSection><NewLine><EndCoversation>
 y
 <DefineLabel2>
-<DefaultMessage><DefineLabel2>Thou dost speak true! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Wouldst thou like one <127>made with me own hands?
-Harumph! <Unknown_CodeA2><NewLine><EndCoversation>
+<DefaultMessage><DefineLabel2>Thou dost speak true! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Wouldst thou like one <127>made with me own hands?
+Harumph! <StartNewSection><NewLine><EndCoversation>
 y
-<Change><72>'ere ye are mate, use it wisely and thou shalt profit by it! <Unknown_CodeA2><NewLine><EndCoversation>
+<Change><72>'ere ye are mate, use it wisely and thou shalt profit by it! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Lord Kenneth
 
@@ -4126,20 +4126,20 @@ Bye.
 cour
 <Or>
 comp
-I travel throughout Britannia teaching my craft. <Unknown_CodeA2><NewLine><NewLine><DefineLabel0>
+I travel throughout Britannia teaching my craft. <StartNewSection><NewLine><NewLine><DefineLabel0>
 <DefaultMessage><DefineLabel0>Dost thou wish to learn the harpsichord?
 Alas.
 y
 <DefineLabel2>
-<DefaultMessage><DefineLabel2>Open the Book of Lore to the Music section and study the score for the piece 'Stones'. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
-<DefaultMessage><DefineLabel3>The notes are like a series of square marks upon a four-line staff. Their positions, either on one or between two lines, marks their pitch. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>A letter C marks the second line of the staff as the pitch 'C'. The first 3 notes are 'ABC'. <Unknown_CodeA2><NewLine><NewLine><KeyWait>What are the next 3?
-No, try again. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel3>
+<DefaultMessage><DefineLabel2>Open the Book of Lore to the Music section and study the score for the piece 'Stones'. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
+<DefaultMessage><DefineLabel3>The notes are like a series of square marks upon a four-line staff. Their positions, either on one or between two lines, marks their pitch. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A letter C marks the second line of the staff as the pitch 'C'. The first 3 notes are 'ABC'. <StartNewSection><NewLine><NewLine><KeyWait>What are the next 3?
+No, try again. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel3>
 dcb
-Good! <Unknown_CodeA2><NewLine><NewLine><DefineLabel4>
+Good! <StartNewSection><NewLine><NewLine><DefineLabel4>
 <DefaultMessage><DefineLabel4>Many keyboards are marked with numbers, so that ABC would be 678.What would the next 3 be?
-No, try again. <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel4>
+No, try again. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel4>
 987
-Good! So the first phrase goes 678 987 8767653! Now thou must practice! <Unknown_CodeA2><NewLine><EndCoversation>
+Good! So the first phrase goes 678 987 8767653! Now thou must practice! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Sir Arbuthnot
 
@@ -4151,7 +4151,7 @@ Fare thee well.
 roya
 <Or>
 coin
-Well... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>That is to say I was, before I became a wanted man!
+Well... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>That is to say I was, before I became a wanted man!
 was
 <Or>
 want
@@ -4186,12 +4186,12 @@ y
 <DefineLabel2>
 <DefaultMessage><DefineLabel2>Art thou the one true Avatar?
 Oh.
-'Tis indeed an honor! <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+'Tis indeed an honor! <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Gregory
 
 Gregory
-a tall, heavily scarred man. <NewLine><NewLine><Unknown_CodeA2>What in the name of Mondain art ye doing in me lighthouse! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+a tall, heavily scarred man. <NewLine><NewLine><StartNewSection>What in the name of Mondain art ye doing in me lighthouse! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 
 Now that's a real poser!
 And a good riddance, too.
@@ -4200,14 +4200,14 @@ Yes, ye did guess it, ya bloomin' plonker!
 <DefaultMessage><DefineLabel0>Didst ye not know this is private property?
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>Were ye born that ugly, or didst ye lose a fight with a frying pan?
-Not only ugly, but yer stupid too! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What dost ye want anyway?
+Not only ugly, but yer stupid too! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>What dost ye want anyway?
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Jacqueline
 
 Jacqueline
 a bony woman with a blank stare.
 
-I, uh... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>don't remember.
+I, uh... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>don't remember.
 Uh, bye....
 reme
 Remember what?
@@ -4221,34 +4221,34 @@ Mmmmm, my favorite!
 ---- SCRIPT for Smith
 
 Smith
-a strangely familiar horse. <NewLine><NewLine><SetFlag><DefineLabel3><DefineLabel0>
+a strangely familiar horse. <NewLine><NewLine><IfElseKnowsName><DefineLabel3><DefineLabel0>
 
-Well... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I eat hay.
+Well... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>I eat hay.
 Come back and see me again. Really!
 eat
 <Or>
 hay
-Yep. <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>Oh, I'm also here to ask you something.
+Yep. <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Oh, I'm also here to ask you something.
 ask
 <DefineLabel4>
 forg
 <Or>
 tell
-Yea... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The answer... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>It was... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2><Rune>INFINITY <Rune>!
-<DefaultMessage><DefineLabel0>Hey... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>You look familiar, have we met?
+Yea... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The answer... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It was... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection><Rune>INFINITY <Rune>!
+<DefaultMessage><DefineLabel0>Hey... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>You look familiar, have we met?
 <DefineLabel1>
 y
 <DefineLabel2>
-<DefaultMessage><DefineLabel1>Oh... <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><DefineLabel2>I thought so... <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><DefineLabel3>Hello,  <AvatarsName>... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>You know what?
-Way back... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Way, way back... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I forgot to tell you something!
+<DefaultMessage><DefineLabel1>Oh... <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel2>I thought so... <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
+<DefaultMessage><DefineLabel3>Hello,  <AvatarsName>... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>You know what?
+Way back... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Way, way back... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I forgot to tell you something!
 <DefaultMessage><DefineLabel4>Lord British wanted me to ask you if you were enjoying this game?
 <DefineLabel4>
 n
 Well, if you have any complaints, write to him at Origin. He would really like to know.
 y
-He will be so glad to hear it... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Of course, he won't ever know unless you write to him at Origin and tell him so. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I know first hand he'd like that.
+He will be so glad to hear it... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Of course, he won't ever know unless you write to him at Origin and tell him so. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I know first hand he'd like that.
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Sutek
 
@@ -4257,11 +4257,11 @@ a young, solemn mage. <NewLine><NewLine><DefineLabel0>
 
 
 
-<DefaultMessage><DefineLabel0>Greetings, I am Sutek. <Unknown_CodeA2><NewLine><NewLine><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel1><EndCoversation>
+<DefaultMessage><DefineLabel0>Greetings, I am Sutek. <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel1><EndCoversation>
 <DefaultMessage><DefineLabel1>Art thou the Avatar of legend?
-Oh. <Unknown_CodeA2><NewLine><EndCoversation>
+Oh. <StartNewSection><NewLine><EndCoversation>
 y
-I have been scrying for the nature of the three Shards! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>I have learned they were formed at the time of the first Dark Lord. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>When Mondain's Gem of Immortality was destroyed, its shards still harbored unspeakable evil! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>They lay festering deep within the earth, but now their malevolent power has been unleashed upon the world. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards and the Shadowlords can and must be destroyed! <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>The Shards must be recovered from their resting places in the boundless Underworld, and cast into the Eternal Flames of Truth, Love, and Courage... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Even as each respective Shadowlord stands nigh upon the flame of the Principle it opposes. <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Take now this knowledge and use it well! <Unknown_CodeA2><NewLine><EndCoversation>
+I have been scrying for the nature of the three Shards! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I have learned they were formed at the time of the first Dark Lord. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>When Mondain's Gem of Immortality was destroyed, its shards still harbored unspeakable evil! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>They lay festering deep within the earth, but now their malevolent power has been unleashed upon the world. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards and the Shadowlords can and must be destroyed! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards must be recovered from their resting places in the boundless Underworld, and cast into the Eternal Flames of Truth, Love, and Courage... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Even as each respective Shadowlord stands nigh upon the flame of the Principle it opposes. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Take now this knowledge and use it well! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Sin'Vraal
 
@@ -4297,19 +4297,19 @@ eart
 deep
 I can only tell thee that he has turned me from the ways of darkness, but he'll have no <119>luck with the Shadowlords!
 shar
-The accursed Shard of Hatred that spawned my former master lies within the underworld at the location thou wouldst call  <Rune>I <Rune>' <Rune>A <Rune><Unknown_CodeA2>,  <Rune>I <Rune>' <Rune>A <Rune><Unknown_CodeA2><Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Enter through the dungeons by Lost Hope Bay!
+The accursed Shard of Hatred that spawned my former master lies within the underworld at the location thou wouldst call  <Rune>I <Rune>' <Rune>A <Rune><StartNewSection>,  <Rune>I <Rune>' <Rune>A <Rune><StartNewSection><StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Enter through the dungeons by Lost Hope Bay!
 <DefaultMessage><Unknown_Enter>
 ---- SCRIPT for Grendel
 
 Grendel
-a giant rat! <NewLine><NewLine><Unknown_CodeA2>Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>What dost thou want? <Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+a giant rat! <NewLine><NewLine><StartNewSection>Squeek... <StartNewSection><NewLine><NewLine><Pause><AskName><StartNewSection><NewLine><NewLine><StartNewSection>Squeek... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>What dost thou want? <StartNewSection><NewLine><NewLine><Unknown_FF>
 
 I once was a great alchemist!
 Squeek!
 alch
-Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>That was before my accident!
+Squeek... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>That was before my accident!
 acci
-Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I was working on a spell called: <NewLine><Rune>VAS REL XEN BET <Rune><NewLine>It got a little out of hand.
+Squeek... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>I was working on a spell called: <NewLine><Rune>VAS REL XEN BET <Rune><NewLine>It got a little out of hand.
 spel
 <Or>
 hand
@@ -4317,15 +4317,15 @@ hand
 vas
 It was to be an enchantment to turn foes into rats.
 rat
-Squeek... <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>During an early experiment I was transformed into a rat! <Unknown_CodeA2><NewLine><NewLine><Pause><Unknown_CodeA2>I have <125>perfected a lesser version.
+Squeek... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>During an early experiment I was transformed into a rat! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>I have <125>perfected a lesser version.
 less
 <Or>
 vers
 <Or>
 perf
-I call it <Rune>REL XEN BET <Rune>. It is of the Sixth Circle, and will turn one being into a rat for fair time! <Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+I call it <Rune>REL XEN BET <Rune>. It is of the Sixth Circle, and will turn one being into a rat for fair time! <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel0>
 <DefaultMessage><DefineLabel0>Wouldst thou like the formula?
 O.K.
 y
-It requires that one part spider silk be mixed with a pinch of sulfurous ash... <Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>...with a crushed root of mandrake and spores scraped from a nightshade cap.
+It requires that one part spider silk be mixed with a pinch of sulfurous ash... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>...with a crushed root of mandrake and spores scraped from a nightshade cap.
 <DefaultMessage><Unknown_Enter>
