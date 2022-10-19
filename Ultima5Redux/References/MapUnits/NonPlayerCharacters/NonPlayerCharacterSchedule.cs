@@ -44,7 +44,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             // beggars wander, and when next to Avatar they want to talk
             Begging = 103,
 
-            // They generally ask for 60gp tribute
+            // They generally ask for 30-60gp tribute
             GenericExtortingGuard = 104,
 
             // These jerks want half your gold! Generally found in Minoc
@@ -60,8 +60,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             MerchantBuyingSellingWander = 108,
 
             // They are Fixed unless wanted by the popo, at which time they seek and attack 
-            FixedExceptAttackWhenIsWantedByThePoPo = 109
-
+            FixedExceptAttackWhenIsWantedByThePoPo = 109, BlackthornGuardWander = 110, BlackthornGuardFixed = 111
         }
 
 
@@ -138,6 +137,14 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     continue;
                 }
 
+                if (location == SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn
+                    && nonPlayerCharacterReference.IsGuard)
+                {
+                    if (aiType == AiType.Fixed) AiTypeList[nIndex] = (int)AiType.BlackthornGuardFixed;
+                    else if (aiType == AiType.CustomAi) AiTypeList[nIndex] = (int)AiType.BlackthornGuardWander;
+                    else throw new Ultima5ReduxException($"Blackthorn Guard has odd aitype: {aiType}");
+                }
+
                 // In the future, such as Blackthorne's castle, this is where we will
                 // will override AIs to have more specific 
 
@@ -175,7 +182,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 {
                     AiTypeList[nIndex] = (int)AiType.GenericExtortingGuard;
                     continue;
-                    ;
                 }
 
                 if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Beggar_KeyIndex)

@@ -584,11 +584,14 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="npcState">the NPC to have a conversation with</param>
         /// <param name="enqueuedScriptItem">a handler to be called when script items are enqueued</param>
+        /// <param name="customDialogueId">leave "" if you don't want a custom dialogue id</param>
         /// <returns>A conversation object to be used to follow along with the conversation</returns>
         public Conversation CreateConversationAndBegin(NonPlayerCharacterState npcState,
-            Conversation.EnqueuedScriptItem enqueuedScriptItem)
+            Conversation.EnqueuedScriptItem enqueuedScriptItem, string customDialogueId = "")
         {
-            CurrentConversation = new Conversation(State, npcState);
+            CurrentConversation = customDialogueId == ""
+                ? new Conversation(State, npcState)
+                : new Conversation(State, npcState, customDialogueId);
 
             CurrentConversation.EnqueuedScriptItemCallback += enqueuedScriptItem;
 
@@ -2123,6 +2126,12 @@ namespace Ultima5Redux
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NoOneToTalkTo));
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
+
+            // if (npc.MapLocation == SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn
+            //     && npc.NPCRef.IsGuard)
+            // {
+            //     
+            // }
 
             ////// HERE is where I will need to put in the custom dialog options for custom AI types
             NonPlayerCharacterSchedule.AiType aiType = npc.GetCurrentAiType(State.TheTimeOfDay);

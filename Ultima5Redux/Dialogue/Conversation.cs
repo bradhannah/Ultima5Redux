@@ -94,6 +94,13 @@ namespace Ultima5Redux.Dialogue
             TheNonPlayerCharacterState = npcState;
         }
 
+        public Conversation(GameState state, NonPlayerCharacterState npcState, string customDialogueId)
+        {
+            _script = GameReferences.TalkScriptsRef.GetCustomTalkScript(customDialogueId);
+            _gameState = state;
+            TheNonPlayerCharacterState = npcState;
+        }
+
         /// <summary>
         ///     Just chill out and wait for a response, but we introduce a small sleep so we don't stress out the CPU
         /// </summary>

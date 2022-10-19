@@ -669,6 +669,7 @@ namespace Ultima5Redux.MapUnits
                 // test all the possibilities, special calculations for all of them
                 switch (aiType)
                 {
+                    case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // do nothing, they are where they are supposed to be 
                         break;
@@ -678,6 +679,7 @@ namespace Ultima5Redux.MapUnits
                         // choose a tile within N tiles that is not blocked, and build a single path
                         WanderWithinN(virtualMap, timeOfDay, 2);
                         break;
+                    case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
                     case NonPlayerCharacterSchedule.AiType.BigWander:
                         // choose a tile within N tiles that is not blocked, and build a single path
                         WanderWithinN(virtualMap, timeOfDay, 4);
@@ -753,12 +755,14 @@ namespace Ultima5Redux.MapUnits
                         }
 
                         break;
+                    case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
                     case NonPlayerCharacterSchedule.AiType.CustomAi:
                     case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:                        
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
                         BuildPath(this, npcDestinationPosition.XY, aStar);
                         break;
+                    case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
                     case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:
                     case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:                        
                     case NonPlayerCharacterSchedule.AiType.Wander:

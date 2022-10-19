@@ -3356,7 +3356,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.SmallMapRef.GetSingleMapByLocation(
-                    SmallMapReferences.SingleMapReference.Location.Yew, 0));
+                    SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn, 0));
 
             TurnResults turnResults = new();
             world.AdvanceTime(2, turnResults);
@@ -3372,6 +3372,12 @@ namespace Ultima5ReduxTesting
             TalkScript bguardTalkScript = GameReferences.TalkScriptsRef.GetCustomTalkScript("BlackthornGuard");
             Assert.IsNotNull(bguardTalkScript);
             Assert.IsTrue(bguardTalkScript.NumberOfScriptLines > 5);
+
+            foreach (NonPlayerCharacter npc in
+                     world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters)
+            {
+                _ = "";
+            }
         }
     }
 }

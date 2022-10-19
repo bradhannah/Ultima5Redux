@@ -56,7 +56,7 @@ namespace Ultima5Redux.Maps
         [DataMember] private MapOverrides TheMapOverrides { get; set; }
 
         //[DataMember] private bool HasBeenExtorted { get; set; }
-        
+
         /// <summary>
         ///     Detailed reference of current small map
         /// </summary>
@@ -683,6 +683,21 @@ namespace Ultima5Redux.Maps
                         turnResults.PushTurnResult(new NpcTalkInteraction(npc));
                         continue;
                     }
+                    case AggressiveMapUnitInfo.DecidedAction.BlackthornGuardPasswordCheck:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
+                        if (npc.NPCState.HasExtortedAvatar) continue;
+                        npc.NPCState.HasExtortedAvatar = true;
+                        turnResults.PushTurnResult(new GuardExtortion(npc,
+                            GuardExtortion.ExtortionType.BlackthornPassword, 0));
+                        continue;
+                    }
+                    case AggressiveMapUnitInfo.DecidedAction.StraightToBlackthornDungeon:
+                        // placeholder - this will require a whole new orchestration system that is going
+                        // to wicked tough
+                        break;
                     case AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion:
                     {
                         // we only extort once per load of a map, we aren't monsters after all!
@@ -993,11 +1008,34 @@ namespace Ultima5Redux.Maps
                     aggressorMapUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
                 switch (aiType)
                 {
+                    case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
+                    case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
+                        // let's add some randomness and only check them half the time
+                        if (Utils.OneInXOdds(2))
+                        {
+                            // are you wearing the black badge? 
+                            // temporary - if you have the badge then that's good enough
+                            if (GameStateReference.State.PlayerInventory.SpecializedItems
+                                    .Items[SpecialItem.SpecificItemType.BlackBadge].Quantity > 0)
+                            {
+                                // if the guard has already harassed the Avatar, then they won't bug him
+                                // again until he re-enters the castle
+                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction
+                                    .BlackthornGuardPasswordCheck);
+                            }
+                            else
+                            {
+                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction
+                                    .StraightToBlackthornDungeon);
+                            }
+                        }
+
+                        break;
                     case NonPlayerCharacterSchedule.AiType.Begging:
                         mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.Begging);
                         break;
                     case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
-                    case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard: 
+                    case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // even if they are extortionists, if you did some super bad, they will try to arrest 
                         if (IsWantedManByThePoPo)
@@ -2322,7 +2360,7 @@ namespace Ultima5Redux.Maps
                 TheMapUnits?.CurrentMapUnits.NonPlayerCharacters.All(n => n.NPCState.HasExtortedAvatar = false);
             }
         }
-        
+
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null,
             bool bLoadFromDisk = false)
         {
@@ -2344,7 +2382,6 @@ namespace Ultima5Redux.Maps
             TheMapUnits.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;
 
             if (xy != null) CurrentPosition.XY = xy;
-
         }
 
         public void MoveAvatar(Point2D newPosition)
