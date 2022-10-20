@@ -143,6 +143,9 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     if (aiType == AiType.Fixed) AiTypeList[nIndex] = (int)AiType.BlackthornGuardFixed;
                     else if (aiType == AiType.CustomAi) AiTypeList[nIndex] = (int)AiType.BlackthornGuardWander;
                     else throw new Ultima5ReduxException($"Blackthorn Guard has odd aitype: {aiType}");
+
+                    continue;
+                    ;
                 }
 
                 // In the future, such as Blackthorne's castle, this is where we will
