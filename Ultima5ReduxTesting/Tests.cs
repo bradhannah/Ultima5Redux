@@ -689,7 +689,7 @@ namespace Ultima5ReduxTesting
                     break;
                 case TalkScript.TalkCommand.StartNewSection:
                     break;
-                case TalkScript.TalkCommand.Unknown_Enter:
+                case TalkScript.TalkCommand.EndScript:
                     break;
                 case TalkScript.TalkCommand.GotoLabel:
                     break;

@@ -52,12 +52,12 @@
       {
         "ScriptItems": [
           {
-            "Command": "StartLabelDefinition",
-            "Comment": "Begin End of Script"
+            "StringData": "",
+            "Command": "StartLabelDefinition"
           },
           {
-            "Command": "EndScript",
-            "Comment": "End the script"
+            "StringData": "",
+            "Command": "EndScript"
           }
         ]
       }

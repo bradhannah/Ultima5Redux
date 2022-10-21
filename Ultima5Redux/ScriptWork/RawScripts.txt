@@ -663,7 +663,7 @@ powe
 <Or>
 fair
 We miss the true ruler, and yet hope for his return!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Stephen
 
 Stephen
@@ -697,7 +697,7 @@ king
 <Or>
 regi
 All over!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Treanna
 Treanna <StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><AskName>
 a young girl.
@@ -740,7 +740,7 @@ Not that one!
 smit
 <DefineLabel4>
 <DefaultMessage><DefineLabel4>That's it! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>I have heard it <122>in Iolo's barn, by his hut in the deep forest! <StartNewSection><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Margaret
 
 Margaret
@@ -787,7 +787,7 @@ y
 <KarmaMinusOne>Well, thanks anyway.
 y
 <Gold>005Thanks.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Desiree
 
 Desiree
@@ -819,7 +819,7 @@ crea
 <Or>
 food
 It is not yet perfected, I'm told. Apparently, it only creates a small quantity, much too little for him!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Drudgeworth
 
 Drudgeworth
@@ -864,7 +864,7 @@ Then let me out. I can helps ye!
 y
 Aye, let's go then. <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><DefineLabel3>Then go! On yer wretched way,  <Rune>PIGDOG <Rune>! Just ye wait 'til I get outta this hole! I'll teach ye to mess with ol' Drudgeworth! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Saduj
 
 Saduj
@@ -918,7 +918,7 @@ Blackthorn himself sent me here to find an object hidden in Lord British's chamb
 Later perhaps.
 y
 Good! <StartNewSection><NewLine><NewLine><JoinParty>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Stillwelt
 
 Stillwelt
@@ -941,7 +941,7 @@ leav
 <Or>
 y
 Get off the roof, NOW! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Chuckles
 
 Chuckles
@@ -977,7 +977,7 @@ Who?
 Oh, I'll do it better this time! <StartNewSection><NewLine><NewLine><Pause><DefineLabel0>
 y
 I thought thou might!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Blackthorn
 
 Blackthorn
@@ -998,7 +998,7 @@ No, I'm afraid that is not it... <StartNewSection><NewLine><NewLine><Pause><Star
 impe
 Fine! With thee on our side, we shall be invincible! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Please, feel free to roam my castle and grounds! <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><DefineLabel4>Who dares approach the mighty Blackthorn? <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel0><Pause><StartNewSection>I think not, let's try again! <StartNewSection><NewLine><NewLine><Pause><DefineLabel4>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Gorn
 
 Gorn
@@ -1019,7 +1019,7 @@ y
 <DefineLabel3>
 y
 Get the keys I hid in the brazier and let's be off! <StartNewSection><NewLine><NewLine><JoinParty>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for ....
 .... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
@@ -1044,7 +1044,7 @@ virt
 It matters not, they are all a travesty!
 trav
 They defile the foundations of Virtue!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for ....
 .... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
@@ -1069,7 +1069,7 @@ virt
 It matters not, they are all a travesty!
 trav
 They defile the foundations of Virtue!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for ....
 .... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
@@ -1094,7 +1094,7 @@ virt
 It matters not, they are all a travesty!
 trav
 They defile the foundations of Virtue!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for ....
 .... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
@@ -1119,7 +1119,7 @@ virt
 It matters not, they are all a travesty!
 trav
 They defile the foundations of Virtue!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for ....
 .... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
@@ -1144,7 +1144,7 @@ virt
 It matters not, they are all a travesty!
 trav
 They defile the foundations of Virtue!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for ....
 .... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
@@ -1169,7 +1169,7 @@ virt
 It matters not, they are all a travesty!
 trav
 They defile the foundations of Virtue!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Kraw
 
 Kraw
@@ -1193,7 +1193,7 @@ plou
 <Or>
 moun
 That breed we have.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Weblock
 
 Weblock
@@ -1231,7 +1231,7 @@ stab
 Take the ladder down.
 <DefaultMessage><DefineLabel0>Please sign in. <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><DefineLabel1>
 <DefaultMessage><DefineLabel1>Where or whom dost thou seek? <StartNewSection><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for ....
 .... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
@@ -1256,7 +1256,7 @@ virt
 It matters not, they are all a travesty!
 trav
 They defile the foundations of Virtue!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for ....
 .... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Thou art in grave danger!
 a scraggly, tortured soul in tattered garb.
@@ -1281,7 +1281,7 @@ virt
 It matters not, they are all a travesty!
 trav
 They defile the foundations of Virtue!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Gallrot
 
 Gallrot
@@ -1313,7 +1313,7 @@ Well, they <121>not really be dogs, but they sure is mangy!
 Don't touch the stuff meself.
 y
 Gulp... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Choke... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Gag... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Spit... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Aye, goes down a bit rough.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Foulwell
 
 Foulwell
@@ -1343,7 +1343,7 @@ I'll be sure to look ye up.
 <CallGuards>GUARDS!
 y
 I thank thee.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Hassad
 
 Hassad
@@ -1390,7 +1390,7 @@ dawn
 Then I shall wait.
 y
 The Word thou seeketh is <Rune>IGNAVUS <Rune>!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Camile
 
 Camile
@@ -1439,7 +1439,7 @@ I see, what <123>I do for thee today? <StartNewSection><NewLine><NewLine><Unknow
 Begone, foolish knave! <StartNewSection><NewLine><EndCoversation>
 y
 Good.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Phillip
 
 Phillip
@@ -1466,7 +1466,7 @@ I've plans to become an artist!
 arti
 'Till then I'll just keep workin' 'ere!
 <DefaultMessage><DefineLabel0>Cheerio! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Christopher
 
 Christopher
@@ -1507,7 +1507,7 @@ Then I'll be of little help to thee in the future!
 y
 Good! <StartNewSection><NewLine><NewLine><IfElseKnowsName><DefineLabel1><AskName><StartNewSection><NewLine><NewLine><StartNewSection>Enchanted, I'm sure, to have met <119>an enlightened soul.
 <DefaultMessage><DefineLabel1>What a nice chap thou art. <StartNewSection><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Thentis
 
 Thentis
@@ -1558,7 +1558,7 @@ Hmmm...
 dawn
 <DefineLabel9>
 <DefaultMessage><DefineLabel9>Good... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Sorry about all the questions, but we've got to be careful. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If thou art with us, meet us by the well at midnight! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Mention the password to those attending, but no one else, for spies abound! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Joshua
 Joshua <StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
 a soiled farmer.
@@ -1586,7 +1586,7 @@ Good! <StartNewSection><NewLine><NewLine><Pause><DefineLabel3>
 O.K.
 y
 I've heard much of the Shadowlords. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If faced in combat, thou art drawn into their plane of existance to do battle. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It seems that they cannot be killed by normal means, so most who fight them die quickly. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A few souls have lived to tell that if a Shadowlord is struck down, it will vanish into thin air! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Soon after, its twisted soul shall return anew! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>One named Sutek knows how to destroy them, he <122>on a remote isle in the south of the Great Sea! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Leof
 
 Leof
@@ -1612,7 +1612,7 @@ blac
 <DefineLabel2>
 <DefaultMessage><DefineLabel2>We too resist his foul, oppressive regime! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Hast thou ever faced a Shadowlord?
 We have heard that here upon the <120>surface of Britannia there is a place where their energies focus! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Just where it is we have not learned, but thou might learn more if thou dost seek out Sir Sean, who lives... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Ah yes, in the Lycaeum on Dagger Isle. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If thou <123>find him, ask of Stonegate!Mayhap those Spectres can be dispatched from this plane of existence! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Vigil
 
 Vigil
@@ -1669,7 +1669,7 @@ I doubt it! <StartNewSection><NewLine><EndCoversation>
 n
 <DefineLabel3>
 <DefaultMessage><DefineLabel3>At least thou art honest! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I feel thou art trustworthy. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Before, when my friends and I were a band of stalwart adventurers, we learned much! <StartNewSection><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Kurt
 
 Kurt
@@ -1709,7 +1709,7 @@ Trea
 I am sure Treanna would love to talk to thee about horses, especially Valorian horses!
 <DefaultMessage><DefineLabel0>Hast thou ever seen one?
 My friend Treanna and I both love them. Treanna works in the castle and gets to see them every day!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Flint
 
 Flint
@@ -1739,7 +1739,7 @@ unti
 <Or>
 now
 Now with all that magic, no one knows what's goin' on!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Sir Adam the Torch
 
 Sir Adam the Torch
@@ -1773,7 +1773,7 @@ Enough to make a ship sail sixscore knots faster! <StartNewSection><NewLine><New
 Hmph! <StartNewSection><NewLine><EndCoversation>
 Y
 I wish I could convince Master Hawkins.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Squire Jimmy
 
 Squire Jimmy
@@ -1803,7 +1803,7 @@ idea
 Ask Sir Adam!
 <DefaultMessage><DefineLabel0>I say, thou dost seem rather well-travelled. What news of the world hath thee?
 Ah, that's the same news as anyone else's. They teach us in school that 'tis all for the common good. I suppose that we're to believe what we're taught. <StartNewSection><NewLine><NewLine><KeyWait><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Glinkie
 
 Glinkie
@@ -1847,7 +1847,7 @@ y
 Oh.
 y
 Oh, no wonder I never found it! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Well, that one is likely safe then... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>But, should thou see one destroyed... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Remember they can be restored with the Words of Power!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Bandaii
 
 Bandaii
@@ -1897,7 +1897,7 @@ iolo
 <Or>
 hut
 At last! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>For thy efforts I will tell thee that I gave a magical carpet to Lord British himself! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>He kept it in his private chamber atop his castle! If thou can get it, I'm sure thou can use it. <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Ava
 
 Ava
@@ -1936,7 +1936,7 @@ y
 <Gold>005 <KarmaPlusOne><KarmaPlusOne><KarmaPlusOne><KarmaPlusOne><KarmaPlusOne>We thank thee.
 <DefaultMessage><DefineLabel4>Art thou the Avatar of legend?
 Virtue makes no mistakes. <StartNewSection><NewLine><NewLine><Pause><StartNewSection>We shall tell thee what we know of the Shard of Falsehood. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Ask my sister of her vision!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Leona
 
 Leona
@@ -1956,7 +1956,7 @@ shar
 Talk with my sister.
 visi
 In the deep of night, many moons ago, a vision came unto my sister and I... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>We saw the Shard of Falsehood deep below a dungeon named Deceit. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The path that was revealed traveled first southwest across many high peaks, opening to a large system of caverns. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then the way led southwest. At a major intersection it turned northwest, soon branching northeast. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>After a long journey northward, the passage turned west. Here the path went on to rocky hills to the southwest, then turned northwest. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Over a lake it ran, unto a massive series of great falls, ending in a larger lake. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Here, upon a small isle, lies the Shard of Falsehood!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Ambrose
 
 Ambrose
@@ -1990,7 +1990,7 @@ Within the Underworld, where the Abyss once was, the lava still flows, north of 
 I see.
 y
 Remember only the Mystic arms <128>near great evil. Only <119>evil could hold our lord!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Thorkin
 
 Thorkin
@@ -2032,7 +2032,7 @@ n
 Too bad.
 y
 Talk to Kitiara, I'm sure ye'll be more'n satisfied! <StartNewSection><NewLine><NewLine><IfElseKnowsName><Unknown_FF><AskName>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Scally
 
 Scally
@@ -2072,7 +2072,7 @@ n
 Ah.
 y
 <StartNewSection>There once was a pirate named David, so crotchety and misbehav'd. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>And then one day, he sailed away, only to where, he would not say.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Bidney
 
 Bidney
@@ -2113,7 +2113,7 @@ Aye, thanks mate!... Hic!
 <DefaultMessage><DefineLabel3>Didst ye ask me 'bout mountain climb'n?
 I used to be a... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Mountain climber... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Gave it up... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Too dangerous... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>So, I 'came a pirate!
 <DefaultMessage><DefineLabel4>Gave me grapple to a man named Lord Michael... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Lived o'er at the Emapthical Abbeyneyney... <StartNewSection><NewLine><NewLine><Pause><StartNewSection>Hic... Zzzzz... <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Sven
 
 Sven
@@ -2159,7 +2159,7 @@ air
 <Or>
 ship
 Airships sound like a heap of nonsense if thou wert to ask me!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lord Dalgrin
 
 Lord Dalgrin
@@ -2196,7 +2196,7 @@ Aye, she's a feisty wench... <StartNewSection><NewLine><NewLine><Pause><StartNew
 <DefaultMessage><DefineLabel0>Avast ye mate, surely thou dost know who I am, don't ye?
 Why, I am the most bloodthirsty pirate to sail the seas.
 <DefaultMessage><DefineLabel1>Why, shiver me timbers, if it ain't ol'  <AvatarsName>! <StartNewSection><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Tierra
 
 Tierra
@@ -2228,7 +2228,7 @@ y
 <DefineLabel3>
 <DefaultMessage><DefineLabel3>I likes thee, perhaps I <123>help thee! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Dost ye wish ye couldst climb mountains?
 Well, Bidney here used to... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Talk to him 'bout mountain climb'n.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Geoffrey
 
 Geoffrey
@@ -2269,7 +2269,7 @@ n
 Soon, I hope.
 y
 I am eager for battle! <StartNewSection><NewLine><NewLine><JoinParty>
-<DefaultMessage><Unknown_Enter>Custom
+<DefaultMessage><EndScript>Custom
 
 ---- SCRIPT for Jennifer
 
@@ -2296,7 +2296,7 @@ mari
 He has travelled throughout the Great Sea.
 sea
 Thou should ask him of his travels!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Jotham
 
 Jotham
@@ -2340,7 +2340,7 @@ Aye, 'tis my favorite.
 Pardon me if I do.
 y
 'ere ye are, mate!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Windmire
 
 Windmire
@@ -2380,7 +2380,7 @@ mate
 <Or>
 scot
 I don't wish to talk about it.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Emilly
 
 Emilly
@@ -2412,7 +2412,7 @@ mate
 His name was Scotty and he was a fine lad.
 scot
 He was a fine lad. Yelled something about a 'beam' just 'fore he died. Gave Windmire the idea for the lighthouse, he did.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Anthony
 
 Anthony
@@ -2464,7 +2464,7 @@ Good!
 Then thou art not being <120>kind!
 y
 I do not believe thee! He would not lie to us! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Charlotte
 
 Charlotte
@@ -2506,7 +2506,7 @@ We must look at the <120>roots of dishonesty, and see it comes from the twisted 
 Hold thy tongue, heretic, or thou shalt lose it!
 y
 Thou art a wise and truthful scholar.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for David
 
 David
@@ -2550,7 +2550,7 @@ y
 Harumph! <StartNewSection><NewLine><EndCoversation>
 y
 <Change><72>'ere ye are mate, use it wisely and thou shalt profit by it! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lord Kenneth
 
 Lord Kenneth
@@ -2575,7 +2575,7 @@ Good! <StartNewSection><NewLine><NewLine><DefineLabel4>
 No, try again. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel4>
 987
 Good! So the first phrase goes 678 987 8767653! Now thou must practice! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Sir Arbuthnot
 
 Sir Arbuthnot
@@ -2622,7 +2622,7 @@ y
 <DefaultMessage><DefineLabel2>Art thou the one true Avatar?
 Oh.
 'Tis indeed an honor! <StartNewSection><NewLine><NewLine><AskName><StartNewSection><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Gregory
 
 Gregory
@@ -2636,7 +2636,7 @@ Yes, ye did guess it, ya bloomin' plonker!
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>Were ye born that ugly, or didst ye lose a fight with a frying pan?
 Not only ugly, but yer stupid too! <StartNewSection><NewLine><NewLine><Pause><StartNewSection>What dost ye want anyway?
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Jacqueline
 
 Jacqueline
@@ -2652,7 +2652,7 @@ y
 Sorry.
 mud
 Mmmmm, my favorite!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Smith
 
 Smith
@@ -2684,7 +2684,7 @@ n
 Well, if you have any complaints, write to him at Origin. He would really like to know.
 y
 He will be so glad to hear it... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Of course, he won't ever know unless you write to him at Origin and tell him so. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I know first hand he'd like that.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Sutek
 
 Sutek
@@ -2697,7 +2697,7 @@ a young, solemn mage. <NewLine><NewLine><DefineLabel0>
 Oh. <StartNewSection><NewLine><EndCoversation>
 y
 I have been scrying for the nature of the three Shards! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I have learned they were formed at the time of the first Dark Lord. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>When Mondain's Gem of Immortality was destroyed, its shards still harbored unspeakable evil! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>They lay festering deep within the earth, but now their malevolent power has been unleashed upon the world. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards and the Shadowlords can and must be destroyed! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>The Shards must be recovered from their resting places in the boundless Underworld, and cast into the Eternal Flames of Truth, Love, and Courage... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Even as each respective Shadowlord stands nigh upon the flame of the Principle it opposes. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Take now this knowledge and use it well! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Sin'Vraal
 
 Sin'Vraal
@@ -2733,7 +2733,7 @@ deep
 I can only tell thee that he has turned me from the ways of darkness, but he'll have no <119>luck with the Shadowlords!
 shar
 The accursed Shard of Hatred that spawned my former master lies within the underworld at the location thou wouldst call  <Rune>I <Rune>' <Rune>A <Rune><StartNewSection>,  <Rune>I <Rune>' <Rune>A <Rune><StartNewSection><StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Enter through the dungeons by Lost Hope Bay!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Grendel
 
 Grendel
@@ -2763,7 +2763,7 @@ I call it <Rune>REL XEN BET <Rune>. It is of the Sixth Circle, and will turn one
 O.K.
 y
 It requires that one part spider silk be mixed with a pinch of sulfurous ash... <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>...with a crushed root of mandrake and spores scraped from a nightshade cap.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Johne, Captain Johne.
 
 Johne, Captain Johne.
@@ -2783,7 +2783,7 @@ y
 Pity. <StartNewSection><NewLine><EndCoversation>
 y
 Let me avenge my wrongdoing. <StartNewSection><NewLine><NewLine><JoinParty>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Sir Simon
 
 Sir Simon
@@ -2809,7 +2809,7 @@ scep
 A mighty item of immense power. It is said that when used it can disperse all magical barriers, even in the ethereal plane. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I hear 'tis held by the Shadowlords themselves, in their earthly fortress!
 amul
 Of that, my wife knows more than I.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lady Tessa
 
 Lady Tessa
@@ -2834,7 +2834,7 @@ I see.
 n
 I knew that one who has tread the path of Virtue could not agree with the current state of affairs. <StartNewSection><NewLine><NewLine><KeyWait><DefineLabel1>
 <DefaultMessage><DefineLabel1>I have seen the Amulet <124>Lord British once bore. It lies forgotten in the Underworld, amongst the graves of valiant warriors. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>With only this can thee find thy path in a place of unholy darkness, <124>I have forseen shall block thy way. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>'Tis beyond <119>a place that thou must search, if thou art to mend the injustice wrought upon the world by Blackthorn and his spectres! <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Dupre
 
 Dupre
@@ -2868,7 +2868,7 @@ y
 Cheapskate!
 y
 <Gold>005 <Change><65>Enjoy the duck!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Sentri
 
 Sentri
@@ -2896,7 +2896,7 @@ y
 I understand.
 y
 It is indeed an honor to fight with thee. <StartNewSection><NewLine><NewLine><JoinParty>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lord Seggallion
 
 Lord Seggallion
@@ -2940,7 +2940,7 @@ virt
 O.K.
 y
 <Change><73>Use it wisely!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Temme
 
 Temme
@@ -2972,7 +2972,7 @@ I think it was Ash and Mandrake... <StartNewSection><NewLine><NewLine><KeyWait><
 Well <127>done better. <StartNewSection><NewLine><EndCoversation>
 y
 Well! If ye think that's good, <127>NEARLY made things disappear!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Dufus
 
 Dufus
@@ -3002,7 +3002,7 @@ Lord Seggallion uses it to study the stars! If thou ask, he might show it unto t
 Oh, well.
 y
 Just the other day, the Great Mage Temme lit a fire with no flint or steel, but merely Lord Seggallion's spyglass.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Quintin
 
 Quintin
@@ -3028,7 +3028,7 @@ blac
 I mustn't gossip.
 goss
 Like I said, I don't wish to tell tales, but if thou dost have an ear for gossip, <127>never heard anyone who talks as much as my friend Telila. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>She <122>in the city of Britain, ask her for some rumours or gossip!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Thrud
 
 Thrud
@@ -3060,7 +3060,7 @@ y
 Liar! Guards! <CallGuards><StartNewSection><NewLine><EndCoversation>
 dawn
 May they serve thee well! <Change><8><Change><28><StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Elistaria
 
 Elistaria
@@ -3099,7 +3099,7 @@ impera
 <DefaultMessage><DefineLabel3>Ah yes, now I remember. Thou art the one infiltrating the Resistance. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Here, wear this badge when thou doth wish to show thou art with Blackthorn and the Oppression! <StartNewSection><NewLine><NewLine><Change><74><KeyWait><StartNewSection>It <121>be that Thrud has some items that <121>be useful in your mission. <StartNewSection><NewLine><NewLine><Unknown_FF>
 <DefaultMessage><DefineLabel8>Daemons! Kill this wretch! <CallGuards><StartNewSection><NewLine><EndCoversation>
 <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Balinor
 
 Balinor
@@ -3115,7 +3115,7 @@ Ah good, <127>not tested my wit for some time! <StartNewSection><NewLine><NewLin
 Hah! Thou hast failed! Now to keep my part of the bargain! <CallGuards><StartNewSection><NewLine><EndCoversation>
 well
 Thou hast guessed well, foolish one, but thou hast committed a fatal blunder! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Never trust a Daemon's word! Hah, hah, hah! <CallGuards><StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lady Janell
 
 Lady Janell
@@ -3159,7 +3159,7 @@ y
 I see.
 y
 Enter one of the mystic moongates at precisely midnight. Then shalt thou find the Shrine!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lord Shalineth
 
 Lord Shalineth
@@ -3188,7 +3188,7 @@ The Name of this dread lord is <Rune>FAULINEI <Rune>. Speak it not, for only at 
 n
 Thou fool. <StartNewSection><NewLine><EndCoversation>
 <DefaultMessage><DefineLabel1>A pleasure to see thee again,  <AvatarsName><StartNewSection><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Sir Sean
 
 Sir Sean
@@ -3224,7 +3224,7 @@ y
 Coward.
 n
 Sail first thy ship unto the southernmost part of Lost Hope Bay. Travel so far as thy skiff will take thee. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Some speak of a special implement that can be used to cross the mountains. Find first this equipment! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Then climb thyway through the mountains to the south. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>There thou shalt find the black keep Stonegate, guarded by Balinor, foulest of daemons! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>This is the earthly domain of the three Shadowlords, from <124>few have returned!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lady Hayden.
 
 Lady Hayden.
@@ -3266,7 +3266,7 @@ If only one still unafraid to fight for Virtue walked the land... <StartNewSecti
 I see.
 n
 Then there is hope!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lord R'hien
 
 Lord R'hien
@@ -3298,7 +3298,7 @@ prin
 Virtue, when imposed by force rather than belief and choice, lacks the meaning that is required for a guiding force in one's life.
 stev
 Hi, John! Thanks for putting me in Ultima V!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Rollo
 
 Rollo
@@ -3342,7 +3342,7 @@ n
 Shows what thou dost know!
 y
 I thank thee, kind soul.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Mariah
 
 Mariah
@@ -3376,7 +3376,7 @@ n
 Soon, I hope.
 y
 I am honored to be with thee again! <StartNewSection><NewLine><NewLine><JoinParty>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lord Michael
 
 Lord Michael
@@ -3416,7 +3416,7 @@ I have the grapple used to climb mountains. <StartNewSection><NewLine><NewLine><
 Oh.
 y
 Use it well, and be careful! <Change><70><StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Cory
 
 Cory
@@ -3458,7 +3458,7 @@ I wish he would return!
 Thy loss.
 y
 Here, eat this.. <StartNewSection><NewLine><NewLine><Pause>You put the morsel in your mouth... <NewLine><NewLine><Pause>Such food as this you've never tasted! It melts in your mouth, tasting of a thousand different spices, all perfectly matched! <Change><65><KeyWait><NewLine><NewLine><StartNewSection>Good, huh!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Hardluck
 
 Hardluck
@@ -3482,7 +3482,7 @@ Nah, not in the mood.
 Oh.
 y
 Thou <121>have noticed that it points out that Blackthorn himself is not responsible for the evils he imposes. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Rather, he is trapped, as we are, under the control of the truly evil Shadowlords, only more so. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>A pity.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Barbra
 
 Barbra
@@ -3518,7 +3518,7 @@ They oppose the basic fabric of Virtue!
 Too bad.
 y
 Then perhaps I have a vision that <121>help thee. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I saw a great man in a distant place. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I saw him as if through a looking glass. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>I saw naught but his reflection. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>More I do not know. <StartNewSection><NewLine><EndCoversation>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Tim
 
 Tim
@@ -3574,7 +3574,7 @@ Only on an instrument worthy of kings!
 Oh.
 y
 Since Lord British's disappearance, his Court Composer Sir Kenneth is said to be traveling throughout Britannia.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Toshi
 
 Toshi
@@ -3608,7 +3608,7 @@ n
 I am saddened.
 y
 A great honor indeed! <StartNewSection><NewLine><NewLine><JoinParty>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Julia
 
 Julia
@@ -3636,7 +3636,7 @@ y
 Just let me know.
 y
 At last, we begin anew! <StartNewSection><NewLine><NewLine><JoinParty>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Toede
 
 Toede
@@ -3668,7 +3668,7 @@ y
 <Rune>PIGDOG <Rune>! <StartNewSection><NewLine><EndCoversation>
 y
 Then free me from these manacles!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Lord Malone
 
 Lord Malone
@@ -3704,7 +3704,7 @@ shad
 Even Nosfentor dares not cross the sacred threshold of Serpent's Hold!
 Nosf
 Speak not that name too loudly, for 'tis the name of the Shadowlord of Cowardice!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Monsieur Loubet
 
 Monsieur Loubet
@@ -3730,7 +3730,7 @@ y
 <DefineLabel1>
 <DefaultMessage><DefineLabel1>Perhaps zen my magic carpet would be of some use?
 I zold it to a mage named Bandaii. He lived in a village named Paws. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>Strange fellow, he was looking for a talking horse! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>If thou <123>find him, he might be willing to zell thee my carpet!
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Kristi
 
 Kristi
@@ -3764,7 +3764,7 @@ Thy loss.
 y
 <Gold>100 <Change><75><Change><75><Change><75><Change><75><Change><75>The mage said that they could open even magically locked doors.
 <DefaultMessage><DefineLabel2>I have no more, but the mage told me that he acquired them from an armourer named Shenstone! <StartNewSection><NewLine><NewLine><Unknown_FF>
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Gardner
 
 Gardner
@@ -3792,7 +3792,7 @@ cowa
 <Or>
 ques
 Upon the Isle of the Avatar, there lies a dungeon. At its bottom lies a small, cavernous room of the Underworld. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>However, there are many more <119>small chambers, near enough to be reached by one with the proper magic! <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>With many uses of <119>magic, and a great deal of exploration, one <121>find the Shard of Cowardice. <StartNewSection><NewLine><NewLine><KeyWait><StartNewSection>It lies at the location <124>upon the surface would be recorded as <Rune>L <Rune>' <Rune>A <Rune><StartNewSection>, <Rune>L <Rune>' <Rune>I <Rune><StartNewSection>.
-<DefaultMessage><Unknown_Enter>
+<DefaultMessage><EndScript>
 ---- SCRIPT for Maxwell
 
 Maxwell

@@ -22,7 +22,7 @@ namespace Ultima5Redux.References.Dialogue
             PlainString = 0x00, AvatarsName = 0x81, EndConversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85,
             Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89, KarmaMinusOne = 0x8A, CallGuards = 0x8B,
             IfElseKnowsName = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, StartLabelDefinition = 0x90,
-            StartNewSection = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE, DoNothingSection = 0xFF,
+            StartNewSection = 0xA2, EndScript = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE, DoNothingSection = 0xFF,
             PromptUserForInput_NPCQuestion = 0x80, PromptUserForInput_UserInterest = 0x7F, UserInputNotRecognized = 0x7E
         }
 
@@ -722,8 +722,8 @@ namespace Ultima5Redux.References.Dialogue
         [DataContract]
         public class ScriptItem
         {
-            [IgnoreDataMember]
-            private string _str = string.Empty;
+            [DataMember(Name = "StringData", EmitDefaultValue = false)]
+            private string _str;
 
             /// <summary>
             ///     command issued
@@ -731,7 +731,7 @@ namespace Ultima5Redux.References.Dialogue
             [DataMember]
             public TalkCommand Command { get; private set; }
 
-            [DataMember] public string Comment { get; private set; } = "";
+            [DataMember(EmitDefaultValue = false)] public string Comment { get; private set; }
 
             [DataMember(EmitDefaultValue = false)]
             public int ItemAdditionalData { get; set; }
@@ -745,11 +745,12 @@ namespace Ultima5Redux.References.Dialogue
             /// <summary>
             ///     Associated string (can be empty)
             /// </summary>
-            [DataMember(EmitDefaultValue = false)]
+            [IgnoreDataMember]
             public string StringData
             {
                 get
                 {
+                    if (_str == null) return "";
                     // we trim the double quotes out since they are so hard to deal with
                     // the boys at Origin must have had some very specific rules for dealing with newlines and
                     // double quotes
@@ -763,9 +764,9 @@ namespace Ultima5Redux.References.Dialogue
             ///     Simple constructor for basic commands
             /// </summary>
             /// <param name="command"></param>
-            public ScriptItem(TalkCommand command) : this(command, string.Empty)
-            {
-            }
+            public ScriptItem(TalkCommand command) //: this(command, "")
+                =>
+                    Command = command;
 
             public ScriptItem()
             {
@@ -833,7 +834,7 @@ namespace Ultima5Redux.References.Dialogue
             /// <returns></returns>
             public bool IsEndOfLabelSection =>
                 GetScriptItem(0).Command == TalkCommand.StartLabelDefinition &&
-                GetScriptItem(1).Command == TalkCommand.Unknown_Enter;
+                GetScriptItem(1).Command == TalkCommand.EndScript;
 
             /// <summary>
             ///     Is this script line a user input based question

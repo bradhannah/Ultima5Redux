@@ -291,7 +291,7 @@ namespace Ultima5Redux.Dialogue
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                             GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANNOT_HELP) + "\n"));
                         break;
-                    case TalkScript.TalkCommand.Unknown_Enter:
+                    case TalkScript.TalkCommand.EndScript:
                         break;
                     case TalkScript.TalkCommand.DoNothingSection:
                         // appears to signify an empty section
@@ -768,7 +768,7 @@ namespace Ultima5Redux.Dialogue
                 case TalkScript.TalkCommand.KeyWait:
                 case TalkScript.TalkCommand.StartLabelDefinition:
                 case TalkScript.TalkCommand.StartNewSection:
-                case TalkScript.TalkCommand.Unknown_Enter:
+                case TalkScript.TalkCommand.EndScript:
                 case TalkScript.TalkCommand.GotoLabel:
                 case TalkScript.TalkCommand.DefineLabel:
                 case TalkScript.TalkCommand.DoNothingSection:

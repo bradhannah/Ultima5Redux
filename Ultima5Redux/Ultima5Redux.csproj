@@ -353,6 +353,7 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
         <Content Include="DataFiles\MagicDefinitions.csv" />
+        <Content Include="DataFiles\StarterDialogue.json" />
         <Content Include="DataFiles\TileOverrides.csv" />
         <EmbeddedResource Include="DataFiles\TileOverrides.json" />
     </ItemGroup>

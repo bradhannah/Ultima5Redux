@@ -145,7 +145,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     else throw new Ultima5ReduxException($"Blackthorn Guard has odd aitype: {aiType}");
 
                     continue;
-                    ;
                 }
 
                 // In the future, such as Blackthorne's castle, this is where we will
