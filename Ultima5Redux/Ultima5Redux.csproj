@@ -153,8 +153,10 @@
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\DrankPotion.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\EnemyFocusedTurnResult.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\EnemyMoved.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\GoToJail.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\GuardExtortion.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\KarmaChanged.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\NpcJoinedParty.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ProvisionQuantityChanged.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\LootDropped.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\NpcTalkInteraction.cs" />

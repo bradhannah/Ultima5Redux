@@ -38,7 +38,8 @@
             ActionUseHmsCapePlans,
             ActionShoppeKeeperInteraction, NoOneToTalkTo, CantTalkSleeping, ComeBackLater, NotTalkative,
             NpcTalkInteraction, DontHurtMeAfraid, AdvanceClockNoComputation, Combat_CombatPlayerMissedTarget,
-            KarmaChanged, ProvisionQuantityChanged, NpcFreedFromManacles, NpcFreedFromStocks, GuardExtortion
+            KarmaChanged, ProvisionQuantityChanged, NpcFreedFromManacles, NpcFreedFromStocks, GuardExtortion,
+            NpcJoinedParty, GoToJail
         }
 
         public bool IsSuccessfulMovement

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.References;
@@ -60,12 +61,16 @@ namespace Ultima5Redux.PlayerCharacters
         ///     Adds an NPC character to the party, and maps their CharacterRecord
         /// </summary>
         /// <param name="npc">the NPC to add</param>
-        public void AddMemberToParty(NonPlayerCharacterReference npc)
+        /// <param name="turnResults"></param>
+        public void AddMemberToParty(NonPlayerCharacter npc, TurnResults turnResults)
         {
-            PlayerCharacterRecord record = GetCharacterRecordByNPC(npc);
+            PlayerCharacterRecord record = GetCharacterRecordByNPC(npc.NPCRef);
             if (record == null)
                 throw new Ultima5ReduxException("Adding a member to party resulted in no retrieved record");
             record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
+            turnResults.PushTurnResult(new NpcJoinedParty(npc.NPCRef));
+            // IsInParty
+            npc.IsInParty = true;
         }
 
         public string ApplyRandomCharacterStatusForMixSpell()

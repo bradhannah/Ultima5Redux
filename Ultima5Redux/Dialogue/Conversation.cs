@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Dialogue;
@@ -713,6 +715,7 @@ namespace Ultima5Redux.Dialogue
             switch (scriptItem.Command)
             {
                 case TalkScript.TalkCommand.GoToJail:
+                    TheTurnResults.PushTurnResult(new GoToJail());
                     break;
                 case TalkScript.TalkCommand.PayGenericExtortion:
                 {
@@ -746,7 +749,16 @@ namespace Ultima5Redux.Dialogue
                         ProvisionReferences.SpecificProvisionType.Gold, -scriptItem.ItemAdditionalData, TheTurnResults);
                     break;
                 case TalkScript.TalkCommand.JoinParty:
-                    _gameState.CharacterRecords.AddMemberToParty(TheNonPlayerCharacterState.NPCRef);
+                    NonPlayerCharacter npc =
+                        _gameState.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters.First(m =>
+                            m.NpcRefIndex == TheNonPlayerCharacterState.NPCRef.DialogIndex);
+                    if (npc == null)
+                    {
+                        throw new Ultima5ReduxException(
+                            $"Tried to get the Npc on the map so they could join but couldn't find dialog #{TheNonPlayerCharacterState.NPCRef.DialogIndex}");
+                    }
+
+                    _gameState.CharacterRecords.AddMemberToParty(npc, TheTurnResults);
                     break;
                 case TalkScript.TalkCommand.Change:
                     // add inventory item to inventory

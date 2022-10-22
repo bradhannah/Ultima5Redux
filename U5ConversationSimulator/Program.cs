@@ -51,7 +51,9 @@ namespace U5ConversationSimulator
                     //
                     break;
                 case TalkScript.TalkCommand.JoinParty:
-                    World.State.CharacterRecords.AddMemberToParty(conversation.TheNonPlayerCharacterState.NPCRef);
+                    // temp breaking it - lazy
+                    //World.State.CharacterRecords.AddMemberToParty(null, new TurnResults());
+                    //conversation.TheNonPlayerCharacterState.NPCRef, new TurnResults());
                     break;
                 case TalkScript.TalkCommand.KarmaMinusOne:
                     //

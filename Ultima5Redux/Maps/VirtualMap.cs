@@ -2030,6 +2030,9 @@ namespace Ultima5Redux.Maps
                     if (mapUnit is CombatMapUnit { HasEscaped: true } and not NonAttackingUnit)
                         continue;
 
+                    // we don't show NPCs who are now in our party
+                    if (mapUnit is NonPlayerCharacter { IsInParty: true }) continue;
+                    
                     // if we find the first highest priority item, then we simply return it
                     if (mapUnit.GetType() == type) return mapUnit;
                 }
