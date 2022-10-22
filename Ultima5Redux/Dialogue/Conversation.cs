@@ -314,10 +314,13 @@ namespace Ultima5Redux.Dialogue
                     case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
                         break;
                     case TalkScript.TalkCommand.GoToJail:
+                        EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.PayGenericExtortion:
+                        EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.PayHalfGoldExtortion:
+                        EnqueueToOutputBuffer(item);
                         break;
                     default:
                         throw new Ultima5ReduxException("Received TalkCommand I wasn't expecting during conversation");
@@ -715,6 +718,7 @@ namespace Ultima5Redux.Dialogue
                 {
                     int nAmountToExtort =
                         OddsAndLogic.GetGuardExtortionAmount(OddsAndLogic.GetEraByTurn(_gameState.TurnsSinceStart));
+                    scriptItem.ItemAdditionalData = nAmountToExtort;
                     _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
                         ProvisionReferences.SpecificProvisionType.Gold, -nAmountToExtort, TheTurnResults);
                     break;
@@ -722,6 +726,7 @@ namespace Ultima5Redux.Dialogue
                 case TalkScript.TalkCommand.PayHalfGoldExtortion:
                 {
                     int nAmountToExtort = _gameState.PlayerInventory.Gold / 2;
+                    scriptItem.ItemAdditionalData = nAmountToExtort;
                     _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
                         ProvisionReferences.SpecificProvisionType.Gold, -nAmountToExtort, TheTurnResults);
                     break;
