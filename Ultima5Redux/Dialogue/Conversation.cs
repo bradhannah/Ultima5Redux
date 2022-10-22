@@ -743,6 +743,8 @@ namespace Ultima5Redux.Dialogue
                 case TalkScript.TalkCommand.CallGuards:
                     _gameState.TheVirtualMap.IsWantedManByThePoPo = true;
                     CallForGuardsAfterConversation = true;
+                    // if it's a guard that calls guards then they will attack you immediately, you had your chance!
+                    if (TheNonPlayerCharacterState.NPCRef.IsGuard) _gameState.TheVirtualMap.DeclinedExtortion = true;
                     break;
                 case TalkScript.TalkCommand.Gold:
                     _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(

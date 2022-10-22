@@ -85,7 +85,10 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Are you wanted by the guards? For example - did you murder someone?
         /// </summary>
-        [DataMember] public bool IsWantedManByThePoPo;
+        [DataMember]
+        public bool IsWantedManByThePoPo { get; set; }
+
+        [DataMember] public bool DeclinedExtortion { get; set; }
 
         /// <summary>
         ///     If we are on a large map - then are we on overworld or underworld
@@ -1006,76 +1009,89 @@ namespace Ultima5Redux.Maps
             {
                 NonPlayerCharacterSchedule.AiType aiType =
                     aggressorMapUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
-                switch (aiType)
+
+                // because this overrides a LOT of AI behaviours, I just let all guards try to attack
+                // you if you turned down the extortion
+                if (nextToEachOtherNpc.NPCRef.IsGuard && IsWantedManByThePoPo && DeclinedExtortion)
                 {
-                    case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
-                    case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
-                        // let's add some randomness and only check them half the time
-                        if (Utils.OneInXOdds(2))
-                        {
-                            // are you wearing the black badge? 
-                            // temporary - if you have the badge then that's good enough
-                            if (GameStateReference.State.PlayerInventory.SpecializedItems
-                                    .Items[SpecialItem.SpecificItemType.BlackBadge].Quantity > 0)
+                    ForceAttack(mapUnitInfo, attackFromTileReference);
+                }
+                else
+                {
+                    switch (aiType)
+                    {
+                        case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
+                        case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
+                            // let's add some randomness and only check them half the time
+                            if (Utils.OneInXOdds(2))
                             {
-                                // if the guard has already harassed the Avatar, then they won't bug him
-                                // again until he re-enters the castle
-                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction
-                                    .BlackthornGuardPasswordCheck);
+                                // are you wearing the black badge? 
+                                // temporary - if you have the badge then that's good enough
+                                if (GameStateReference.State.PlayerInventory.SpecializedItems
+                                        .Items[SpecialItem.SpecificItemType.BlackBadge].Quantity > 0)
+                                {
+                                    // if the guard has already harassed the Avatar, then they won't bug him
+                                    // again until he re-enters the castle
+                                    mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction
+                                        .BlackthornGuardPasswordCheck);
+                                }
+                                else
+                                {
+                                    mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction
+                                        .StraightToBlackthornDungeon);
+                                }
+                            }
+
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.Begging:
+                            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.Begging);
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
+                        case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
+                        case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
+                            // even if they are extortionists, if you did some super bad, they will try to arrest 
+                            if (IsWantedManByThePoPo && DeclinedExtortion)
+                            {
+                                // attack them
+                                goto case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing;
+                            }
+
+                            if (IsWantedManByThePoPo)
+                            {
+                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
+                                break;
+                            }
+
+                            mapUnitInfo.ForceDecidedAction(
+                                aiType == NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard
+                                    ? AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion
+                                    : AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion);
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
+                            // if they wanted to chat and they are a guard they can get pissed off and arrest you
+                            if (IsWantedManByThePoPo || (nextToEachOtherNpc.NPCState.PissedOffCountDown == 0 &&
+                                                         nextToEachOtherNpc.NPCRef.IsGuard))
+                            {
+                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
                             }
                             else
                             {
-                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction
-                                    .StraightToBlackthornDungeon);
+                                // some times non guard NPCs are just keen to chat
+                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.WantsToChat);
                             }
-                        }
 
-                        break;
-                    case NonPlayerCharacterSchedule.AiType.Begging:
-                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.Begging);
-                        break;
-                    case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
-                    case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
-                    case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
-                        // even if they are extortionists, if you did some super bad, they will try to arrest 
-                        if (IsWantedManByThePoPo)
-                        {
-                            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
                             break;
-                        }
+                        case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
+                            // wow - I just leaned how to do this goto
+                            // they only attack when you are wanted by the popo
+                            if (IsWantedManByThePoPo) ForceAttack(mapUnitInfo, attackFromTileReference);
 
-                        mapUnitInfo.ForceDecidedAction(
-                            aiType == NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard
-                                ? AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion
-                                : AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion);
-                        break;
-                    case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
-                        // if they wanted to chat and they are a guard they can get pissed off and arrest you
-                        if (IsWantedManByThePoPo || (nextToEachOtherNpc.NPCState.PissedOffCountDown == 0 &&
-                                                     nextToEachOtherNpc.NPCRef.IsGuard))
-                        {
-                            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
-                        }
-                        else
-                        {
-                            // some times non guard NPCs are just keen to chat
-                            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.WantsToChat);
-                        }
-
-                        break;
-                    case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
-                        // wow - I just leaned how to do this goto
-                        // they only attack when you are wanted by the popo
-                        if (IsWantedManByThePoPo) goto case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing;
-                        break;
-                    case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
-                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.EnemyAttackCombatMap);
-                        SingleCombatMapReference singleCombatMapReference = GetSingleCombatMapReference(
-                            attackFromTileReference.CombatMapIndex,
-                            SingleCombatMapReference.Territory.Britannia);
-
-                        mapUnitInfo.CombatMapReference = singleCombatMapReference;
-                        break;
+                            //goto case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing;
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
+                            ForceAttack(mapUnitInfo, attackFromTileReference);
+                            break;
+                    }
                 }
             }
             // if a guard wants to chat, they lose patience after a while and want to arrest you
@@ -1170,6 +1186,16 @@ namespace Ultima5Redux.Maps
             }
 
             return mapUnitInfo;
+        }
+
+        private void ForceAttack(AggressiveMapUnitInfo mapUnitInfo, TileReference attackFromTileReference)
+        {
+            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.EnemyAttackCombatMap);
+            SingleCombatMapReference singleCombatMapReference = GetSingleCombatMapReference(
+                attackFromTileReference.CombatMapIndex,
+                SingleCombatMapReference.Territory.Britannia);
+
+            mapUnitInfo.CombatMapReference = singleCombatMapReference;
         }
 
         /// <summary>
@@ -2032,7 +2058,7 @@ namespace Ultima5Redux.Maps
 
                     // we don't show NPCs who are now in our party
                     if (mapUnit is NonPlayerCharacter { IsInParty: true }) continue;
-                    
+
                     // if we find the first highest priority item, then we simply return it
                     if (mapUnit.GetType() == type) return mapUnit;
                 }
@@ -2353,6 +2379,7 @@ namespace Ultima5Redux.Maps
             // if you are somehow transported between two different small map locations, then the guards
             // forget about your transgressions
             IsWantedManByThePoPo = false;
+            DeclinedExtortion = false;
 
             if (LargeMapOverUnder == Map.Maps.Small)
             {

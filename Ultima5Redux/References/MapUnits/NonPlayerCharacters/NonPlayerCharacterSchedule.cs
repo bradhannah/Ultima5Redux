@@ -147,6 +147,18 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     continue;
                 }
 
+                // THIS was intended for better handling of attacks from guards after you turn down
+                // their extortion
+                // if (nonPlayerCharacterReference.IsGuard && aiType != AiType.CustomAi)
+                // {
+                //     if (aiType == AiType.Fixed) AiTypeList[nIndex] = (int)AiType.FixedExceptAttackWhenIsWantedByThePoPo;
+                //     else if (aiType == AiType.BigWander) AiTypeList[nIndex] = (int)AiType.BigWander;
+                //     else if (aiType == AiType.Wander) AiTypeList[nIndex] = (int)AiType.Wander;
+                //     else if (aiType == AiType.ExtortOrAttackOrFollow) break;
+                //     else throw new Ultima5ReduxException("DERP");
+                //     continue;
+                // }
+
                 // In the future, such as Blackthorne's castle, this is where we will
                 // will override AIs to have more specific 
 
