@@ -22,9 +22,9 @@
       {
         "ScriptItems": [
           {
-            "Command": "PlainString",
-            "StringData": "XXX NO Greeting",
-            "Comment": "greeting"
+            "Command": "DefineLabel",
+            "LabelNum": 0,
+            "Comment": "Greeting"
           }
         ]
       },
@@ -46,6 +46,51 @@
           },
           {
             "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition"
+          },
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 0
+          },
+          {
+            "StringData": "Give now the password, bearer of the Badge!",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "StartNewSection"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "That's not it!!!!!!",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "impe",
+            "Command": "PlainString"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "Woot woot! Welcome to the team!",
+            "Command": "PlainString"
           }
         ]
       },
