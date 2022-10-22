@@ -3373,6 +3373,8 @@ namespace Ultima5ReduxTesting
             Assert.IsNotNull(bguardTalkScript);
             Assert.IsTrue(bguardTalkScript.NumberOfScriptLines > 5);
 
+            TalkScript genericGuard = GameReferences.TalkScriptsRef.GetCustomTalkScript("GenericExtortingGuard");
+            
             foreach (NonPlayerCharacter npc in
                      world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters)
             {

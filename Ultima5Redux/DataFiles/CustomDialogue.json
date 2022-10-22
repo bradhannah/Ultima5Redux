@@ -144,5 +144,184 @@
         ]
       }
     ]
+  },
+  "GenericExtortingGuard": {
+    "ScriptLines": [
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Blackthorn Guard\n",
+            "Comment": "name"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "a greedy looking guard.\n",
+            "Comment": "description"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 0,
+            "Comment": "Greeting"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Guard will never tell you his job\n",
+            "Comment": "ask JOB"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Guard should never say goodbye this way\n",
+            "Comment": "say BYE"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition"
+          },
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 0,
+            "Comment": "Guard immediately demands a tribute..."
+          },
+          {
+            "StringData": "A guard demands a ",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "ExtortionAmount"
+          },
+          {
+            "StringData": " gp tribute to Blackthorn!\n\nWilst thou pay?",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "StartNewSection"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 1,
+            "Comment": "You refuse to pay the tribute..."
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "y",
+            "Command": "PlainString",
+            "Comment": "yes - you will pay the tribute"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PayGenericExtortion"
+          },
+          {
+            "StringData": "Thank you on behalf of Lord Blackthorn.",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition"
+          },
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 1,
+            "Comment": "This happens if you refuse to pay the extortion"
+          },
+          {
+            "StringData": "Thou art under arrest!\n\nWilt thou come quietly?",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "StartNewSection"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "That was ill advised!"
+          },
+          {
+            "Command": "CallGuards",
+            "Comment": "You will NOT come quietly! (default)"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "y",
+            "Command": "PlainString",
+            "Comment": "yes - I will go to jail quietly"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "Come along then..."
+          },
+          {
+            "Command": "GoToJail"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition",
+            "Comment": "Begin End of Script"
+          },
+          {
+            "Command": "EndScript",
+            "Comment": "End the script"
+          }
+        ]
+      }
+    ]
   }
 }

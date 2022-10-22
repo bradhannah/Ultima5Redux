@@ -193,6 +193,10 @@ namespace Ultima5Redux.Dialogue
                         // we skip the next block because it is the line used when we actually know the Avatar
                         _currentSkipInstruction = SkipInstruction.SkipNext;
                         return;
+                    case TalkScript.TalkCommand.ExtortionAmount:
+                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
+                            TextProcessItem(item)));
+                        break;
                     case TalkScript.TalkCommand.AvatarsName:
                         // we should already know if they know the avatars name....
                         Debug.Assert(TheNonPlayerCharacterState.HasMetAvatar);
@@ -309,6 +313,12 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
                         break;
+                    case TalkScript.TalkCommand.GoToJail:
+                        break;
+                    case TalkScript.TalkCommand.PayGenericExtortion:
+                        break;
+                    case TalkScript.TalkCommand.PayHalfGoldExtortion:
+                        break;
                     default:
                         throw new Ultima5ReduxException("Received TalkCommand I wasn't expecting during conversation");
                 }
@@ -390,6 +400,9 @@ namespace Ultima5Redux.Dialogue
         {
             switch (item.Command)
             {
+                case TalkScript.TalkCommand.ExtortionAmount:
+                    return OddsAndLogic.GetGuardExtortionAmount(
+                        OddsAndLogic.GetEraByTurn(_gameState.TurnsSinceStart)).ToString();
                 case TalkScript.TalkCommand.AvatarsName:
                     return _gameState.AvatarsName;
                 case TalkScript.TalkCommand.NewLine:
@@ -691,11 +704,28 @@ namespace Ultima5Redux.Dialogue
             };
         }
 
-        
+
         public void ProcessScriptItem(TalkScript.ScriptItem scriptItem)
         {
             switch (scriptItem.Command)
             {
+                case TalkScript.TalkCommand.GoToJail:
+                    break;
+                case TalkScript.TalkCommand.PayGenericExtortion:
+                {
+                    int nAmountToExtort =
+                        OddsAndLogic.GetGuardExtortionAmount(OddsAndLogic.GetEraByTurn(_gameState.TurnsSinceStart));
+                    _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
+                        ProvisionReferences.SpecificProvisionType.Gold, -nAmountToExtort, TheTurnResults);
+                    break;
+                }
+                case TalkScript.TalkCommand.PayHalfGoldExtortion:
+                {
+                    int nAmountToExtort = _gameState.PlayerInventory.Gold / 2;
+                    _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
+                        ProvisionReferences.SpecificProvisionType.Gold, -nAmountToExtort, TheTurnResults);
+                    break;
+                }
                 case TalkScript.TalkCommand.KarmaPlusOne:
                     _gameState.ChangeKarma(1, TheTurnResults);
                     break;
@@ -776,6 +806,7 @@ namespace Ultima5Redux.Dialogue
                 case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
                 case TalkScript.TalkCommand.UserInputNotRecognized:
                     break;
+                case TalkScript.TalkCommand.ExtortionAmount:
                 default:
                     throw new ArgumentOutOfRangeException();
             }

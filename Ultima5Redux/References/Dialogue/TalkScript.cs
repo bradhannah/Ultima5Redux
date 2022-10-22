@@ -10,8 +10,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Ultima5Redux.References.Dialogue
 {
-    [DataContract]
-    public class TalkScript
+    [DataContract] public class TalkScript
     {
         /// <summary>
         ///     Specific talk command
@@ -23,7 +22,9 @@ namespace Ultima5Redux.References.Dialogue
             Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89, KarmaMinusOne = 0x8A, CallGuards = 0x8B,
             IfElseKnowsName = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, StartLabelDefinition = 0x90,
             StartNewSection = 0xA2, EndScript = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE, DoNothingSection = 0xFF,
-            PromptUserForInput_NPCQuestion = 0x80, PromptUserForInput_UserInterest = 0x7F, UserInputNotRecognized = 0x7E
+            PromptUserForInput_NPCQuestion = 0x80, PromptUserForInput_UserInterest = 0x7F,
+            UserInputNotRecognized = 0x7E, ExtortionAmount = 0x100, GoToJail = 0x101, PayGenericExtortion = 0x102,
+            PayHalfGoldExtortion = 0x103
         }
 
         /// <summary>
@@ -54,20 +55,17 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     All of the ScriptLines
         /// </summary>
-        [DataMember(Name = "ScriptLines")]
-        private readonly List<ScriptLine> _scriptLines = new();
+        [DataMember(Name = "ScriptLines")] private readonly List<ScriptLine> _scriptLines = new();
 
         /// <summary>
         ///     Non label specific Q & A
         /// </summary>
-        [IgnoreDataMember]
-        private readonly ScriptQuestionAnswers _scriptQuestionAnswers = new();
+        [IgnoreDataMember] private readonly ScriptQuestionAnswers _scriptQuestionAnswers = new();
 
         /// <summary>
         ///     Script talk labels contain all the labels, their Q & A and default responses
         /// </summary>
-        [IgnoreDataMember]
-        private readonly ScriptTalkLabels _scriptTalkLabels = new();
+        [IgnoreDataMember] private readonly ScriptTalkLabels _scriptTalkLabels = new();
 
         /// <summary>
         ///     We only capture the bare minimum when deserializing scripts and process them after
@@ -79,7 +77,7 @@ namespace Ultima5Redux.References.Dialogue
             //_currentScriptLine = _scriptLines[0];
             InitScript();
         }
-        
+
         // tracking the current script line
         [IgnoreDataMember] private ScriptLine _currentScriptLine; //= new();
 
@@ -161,6 +159,7 @@ namespace Ultima5Redux.References.Dialogue
                 _currentScriptLine = new ScriptLine();
                 _scriptLines.Add(_currentScriptLine);
             }
+
             _currentScriptLine.AddScriptItem(talkCommand == TalkCommand.PlainString
                 ? new ScriptItem(talkCommand, talkStr)
                 : new ScriptItem(talkCommand));
@@ -213,7 +212,7 @@ namespace Ultima5Redux.References.Dialogue
         public void InitScript()
         {
             // if (_scriptLines.Count == 0) _scriptLines.Add(_currentScriptLine);
-            
+
             // we keep track of the index into the ScriptLines all the way through the entire method
             int nIndex = END_BASE_INDEXES + 1;
 
@@ -700,14 +699,11 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     A single instance of a question and answer for dialog
         /// </summary>
-        [DataContract]
-        protected internal class ScriptQuestionAnswer
+        [DataContract] protected internal class ScriptQuestionAnswer
         {
-            [DataMember]
-            public ScriptLine Answer { get; }
+            [DataMember] public ScriptLine Answer { get; }
 
-            [DataMember]
-            public List<string> Questions { get; }
+            [DataMember] public List<string> Questions { get; }
 
             public ScriptQuestionAnswer(List<string> questions, ScriptLine answer)
             {
@@ -719,8 +715,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     Represents a single script component
         /// </summary>
-        [DataContract]
-        public class ScriptItem
+        [DataContract] public class ScriptItem
         {
             [DataMember(Name = "StringData", EmitDefaultValue = false)]
             private string _str;
@@ -733,15 +728,14 @@ namespace Ultima5Redux.References.Dialogue
 
             [DataMember(EmitDefaultValue = false)] public string Comment { get; private set; }
 
-            [DataMember(EmitDefaultValue = false)]
-            public int ItemAdditionalData { get; set; }
+            [DataMember(EmitDefaultValue = false)] public int ItemAdditionalData { get; set; }
 
             /// <summary>
             ///     If there is a label, then this is a zero based index
             /// </summary>
             [DataMember(EmitDefaultValue = false)]
             public int LabelNum { get; private set; }
-            
+
             /// <summary>
             ///     Associated string (can be empty)
             /// </summary>
@@ -810,8 +804,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     Special scriptline that identifies that it has been split in sections
         /// </summary>
-        [DataContract]
-        protected internal class SplitScriptLine : ScriptLine
+        [DataContract] protected internal class SplitScriptLine : ScriptLine
         {
         }
 
@@ -819,14 +812,12 @@ namespace Ultima5Redux.References.Dialogue
         ///     Represents a single line of a script
         ///     This script line can be in a "split mode" or non-splitmode
         /// </summary>
-        [DataContract]
-        protected internal class ScriptLine
+        [DataContract] protected internal class ScriptLine
         {
             /// <summary>
             ///     a list of all associated ScriptItems, in a particular order
             /// </summary>
-            [DataMember(Name = "ScriptItems")]
-            private readonly List<ScriptItem> _scriptItems = new();
+            [DataMember(Name = "ScriptItems")] private readonly List<ScriptItem> _scriptItems = new();
 
             /// <summary>
             ///     Does this line represent the end of all Labels in the NPC talk script (end of script)
@@ -948,6 +939,14 @@ namespace Ultima5Redux.References.Dialogue
                             // we need to tell the loop to force yet another split next time around
                             // basically - these items need to part of a single item SplitScriptLine
                             forceSplitNext = true;
+                            break;
+                        case TalkCommand.ExtortionAmount:
+                            item.ItemAdditionalData =
+                                OddsAndLogic.GetGuardExtortionAmount(
+                                    OddsAndLogic.GetEraByTurn(GameStateReference.State.TurnsSinceStart));
+                            //var splitScriptLine = new SplitScriptLine();
+                            lines[nSection].AddScriptItem(item);
+                            //lines.Add();
                             break;
                         case TalkCommand.Change:
                             // advance to next section

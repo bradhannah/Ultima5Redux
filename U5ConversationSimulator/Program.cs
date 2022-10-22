@@ -108,7 +108,9 @@ namespace U5ConversationSimulator
                 SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn;
             NonPlayerCharacterState npcState =
                 World.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 5);
-            var convo = new Conversation(World.State, npcState); // delwyn
+            var convo = new Conversation(World.State, npcState, "GenericExtortingGuard");
+            //World.State, npcState); // delwyn
+            
 
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
