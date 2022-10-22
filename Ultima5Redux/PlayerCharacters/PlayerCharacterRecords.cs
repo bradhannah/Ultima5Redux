@@ -20,6 +20,8 @@ namespace Ultima5Redux.PlayerCharacters
         public const int AVATAR_RECORD = 0x00;
         public const int MAX_PARTY_MEMBERS = 6;
 
+        [DataMember] public bool WearingBlackBadge { get; set; }
+        
         [DataMember] public readonly List<PlayerCharacterRecord> Records = new(TOTAL_CHARACTER_RECORDS);
 
         [IgnoreDataMember] public PlayerCharacterRecord AvatarRecord => Records[0];

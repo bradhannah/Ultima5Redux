@@ -698,8 +698,11 @@ namespace Ultima5Redux.Maps
                         continue;
                     }
                     case AggressiveMapUnitInfo.DecidedAction.StraightToBlackthornDungeon:
-                        // placeholder - this will require a whole new orchestration system that is going
-                        // to wicked tough
+                        if (mapUnit is not NonPlayerCharacter blackthornGuard)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
+
+                        turnResults.PushTurnResult(new GoToBlackthornDungeon(blackthornGuard));
                         break;
                     case AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion:
                     {
@@ -1027,8 +1030,7 @@ namespace Ultima5Redux.Maps
                             {
                                 // are you wearing the black badge? 
                                 // temporary - if you have the badge then that's good enough
-                                if (GameStateReference.State.PlayerInventory.SpecializedItems
-                                        .Items[SpecialItem.SpecificItemType.BlackBadge].Quantity > 0)
+                                if (GameStateReference.State.CharacterRecords.WearingBlackBadge)
                                 {
                                     // if the guard has already harassed the Avatar, then they won't bug him
                                     // again until he re-enters the castle

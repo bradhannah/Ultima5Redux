@@ -2421,13 +2421,11 @@ namespace Ultima5Redux
                     break;
                 case SpecialItem.SpecificItemType.Spyglass:
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.WearUseItemStrings
-                            .SPYGLASS_N_N), false);
+                        DataOvlReference.WearUseItemStrings.SPYGLASS_N_N), false);
                     break;
                 case SpecialItem.SpecificItemType.HMSCape:
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.WearUseItemStrings
-                            .PLANS_N_N), false);
+                        DataOvlReference.WearUseItemStrings.PLANS_N_N), false);
                     break;
                 case SpecialItem.SpecificItemType.PocketWatch:
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
@@ -2436,18 +2434,27 @@ namespace Ultima5Redux
                     break;
                 case SpecialItem.SpecificItemType.BlackBadge:
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.WearUseItemStrings
-                            .BADGE_N_N), false);
+                        DataOvlReference.WearUseItemStrings.BADGE_N_N), false);
+                    if (State.CharacterRecords.WearingBlackBadge)
+                    {
+                        turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                            DataOvlReference.WearUseItemStrings.REMOVED), false);
+                    }
+                    else
+                    {
+                        turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                            DataOvlReference.WearUseItemStrings.BADGE_WORN_BANG_N), false);
+                    }
+
+                    State.CharacterRecords.WearingBlackBadge = !State.CharacterRecords.WearingBlackBadge;
                     break;
                 case SpecialItem.SpecificItemType.WoodenBox:
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.WearUseItemStrings
-                            .BOX_N_HOW_N), false);
+                        DataOvlReference.WearUseItemStrings.BOX_N_HOW_N), false);
                     break;
                 case SpecialItem.SpecificItemType.Sextant:
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.WearUseItemStrings
-                            .SEXTANT_N_N), false);
+                        DataOvlReference.WearUseItemStrings.SEXTANT_N_N), false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(spcItem),

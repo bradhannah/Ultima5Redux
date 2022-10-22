@@ -616,5 +616,121 @@
         ]
       }
     ]
+  },
+  "BlackthornGuardStraightToDungeon": {
+    "ScriptLines": [
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Blackthorn Guard\n",
+            "Comment": "name"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "a grumpy and oppressive guard.\n",
+            "Comment": "description"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 0,
+            "Comment": "Greeting"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Guard will never tell you his job\n",
+            "Comment": "ask JOB"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Guard should never say goodbye this way\n",
+            "Comment": "say BYE"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition"
+          },
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 0,
+            "Comment": "Straight to the dungeon with you."
+          },
+          {
+            "StringData": "Thou art subdued and blindfolded!\n",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "Pause"
+          },
+          {
+            "Command": "NewLine"
+          },
+          {
+            "StringData": "Strong guards drag thee away!\n",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "Pause"
+          },
+          {
+            "Command": "NewLine"
+          },
+          {
+            "StringData": "Thou hast been chained and manacled!\n",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "Pause"
+          },
+          {
+            "Command": "NewLine"
+          },
+          {
+            "StringData": "Footsteps!\n",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "CallGuards"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition",
+            "Comment": "Begin End of Script"
+          },
+          {
+            "Command": "EndScript",
+            "Comment": "End the script"
+          }
+        ]
+      }
+    ]
   }
 }
