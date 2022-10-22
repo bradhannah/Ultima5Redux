@@ -56,7 +56,8 @@
           },
           {
             "Command": "DefineLabel",
-            "LabelNum": 0
+            "LabelNum": 0,
+            "Comment": "Get right to checking for the password."
           },
           {
             "StringData": "Give now the password, bearer of the Badge!",
@@ -70,8 +71,41 @@
       {
         "ScriptItems": [
           {
-            "StringData": "That's not it!!!!!!",
+            "StringData": "Thou art subdued and blindfolded!\n",
             "Command": "PlainString"
+          },
+          {
+            "Command": "Pause"
+          },
+          {
+            "Command": "NewLine"
+          },
+          {
+            "StringData": "Strong guards drag thee away!\n",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "Pause"
+          },
+          {
+            "Command": "NewLine"
+          },
+          {
+            "StringData": "Thou hast been chained and manacled!\n",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "Pause"
+          },
+          {
+            "Command": "NewLine"
+          },
+          {
+            "StringData": "Footsteps!\n",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "CallGuards"
           },
           {
             "Command": "EndConversation"
@@ -89,8 +123,11 @@
       {
         "ScriptItems": [
           {
-            "StringData": "Woot woot! Welcome to the team!",
+            "StringData": "Pass, friend!",
             "Command": "PlainString"
+          },
+          {
+            "Command": "EndConversation"
           }
         ]
       },
