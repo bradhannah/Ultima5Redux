@@ -28,7 +28,8 @@ namespace Ultima5Redux.References.Maps
             ItemShield = 262, ItemHelm = 265, ItemRing = 266, ItemArmour = 267, ItemAnkh = 268, Lava = 143,
             ItemKey = 263, DeadBody = 286, BloodSpatter = 287, Chest = 257, Whirlpool_KeyIndex = 492, PoisonField = 488,
             MagicField = 489, FireField = 490, ElectricField = 491, ItemFood = 271, ItemGem = 264, ItemTorch = 269,
-            ItemMoney = 258, Beggar_KeyIndex = 365, HolyFloorSymbol = 278, Telescope = 89
+            ItemMoney = 258, Beggar_KeyIndex = 365, HolyFloorSymbol = 278, Telescope = 89, Clock1 = 250, Clock2 = 251,
+            Well = 161
         }
 
 

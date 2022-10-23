@@ -13,6 +13,7 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.NonPlayerCharacters.ExtendedNpc;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.MapUnits.TurnResults;
@@ -3381,5 +3382,36 @@ namespace Ultima5ReduxTesting
                 _ = "";
             }
         }
+
+        [Test] [TestCase(SaveFiles.fresh, false)] [TestCase(SaveFiles.fresh, true)]
+        public void test_MakeAWell(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Empath_Abbey, 0));
+
+            TurnResults turnResults = new();
+            Point2D wellPosition = new(15, 15);
+            var wishingWell =
+                WishingWell.Create(world.State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+                    wellPosition, world.State.TheVirtualMap.CurrentSingleMapReference.Floor);
+
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnits =
+                world.TryToLook(wellPosition, out World.SpecialLookCommand specialLookCommand, turnResults);
+
+            Conversation convo = world.CreateConversationAndBegin(wishingWell.NPCState,
+                OnUpdateOfEnqueuedScriptItemHandleDelwyn, "WishingWell");
+            convo.BeginConversation();
+            string npcName = wishingWell.FriendlyName;
+            Assert.False(npcName == "None");
+            convo.AddUserResponse("yes");
+        }
+        
     }
 }

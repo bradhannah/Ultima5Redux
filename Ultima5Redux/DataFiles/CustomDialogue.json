@@ -732,5 +732,168 @@
         ]
       }
     ]
+  },
+  "WishingWell": {
+    "ScriptLines": [
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "Well\n",
+            "Comment": "name"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "a well.\n",
+            "Comment": "description"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 0,
+            "Comment": "Greeting"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Wells will never tell you their job\n",
+            "Comment": "ask JOB"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "XXX Wells should never say goodbye this way\n",
+            "Comment": "say BYE"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition"
+          },
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 0,
+            "Comment": ""
+          },
+          {
+            "Command": "StartNewSection"
+          },
+          {
+            "Command": "PlainString",
+            "StringData": "Drop a coin?\n",
+            "Comment": "Automatic response from the well"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "y\n",
+            "Command": "PlainString"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "Gold",
+            "Comment": "this section starts when the avatar says 'yes' to throw a coin in"
+          },
+          {
+            "StringData": "001",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 1
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition"
+          },
+          {
+            "Command": "DefineLabel",
+            "LabelNum": 1
+          },
+          {
+            "Command": "StartNewSection"
+          },
+          {
+            "StringData": "Thy wish?",
+            "Command": "PlainString"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "No effect!\n",
+            "Command": "PlainString"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "horse\n",
+            "Command": "PlainString"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "PlainString",
+            "StringData": "Poof a Horse!\n"
+          },
+          {
+            "Command": "EndConversation"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "StartLabelDefinition",
+            "Comment": "Begin End of Script"
+          },
+          {
+            "Command": "EndScript",
+            "Comment": "End the script"
+          }
+        ]
+      }
+    ]
   }
 }

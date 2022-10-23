@@ -16,7 +16,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public enum SpecificNpcDialogType
         {
             Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87, InnKeeper = 0x88,
-            MagicSeller = 0x85, GuildMaster = 0x86, None = 0xFF, Guard = 0xFE
+            MagicSeller = 0x85, GuildMaster = 0x86, None = 0xFF, Guard = 0xFE, WishingWell = 0xFD
             // unknowns may be crown and sandlewood box
         }
 
@@ -86,7 +86,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                                TileReference.N_TYPICAL_ANIMATION_FRAMES
                     && MapLocation == SmallMapReferences.SingleMapReference.Location.Windemere)
                     return SpecificNpcDialogType.Guard;
-                
+
                 //if (NPCKeySprite is >= 368 and <= 371) return SpecificNpcDialogType.Guard;
                 // it's the Avatar
                 if (NPCKeySprite == 256) return SpecificNpcDialogType.None;

@@ -56,7 +56,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         [IgnoreDataMember]
         public NonPlayerCharacterReference NPCRef
         {
-            get => GameReferences.NpcRefs.GetNonPlayerCharactersByLocation(NPCLocation)[NPCRefIndex];
+            get
+            {
+                if (_npcRefOverride != null) return _npcRefOverride;
+                return GameReferences.NpcRefs.GetNonPlayerCharactersByLocation(NPCLocation)[NPCRefIndex];
+            }
             private set
             {
                 NPCRefIndex = value.DialogIndex;
@@ -64,10 +68,25 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
+        private readonly NonPlayerCharacterReference _npcRefOverride;
+        
         [JsonConstructor] private NonPlayerCharacterState()
         {
         }
 
-        public NonPlayerCharacterState(NonPlayerCharacterReference npcRef) => NPCRef = npcRef;
+        public NonPlayerCharacterState(NonPlayerCharacterReference npcRef, bool bTemporaryReference = false)
+        {
+            if (bTemporaryReference)
+            {
+                // there is a special condition for temporary references.
+                // because the class saves index values instead of the npc reference for the sake of saving files
+                // if it's temporary (like a wishing well) then we will add an override
+                _npcRefOverride = npcRef;
+            }
+            else
+            {
+                NPCRef = npcRef;
+            }
+        }
     }
 }

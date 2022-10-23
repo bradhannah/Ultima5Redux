@@ -9,7 +9,7 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
-    [DataContract] public sealed class NonPlayerCharacter : MapUnit
+    [DataContract] public class NonPlayerCharacter : MapUnit
     {
         [DataMember(Name = "PlayerCharacterRecordIndex")]
         private int _playerCharacterRecordIndex;

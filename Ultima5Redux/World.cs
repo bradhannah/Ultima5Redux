@@ -9,6 +9,7 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.NonPlayerCharacters.ExtendedNpc;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.MapUnits.TurnResults;
@@ -1519,23 +1520,38 @@ namespace Ultima5Redux
                 specialLookCommand = SpecialLookCommand.Sign;
                 lookStr = string.Empty;
             }
-            else if (GameReferences.SpriteTileReferences.GetTileNumberByName("Clock1") == tileReference.Index)
-            {
-                lookStr = GameReferences.DataOvlRef.StringReferences
-                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
-                          GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart() +
-                          State.TheTimeOfDay.FormattedTime;
-            }
-            else // lets see what we've got here!
-            {
-                lookStr = GameReferences.DataOvlRef.StringReferences
-                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
-                          GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart();
-            }
+            else
+                switch (tileReference.Index)
+                {
+                    case (int)TileReference.SpriteIndex.Well:
+                        var wishingWell =
+                            WishingWell.Create(State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+                                xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
+                        turnResults.PushTurnResult(new NpcTalkInteraction(wishingWell, "WishingWell"));
+                        return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                    case (int)TileReference.SpriteIndex.Clock1 or (int)TileReference.SpriteIndex.Clock2:
+                        lookStr = GameReferences.DataOvlRef.StringReferences
+                                      .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
+                                  GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart() +
+                                  State.TheTimeOfDay.FormattedTime;
+                        break;
+                    default:
+                        // lets see what we've got here!
+                        lookStr = GameReferences.DataOvlRef.StringReferences
+                                      .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
+                                  GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart();
+                        break;
+                }
 
             // pass time at the end to make sure moving characters are accounted for
             turnResults.PushOutputToConsole(lookStr, false);
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionLook));
+
+            // if (tileReference.Index == (int)TileReference.SpriteIndex.Well)
+            // {
+            //     // some wells are supposed to spawn horses, and some aren't... I think maybe all of them should..?
+            //     
+            // }
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
