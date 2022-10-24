@@ -439,7 +439,7 @@ namespace Ultima5Redux.MapUnits
                     or TileReference.SpriteIndex.Fighter_KeyIndex
                     or TileReference.SpriteIndex.Bard_KeyIndex
                     or TileReference.SpriteIndex.TownsPerson_KeyIndex
-                    or TileReference.SpriteIndex.Ray_KeyIndex
+                    or TileReference.SpriteIndex.Rat_KeyIndex
                     or TileReference.SpriteIndex.Bat_KeyIndex
                     or TileReference.SpriteIndex.ShadowLord_KeyIndex)
                 {

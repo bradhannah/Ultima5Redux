@@ -2385,6 +2385,11 @@ namespace Ultima5Redux.Maps
             IsWantedManByThePoPo = false;
             DeclinedExtortion = false;
 
+            // re-add all dead rats back
+            TheMapUnits?.CurrentMapUnits.NonPlayerCharacters
+                .Where(m => m.NpcRefIndex == (int)TileReference.SpriteIndex.Rat_KeyIndex)
+                .All(m => m.NPCState.IsDead = false);
+
             if (LargeMapOverUnder == Map.Maps.Small)
             {
                 // as we exit the Small Map we must make sure we reset the extorted flag 

@@ -60,7 +60,13 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             MerchantBuyingSellingWander = 108,
 
             // They are Fixed unless wanted by the popo, at which time they seek and attack 
-            FixedExceptAttackWhenIsWantedByThePoPo = 109, BlackthornGuardWander = 110, BlackthornGuardFixed = 111
+            FixedExceptAttackWhenIsWantedByThePoPo = 109,
+
+            // Blackthorn guards will check in for password, with a small wander
+            BlackthornGuardWander = 110,
+
+            // Blackthorn guard stays put, but will ask password if prompted
+            BlackthornGuardFixed = 111, StoneGargoyleTrigger = 112
         }
 
 
@@ -126,6 +132,15 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 {
                     // this is Stillwelt, the mean guard
                     AiTypeList[nIndex] = (int)AiType.SmallWanderWantsToChat;
+                    continue;
+                }
+
+                // some Rats in smalls maps have what I consider the guards AI, so we override it so they are 
+                // aggressive and attack
+                if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Rat_KeyIndex
+                    && aiType is AiType.ExtortOrAttackOrFollow)
+                {
+                    AiTypeList[nIndex] = (int)AiType.DrudgeWorthThing;
                     continue;
                 }
 
