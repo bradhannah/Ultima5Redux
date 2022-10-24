@@ -39,7 +39,7 @@
             ActionShoppeKeeperInteraction, NoOneToTalkTo, CantTalkSleeping, ComeBackLater, NotTalkative,
             NpcTalkInteraction, DontHurtMeAfraid, AdvanceClockNoComputation, Combat_CombatPlayerMissedTarget,
             KarmaChanged, ProvisionQuantityChanged, NpcFreedFromManacles, NpcFreedFromStocks, GuardExtortion,
-            NpcJoinedParty, GoToJail, GoToBlackthornDungeon
+            NpcJoinedParty, GoToJail, GoToBlackthornDungeon, PoofHorse
         }
 
         public bool IsSuccessfulMovement

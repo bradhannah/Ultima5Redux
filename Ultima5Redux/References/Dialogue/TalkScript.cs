@@ -24,7 +24,7 @@ namespace Ultima5Redux.References.Dialogue
             StartNewSection = 0xA2, EndScript = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE, DoNothingSection = 0xFF,
             PromptUserForInput_NPCQuestion = 0x80, PromptUserForInput_UserInterest = 0x7F,
             UserInputNotRecognized = 0x7E, ExtortionAmount = 0x100, GoToJail = 0x101, PayGenericExtortion = 0x102,
-            PayHalfGoldExtortion = 0x103
+            PayHalfGoldExtortion = 0x103, MakeAHorse = 0x104
         }
 
         /// <summary>

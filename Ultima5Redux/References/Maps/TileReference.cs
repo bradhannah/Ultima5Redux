@@ -15,6 +15,7 @@ namespace Ultima5Redux.References.Maps
         {
             Nothing = 0, Water = 1, TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149,
             PlowedField = 44, Cactus = 47, WheatInField = 45, HitchingPost = 162, Guard_KeyIndex = 368,
+            Rat_KeyIndex = 400,
             StoneBrickWallSecret = 78, RegularDoor = 184, LockedDoor = 185, RegularDoorView = 186, LockedDoorView = 187,
             RightSconce = 176, LeftScone = 177, Brazier = 178, CampFire = 179, LampPost = 189, CandleOnTable = 190,
             CookStove = 191, BlueFlame = 222, ChairBackForward = 144, ChairBackLeft = 145, ChairBackBack = 146,

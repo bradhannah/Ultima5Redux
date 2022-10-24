@@ -874,8 +874,47 @@
       {
         "ScriptItems": [
           {
+            "Command": "Or"
+          },
+          {
+            "Command": "PlainString"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "mustang\n",
+            "Command": "PlainString"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "Command": "Or"
+          },
+          {
+            "Command": "PlainString"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
+            "StringData": "ferrari\n",
+            "Command": "PlainString"
+          }
+        ]
+      },
+      {
+        "ScriptItems": [
+          {
             "Command": "PlainString",
             "StringData": "Poof a Horse!\n"
+          },
+          {
+            "Command": "MakeAHorse"
           },
           {
             "Command": "EndConversation"

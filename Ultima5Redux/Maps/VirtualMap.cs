@@ -1514,7 +1514,7 @@ namespace Ultima5Redux.Maps
         ///     Creates a horse MapUnit in the surrounding tiles of the Avatar - if one exists
         /// </summary>
         /// <returns>the new horse or null if there was no where to put it</returns>
-        public Horse CreateHorseAroundAvatar()
+        public Horse CreateHorseAroundAvatar(TurnResults turnResults)
         {
             List<Point2D> freeSpacesAroundAvatar = GetFreeSpacesSurroundingAvatar();
             if (freeSpacesAroundAvatar.Count <= 0) return null;
@@ -1527,6 +1527,8 @@ namespace Ultima5Redux.Maps
 
             if (nIndex == -1 || horse == null) return null;
 
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.PoofHorse));
+            
             return horse;
         }
 

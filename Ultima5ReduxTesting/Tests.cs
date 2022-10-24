@@ -932,7 +932,7 @@ namespace Ultima5ReduxTesting
             TurnResults turnResults = new TurnResults();
             world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
-            Horse horse = world.State.TheVirtualMap.CreateHorseAroundAvatar();
+            Horse horse = world.State.TheVirtualMap.CreateHorseAroundAvatar(turnResults);
             Assert.True(horse != null);
         }
 

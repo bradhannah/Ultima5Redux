@@ -242,6 +242,9 @@ namespace Ultima5Redux.Dialogue
                             _script.GetScriptLine(_script.GetScriptLineLabelIndex(item.LabelNum)));
                         _currentSkipInstruction = SkipInstruction.SkipToLabel;
                         return;
+                    case TalkScript.TalkCommand.MakeAHorse:
+                        EnqueueToOutputBuffer(item);
+                        break;                        
                     case TalkScript.TalkCommand.EndConversation:
                         EnqueueToOutputBuffer(item);
                         ConversationEnded = true;
@@ -714,6 +717,10 @@ namespace Ultima5Redux.Dialogue
         {
             switch (scriptItem.Command)
             {
+                case TalkScript.TalkCommand.MakeAHorse:
+                    // well, we make a horse!
+                    _ = _gameState.TheVirtualMap.CreateHorseAroundAvatar(TheTurnResults);
+                    break;
                 case TalkScript.TalkCommand.GoToJail:
                     TheTurnResults.PushTurnResult(new GoToJail());
                     break;
