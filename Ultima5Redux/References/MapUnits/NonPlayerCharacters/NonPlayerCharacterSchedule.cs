@@ -144,6 +144,12 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     continue;
                 }
 
+                if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.StoneGargoyle_KeyIndex)
+                {
+                    AiTypeList[nIndex] = (int)AiType.StoneGargoyleTrigger;
+                    continue;
+                }
+
                 // the daemon's at Windemere are really like guards
                 if (location == SmallMapReferences.SingleMapReference.Location.Windemere &&
                     nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Daemon1_KeyIndex)

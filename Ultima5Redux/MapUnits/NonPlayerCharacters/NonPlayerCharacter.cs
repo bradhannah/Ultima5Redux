@@ -105,7 +105,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             // there are many circumstances where we will assign a specific AI based on who they are
             // this is especially true for guards
             //AssignSpecialAi();
-            
+
             // it's a large map so we follow different logic to determine the placement of the character
             if (bLargeMap)
             {

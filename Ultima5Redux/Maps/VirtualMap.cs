@@ -1528,7 +1528,7 @@ namespace Ultima5Redux.Maps
             if (nIndex == -1 || horse == null) return null;
 
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.PoofHorse));
-            
+
             return horse;
         }
 
@@ -2386,9 +2386,20 @@ namespace Ultima5Redux.Maps
             DeclinedExtortion = false;
 
             // re-add all dead rats back
-            TheMapUnits?.CurrentMapUnits.NonPlayerCharacters
-                .Where(m => m.NpcRefIndex == (int)TileReference.SpriteIndex.Rat_KeyIndex)
-                .All(m => m.NPCState.IsDead = false);
+            foreach (NonPlayerCharacter mapUnit in TheMapUnits?.CurrentMapUnits.NonPlayerCharacters
+                         .Where(m => m.KeyTileReference.Index == (int)TileReference.SpriteIndex.Rat_KeyIndex)!)
+            {
+                mapUnit.NPCState.IsDead = false;
+            }
+
+            // Gargoyles may have overriden AI when the avatar gets too close them 
+            foreach (NonPlayerCharacter mapUnit in TheMapUnits?.CurrentMapUnits.NonPlayerCharacters.Where(m =>
+                         m.KeyTileReference.Index == (int)TileReference.SpriteIndex.StoneGargoyle_KeyIndex)!)
+            {
+                mapUnit.NPCState.UnsetOverridenAi();
+            }
+
+            //NPCState.OverrideAi(NonPlayerCharacterSchedule.AiType.DrudgeWorthThing);
 
             if (LargeMapOverUnder == Map.Maps.Small)
             {

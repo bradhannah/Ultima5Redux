@@ -80,9 +80,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     and <= (int)TileReference.SpriteIndex.Guard_KeyIndex + TileReference.N_TYPICAL_ANIMATION_FRAMES)
                     return SpecificNpcDialogType.Guard;
 
-                if (NPCKeySprite is (int)TileReference.SpriteIndex.Rat_KeyIndex)
-                    _ = "";
-                
                 // daemons at Windemere are guards too
                 if (NPCKeySprite is (int)TileReference.SpriteIndex.Daemon1_KeyIndex
                         and <= (int)TileReference.SpriteIndex.Daemon1_KeyIndex +

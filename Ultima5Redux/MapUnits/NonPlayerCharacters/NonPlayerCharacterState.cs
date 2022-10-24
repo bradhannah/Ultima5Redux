@@ -22,7 +22,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         {
             OverrideAiType = true;
             OverridenAiType = aiType;
-        }        
+        }
+
+        public void UnsetOverridenAi()
+        {
+            OverrideAiType = false;
+        }
         
         [DataMember]
         public bool HasMetAvatar

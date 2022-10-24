@@ -42,7 +42,7 @@ namespace Ultima5Redux.MapUnits
         [DataMember]
         public MapUnitCollection UnderworldMapUnitCollection { get; protected set; } =
             new();
-
+        
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
         /// </summary>

@@ -83,7 +83,7 @@ namespace Ultima5Redux.MapUnits
         protected virtual NonPlayerCharacterSchedule.AiType OverridenAiType =>
             NPCState?.OverridenAiType ?? NonPlayerCharacterSchedule.AiType.Fixed;
 
-
+        
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
         /// </summary>
@@ -393,9 +393,26 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
+        // Should the tile be animated? 
+        // presently, it's only for Stone Gargoyles, but could be extended to more
+        public bool ShouldAnimate
+        {
+            get
+            {
+                if (NPCRef == null) return true;
+                return GetCurrentAiType(GameStateReference.State.TheTimeOfDay) !=
+                       NonPlayerCharacterSchedule.AiType.StoneGargoyleTrigger;
+            }
+        }
+
         private void UpdateAnimationIndex()
         {
             if (KeyTileReference.TotalAnimationFrames <= 1) return;
+            if (!ShouldAnimate)
+            {
+                _nCurrentAnimationIndex = 0;
+                return;
+            }
 
             TimeSpan ts = DateTime.Now.Subtract(_lastAnimationUpdate);
             if (ts.TotalSeconds > D_TIME_BETWEEN_ANIMATION)
@@ -700,6 +717,17 @@ namespace Ultima5Redux.MapUnits
                         break;
                     case NonPlayerCharacterSchedule.AiType.HorseWander:
                         WanderWithinN(virtualMap, timeOfDay, 4);
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.StoneGargoyleTrigger:
+                        // basic behaviour is if the Avatar is close to them (2 tiles between) then they 
+                        // become aggressive - maybe just switch their AI type at that point
+                        MapUnitPosition avatarPosition = virtualMap.TheMapUnits.CurrentAvatarPosition;
+                        const int N_DISTANCE_TO_TRIGGER_GARGOYLES = 4;
+                        if (avatarPosition.XY.DistanceBetween(MapUnitPosition.XY) <= N_DISTANCE_TO_TRIGGER_GARGOYLES)
+                        {
+                            NPCState?.OverrideAi(NonPlayerCharacterSchedule.AiType.DrudgeWorthThing);
+                        }
+
                         break;
                     case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
                         if (virtualMap.IsWantedManByThePoPo)
