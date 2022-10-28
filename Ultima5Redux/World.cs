@@ -754,7 +754,9 @@ namespace Ultima5Redux
                         break;
                     }
 
-                    npc.NPCState.IsDead = true;
+                    //npc.NPCState.IsDead = true;
+                    //// NEED TO FIGURE OUT WHAT IS AND ISN'T MURDER
+                    MurderNpc(npc, turnResults);
 
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackCombatMapNpc));
                     tryToAttackResult = TryToAttackResult.CombatMapNpc;

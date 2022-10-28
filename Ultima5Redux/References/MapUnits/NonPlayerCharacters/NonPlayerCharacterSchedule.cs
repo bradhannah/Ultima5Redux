@@ -151,10 +151,14 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 }
 
                 // the daemon's at Windemere are really like guards
-                if (location == SmallMapReferences.SingleMapReference.Location.Windemere &&
-                    nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Daemon1_KeyIndex)
+                if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Daemon1_KeyIndex)
+                    
                 {
-                    AiTypeList[nIndex] = (int)AiType.FixedExceptAttackWhenIsWantedByThePoPo;
+                    if (location == SmallMapReferences.SingleMapReference.Location.Windemere)
+                    {
+                        AiTypeList[nIndex] = (int)AiType.FixedExceptAttackWhenIsWantedByThePoPo;
+                    }
+
                     continue;
                 }
 
