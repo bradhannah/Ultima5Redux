@@ -3434,5 +3434,18 @@ namespace Ultima5ReduxTesting
                 out TileReference eastAndDownCalcReference));
             Assert.IsTrue(GameReferences.SpriteTileReferences.IsStaircase(eastAndDownCalcReference.Index));
         }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_DoorsInRightDirection(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn, -1));
+
+            var doorPos = new Point2D(8, 18);
+
+            Assert.False(world.State.TheVirtualMap.IsHorizDoor(doorPos));
+        }
     }
 }

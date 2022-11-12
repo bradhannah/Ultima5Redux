@@ -2125,12 +2125,14 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <returns></returns>
         public bool IsHorizDoor(in Point2D xy)
-        {
+        { 
             if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
             if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
 
-            return GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC ||
-                   GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC;
+            int nOpenSpacesHorizOnX = (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1)
+                                      + (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1);
+
+            return nOpenSpacesHorizOnX == 0;
         }
 
         public bool IsHorizTombstone(in Point2D xy)
@@ -2138,12 +2140,9 @@ namespace Ultima5Redux.Maps
             if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
             if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
 
-            bool bHasHorizBlock = GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC ||
-                                  GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC;
-            if (bHasHorizBlock) return bHasHorizBlock;
-            bool bHasVertBlock = GetTileReference(xy.X, xy.Y - 1).IsSolidSpriteButNotDoorAndNotNPC ||
-                                 GetTileReference(xy.X, xy.Y + 1).IsSolidSpriteButNotDoorAndNotNPC;
-            return !bHasVertBlock;
+            int nOpenSpacesHorizOnX = (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1)
+                                      + (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1);
+            return nOpenSpacesHorizOnX == 0;
         }
 
 

@@ -89,6 +89,7 @@ namespace Ultima5Redux.References.Maps
 
         // Exclude the black square from this, it messes up door and tombstone horizontal checks
         public bool IsSolidSpriteButNotDoorAndNotNPC => IsSolidSpriteButNotDoor && !IsNPC && Index != 255;
+        public bool IsSolidSpriteButNotNPC => IsSolidSprite && !IsNPC && Index != 255;
 
         public bool IsTableWithFood =>
             Index is (int)SpriteIndex.TableFoodBoth or (int)SpriteIndex.TableFoodBottom
