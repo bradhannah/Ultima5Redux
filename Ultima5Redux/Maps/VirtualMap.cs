@@ -1874,46 +1874,6 @@ namespace Ultima5Redux.Maps
         {
             bool bGoingUp = IsStairGoingUp(xy, out TileReference stairTileReference);
             return stairTileReference;
-            // Point2D.Direction direction;
-            // if (!bGoingUp)
-            // {
-            //     direction = GetStairsDirection(xy);
-            // }
-            // else
-            // {
-            //     direction = GetStairsDirection(xy);
-            // }
-            //
-            // int nSpriteNum = -1;
-            // switch (direction)
-            // {
-            //     case Point2D.Direction.Up:
-            //         nSpriteNum = bGoingUp
-            //             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsNorth").Index
-            //             : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsNorth").Index;
-            //         break;
-            //     case Point2D.Direction.Down:
-            //         nSpriteNum = bGoingUp
-            //             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsSouth").Index
-            //             : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsSouth").Index;
-            //         break;
-            //     case Point2D.Direction.Left:
-            //         nSpriteNum = bGoingUp
-            //             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsWest").Index
-            //             : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsWest").Index;
-            //         break;
-            //     case Point2D.Direction.Right:
-            //         nSpriteNum = bGoingUp
-            //             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsEast").Index
-            //             : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsEast").Index;
-            //         break;
-            //     case Point2D.Direction.None:
-            //         break;
-            //     default:
-            //         throw new ArgumentOutOfRangeException(nameof(xy), @"Point2D is out of range for stairs check");
-            // }
-            //
-            // return nSpriteNum;
         }
 
         /// <summary>
@@ -2241,7 +2201,7 @@ namespace Ultima5Redux.Maps
             if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
             bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy,
                 out stairTileReference);
-            return bStairGoUp;
+            return !bStairGoUp;
         }
 
         /// <summary>
