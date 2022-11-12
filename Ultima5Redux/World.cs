@@ -1706,7 +1706,7 @@ namespace Ultima5Redux
             {
                 State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition.XY);
                 turnResults.PushOutputToConsole(
-                    State.TheVirtualMap.IsStairGoingDown(State.TheVirtualMap.CurrentPosition.XY)
+                    State.TheVirtualMap.IsStairGoingDown(State.TheVirtualMap.CurrentPosition.XY, out _)
                         ? GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN)
                         : GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP));
 

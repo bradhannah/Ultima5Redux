@@ -3412,6 +3412,27 @@ namespace Ultima5ReduxTesting
             Assert.False(npcName == "None");
             convo.AddUserResponse("yes");
         }
-        
+
+
+        [Test] [TestCase(SaveFiles.fresh, false)] [TestCase(SaveFiles.fresh, true)]
+        public void test_StairsGoRightWay(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Jhelom, 1));
+
+            var eastAndDownPosition = new Point2D(7, 28);
+            TileReference eastAndDown = world.State.TheVirtualMap.GetTileReference(eastAndDownPosition);
+            Assert.IsTrue(GameReferences.SpriteTileReferences.IsStaircase(eastAndDown.Index));
+            Assert.IsTrue(world.State.TheVirtualMap.IsStairGoingDown(eastAndDownPosition,
+                out TileReference eastAndDownCalcReference));
+            Assert.IsTrue(GameReferences.SpriteTileReferences.IsStaircase(eastAndDownCalcReference.Index));
+        }
     }
 }

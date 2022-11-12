@@ -40,10 +40,59 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public bool DoStairsGoDown(SmallMapReferences.SingleMapReference.Location location, int nFloor,
-            Point2D tilePos) => !DoStairsGoUp(location, nFloor, tilePos);
+        // TileReference GetCorrectStairTile(Point2D.Direction direction)
+        // {
+        //     bool bGoingUp = IsStairGoingUp(xy, out TileReference stairTileReference);
+        //     return stairTileReference;
 
-        public bool DoStairsGoUp(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
+        // Point2D.Direction direction;
+        // if (!bGoingUp)
+        // {
+        //     direction = GetStairsDirection(xy);
+        // }
+        // else
+        // {
+        //     direction = GetStairsDirection(xy);
+        // }
+        //
+        // int nSpriteNum = -1;
+        // switch (direction)
+        // {
+        //     case Point2D.Direction.Up:
+        //         nSpriteNum = bGoingUp
+        //             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsNorth").Index
+        //             : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsNorth").Index;
+        //         break;
+        //     case Point2D.Direction.Down:
+        //         nSpriteNum = bGoingUp
+        //             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsSouth").Index
+        //             : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsSouth").Index;
+        //         break;
+        //     case Point2D.Direction.Left:
+        //         nSpriteNum = bGoingUp
+        //             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsWest").Index
+        //             : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsWest").Index;
+        //         break;
+        //     case Point2D.Direction.Right:
+        //         nSpriteNum = bGoingUp
+        //             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsEast").Index
+        //             : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsEast").Index;
+        //         break;
+        //     case Point2D.Direction.None:
+        //         break;
+        //     default:
+        //         throw new ArgumentOutOfRangeException(nameof(xy), @"Point2D is out of range for stairs check");
+        // }
+        //
+        // return nSpriteNum;
+        // }
+
+        public bool DoStairsGoDown(SmallMapReferences.SingleMapReference.Location location, int nFloor,
+            Point2D tilePos, out TileReference stairTileReference) =>
+            !DoStairsGoUp(location, nFloor, tilePos, out stairTileReference);
+
+        public bool DoStairsGoUp(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos,
+            out TileReference stairTileReference)
         {
             SmallMap currentFloorSmallMap = _mapLocationDictionary[location][nFloor];
             bool bHasLowerFloor = _mapLocationDictionary[location].ContainsKey(nFloor - 1);
@@ -53,17 +102,55 @@ namespace Ultima5Redux.Maps
             Debug.Assert(
                 GameReferences.SpriteTileReferences.IsStaircase(currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
             // is it the bottom or top floor? if so, then we know
-            if (!bHasLowerFloor) return true;
-            if (!bHasHigherFloor) return false;
+            if (!bHasLowerFloor)
+            {
+                // no lower floor? then it's going up
+                // we use the existing tile reference - it is fine
+                stairTileReference =
+                    GameReferences.SpriteTileReferences.GetTileReference(
+                        currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]);
+                return true;
+            }
 
-            // is there a stair case on the lower floor?
+            // if no higher floor OR s there a stair case on the lower floor?
+            if (!bHasHigherFloor)
+            {
+                // no higher floor? Definitely going down, so let's get the lower stair sprite
+                stairTileReference =
+                    GameReferences.SpriteTileReferences.GetTileReference(
+                        _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]);
+                return false;
+            }
+
+            // if the floor below has a staircase, then we know it's a down
             if (GameReferences.SpriteTileReferences.IsStaircase(
-                    _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y])) return false;
+                    _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]))
+            {
+                stairTileReference =
+                    GameReferences.SpriteTileReferences.GetTileReference(
+                        _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]);
+
+                return false;
+            }
+            // stairTileReference =
+            //     GameReferences.SpriteTileReferences.GetTileReference(
+            //         currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]);
+
+            // // is there a stair case on the lower floor?
+            // if (GameReferences.SpriteTileReferences.IsStaircase(
+            //         _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]))
+            // {
+            //     return false;
+            // }
             // is there a stair case on the upper floor?
-            if (GameReferences.SpriteTileReferences.IsStaircase(
-                    _mapLocationDictionary[location][nFloor + 1].TheMap[tilePos.X][tilePos.Y])) return true;
+            // if (GameReferences.SpriteTileReferences.IsStaircase(
+
+            stairTileReference =
+                GameReferences.SpriteTileReferences.GetTileReference(
+                    currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]);
+            return true;
             // if not - then WTF?
-            throw new Ultima5ReduxException("There is staircase with apparently no matching stair case");
+            // throw new Ultima5ReduxException("There is staircase with apparently no matching stair case");
         }
 
         public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference.Location location, int nFloor) =>

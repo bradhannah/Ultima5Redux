@@ -272,7 +272,7 @@ namespace Ultima5Redux.MapUnits
             // are they destined to go up or down it?
             if (GameReferences.SpriteTileReferences.IsStaircase(currentTileRef.Index))
             {
-                if (virtualMap.IsStairGoingUp(xy))
+                if (virtualMap.IsStairGoingUp(xy, out _))
                     return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
                 return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
             }
