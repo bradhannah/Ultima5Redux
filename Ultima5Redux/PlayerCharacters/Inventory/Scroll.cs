@@ -11,7 +11,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [JsonConverter(typeof(StringEnumConverter))]
         public enum ScrollSpells
         {
-            Vas_Lor = 0, Rel_Hur, In_Sanct, In_An, In_Quas_Wis, Kal_Xen_Corp, In_Mani_Corp, An_Tym
+            Vas_Lor = 0x27A, Rel_Hur = 0x27B, In_Sanct = 0x27C, In_An = 0x27D, In_Quas_Wis = 0x27E,
+            Kal_Xen_Corp = 0x27F, In_Mani_Corp = 0x280, An_Tym = 0x281
         }
 
         private const int SCROLL_SPRITE = 260;
@@ -26,6 +27,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override string InventoryReferenceString => ScrollSpell.ToString();
         [IgnoreDataMember] public override bool IsSellable => false;
 
+        public static int GetLegacySaveQuantityIndex(ScrollSpells scrollSpells) => (int)scrollSpells;
+        
         [IgnoreDataMember]
         public MagicReference ScrollMagicReference
         {

@@ -23,6 +23,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override bool HideQuantity => false;
 
         [IgnoreDataMember] public override string InventoryReferenceString => Color.ToString();
+        public static int GetLegacySaveQuantityIndex(PotionColor color) => (int)color;
 
         [JsonConstructor] private Potion()
         {

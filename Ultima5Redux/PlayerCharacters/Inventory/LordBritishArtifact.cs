@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -28,6 +29,21 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override bool HideQuantity => true;
 
         [IgnoreDataMember] public override string InventoryReferenceString => Artifact.ToString();
+
+        public static int GetLegacySaveQuantityIndex(ArtifactType artifactType)
+        {
+            switch (artifactType)
+            {
+                case ArtifactType.Amulet:
+                    return 0x20D;
+                case ArtifactType.Crown:
+                    return 0x20E;
+                case ArtifactType.Sceptre:
+                    return 0x20F;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
         [JsonConstructor] private LordBritishArtifact()
         {

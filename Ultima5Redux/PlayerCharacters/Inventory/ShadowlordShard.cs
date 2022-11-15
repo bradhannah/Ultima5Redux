@@ -14,6 +14,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public enum ShardType { Falsehood = 0x210, Hatred = 0x211, Cowardice = 0x212 }
         // private enum Offsets { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 }
 
+        public static int GetLegacySaveQuantityIndex(ShardType shardType) => (int)shardType;
+        
         private const int SHARD_SPRITE = 436;
 
         [DataMember]

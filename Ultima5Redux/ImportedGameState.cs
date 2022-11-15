@@ -210,34 +210,38 @@ namespace Ultima5Redux
         {
             // can't remember why I return 262..?
             if (equipment == DataOvlReference.Equipment.BareHands) return 262;
-            return GetByteAsIntFromGameStateByteArray((int)equipment);
+            const int OFFSET = 0x21A;
+            int nIndex = OFFSET + (int)equipment;
+            return GetByteAsIntFromGameStateByteArray(nIndex);
         }
 
         internal int GetLordBritishArtifactQuantity(LordBritishArtifact.ArtifactType artifact) =>
-            GetByteAsIntFromGameStateByteArray((int)artifact);
+            GetByteAsIntFromGameStateByteArray(LordBritishArtifact.GetLegacySaveQuantityIndex(artifact));
 
-        internal int GetPotionQuantity(Potion.PotionColor color) => GetByteAsIntFromGameStateByteArray((int)color);
+        internal int GetPotionQuantity(Potion.PotionColor color) =>
+            GetByteAsIntFromGameStateByteArray(Potion.GetLegacySaveQuantityIndex(color));
 
         internal int GetReagentQuantity(Reagent.SpecificReagentType specificReagentType) =>
-            GetByteAsIntFromGameStateByteArray((int)specificReagentType);
+            GetByteAsIntFromGameStateByteArray(Reagent.GetLegacySaveQuantityIndex(specificReagentType));
 
         internal int GetScrollQuantity(MagicReference.SpellWords spellWord)
         {
             var scrollSpell =
                 (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
-
-            int nIndex = 0x27A + (int)scrollSpell;
-            return GetByteAsIntFromGameStateByteArray(nIndex);
+            // const int offset = 0x27A;
+            // int nIndex = offset + (int)scrollSpell;
+            return GetByteAsIntFromGameStateByteArray(Scroll.GetLegacySaveQuantityIndex(scrollSpell));
         }
 
         internal int GetShadowlordShardQuantity(ShadowlordShard.ShardType shard) =>
-            GetByteAsIntFromGameStateByteArray((int)shard);
+            GetByteAsIntFromGameStateByteArray(ShadowlordShard.GetLegacySaveQuantityIndex(shard));
 
         internal int GetSpecialItemQuantity(SpecialItem.SpecificItemType specialItem) =>
-            GetByteAsIntFromGameStateByteArray((int)specialItem);
+            GetByteAsIntFromGameStateByteArray(SpecialItem.GetLegacySaveQuantityIndex(specialItem));
 
+        // good
         internal int GetSpellQuantity(MagicReference.SpellWords spellWord) =>
-            GetByteAsIntFromGameStateByteArray((int)spellWord);
+            GetByteAsIntFromGameStateByteArray(MagicReference.GetLegacySaveQuantityIndex(spellWord));
 
         private int GetByteAsIntFromGameStateByteArray(int nOffset)
         {
@@ -267,7 +271,6 @@ namespace Ultima5Redux
                 0x2B6, 0xF,
                 0x00, DataChunkName.SEARCH_OBJECT_STILL_THERE);
 
-            
             // player location
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party _location", 0x2ED, 0x01, 0x00,
                 DataChunkName.PARTY_LOC);

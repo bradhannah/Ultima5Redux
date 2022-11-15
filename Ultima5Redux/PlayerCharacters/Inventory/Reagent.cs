@@ -45,6 +45,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override string InventoryReferenceString => ReagentType.ToString();
         [IgnoreDataMember] public override bool IsSellable => false;
+        public static int GetLegacySaveQuantityIndex(SpecificReagentType reagentType) => (int)reagentType;
 
         /// <summary>
         ///     Standard index/order of reagents in data files

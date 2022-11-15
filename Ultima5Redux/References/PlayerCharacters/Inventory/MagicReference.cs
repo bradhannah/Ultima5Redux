@@ -92,6 +92,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             Vas_Rel_Por, An_Tym, Nox
         }
 
+        public static int GetLegacySaveQuantityIndex(SpellWords spellWords) => (int)spellWords;
+
         [DataMember]
         private bool BlackPearl
         {

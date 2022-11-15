@@ -22,6 +22,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             WoodenBox = 270, Sextant = 256
         }
 
+        public static int GetLegacySaveQuantityIndex(SpecificItemType specificItemType) => (int)specificItemType;
+
         [DataMember] public SpecificItemType ItemType { get; private set; }
 
         [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
