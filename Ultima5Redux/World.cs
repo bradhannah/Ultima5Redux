@@ -2366,7 +2366,8 @@ namespace Ultima5Redux
                     break;
                 case Potion.PotionColor.White:
                     // x-ray
-                    bSucceeded = _random.Next() % 2 == 0;
+                    bSucceeded = true; //_random.Next() % 2 == 0;
+                    // bajh: failing this seems pretty dumb to me - why would it fail?
                     if (bSucceeded)
                     {
                         turnResults.PushOutputToConsole("X-Ray!", false);
@@ -2374,7 +2375,7 @@ namespace Ultima5Redux
                     }
 
                     // if you fail with the x-ray then 
-                    CastSleep(turnResults, record, out bool _);
+                    //CastSleep(turnResults, record, out bool _);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(potion), @"Tried to use an undefined potion");

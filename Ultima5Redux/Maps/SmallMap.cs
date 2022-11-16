@@ -75,10 +75,14 @@ namespace Ultima5Redux.Maps
             return currentSingleMapReferenceId switch
             {
                 // sin vraal - desert
-                0x0f => 7,
+                (int)SmallMapReferences.SingleMapReference.Location.SinVraals_Hut => (int)TileReference.SpriteIndex
+                    .Desert1,
                 // sutek or grendal
-                0x0e or 0x10 => 4,
-                _ => 5
+                (int)SmallMapReferences.SingleMapReference.Location.Suteks_Hut
+                    or (int)SmallMapReferences.SingleMapReference.Location.Grendels_Hut => (int)TileReference.SpriteIndex.Swamp,
+                // stonegate
+                (int)SmallMapReferences.SingleMapReference.Location.Stonegate => 11,
+                _ => (int)TileReference.SpriteIndex.Grass
             };
         }
 
