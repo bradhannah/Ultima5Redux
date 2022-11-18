@@ -76,7 +76,7 @@ namespace Ultima5Redux.MapUnits
                 // set this up otherwise
                 if (i == 0 && mapUnitState.Tile1Ref.Index == 256)
                     mapUnitState.SetTileReference(
-                        GameReferences.SpriteTileReferences.GetTileReferenceByName("BasicAvatar"));
+                        GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("BasicAvatar"));
 
                 _mapUnitStates.Add(mapUnitState);
             }

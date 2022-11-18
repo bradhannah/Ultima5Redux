@@ -18,7 +18,8 @@ namespace Ultima5Redux.Maps
             // if the _mapLocationDictionary already has elements, then we assume it was deserialized and skip this step
             if (_mapLocationDictionary.Count > 0) return;
 
-            foreach (SmallMapReferences.SingleMapReference mapRef in GameReferences.SmallMapRef.MapReferenceList)
+            foreach (SmallMapReferences.SingleMapReference mapRef in GameReferences.Instance.SmallMapRef
+                         .MapReferenceList)
             {
                 // TEMPORARY while we don't currently read in Dungeons
                 if (mapRef.MapType == Map.Maps.Dungeon)
@@ -53,14 +54,15 @@ namespace Ultima5Redux.Maps
 
             // is it a stair case?
             Debug.Assert(
-                GameReferences.SpriteTileReferences.IsStaircase(currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
+                GameReferences.Instance.SpriteTileReferences.IsStaircase(
+                    currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
             // is it the bottom or top floor? if so, then we know
             if (!bHasLowerFloor)
             {
                 // no lower floor? then it's going up
                 // we use the existing tile reference - it is fine
                 stairTileReference =
-                    GameReferences.SpriteTileReferences.GetTileReference(
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(
                         currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]);
                 return true;
             }
@@ -70,24 +72,24 @@ namespace Ultima5Redux.Maps
             {
                 // no higher floor? Definitely going down, so let's get the lower stair sprite
                 stairTileReference =
-                    GameReferences.SpriteTileReferences.GetTileReference(
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(
                         _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]);
                 return false;
             }
 
             // if the floor below has a staircase, then we know it's a down
-            if (GameReferences.SpriteTileReferences.IsStaircase(
+            if (GameReferences.Instance.SpriteTileReferences.IsStaircase(
                     _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]))
             {
                 stairTileReference =
-                    GameReferences.SpriteTileReferences.GetTileReference(
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(
                         _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]);
 
                 return false;
             }
 
             stairTileReference =
-                GameReferences.SpriteTileReferences.GetTileReference(
+                GameReferences.Instance.SpriteTileReferences.GetTileReference(
                     currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]);
             return true;
         }

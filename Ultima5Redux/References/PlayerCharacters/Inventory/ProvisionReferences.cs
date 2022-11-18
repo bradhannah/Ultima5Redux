@@ -60,7 +60,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             SpecificProvisionType specificProvisionType)
         {
             int nIndex = 0;
-            foreach (byte b in GameReferences.DataOvlRef
+            foreach (byte b in GameReferences.Instance.DataOvlRef
                          .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList())
             {
                 var potentialLocation =

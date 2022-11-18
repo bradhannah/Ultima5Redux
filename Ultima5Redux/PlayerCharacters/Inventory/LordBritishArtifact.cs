@@ -17,9 +17,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public string EquipMessage =>
             Artifact switch
             {
-                ArtifactType.Amulet => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WEARING_AMULET),
-                ArtifactType.Crown => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.DON_THE_CROWN),
-                ArtifactType.Sceptre => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WIELD_SCEPTRE),
+                ArtifactType.Amulet => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WEARING_AMULET),
+                ArtifactType.Crown => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.DON_THE_CROWN),
+                ArtifactType.Sceptre => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WIELD_SCEPTRE),
                 _ => throw new InvalidEnumArgumentException(((int)Artifact).ToString())
             };
 

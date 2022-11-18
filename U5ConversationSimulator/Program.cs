@@ -93,7 +93,7 @@ namespace U5ConversationSimulator
             World = new World(true, "/Users/bradhannah/games/u5tests/b_carpet");
 
             World.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn,
                     0));
 

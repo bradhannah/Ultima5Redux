@@ -25,7 +25,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             MapUnitPosition = mapUnitPosition;
             TheMoonstone = moonstone;
-            KeyTileReference = GameReferences.SpriteTileReferences.GetTileReference(moonstone.InvRef.ItemSpriteExposed);
+            KeyTileReference =
+                GameReferences.Instance.SpriteTileReferences.GetTileReference(moonstone.InvRef.ItemSpriteExposed);
         }
 
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;

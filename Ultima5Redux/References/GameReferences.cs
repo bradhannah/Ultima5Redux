@@ -14,105 +14,124 @@ namespace Ultima5Redux.References
         private const string RELATIVE_INSTALLED = @"Ultima5ReduxTestDependancies/DataFiles";
         private const string RELATIVE_TEST = @"../Ultima5ReduxTestDependancies/DataFiles";
 
-        public static CombatItemReferences CombatItemRefs { get; private set; }
+        public CombatItemReferences CombatItemRefs { get; private set; }
 
-        public static CombatMapReferences CombatMapRefs { get; private set; }
+        public CombatMapReferences CombatMapRefs { get; private set; }
 
         /// <summary>
         ///     A collection of data.ovl references
         /// </summary>
-        public static DataOvlReference DataOvlRef { get; private set; }
+        public DataOvlReference DataOvlRef { get; private set; }
 
-        public static EnemyReferences EnemyRefs { get; private set; }
+        public EnemyReferences EnemyRefs { get; private set; }
 
-        public static GameReferences Instance { get; set; }
+        public static GameReferences Instance
+        {
+            get
+            {
+                if (_gameReferences == null)
+                {
+                    _gameReferences = new GameReferences(legacyDataDirectory);
+                    _gameReferences.Build();
+                }
+
+                _gameReferences.IsInitialized = true;
+                return _gameReferences;
+            }
+        }
+
+        private static GameReferences _gameReferences;
+        //get; set; }
 
         /// <summary>
         ///     Detailed inventory information reference
         /// </summary>
-        public static InventoryReferences InvRef { get; private set; }
+        public InventoryReferences InvRef { get; private set; }
 
-        public static bool IsInitialized { get; private set; }
+        public bool IsInitialized { get; private set; }
 
         /// <summary>
         ///     A large map reference
         /// </summary>
         /// <remarks>needs to be reviewed</remarks>
-        public static LargeMapLocationReferences LargeMapRef { get; private set; }
+        public LargeMapLocationReferences LargeMapRef { get; private set; }
 
         /// <summary>
         ///     A collection of all Look references
         /// </summary>
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public static Look LookRef { get; private set; }
+        public Look LookRef { get; private set; }
 
-        public static MagicReferences MagicRefs { get; private set; }
+        public MagicReferences MagicRefs { get; private set; }
 
-        public static MoonPhaseReferences MoonPhaseRefs { get; private set; }
+        public MoonPhaseReferences MoonPhaseRefs { get; private set; }
 
         /// <summary>
         ///     A collection of all NPC references
         /// </summary>
-        public static NonPlayerCharacterReferences NpcRefs { get; private set; }
+        public NonPlayerCharacterReferences NpcRefs { get; private set; }
 
-        public static ProvisionReferences ProvisionReferences { get; private set; }
+        public ProvisionReferences ProvisionReferences { get; private set; }
 
-        public static ReagentReferences ReagentReferences { get; private set; }
+        public ReagentReferences ReagentReferences { get; private set; }
 
-        public static ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference { get; private set; }
-        public static ShoppeKeeperReferences ShoppeKeeperRefs { get; private set; }
+        public ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference { get; private set; }
+        public ShoppeKeeperReferences ShoppeKeeperRefs { get; private set; }
 
         /// <summary>
         ///     A collection of all Sign references
         /// </summary>
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public static Signs SignRef { get; private set; }
+        public Signs SignRef { get; private set; }
 
         /// <summary>
         ///     A collection of all small map references
         /// </summary>
-        public static SmallMapReferences SmallMapRef { get; private set; }
+        public SmallMapReferences SmallMapRef { get; private set; }
 
         /// <summary>
         ///     A collection of all tile references
         /// </summary>
-        public static TileReferences SpriteTileReferences { get; private set; }
+        public TileReferences SpriteTileReferences { get; private set; }
 
         /// <summary>
         ///     A collection of all talk script references
         /// </summary>
-        public static TalkScripts TalkScriptsRef { get; private set; }
+        public TalkScripts TalkScriptsRef { get; private set; }
 
-        public static TileOverrideReferences TileOverrideRefs { get; private set; }
+        public TileOverrideReferences TileOverrideRefs { get; private set; }
 
-        public static SearchLocationReferences SearchLocationReferences { get; private set; }
-        
-        private GameReferences(string dataDirectory)
+        public SearchLocationReferences SearchLocationReferences { get; private set; }
+
+        private void Build()
         {
-            LookRef = new Look(dataDirectory);
-            SignRef = new Signs(dataDirectory);
+            LookRef = new Look(legacyDataDirectory);
+            SignRef = new Signs(legacyDataDirectory);
             InvRef = new InventoryReferences();
             MagicRefs = new MagicReferences();
             TileOverrideRefs = new TileOverrideReferences();
 
-            DataOvlRef = new DataOvlReference(dataDirectory);
+            DataOvlRef = new DataOvlReference(legacyDataDirectory);
 
             SmallMapRef = new SmallMapReferences(DataOvlRef);
             LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
             CombatItemRefs = new CombatItemReferences(InvRef);
-            TalkScriptsRef = new TalkScripts(dataDirectory, DataOvlRef);
-            NpcRefs = new NonPlayerCharacterReferences(dataDirectory, SmallMapRef, TalkScriptsRef);
+            TalkScriptsRef = new TalkScripts(legacyDataDirectory, DataOvlRef);
+            NpcRefs = new NonPlayerCharacterReferences(legacyDataDirectory, SmallMapRef, TalkScriptsRef);
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
-            CombatMapRefs = new CombatMapReferences(dataDirectory, SpriteTileReferences);
+            CombatMapRefs = new CombatMapReferences(legacyDataDirectory, SpriteTileReferences);
 
-            ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(dataDirectory, DataOvlRef);
+            ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(legacyDataDirectory, DataOvlRef);
             ShoppeKeeperRefs = new ShoppeKeeperReferences(DataOvlRef, NpcRefs);
             ReagentReferences = new ReagentReferences();
             ProvisionReferences = new ProvisionReferences();
             SearchLocationReferences = new SearchLocationReferences(DataOvlRef, SpriteTileReferences);
         }
+        
+        
+        private GameReferences(string dataDirectory) => legacyDataDirectory = dataDirectory;
 
         private static string GetU5Directory()
         {
@@ -125,6 +144,8 @@ namespace Ultima5Redux.References
                                             Directory.GetDirectories(Directory.GetCurrentDirectory()));
         }
 
+        private static string legacyDataDirectory = "";
+        
         public static void Initialize(string dataDirectory = "")
         {
             if (dataDirectory == "")
@@ -144,8 +165,10 @@ namespace Ultima5Redux.References
                                                 Path.Combine(dataDirectory, FileConstants.DATA_OVL));
             }
 
-            Instance = new GameReferences(dataDirectory);
-            IsInitialized = true;
+            legacyDataDirectory = dataDirectory;
+
+            // Instance = new GameReferences(dataDirectory);
+            // IsInitialized = true;
         }
     }
 }

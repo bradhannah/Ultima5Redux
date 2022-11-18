@@ -21,7 +21,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
             Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(
             smallMapTheSmallMapCharacterState, mapUnitMovement, location, direction, npcState,
-            GameReferences.SpriteTileReferences.GetTileReferenceByName("ShipSailsDown"), mapUnitPosition)
+            GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("ShipSailsDown"), mapUnitPosition)
         {
         }
 

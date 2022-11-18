@@ -280,7 +280,7 @@ namespace Ultima5Redux.MapUnits
 
                 MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location, npcState,
                     smallMapCharacterState.TheMapUnitPosition,
-                    GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
                     smallMapCharacterState);
 
                 // I want to be able to do this - but if I do then no new map units are created...
@@ -293,8 +293,8 @@ namespace Ultima5Redux.MapUnits
 
             //int nFloor = map == Map.Maps.Underworld ? -1 : 0;
             //int nFloor = sin
-            int nFloors = GameReferences.SmallMapRef.GetNumberOfFloors(location);
-            bool bHasBasement = GameReferences.SmallMapRef.HasBasement(location);
+            int nFloors = GameReferences.Instance.SmallMapRef.GetNumberOfFloors(location);
+            bool bHasBasement = GameReferences.Instance.SmallMapRef.HasBasement(location);
             int nTopFloor = bHasBasement ? nFloors - 2 : nFloors - 1;
 
             for (int nFloor = bHasBasement ? -1 : 0; nFloor <= nTopFloor; nFloor++)
@@ -368,7 +368,8 @@ namespace Ultima5Redux.MapUnits
 
             // set position of frigate in the world
             frigate.SkiffsAboard = nSkiffsAboard;
-            frigate.KeyTileReference = GameReferences.SpriteTileReferences.GetTileReferenceByName("ShipNoSailsLeft");
+            frigate.KeyTileReference =
+                GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("ShipNoSailsLeft");
 
             AddNewMapUnit(Map.Maps.Overworld, frigate, nIndex);
             return frigate;
@@ -411,12 +412,12 @@ namespace Ultima5Redux.MapUnits
                         newUnit = new EmptyMapUnit();
                 }
             }
-            else if (GameReferences.SpriteTileReferences.IsFrigate(tileReference.Index))
+            else if (GameReferences.Instance.SpriteTileReferences.IsFrigate(tileReference.Index))
             {
                 newUnit = new Frigate(mapUnitMovement, location, tileReference.GetDirection(), npcState,
                     mapUnitPosition);
             }
-            else if (GameReferences.SpriteTileReferences.IsSkiff(tileReference.Index))
+            else if (GameReferences.Instance.SpriteTileReferences.IsSkiff(tileReference.Index))
             {
                 newUnit = new Skiff(mapUnitMovement, location, tileReference.GetDirection(), npcState, mapUnitPosition);
             }
@@ -452,10 +453,10 @@ namespace Ultima5Redux.MapUnits
                     newUnit.MapLocation = location;
                 }
             }
-            else if (GameReferences.SpriteTileReferences.IsMonster(tileReference.Index))
+            else if (GameReferences.Instance.SpriteTileReferences.IsMonster(tileReference.Index))
             {
-                Debug.Assert(GameReferences.EnemyRefs != null);
-                newUnit = new Enemy(mapUnitMovement, GameReferences.EnemyRefs.GetEnemyReference(tileReference),
+                Debug.Assert(GameReferences.Instance.EnemyRefs != null);
+                newUnit = new Enemy(mapUnitMovement, GameReferences.Instance.EnemyRefs.GetEnemyReference(tileReference),
                     location, npcState, mapUnitPosition);
             }
             // this is where we will create monsters too
@@ -972,19 +973,20 @@ namespace Ultima5Redux.MapUnits
         /// <returns>The MapUnit object they were occupying - you need to re-add it the map after</returns>
         public MapUnit XitCurrentMapUnit(VirtualMap virtualMap, out string retStr)
         {
-            retStr = GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.XIT)
+            retStr = GameReferences.Instance.DataOvlRef.StringReferences
+                .GetString(DataOvlReference.KeypressCommandsStrings.XIT)
                 .TrimEnd();
 
             if (!virtualMap.TheMapUnits.GetAvatarMapUnit().IsAvatarOnBoardedThing)
             {
-                retStr += " " + GameReferences.DataOvlRef.StringReferences
+                retStr += " " + GameReferences.Instance.DataOvlRef.StringReferences
                     .GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
                 return null;
             }
 
             if (!GetAvatarMapUnit().CurrentBoardedMapUnit.CanBeExited(virtualMap))
             {
-                retStr += "\n" + GameReferences.DataOvlRef.StringReferences
+                retStr += "\n" + GameReferences.Instance.DataOvlRef.StringReferences
                     .GetString(DataOvlReference.SleepTransportStrings.N_NO_LAND_NEARBY_BANG_N).Trim();
                 return null;
             }

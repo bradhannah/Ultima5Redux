@@ -112,7 +112,7 @@ namespace Ultima5Redux
                     if (TheVirtualMap.CurrentSingleMapReference == null)
                         throw new Ultima5ReduxException("No single map is set in virtual map");
 
-                    return GameReferences.SmallMapRef.GetLocationName(TheVirtualMap.CurrentSingleMapReference
+                    return GameReferences.Instance.SmallMapRef.GetLocationName(TheVirtualMap.CurrentSingleMapReference
                         .MapLocation);
                 }
 
@@ -206,7 +206,7 @@ namespace Ultima5Redux
             SmallMapReferences.SingleMapReference mapRef =
                 location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
                     ? null
-                    : GameReferences.SmallMapRef.GetSingleMapByLocation(location, nInitialFloor);
+                    : GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(location, nInitialFloor);
 
             TheVirtualMap = new VirtualMap(smallMaps, overworldMap, underworldMap, _initialMap, mapRef,
                 bUseExtendedSprites, ImportedGameState, searchItems);

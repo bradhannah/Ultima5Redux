@@ -17,7 +17,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [OnDeserialized] private void PostDeserialize(StreamingContext streamingContext)
         {
             InventoryReference inventoryReference =
-                GameReferences.InvRef.GetInventoryReference(_inventoryReferenceType, _inventoryItemName);
+                GameReferences.Instance.InvRef.GetInventoryReference(_inventoryReferenceType, _inventoryItemName);
             InvItem = InventoryItemFactory.Create(inventoryReference);
             InvItem.Quantity = _nQuantity;
         }

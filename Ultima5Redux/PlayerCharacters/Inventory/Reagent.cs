@@ -78,13 +78,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public override int GetAdjustedBuyPrice(PlayerCharacterRecords records,
             SmallMapReferences.SingleMapReference.Location location)
         {
-            if (!GameReferences.ReagentReferences.IsReagentSoldAtLocation(location, ReagentType))
+            if (!GameReferences.Instance.ReagentReferences.IsReagentSoldAtLocation(location, ReagentType))
                 throw new Ultima5ReduxException("Requested reagent " + LongName + " from " + location +
                                                 " which is not sold here");
 
             // A big thank you to Markus Brenner (@minstrel_dragon) for digging in and figuring out the Karma calculation
             // price = Base Price * (1 + (100 - Karma) / 100)
-            int nAdjustedPrice = GameReferences.ReagentReferences.GetPriceAndQuantity(location, ReagentType).Price *
+            int nAdjustedPrice =
+                GameReferences.Instance.ReagentReferences.GetPriceAndQuantity(location, ReagentType).Price *
                                  (1 + (100 - GameStateReference.State.Karma) / 100);
             return nAdjustedPrice;
         }
@@ -98,11 +99,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <exception cref="Ultima5ReduxException"></exception>
         public override int GetQuantityForSale(SmallMapReferences.SingleMapReference.Location location)
         {
-            if (!GameReferences.ReagentReferences.IsReagentSoldAtLocation(location, ReagentType))
+            if (!GameReferences.Instance.ReagentReferences.IsReagentSoldAtLocation(location, ReagentType))
                 throw new Ultima5ReduxException("Requested reagent " + LongName + " from " + location +
                                                 " which is not sold here");
 
-            return GameReferences.ReagentReferences.GetPriceAndQuantity(location, ReagentType).Quantity;
+            return GameReferences.Instance.ReagentReferences.GetPriceAndQuantity(location, ReagentType).Quantity;
         }
 
         /// <summary>
@@ -111,6 +112,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="location"></param>
         /// <returns></returns>
         public bool IsReagentForSale(SmallMapReferences.SingleMapReference.Location location) =>
-            GameReferences.ReagentReferences.IsReagentSoldAtLocation(location, ReagentType);
+            GameReferences.Instance.ReagentReferences.IsReagentSoldAtLocation(location, ReagentType);
     }
 }

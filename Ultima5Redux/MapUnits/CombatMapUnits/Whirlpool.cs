@@ -18,7 +18,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public override TileReference KeyTileReference
         {
-            get => GameReferences.SpriteTileReferences.GetTileReference(492);
+            get => GameReferences.Instance.SpriteTileReferences.GetTileReference(492);
             set => throw new NotImplementedException();
         }
 

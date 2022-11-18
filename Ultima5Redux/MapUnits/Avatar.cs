@@ -83,9 +83,10 @@ namespace Ultima5Redux.MapUnits
         {
             get =>
                 IsAvatarOnBoardedThing
-                    ? GameReferences.SpriteTileReferences.GetTileReferenceByName(
+                    ? GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(
                         DirectionToTileNameBoarded[Direction])
-                    : GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+                    : GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(
+                        DirectionToTileName[Direction]);
             set
             {
                 CurrentAvatarState = CalculateAvatarState(value);

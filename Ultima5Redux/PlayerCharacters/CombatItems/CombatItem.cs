@@ -28,7 +28,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         [IgnoreDataMember]
         public CombatItemReference TheCombatItemReference
         {
-            get => GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(SpecificEquipment);
+            get => GameReferences.Instance.CombatItemRefs.GetCombatItemReferenceFromEquipment(SpecificEquipment);
             private set => SpecificEquipment = value.SpecificEquipment;
         }
 

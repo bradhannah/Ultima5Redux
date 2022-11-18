@@ -16,7 +16,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override bool ExposeInnerItemsOnSearch => true;
 
         //GUTS_BANG_N, A_BLOOD_PULP_BANG_N,
-        public override string FriendlyName => GameReferences.DataOvlRef.StringReferences
+        public override string FriendlyName => GameReferences.Instance.DataOvlRef.StringReferences
             .GetString(DataOvlReference.ThingsIFindStrings.A_BLOOD_PULP_BANG_N).TrimEnd();
 
         [DataMember]
@@ -26,7 +26,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override bool IsSearchable => true;
 
         public override TileReference KeyTileReference =>
-            GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex.DeadBody);
+            GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex.DeadBody);
 
         public override string Name => FriendlyName;
 

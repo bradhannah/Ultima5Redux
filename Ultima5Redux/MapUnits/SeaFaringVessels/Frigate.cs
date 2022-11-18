@@ -42,7 +42,8 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Frigate;
 
         public override string BoardXitName =>
-            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
+            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N)
+                .Trim();
 
         public override string FriendlyName => BoardXitName;
 

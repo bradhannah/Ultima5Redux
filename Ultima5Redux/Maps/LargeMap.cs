@@ -78,7 +78,7 @@ namespace Ultima5Redux.Maps
             {
                 case Maps.Overworld:
                 case Maps.Underworld:
-                    TheMap = GameReferences.LargeMapRef.GetMap(mapChoice);
+                    TheMap = GameReferences.Instance.LargeMapRef.GetMap(mapChoice);
                     break;
                 case Maps.Small:
                     throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");

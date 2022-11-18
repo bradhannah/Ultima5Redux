@@ -23,7 +23,7 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Horse;
 
         [IgnoreDataMember]
-        public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
+        public override string BoardXitName => GameReferences.Instance.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.HORSE_N).Trim();
 
         [IgnoreDataMember] public override string FriendlyName => BoardXitName;
@@ -77,7 +77,7 @@ namespace Ultima5Redux.MapUnits
         public Horse(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
             Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null,
             mapUnitMovement, location, direction, npcState,
-            GameReferences.SpriteTileReferences.GetTileReferenceByName("HorseLeft"), mapUnitPosition) =>
+            GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("HorseLeft"), mapUnitPosition) =>
             KeyTileReference = GetNonBoardedTileReference();
 
         private static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)

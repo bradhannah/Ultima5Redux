@@ -13,7 +13,7 @@ namespace Ultima5Redux.References
         {
             RawId = id;
             CalcId = id + 0x100;
-            CalcTileReference = GameReferences.SpriteTileReferences.GetTileReference(CalcId);
+            CalcTileReference = GameReferences.Instance.SpriteTileReferences.GetTileReference(CalcId);
             Position = position;
             Index = index;
             Location = location;

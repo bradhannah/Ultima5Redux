@@ -34,19 +34,19 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             {
                 if (Record.IsInvisible)
                 {
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("Apparition");
+                    return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("Apparition");
                 }
 
                 if (Record.IsRat)
                 {
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("Rat1");
+                    return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("Rat1");
                 }
 
                 switch (Stats.Status)
                 {
                     case PlayerCharacterRecord.CharacterStatus.Dead:
                     case PlayerCharacterRecord.CharacterStatus.Asleep:
-                        return GameReferences.SpriteTileReferences.GetTileReferenceByName("DeadBody");
+                        return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("DeadBody");
                     default: return base.KeyTileReference;
                 }
             }
@@ -71,7 +71,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public CombatPlayer(PlayerCharacterRecord record, Point2D xy)
         {
             Record = record;
-            KeyTileReference = GameReferences.SpriteTileReferences.GetTileReference(record.PrimarySpriteIndex);
+            KeyTileReference = GameReferences.Instance.SpriteTileReferences.GetTileReference(record.PrimarySpriteIndex);
             MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
         }
 

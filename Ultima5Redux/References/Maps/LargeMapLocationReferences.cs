@@ -137,11 +137,12 @@ namespace Ultima5Redux.References.Maps
             {
                 case Map.Maps.Overworld:
                     return BuildGenericMap(
-                        Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.BRIT_DAT),
-                        Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.DATA_OVL), false);
+                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.BRIT_DAT),
+                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.DATA_OVL), false);
                 case Map.Maps.Underworld:
                     return BuildGenericMap(
-                        Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "", true);
+                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "",
+                        true);
                 case Map.Maps.Small:
                 case Map.Maps.Combat:
                 default:

@@ -39,7 +39,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 switch (GetCombatItemTypeByEquipment(equipment))
                 {
                     case CombatItemType.Armour:
-                        ArmourReference armourReference = new(GameReferences.DataOvlRef, inventoryReference);
+                        ArmourReference armourReference = new(GameReferences.Instance.DataOvlRef, inventoryReference);
                         _equipmentToCombatItemReference.Add(equipment, armourReference);
 
                         _allArmour.Add(armourReference);
@@ -64,7 +64,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
                         break;
                     case CombatItemType.Weapon:
-                        WeaponReference weaponReference = new(GameReferences.DataOvlRef, inventoryReference);
+                        WeaponReference weaponReference = new(GameReferences.Instance.DataOvlRef, inventoryReference);
                         _weaponReferences.Add(weaponReference);
                         _equipmentToCombatItemReference.Add(equipment, weaponReference);
                         break;

@@ -98,7 +98,7 @@ namespace Ultima5Redux.Dialogue
 
         public Conversation(GameState state, NonPlayerCharacterState npcState, string customDialogueId)
         {
-            _script = GameReferences.TalkScriptsRef.GetCustomTalkScript(customDialogueId);
+            _script = GameReferences.Instance.TalkScriptsRef.GetCustomTalkScript(customDialogueId);
             _gameState = state;
             TheNonPlayerCharacterState = npcState;
         }
@@ -654,7 +654,7 @@ namespace Ultima5Redux.Dialogue
         public string GetConversationStr(DataOvlReference.ChunkPhrasesConversation index)
         {
             char[] trimChars = { '"' };
-            string convStr = GameReferences.DataOvlRef
+            string convStr = GameReferences.Instance.DataOvlRef
                 .GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index).Trim();
             convStr = convStr.Trim(trimChars);
             return convStr;

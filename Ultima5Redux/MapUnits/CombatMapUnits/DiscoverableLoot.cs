@@ -56,7 +56,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public NonAttackingUnit AlternateNonAttackingUnit { get; private set; }
 
         public override TileReference KeyTileReference { get; set; } =
-            GameReferences.SpriteTileReferences.GetTileReference(0);
+            GameReferences.Instance.SpriteTileReferences.GetTileReference(0);
 
         public DiscoverableLoot()
         {

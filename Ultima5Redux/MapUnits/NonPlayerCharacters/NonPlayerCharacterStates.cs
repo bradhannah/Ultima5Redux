@@ -32,7 +32,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 {
                     NonPlayerCharacterState npcState =
                         new(
-                            GameReferences.NpcRefs.GetNonPlayerCharactersByLocation(location)[npcIndex])
+                            GameReferences.Instance.NpcRefs.GetNonPlayerCharactersByLocation(location)[npcIndex])
                         {
                             IsDead = importedGameState.NPCIsDeadArray[locationIndex - 1][npcIndex],
                             HasMetAvatar = importedGameState.NPCIsMetArray[locationIndex - 1][npcIndex]

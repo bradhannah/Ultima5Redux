@@ -30,7 +30,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private static CombatItem CreateArmament(InventoryReference itemReference)
         {
             CombatItemReference combatItemReference =
-                GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(itemReference.GetAsEquipment());
+                GameReferences.Instance.CombatItemRefs.GetCombatItemReferenceFromEquipment(
+                    itemReference.GetAsEquipment());
 
             switch (combatItemReference)
             {
@@ -81,7 +82,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
                     var spellWords =
                         GetEnumByInventoryName<MagicReference.SpellWords>(itemReference);
-                    return new Scroll(spellWords, 1, GameReferences.MagicRefs.GetMagicReference(spellWords));
+                    return new Scroll(spellWords, 1, GameReferences.Instance.MagicRefs.GetMagicReference(spellWords));
                 case (int)SpriteRefs.Shard:
                     return new ShadowlordShard(GetEnumByInventoryName<ShadowlordShard.ShardType>(itemReference), 1);
                 case (int)SpriteRefs.Crown:
@@ -135,7 +136,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     return new Reagent(GetEnumByInventoryName<Reagent.SpecificReagentType>(itemReference), 1);
                 case InventoryReferences.InventoryReferenceType.Armament:
                     return CreateArmament(itemReference);
-                //CombatItemReference combatItemReference = GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(itemReference.GetAsEquipment());
+                //CombatItemReference combatItemReference = GameReferences.Instance.CombatItemRefs.GetCombatItemReferenceFromEquipment(itemReference.GetAsEquipment());
 
                 case InventoryReferences.InventoryReferenceType.Spell:
                     var spellWords =

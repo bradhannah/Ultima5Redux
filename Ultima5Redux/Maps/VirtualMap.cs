@@ -333,17 +333,17 @@ namespace Ultima5Redux.Maps
             frigate.Hitpoints -= nDamage;
 
             turnResults.PushOutputToConsole(
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
                     .BREAKING_UP), false);
             // if we hit zero hitpoints then the ship is destroyed and a skiff is boarded
             if (frigate.Hitpoints <= 0)
             {
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveShipDestroyed));
                 // destroy the ship and leave board the Avatar onto a skiff
-                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.WorldStrings2
                         .SHIP_SUNK_BANG_N), false);
-                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences
+                turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences
                     .GetString(DataOvlReference.WorldStrings2.ABANDON_SHIP_BANG_N).TrimEnd(), false);
 
                 MapUnit newFrigate =
@@ -354,7 +354,7 @@ namespace Ultima5Redux.Maps
             else
             {
                 if (frigate.Hitpoints <= 10)
-                    turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                    turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WorldStrings
                             .HULL_WEAK), false);
 
@@ -577,10 +577,11 @@ namespace Ultima5Redux.Maps
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
             // true indicates that it is walkable
             bool bStaircaseWalkable =
-                !(bNoStaircases && GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index));
+                !(bNoStaircases && GameReferences.Instance.SpriteTileReferences.IsStaircase(tileReference.Index));
 
             // if it's nighttime then the portcullises go down and you cannot pass
-            bool bPortcullisDown = GameReferences.SpriteTileReferences.GetTileNumberByName("BrickWallArchway") ==
+            bool bPortcullisDown =
+                GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("BrickWallArchway") ==
                 tileReference.Index && !GameStateReference.State.TheTimeOfDay.IsDayLight;
 
             // we check both the tile reference below as well as the map unit that occupies the tile
@@ -836,7 +837,7 @@ namespace Ultima5Redux.Maps
             if (!nonAttackingUnit.IsTrapped)
             {
                 turnResults.PushOutputToConsole(
-                    U5StringRef.ThouDostFind(GameReferences.DataOvlRef.StringReferences.GetString(
+                    U5StringRef.ThouDostFind(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.ThingsIFindStrings.NO_TRAP_BANG_N)));
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchNoTrap));
                 return;
@@ -852,7 +853,7 @@ namespace Ultima5Redux.Maps
                     if (bTriggeredTrap)
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                 .A_SIMPLE_TRAP_BANG_N)));
                         nonAttackingUnit.TriggerTrap(turnResults, record.Stats, records);
                         turnResults.PushTurnResult(
@@ -861,7 +862,7 @@ namespace Ultima5Redux.Maps
                     else
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                 .A_SIMPLE_TRAP_N)));
                         turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchRemoveSimple));
                     }
@@ -872,7 +873,7 @@ namespace Ultima5Redux.Maps
                     {
                         turnResults.PushOutputToConsole(
                             U5StringRef.ThouDostFind(
-                                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_COMPLEX_TRAP_BANG_N)));
                         nonAttackingUnit.TriggerTrap(turnResults, record.Stats, records);
                         turnResults.PushTurnResult(
@@ -882,7 +883,7 @@ namespace Ultima5Redux.Maps
                     {
                         turnResults.PushOutputToConsole(
                             U5StringRef.ThouDostFind(
-                                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_COMPLEX_TRAP_N)));
                         turnResults.PushTurnResult(
                             new BasicResult(TurnResult.TurnResultType.ActionSearchRemoveComplex));
@@ -926,7 +927,8 @@ namespace Ultima5Redux.Maps
 
                 // it's not occupied so we can create a monster
                 EnemyReference enemyRef =
-                    GameReferences.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn, GetTileReference(tilePosition));
+                    GameReferences.Instance.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn,
+                        GetTileReference(tilePosition));
                 if (enemyRef == null) continue;
 
                 // add the new character to our list of characters currently on the map
@@ -953,7 +955,7 @@ namespace Ultima5Redux.Maps
             Point2D attackToPosition, SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit)
         {
             SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map) =>
-                GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
+                GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
 
             TileReference attackToTileReference = GetTileReference(attackToPosition);
             TileReference attackFromTileReference = GetTileReference(attackFromPosition);
@@ -1183,7 +1185,8 @@ namespace Ultima5Redux.Maps
                     mapUnitInfo.CombatMapReference =
                         getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
                 else
-                    mapUnitInfo.CombatMapReference = GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
+                    mapUnitInfo.CombatMapReference = GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                        territory,
                         (int)attackToTileReference.CombatMapIndex);
             }
 
@@ -1248,7 +1251,7 @@ namespace Ultima5Redux.Maps
                     else // otherwise we know you are going up
                     {
                         if (TileReferences.IsLadderUp(tileReference.Index) ||
-                            (GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index) &&
+                            (GameReferences.Instance.SpriteTileReferences.IsStaircase(tileReference.Index) &&
                              IsStairGoingUp(new Point2D(x, y), out _)))
                             laddersAndStairs.Add(new Point2D(x, y));
                     }
@@ -1400,9 +1403,11 @@ namespace Ultima5Redux.Maps
 
         public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location)
         {
-            List<byte> xDockCoords = GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS)
+            List<byte> xDockCoords = GameReferences.Instance.DataOvlRef
+                .GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS)
                 .GetAsByteList();
-            List<byte> yDockCoords = GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS)
+            List<byte> yDockCoords = GameReferences.Instance.DataOvlRef
+                .GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS)
                 .GetAsByteList();
             Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
                 new()
@@ -1592,13 +1597,13 @@ namespace Ultima5Redux.Maps
                 // if the avatar is south of the mirror then show his image
                 Point2D expectedAvatarPos = new(tilePosInMap.X, tilePosInMap.Y + 1);
                 if (expectedAvatarPos == CurrentPosition.XY)
-                    return GameReferences.SpriteTileReferences.GetTileNumberByName("MirrorAvatar");
+                    return GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("MirrorAvatar");
             }
 
             // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
             bool bIsChair = TileReferences.IsChair(nSprite);
             // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite
-            bool bIsLadder = GameReferences.SpriteTileReferences.IsLadder(nSprite);
+            bool bIsLadder = GameReferences.Instance.SpriteTileReferences.IsLadder(nSprite);
             // is it the human sleeping side of the bed?
             bool bIsHeadOfBed = TileReferences.IsHeadOfBed(nSprite);
             // we need to check these before they get "corrected"
@@ -1609,7 +1614,7 @@ namespace Ultima5Redux.Maps
             // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this
             bool bIsFoodNearby = TileReferences.IsChair(nSprite) && IsFoodNearby(tilePosInMap);
 
-            bool bIsStaircase = GameReferences.SpriteTileReferences.IsStaircase(nSprite); // is it a staircase
+            bool bIsStaircase = GameReferences.Instance.SpriteTileReferences.IsStaircase(nSprite); // is it a staircase
 
             int nNewSpriteIndex;
 
@@ -1625,7 +1630,7 @@ namespace Ultima5Redux.Maps
                 }
                 else
                 {
-                    nNewSpriteIndex = GameReferences.SpriteTileReferences.GetCorrectSprite(nSprite,
+                    nNewSpriteIndex = GameReferences.Instance.SpriteTileReferences.GetCorrectSprite(nSprite,
                         bIsMapUnitOccupiedTile,
                         bIsAvatarTile, bIsFoodNearby, GameStateReference.State.TheTimeOfDay.IsDayLight);
                 }
@@ -1725,7 +1730,7 @@ namespace Ultima5Redux.Maps
             }
 
             // if attacking another frigate, then it's boat to boat
-            if (GameReferences.SpriteTileReferences.IsFrigate(targettedMapUniTileReference.Index))
+            if (GameReferences.Instance.SpriteTileReferences.IsFrigate(targettedMapUniTileReference.Index))
                 return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatBoat, territory);
 
             // otherwise it's boat (ours) to ocean
@@ -1735,7 +1740,7 @@ namespace Ultima5Redux.Maps
 
         private SingleCombatMapReference GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map,
             SingleCombatMapReference.Territory territory) =>
-            GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
+            GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
 
         /// <summary>
         ///     Gets the Avatar's current position in 3D spaces
@@ -1901,7 +1906,7 @@ namespace Ultima5Redux.Maps
             if (!bIgnoreMoongate && IsLargeMap &&
                 GameStateReference.State.TheMoongates.IsMoonstoneBuried(new Point3D(xy.X, xy.Y,
                     LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF)))
-                return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
+                return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
                        throw new Ultima5ReduxException("Supposed to get a moongate override: " + xy);
 
             // we check to see if our override map has something on top of it
@@ -1927,7 +1932,7 @@ namespace Ultima5Redux.Maps
             // if it has touched it then we draw the outer tiles
             if (CurrentMap is SmallMap smallMap && !smallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
             {
-                TileReference outerTileReference = GameReferences.SpriteTileReferences.GetTileReference(
+                TileReference outerTileReference = GameReferences.Instance.SpriteTileReferences.GetTileReference(
                     smallMap.GetOutOfBoundsSprite(xy));
                 tileStack.PushTileReference(outerTileReference);
                 return tileStack;
@@ -1951,7 +1956,7 @@ namespace Ultima5Redux.Maps
                 CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
             {
                 TileReference flatTileReference =
-                    GameReferences.SpriteTileReferences.GetTileReference(GetAlternateFlatSprite(xy));
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(GetAlternateFlatSprite(xy));
                 tileStack.PushTileReference(flatTileReference);
             }
 
@@ -1959,7 +1964,7 @@ namespace Ultima5Redux.Maps
             int nCalculatedIndex = GetCalculatedSpriteIndexByTile(origTileReference, xy, bIsAvatarTile,
                 bIsMapUnitOccupiedTile, topMostMapUnit, out bool bDrawCharacterOnTile);
             TileReference calculatedTileReference =
-                GameReferences.SpriteTileReferences.GetAnimatedTileReference(nCalculatedIndex);
+                GameReferences.Instance.SpriteTileReferences.GetAnimatedTileReference(nCalculatedIndex);
 
             // there are times we will not draw a calculated reference - such as when an NPC is on a door 
             // which indicates it is open, and therefor hidden
@@ -2109,9 +2114,10 @@ namespace Ultima5Redux.Maps
         public bool IsFoodNearby(in Point2D characterPos)
         {
             bool isFoodTable(int nSprite) =>
-                nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index ||
-                nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom").Index ||
-                nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
+                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index ||
+                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom")
+                    .Index ||
+                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
 
             // yuck, but if the food is up one tile or down one tile, then food is nearby
             bool bIsFoodNearby = isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index) ||
@@ -2178,7 +2184,7 @@ namespace Ultima5Redux.Maps
 
         public bool IsNPCInBed(NonPlayerCharacter npc) =>
             GetTileReference(npc.MapUnitPosition.XY).Index ==
-            GameReferences.SpriteTileReferences.GetTileNumberByName("LeftBed");
+            GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("LeftBed");
 
         /// <summary>
         ///     Determines if a specific Dock is occupied by a Sea Faring Vessel
@@ -2197,7 +2203,7 @@ namespace Ultima5Redux.Maps
         public bool IsStairGoingDown(in Point2D xy, out TileReference stairTileReference)
         {
             stairTileReference = null;
-            if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
+            if (!GameReferences.Instance.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
             bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy,
                 out stairTileReference);
             return !bStairGoUp;
@@ -2212,7 +2218,7 @@ namespace Ultima5Redux.Maps
         public bool IsStairGoingUp(in Point2D xy, out TileReference stairTileReference)
         {
             stairTileReference = null;
-            if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
+            if (!GameReferences.Instance.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
 
             if (IsCombatMap) return false;
 
@@ -2288,7 +2294,7 @@ namespace Ultima5Redux.Maps
                     return;
                 case NonPlayerCharacter npc:
                     EnemyReference enemyReference =
-                        GameReferences.EnemyRefs.GetEnemyReference(npc.KeyTileReference.Index);
+                        GameReferences.Instance.EnemyRefs.GetEnemyReference(npc.KeyTileReference.Index);
                     LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.South, records,
                         enemyReference, npc.NPCRef);
                     return;
@@ -2314,7 +2320,8 @@ namespace Ultima5Redux.Maps
             if (enemyReference.IsNpc) nSecondaryEnemies = 0;
 
             EnemyReference primaryEnemyReference = enemyReference;
-            EnemyReference secondaryEnemyReference = GameReferences.EnemyRefs.GetFriendReference(primaryEnemyReference);
+            EnemyReference secondaryEnemyReference =
+                GameReferences.Instance.EnemyRefs.GetFriendReference(primaryEnemyReference);
 
             LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, nPrimaryEnemies,
                 secondaryEnemyReference, nSecondaryEnemies);
@@ -2436,13 +2443,13 @@ namespace Ultima5Redux.Maps
                     if (discoverableLoot.IsDeadBody)
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                 .A_ROTTING_BODY_BANG_N)));
                     }
                     else if (discoverableLoot.IsBloodSpatter)
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                 .A_BLOOD_PULP_BANG_N)));
                     }
                     else
@@ -2453,7 +2460,7 @@ namespace Ultima5Redux.Maps
                 }
 
                 turnResults.PushOutputToConsole(
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                         .NOTHING_OF_NOTE_BANG_N));
             }
 
@@ -2527,7 +2534,8 @@ namespace Ultima5Redux.Maps
             if (CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
 
-            LoadSmallMap(GameReferences.SmallMapRef.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
+            LoadSmallMap(GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
+                CurrentSingleMapReference.MapLocation,
                 CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
         }
     }

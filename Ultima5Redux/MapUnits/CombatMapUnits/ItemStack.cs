@@ -30,8 +30,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             get
             {
-                if (!HasStackableItems) return GameReferences.SpriteTileReferences.GetTileReference(256);
-                return GameReferences.SpriteTileReferences.GetTileReference(_stackableItems.Peek().InvItem.SpriteNum);
+                if (!HasStackableItems) return GameReferences.Instance.SpriteTileReferences.GetTileReference(256);
+                return GameReferences.Instance.SpriteTileReferences.GetTileReference(_stackableItems.Peek().InvItem
+                    .SpriteNum);
             }
             set => throw new NotImplementedException("Cannot assign KeyTileReference in ItemStack");
         }

@@ -45,7 +45,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember]
         public EnemyReference EnemyReference
         {
-            get => GameReferences.EnemyRefs.GetEnemyReference(_enemyReferenceIndex);
+            get => GameReferences.Instance.EnemyRefs.GetEnemyReference(_enemyReferenceIndex);
             private set => _enemyReferenceIndex = value.KeyTileReference.Index;
         }
 

@@ -22,7 +22,7 @@ namespace Ultima5Redux.Maps
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             TheSearchItemReference =
-                GameReferences.SearchLocationReferences.GetSearchItemReferenceByIndex(SearchItemIndex);
+                GameReferences.Instance.SearchLocationReferences.GetSearchItemReferenceByIndex(SearchItemIndex);
         }
     }
 
@@ -38,10 +38,10 @@ namespace Ultima5Redux.Maps
 
         public void Initialize()
         {
-            for (int i = 0; i < GameReferences.SearchLocationReferences.TotalReferences; i++)
+            for (int i = 0; i < GameReferences.Instance.SearchLocationReferences.TotalReferences; i++)
             {
                 SearchItemReference searchItemReference =
-                    GameReferences.SearchLocationReferences.GetSearchItemReferenceByIndex(i);
+                    GameReferences.Instance.SearchLocationReferences.GetSearchItemReferenceByIndex(i);
 
                 var item = new SearchItem(i, false, searchItemReference);
 
@@ -54,11 +54,11 @@ namespace Ultima5Redux.Maps
             if (searchItems.Count == 0) //< N_TOTAL_SEARCH_ITEMS)
                 throw new Ultima5ReduxException($"Too few search items in the list: {searchItems.Count}");
 
-            for (int i = 0; i < GameReferences.SearchLocationReferences.TotalReferences; i++)
+            for (int i = 0; i < GameReferences.Instance.SearchLocationReferences.TotalReferences; i++)
             {
                 bool bIsDiscovered = searchItems[i];
                 SearchItemReference searchItemReference =
-                    GameReferences.SearchLocationReferences.GetSearchItemReferenceByIndex(i);
+                    GameReferences.Instance.SearchLocationReferences.GetSearchItemReferenceByIndex(i);
 
                 var item = new SearchItem(i, bIsDiscovered, searchItemReference);
 
@@ -69,12 +69,12 @@ namespace Ultima5Redux.Maps
         public bool IsAvailableSearchItemByLocation(SmallMapReferences.SingleMapReference.Location location, int nFloor,
             Point2D position)
         {
-            if (!GameReferences.SearchLocationReferences.IsSearchItemAtLocation(location, nFloor, position))
+            if (!GameReferences.Instance.SearchLocationReferences.IsSearchItemAtLocation(location, nFloor, position))
             {
                 return false;
             }
 
-            return GameReferences.SearchLocationReferences
+            return GameReferences.Instance.SearchLocationReferences
                 .GetListOfSearchItemReferences
                     (location, nFloor, position).Any(searchItemReference =>
                     !_searchItems[searchItemReference.Index].IsDiscovered);
@@ -85,7 +85,7 @@ namespace Ultima5Redux.Maps
             int nFloor)
         {
             List<SearchItemReference> searchItemReferences =
-                GameReferences.SearchLocationReferences.GetListOfSearchItemReferences(location, nFloor);
+                GameReferences.Instance.SearchLocationReferences.GetListOfSearchItemReferences(location, nFloor);
 
             if (searchItemReferences == null || searchItemReferences.Count == 0)
                 return new Dictionary<Point2D, List<SearchItem>>();
@@ -110,7 +110,7 @@ namespace Ultima5Redux.Maps
             SmallMapReferences.SingleMapReference.Location location)
         {
             List<SearchItemReference> searchItemReferences =
-                GameReferences.SearchLocationReferences.GetListOfSearchItemReferences(location);
+                GameReferences.Instance.SearchLocationReferences.GetListOfSearchItemReferences(location);
 
             List<SearchItem> searchItems = new();
 
@@ -136,7 +136,8 @@ namespace Ultima5Redux.Maps
             if (!IsAvailableSearchItemByLocation(location, nFloor, position)) return new List<SearchItem>();
 
             List<SearchItemReference> searchItemsReferences =
-                GameReferences.SearchLocationReferences.GetListOfSearchItemReferences(location, nFloor, position);
+                GameReferences.Instance.SearchLocationReferences.GetListOfSearchItemReferences(location, nFloor,
+                    position);
 
             List<SearchItem> searchItems = new();
             foreach (SearchItemReference searchItemReference in searchItemsReferences)

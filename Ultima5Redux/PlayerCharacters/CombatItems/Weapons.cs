@@ -25,7 +25,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 AddWeapon(weaponReference, importedGameState.GetEquipmentQuantity(weaponReference.SpecificEquipment));
             }
 
-            foreach (WeaponReference weaponReference in GameReferences.CombatItemRefs.WeaponReferences)
+            foreach (WeaponReference weaponReference in GameReferences.Instance.CombatItemRefs.WeaponReferences)
             {
                 addWeaponLegacy(weaponReference);
             }

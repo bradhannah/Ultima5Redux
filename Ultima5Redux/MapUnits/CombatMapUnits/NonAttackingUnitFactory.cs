@@ -45,7 +45,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public static StackableItem CreateStackableItem(int nSprite)
         {
             // we know it's an actual item at this point
-            List<InventoryReference> invRefs = GameReferences.InvRef.GetInventoryReferences(nSprite).ToList();
+            List<InventoryReference> invRefs = GameReferences.Instance.InvRef.GetInventoryReferences(nSprite).ToList();
 
             if (invRefs.Count == 0)
             {
@@ -68,7 +68,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public static StackableItem CreateStackableItem(int nSprite, int nQuality)
         {
             // we know it's an actual item at this point
-            List<InventoryReference> invRefs = GameReferences.InvRef.GetInventoryReferences(nSprite).ToList();
+            List<InventoryReference> invRefs = GameReferences.Instance.InvRef.GetInventoryReferences(nSprite).ToList();
 
             if (invRefs.Count == 0)
             {
@@ -97,7 +97,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                         && nQuality == 255)
                     {
                         InventoryReference inventoryReference =
-                            GameReferences.InvRef.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item,
+                            GameReferences.Instance.InvRef.GetInventoryReference(
+                                InventoryReferences.InventoryReferenceType.Item,
                                 "HMSCape");
                         invItem = InventoryItemFactory.Create(inventoryReference);
                         // default to 1 for now, unless I find a circumstance that needs more
@@ -106,7 +107,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     else
                     {
                         InventoryReference inventoryReference =
-                            GameReferences.InvRef.GetInventoryReference((DataOvlReference.Equipment)nQuality);
+                            GameReferences.Instance.InvRef.GetInventoryReference((DataOvlReference.Equipment)nQuality);
                         invItem = InventoryItemFactory.Create(inventoryReference);
                         // default to 1 for now, unless I find a circumstance that needs more
                         invItem.Quantity = 1;

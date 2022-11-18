@@ -73,7 +73,7 @@ namespace Ultima5Redux.References.Maps
             IsLandEnemyPassable;
 
         public bool HasAlternateFlatSprite =>
-            GameReferences.SpriteTileReferences.GetTileReference(Index).FlatTileSubstitutionIndex != -1;
+            GameReferences.Instance.SpriteTileReferences.GetTileReference(Index).FlatTileSubstitutionIndex != -1;
 
         public bool HasSearchReplacement => Index == (int)SpriteIndex.StoneBrickWallSecret;
 

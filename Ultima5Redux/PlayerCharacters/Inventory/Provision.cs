@@ -16,14 +16,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember]
         public int BundleQuantity =>
-            GameReferences.ProvisionReferences.GetBundleQuantity(ProvisionType);
+            GameReferences.Instance.ProvisionReferences.GetBundleQuantity(ProvisionType);
 
         public override string FindDescription
         {
             get
             {
                 string getProvStr(DataOvlReference.ThingsIFindStrings provType) =>
-                    GameReferences.DataOvlRef.StringReferences.GetString(provType).Trim();
+                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(provType).Trim();
 
                 return ProvisionType switch
                 {
@@ -33,11 +33,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                         .A_GEM_BANG_N),
                     ProvisionReferences.SpecificProvisionType.Keys => getProvStr(DataOvlReference.ThingsIFindStrings
                         .A_RING_OF_KEYS_BANG_N),
-                    ProvisionReferences.SpecificProvisionType.SkullKeys => GameReferences.DataOvlRef.StringReferences
+                    ProvisionReferences.SpecificProvisionType.SkullKeys => GameReferences.Instance.DataOvlRef
+                        .StringReferences
                         .GetString(DataOvlReference.GetThingsStrings.S_ODD_KEY).Trim(),
-                    ProvisionReferences.SpecificProvisionType.Food => GameReferences.DataOvlRef.StringReferences
+                    ProvisionReferences.SpecificProvisionType.Food => GameReferences.Instance.DataOvlRef
+                        .StringReferences
                         .GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim(),
-                    ProvisionReferences.SpecificProvisionType.Gold => GameReferences.DataOvlRef.StringReferences
+                    ProvisionReferences.SpecificProvisionType.Gold => GameReferences.Instance.DataOvlRef
+                        .StringReferences
                         .GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim(),
                     _ => throw new ArgumentOutOfRangeException()
                 };
@@ -68,7 +71,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public override int GetAdjustedBuyPrice(PlayerCharacterRecords records,
             SmallMapReferences.SingleMapReference.Location location)
         {
-            int nBasePrice = GameReferences.ProvisionReferences.GetBasePrice(location, ProvisionType);
+            int nBasePrice = GameReferences.Instance.ProvisionReferences.GetBasePrice(location, ProvisionType);
             if (nBasePrice == -1)
                 throw new Ultima5ReduxException("Requested provision " + LongName + " from " + location +
                                                 " which is not sold here");

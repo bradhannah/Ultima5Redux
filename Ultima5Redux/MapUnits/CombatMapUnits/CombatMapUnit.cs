@@ -111,22 +111,22 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     break;
                 case HitState.BarelyWounded:
                     stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
                             ._BARELY_WOUNDED_BANG_N);
                     break;
                 case HitState.LightlyWounded:
                     stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
                             ._LIGHTLY_WOUNDED_BANG_N);
                     break;
                 case HitState.HeavilyWounded:
                     stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
                             .HEAVILY_WOUNDED_BANG_N);
                     break;
                 case HitState.CriticallyWounded:
                     stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
                             ._CRITICAL_BANG_N);
                     break;
                 case HitState.Fleeing:
@@ -138,14 +138,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     else
                     {
                         stateOutput +=
-                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
                                 ._CRITICAL_BANG_N);
                     }
 
                     break;
                 case HitState.Dead:
                     stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
                             ._KILLED_BANG_N);
                     break;
                 default:
@@ -205,7 +205,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 this, opposingCombatMapUnit, missileType));
             if (!bIsHit)
             {
-                string missedOutput = FriendlyName + GameReferences.DataOvlRef.StringReferences
+                string missedOutput = FriendlyName + GameReferences.Instance.DataOvlRef.StringReferences
                                           .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd()
                                           .Replace("!", " ") +
                                       opposingCombatMapUnit.FriendlyName + "!" + "\n" + debugStr;
@@ -232,7 +232,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
             if (nAttack == 0)
             {
-                string grazedOutput = FriendlyName + GameReferences.DataOvlRef.StringReferences
+                string grazedOutput = FriendlyName + GameReferences.Instance.DataOvlRef.StringReferences
                                           .GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd()
                                           .Replace("!", " ") +
                                       opposingCombatMapUnit.FriendlyName + "!" + "\n" + debugStr;

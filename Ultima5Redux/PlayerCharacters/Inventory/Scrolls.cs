@@ -35,7 +35,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private void AddScroll(MagicReference.SpellWords spellWord, int nQuantity)
         {
             Items[spellWord] = new Scroll(spellWord, nQuantity,
-                GameReferences.MagicRefs.GetMagicReference(spellWord));
+                GameReferences.Instance.MagicRefs.GetMagicReference(spellWord));
         }
     }
 }

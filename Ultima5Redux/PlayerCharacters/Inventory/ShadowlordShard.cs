@@ -48,8 +48,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         private static string GetEquipStr(DataOvlReference.ShadowlordStrings shadowlordShard) =>
-            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
+            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
                 .GEM_SHARD_THOU_HOLD_EVIL_SHARD) +
-            GameReferences.DataOvlRef.StringReferences.GetString(shadowlordShard);
+            GameReferences.Instance.DataOvlRef.StringReferences.GetString(shadowlordShard);
     }
 }

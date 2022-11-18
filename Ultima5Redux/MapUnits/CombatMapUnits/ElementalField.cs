@@ -20,7 +20,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public override TileReference KeyTileReference
         {
-            get => GameReferences.SpriteTileReferences.GetTileReference((int)TheFieldType);
+            get => GameReferences.Instance.SpriteTileReferences.GetTileReference((int)TheFieldType);
             set => throw new NotImplementedException("Can't set the key sprite in Elemental Field");
         }
 

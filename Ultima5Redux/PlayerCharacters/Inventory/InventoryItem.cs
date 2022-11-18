@@ -48,7 +48,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember]
         public InventoryReference InvRef
         {
-            get => GameReferences.InvRef.GetInventoryReference(InvRefType, InventoryReferenceString);
+            get => GameReferences.Instance.InvRef.GetInventoryReference(InvRefType, InventoryReferenceString);
             protected internal set =>
                 InvRefType = value.InvRefType;
         }

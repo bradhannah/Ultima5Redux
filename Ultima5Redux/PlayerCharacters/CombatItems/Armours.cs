@@ -46,7 +46,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public Armours(ImportedGameState importedGameState)
         {
-            foreach (ArmourReference armourReference in GameReferences.CombatItemRefs.AllArmour)
+            foreach (ArmourReference armourReference in GameReferences.Instance.CombatItemRefs.AllArmour)
             {
                 AddArmour(armourReference, importedGameState.GetEquipmentQuantity(armourReference.SpecificEquipment));
             }

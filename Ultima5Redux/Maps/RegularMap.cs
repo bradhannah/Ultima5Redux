@@ -16,7 +16,7 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember]
         protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides =>
-            _xyOverrides ??= GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
+            _xyOverrides ??= GameReferences.Instance.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
 
         private Dictionary<Point2D, TileOverrideReference> _xyOverrides;
 

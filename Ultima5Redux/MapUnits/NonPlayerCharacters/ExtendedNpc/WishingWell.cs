@@ -12,7 +12,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ExtendedNpc
         {
             var schedule = new NonPlayerCharacterReference.NpcSchedule();
 
-            TalkScript wishingWellTalkScript = GameReferences.TalkScriptsRef.GetCustomTalkScript("WishingWell");
+            TalkScript wishingWellTalkScript =
+                GameReferences.Instance.TalkScriptsRef.GetCustomTalkScript("WishingWell");
 
             var npcRef = new NonPlayerCharacterReference(
                 location, schedule, 0, 0, 0, wishingWellTalkScript);

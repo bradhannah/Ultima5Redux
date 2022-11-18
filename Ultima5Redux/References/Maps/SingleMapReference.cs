@@ -170,7 +170,7 @@ namespace Ultima5Redux.References.Maps
             }
 
             public static SingleMapReference GetCombatMapSingleInstance() =>
-                new(GameReferences.DataOvlRef.DataDirectory, Location.Combat_resting_shrine, 0, 0);
+                new(GameReferences.Instance.DataOvlRef.DataDirectory, Location.Combat_resting_shrine, 0, 0);
 
             /// <summary>
             ///     Get the filename of the map data based on the location
@@ -195,7 +195,8 @@ namespace Ultima5Redux.References.Maps
                 if (map == Map.Maps.Small)
                     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
 
-                return new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, Location.Britannia_Underworld,
+                return new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory,
+                    Location.Britannia_Underworld,
                     map == Map.Maps.Overworld ? 0 : -1, 0);
             }
 

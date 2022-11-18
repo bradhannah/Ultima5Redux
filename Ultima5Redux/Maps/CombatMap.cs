@@ -123,7 +123,7 @@ namespace Ultima5Redux.Maps
         {
             CombatMapUnits = GameStateReference.State.TheVirtualMap.TheMapUnits;
             TheCombatMapReference = singleCombatMapReference;
-            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
+            XYOverrides = GameReferences.Instance.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
 
             InitializeAStarMap(WalkableType.CombatLand);
             InitializeAStarMap(WalkableType.CombatWater);
@@ -254,8 +254,9 @@ namespace Ultima5Redux.Maps
         private static bool IsWalkingPassable(TileReference tileReference) =>
             tileReference.IsWalking_Passable ||
             tileReference.Index ==
-            GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index ||
-            tileReference.Index == GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
+            GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index ||
+            tileReference.Index == GameReferences.Instance.SpriteTileReferences
+                .GetTileReferenceByName("RegularDoorView")
                 .Index;
 
         private void ClearCurrentCombatItemQueue()
@@ -301,7 +302,7 @@ namespace Ultima5Redux.Maps
                 case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
                     combatMapUnit = CombatMapUnits.CreateEnemyOnCombatMap(
                         singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
-                        GameReferences.EnemyRefs.GetEnemyReference(nEnemySprite), out int _);
+                        GameReferences.Instance.EnemyRefs.GetEnemyReference(nEnemySprite), out int _);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
                     Debug.Assert(!(mapUnitPosition.X == 0 && mapUnitPosition.Y == 0));
@@ -710,7 +711,7 @@ namespace Ultima5Redux.Maps
                 // do they multiply?
                 DivideEnemy(enemy);
 
-                turnResults.PushOutputToConsole("\n" + affectedCombatMapUnit.FriendlyName + GameReferences
+                turnResults.PushOutputToConsole("\n" + affectedCombatMapUnit.FriendlyName + GameReferences.Instance
                     .DataOvlRef
                     .StringReferences.GetString(DataOvlReference.Battle2Strings._DIVIDES_BANG_N)
                     .TrimEnd(), false, false);
@@ -1199,7 +1200,7 @@ namespace Ultima5Redux.Maps
                         if (bIsBlocked)
                         {
                             string blockedAttackStr = combatPlayer.FriendlyName +
-                                                      GameReferences.DataOvlRef.StringReferences
+                                                      GameReferences.Instance.DataOvlRef.StringReferences
                                                           .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N)
                                                           .TrimEnd().Replace("!", " ") + opponentMapUnit.FriendlyName +
                                                       " because it was blocked!";

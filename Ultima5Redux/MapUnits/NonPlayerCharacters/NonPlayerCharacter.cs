@@ -47,7 +47,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         public bool IsMinstrel => NPCRef.NPCKeySprite == (int)TileReference.SpriteIndex.BardPlaying_KeyIndex;
 
         public TileReference AlternateSittingTileReference => IsMinstrel
-            ? GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex.BardPlaying_KeyIndex)
+            ? GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                .BardPlaying_KeyIndex)
             : KeyTileReference;
 
         public override TileReference KeyTileReference
@@ -57,7 +58,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // the typical minstrel walks around like a regular bard
                 if (IsMinstrel)
                 {
-                    return GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                    return GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                         .Bard_KeyIndex);
                 }
 
@@ -84,7 +85,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             SmallMapReferences.SingleMapReference.Location location, MapUnitPosition mapUnitPosition,
             NonPlayerCharacterState npcState) : base(smallMapTheSmallMapCharacterState, mapUnitMovement, location,
             Point2D.Direction.None, npcState,
-            GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite), mapUnitPosition)
+            GameReferences.Instance.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
+            mapUnitPosition)
         {
             NPCState = npcState;
             bool bLargeMap = TheSmallMapCharacterState == null && NPCState.NPCRef == null;

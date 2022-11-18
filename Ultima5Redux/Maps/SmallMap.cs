@@ -20,7 +20,7 @@ namespace Ultima5Redux.Maps
             {
                 if (_currentSingleMapReference == null)
                     _currentSingleMapReference =
-                        GameReferences.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
+                        GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
                 return _currentSingleMapReference;
             }
         }
@@ -110,8 +110,8 @@ namespace Ultima5Redux.Maps
         protected override float GetAStarWeight(in Point2D xy)
         {
             bool isPreferredIndex(int nSprite) =>
-                nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
-                GameReferences.SpriteTileReferences.IsPath(nSprite);
+                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
+                GameReferences.Instance.SpriteTileReferences.IsPath(nSprite);
 
             const int fDefaultDeduction = 2;
 

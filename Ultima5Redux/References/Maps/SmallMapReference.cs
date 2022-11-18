@@ -126,7 +126,8 @@ namespace Ultima5Redux.References.Maps
 
             for (int i = 0; i < nFloors; i++)
             {
-                mapRefs.Add(new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, location, startFloor + i,
+                mapRefs.Add(new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory, location,
+                    startFloor + i,
                     fileOffset + i * SmallMap.X_TILES * SmallMap.Y_TILES));
             }
 

@@ -89,7 +89,7 @@ namespace Ultima5Redux.PlayerCharacters
             {
                 case 0:
                     // poison - the Avatar
-                    retStr = GameReferences.DataOvlRef.StringReferences
+                    retStr = GameReferences.Instance.DataOvlRef.StringReferences
                         .GetString(DataOvlReference.ExclaimStrings.POISONED_BANG_N).Trim();
                     AvatarRecord.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
                     break;

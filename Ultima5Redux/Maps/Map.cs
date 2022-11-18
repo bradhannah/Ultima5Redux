@@ -163,9 +163,9 @@ namespace Ultima5Redux.Maps
         public TileReference GetTileReference(in Point2D xy)
         {
             if (IsXYOverride(xy, TileOverrideReference.TileType.Primary))
-                return GameReferences.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
+                return GameReferences.Instance.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
 
-            return GameReferences.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
+            return GameReferences.Instance.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
         }
 
         public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
@@ -216,9 +216,9 @@ namespace Ultima5Redux.Maps
             }
 
             bool bIsWalkable = tileReference.IsWalking_Passable ||
-                               tileReference.Index == GameReferences.SpriteTileReferences
+                               tileReference.Index == GameReferences.Instance.SpriteTileReferences
                                    .GetTileReferenceByName("RegularDoor").Index ||
-                               tileReference.Index == GameReferences.SpriteTileReferences
+                               tileReference.Index == GameReferences.Instance.SpriteTileReferences
                                    .GetTileReferenceByName("RegularDoorView").Index;
             return bIsWalkable;
         }
@@ -241,7 +241,8 @@ namespace Ultima5Redux.Maps
             {
                 for (int y = 0; y < nYTiles; y++)
                 {
-                    TileReference currentTile = GameReferences.SpriteTileReferences.GetTileReference(TheMap[x][y]);
+                    TileReference currentTile =
+                        GameReferences.Instance.SpriteTileReferences.GetTileReference(TheMap[x][y]);
 
                     bool bIsWalkable = IsTileWalkable(currentTile, walkableType);
 

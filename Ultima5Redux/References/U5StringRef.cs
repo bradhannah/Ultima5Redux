@@ -208,7 +208,7 @@ namespace Ultima5Redux.References
             };
 
         public static string ThouDostFind(string thingYouFound) =>
-            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                 .N_THOU_DOST_FIND_N) + thingYouFound;
 
         public string GetDirectionString(Point2D.Direction direction)

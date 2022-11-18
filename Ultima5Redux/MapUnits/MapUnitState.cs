@@ -51,8 +51,8 @@ namespace Ultima5Redux.MapUnits
             //
             _tile1 = stateBytes[0] + 0x100;
             _tile2 = stateBytes[1] + 0x100;
-            Tile1Ref = GameReferences.SpriteTileReferences.GetTileReference(_tile1);
-            Tile2Ref = GameReferences.SpriteTileReferences.GetTileReference(_tile2);
+            Tile1Ref = GameReferences.Instance.SpriteTileReferences.GetTileReference(_tile1);
+            Tile2Ref = GameReferences.Instance.SpriteTileReferences.GetTileReference(_tile2);
 
             X = stateBytes[2];
             Y = stateBytes[3];
@@ -64,8 +64,8 @@ namespace Ultima5Redux.MapUnits
 
         public MapUnitState(NonPlayerCharacterReference npcRef)
         {
-            Tile1Ref = GameReferences.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
-            Tile2Ref = GameReferences.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
+            Tile1Ref = GameReferences.Instance.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
+            Tile2Ref = GameReferences.Instance.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
         }
 
         public static MapUnitState CreateAvatar(MapUnitPosition avatarPosition, MapUnitState mapUnitState = null)
@@ -78,7 +78,7 @@ namespace Ultima5Redux.MapUnits
             if (mapUnitState == null)
             {
                 theAvatar = new MapUnitState();
-                avatarTileRef = GameReferences.SpriteTileReferences.GetTileReferenceByName("BasicAvatar");
+                avatarTileRef = GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("BasicAvatar");
             }
             else
             {
@@ -88,7 +88,7 @@ namespace Ultima5Redux.MapUnits
 
             theAvatar._tile1 = avatarTileRef.Index;
             theAvatar._tile2 = avatarTileRef.Index;
-            theAvatar.Tile1Ref = GameReferences.SpriteTileReferences.GetTileReference(theAvatar._tile1);
+            theAvatar.Tile1Ref = GameReferences.Instance.SpriteTileReferences.GetTileReference(theAvatar._tile1);
             theAvatar.Tile2Ref = theAvatar.Tile1Ref;
 
             theAvatar.X = (byte)avatarPosition.X;

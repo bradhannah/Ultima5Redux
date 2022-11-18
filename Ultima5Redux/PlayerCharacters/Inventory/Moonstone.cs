@@ -12,7 +12,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public MoonPhaseReferences.MoonPhases Phase { get; private set; }
 
         [IgnoreDataMember]
-        public override string FindDescription => GameReferences.DataOvlRef.StringReferences
+        public override string FindDescription => GameReferences.Instance.DataOvlRef.StringReferences
             .GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N).TrimEnd();
 
         [IgnoreDataMember] public override bool HideQuantity => true;

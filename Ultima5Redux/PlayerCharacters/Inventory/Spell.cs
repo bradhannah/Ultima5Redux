@@ -38,7 +38,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public int MinCircle => SpellMagicReference.Circle;
 
         [IgnoreDataMember]
-        public MagicReference SpellMagicReference => GameReferences.MagicRefs.GetMagicReference(SpellIncantation);
+        public MagicReference SpellMagicReference =>
+            GameReferences.Instance.MagicRefs.GetMagicReference(SpellIncantation);
 
         [JsonConstructor] public Spell()
         {

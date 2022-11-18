@@ -246,7 +246,7 @@ namespace Ultima5Redux.References.Maps
                 int nTriggerPositionYCol = nTrigger + XTILES + nTriggerTiles;
 
                 int nSprite = fullRows[nTriggerSpriteRow].GetByte(nTriggerSpriteCol);
-                TileReference triggerSprite = GameReferences.SpriteTileReferences.GetTileReference(nSprite);
+                TileReference triggerSprite = GameReferences.Instance.SpriteTileReferences.GetTileReference(nSprite);
 
                 Point2D triggerPosition = new(fullRows[nTriggerPositionRow].GetByte(nTriggerPositionXCol),
                     fullRows[nTriggerPositionRow].GetByte(nTriggerPositionYCol));

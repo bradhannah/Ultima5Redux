@@ -12,14 +12,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override bool ExposeInnerItemsOnOpen => true;
         public override bool ExposeInnerItemsOnSearch => false;
 
-        public override string FriendlyName => GameReferences.DataOvlRef.StringReferences
+        public override string FriendlyName => GameReferences.Instance.DataOvlRef.StringReferences
             .GetString(DataOvlReference.Vision2Strings.A_WOODEN_CHEST_DOT_N).TrimEnd();
 
         public override bool IsOpenable => true;
         public override bool IsSearchable => true;
 
         public override TileReference KeyTileReference =>
-            GameReferences.SpriteTileReferences.GetTileReferenceByName("Chest");
+            GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("Chest");
 
         public override string Name => FriendlyName;
 

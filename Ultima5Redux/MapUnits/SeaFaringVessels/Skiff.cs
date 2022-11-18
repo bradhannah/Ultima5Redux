@@ -22,7 +22,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Skiff;
 
-        public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
+        public override string BoardXitName => GameReferences.Instance.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.SKIFF_N).Trim();
 
         public override string FriendlyName => BoardXitName;

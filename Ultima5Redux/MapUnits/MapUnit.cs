@@ -58,8 +58,8 @@ namespace Ultima5Redux.MapUnits
         public virtual TileReference KeyTileReference
         {
             get => NPCRef == null
-                ? GameReferences.SpriteTileReferences.GetTileReference(_keyTileIndex)
-                : GameReferences.SpriteTileReferences.GetTileReference(NPCRef.NPCKeySprite);
+                ? GameReferences.Instance.SpriteTileReferences.GetTileReference(_keyTileIndex)
+                : GameReferences.Instance.SpriteTileReferences.GetTileReference(NPCRef.NPCKeySprite);
             set => _keyTileIndex = value.Index;
         }
 
@@ -264,13 +264,14 @@ namespace Ultima5Redux.MapUnits
             VirtualMap.LadderOrStairDirection ladderOrStairDirection, Point2D xy)
         {
             // is player on a ladder or staircase going in the direction they intend to go?
-            bool bIsOnStairCaseOrLadder = GameReferences.SpriteTileReferences.IsStaircase(currentTileRef.Index) ||
-                                          GameReferences.SpriteTileReferences.IsLadder(currentTileRef.Index);
+            bool bIsOnStairCaseOrLadder =
+                GameReferences.Instance.SpriteTileReferences.IsStaircase(currentTileRef.Index) ||
+                GameReferences.Instance.SpriteTileReferences.IsLadder(currentTileRef.Index);
 
             if (!bIsOnStairCaseOrLadder) return false;
 
             // are they destined to go up or down it?
-            if (GameReferences.SpriteTileReferences.IsStaircase(currentTileRef.Index))
+            if (GameReferences.Instance.SpriteTileReferences.IsStaircase(currentTileRef.Index))
             {
                 if (virtualMap.IsStairGoingUp(xy, out _))
                     return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
@@ -438,7 +439,7 @@ namespace Ultima5Redux.MapUnits
             if (!DirectionToTileName.ContainsKey(Direction))
                 throw new Ultima5ReduxException(
                     $"Tried to get NonBoardedTileReference with direction {Direction} on tile {KeyTileReference.Description}");
-            return GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+            return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
         }
 
         public TileReference GetAnimatedTileReference()
@@ -448,7 +449,7 @@ namespace Ultima5Redux.MapUnits
             if (KeyTileReference.TotalAnimationFrames < 2) return KeyTileReference;
 
             UpdateAnimationIndex();
-            return GameReferences.SpriteTileReferences.GetTileReference(
+            return GameReferences.Instance.SpriteTileReferences.GetTileReference(
                 KeyTileReference.Index + _nCurrentAnimationIndex);
         }
 
@@ -489,7 +490,7 @@ namespace Ultima5Redux.MapUnits
             Dictionary<Point2D.Direction, string> tileNameDictionary =
                 UseFourDirections ? FourDirectionToTileNameBoarded : DirectionToTileNameBoarded;
             if (tileNameDictionary == null) return KeyTileReference;
-            return GameReferences.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
+            return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
         }
 
         /// <summary>

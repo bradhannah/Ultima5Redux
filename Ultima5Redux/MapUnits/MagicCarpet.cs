@@ -17,7 +17,7 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;
 
         [IgnoreDataMember]
-        public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
+        public override string BoardXitName => GameReferences.Instance.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.CARPET_N).Trim();
 
         [IgnoreDataMember] public override string FriendlyName => BoardXitName;
@@ -66,7 +66,7 @@ namespace Ultima5Redux.MapUnits
         public MagicCarpet(SmallMapReferences.SingleMapReference.Location location, Point2D.Direction direction,
             NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null, new MapUnitMovement(0),
             location, direction, npcState,
-            GameReferences.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition) =>
+            GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition) =>
             KeyTileReference = GetNonBoardedTileReference();
 
         internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
