@@ -3325,7 +3325,6 @@ namespace Ultima5ReduxTesting
                     }
 
                     Assert.IsTrue(bFoundNonZero, $"ShoppeKeeper didn't have a non zero AI: {npc.FriendlyName}");
-                    // }
                 }
             }
         }
@@ -3493,5 +3492,11 @@ namespace Ultima5ReduxTesting
 
             Assert.False(world.State.TheVirtualMap.IsHorizDoor(doorPos));
         }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_DungeonReferences(SaveFiles saveFiles)
+        {
+            var dungeonReferences = new DungeonReferences(Path.Combine(DataDirectory, "dungeon.dat"));
+        }
+        
     }
 }

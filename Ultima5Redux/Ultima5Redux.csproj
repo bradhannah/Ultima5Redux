@@ -173,6 +173,9 @@
         <Compile Include="MapUnits\TurnResults\TurnResults.cs" />
         <Compile Include="OddsAndLogic.cs" />
         <Compile Include="PlayerCharacters\Inventory\InventoryItemFactory.cs" />
+        <Compile Include="References\Maps\DungeonReferences.cs" />
+        <Compile Include="References\Maps\DungeonTile.cs" />
+        <Compile Include="References\Maps\SingleDungeonMapReference.cs" />
         <Compile Include="References\SearchLocationReferences.cs" />
         <Compile Include="StreamingOutput.cs" />
         <Compile Include="StreamingOutputItem.cs" />

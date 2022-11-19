@@ -25,6 +25,8 @@ namespace Ultima5Redux.References
 
         public EnemyReferences EnemyRefs { get; private set; }
 
+        public DungeonReferences DungeonReferences { get; private set; }
+
         public static GameReferences Instance
         {
             get
@@ -128,6 +130,7 @@ namespace Ultima5Redux.References
             ReagentReferences = new ReagentReferences();
             ProvisionReferences = new ProvisionReferences();
             SearchLocationReferences = new SearchLocationReferences(DataOvlRef, SpriteTileReferences);
+            DungeonReferences = new DungeonReferences(legacyDataDirectory);
         }
         
         
