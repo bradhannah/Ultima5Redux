@@ -92,11 +92,13 @@
         <Compile Include="GameSummary.cs" />
         <Compile Include="ImportedGameState.cs" />
         <Compile Include="Maps\CombatMap.cs" />
+        <Compile Include="Maps\DungeonMap.cs" />
         <Compile Include="Maps\InitiativeQueue.cs" />
         <Compile Include="Maps\MapOverrides.cs" />
         <Compile Include="Maps\RegularMap.cs" />
         <Compile Include="Maps\SearchItems.cs" />
         <Compile Include="Maps\Sign.cs" />
+        <Compile Include="Maps\SingleDungeonMapFloorReference.cs" />
         <Compile Include="Maps\TileStack.cs" />
         <Compile Include="Maps\TriggerTiles.cs" />
         <Compile Include="Maps\VirtualMap.AggressiveMapUnitInfo.cs" />
@@ -175,7 +177,7 @@
         <Compile Include="PlayerCharacters\Inventory\InventoryItemFactory.cs" />
         <Compile Include="References\Maps\DungeonReferences.cs" />
         <Compile Include="References\Maps\DungeonTile.cs" />
-        <Compile Include="References\Maps\SingleDungeonMapReference.cs" />
+        <Compile Include="References\Maps\DungeonMapReference.cs" />
         <Compile Include="References\SearchLocationReferences.cs" />
         <Compile Include="StreamingOutput.cs" />
         <Compile Include="StreamingOutputItem.cs" />

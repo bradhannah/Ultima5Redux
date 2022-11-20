@@ -39,6 +39,8 @@ namespace Ultima5Redux.MapUnits
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
         [DataMember] public MapUnitCollection SmallMapUnitCollection { get; protected set; } = new();
 
+        [DataMember] public MapUnitCollection DungeonMapUnitCollection { get; protected set; } = new();
+
         [DataMember]
         public MapUnitCollection UnderworldMapUnitCollection { get; protected set; } =
             new();
@@ -168,6 +170,7 @@ namespace Ultima5Redux.MapUnits
         {
             return map switch
             {
+                Map.Maps.Dungeon => DungeonMapUnitCollection,
                 Map.Maps.Small => SmallMapUnitCollection,
                 Map.Maps.Overworld => OverworldMapMapUnitCollection,
                 Map.Maps.Underworld => UnderworldMapUnitCollection,
@@ -208,6 +211,16 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
+        internal void LoadDungeonMap(SmallMapReferences.SingleMapReference.Location location)
+        {
+            DungeonMapUnitCollection.Clear();
+
+            MapUnit theAvatar = Avatar.CreateAvatar(location, new MapUnitMovement(0),
+                new MapUnitPosition(0, 0, 0),
+                GameReferences.Instance.SpriteTileReferences.GetTileReference(284), _bUseExtendedSprites);
+            DungeonMapUnitCollection.Add(theAvatar);
+        }
+        
         /// <summary>
         ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
@@ -221,34 +234,35 @@ namespace Ultima5Redux.MapUnits
             // wipe all existing characters since they cannot exist beyond the load
             SmallMapUnitCollection.Clear();
             CombatMapMapUnitCollection.Clear();
+            DungeonMapUnitCollection.Clear();
 
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
                 MapUnitMovement mapUnitMovement = _importedMovements.GetMovement(i) ?? new MapUnitMovement(i);
 
-                // if it is the first index, then it's the Avatar - but if it's the initial load
-                // then it will just load from disk, otherwise we need to create a stub
-                if (i == 0 && !bInitialLegacyLoad)
+                switch (i)
                 {
-                    mapUnitMovement.ClearMovements();
-                    // load the existing AvatarMapUnit with boarded MapUnits
+                    // if it is the first index, then it's the Avatar - but if it's the initial load
+                    // then it will just load from disk, otherwise we need to create a stub
+                    case 0 when !bInitialLegacyLoad:
+                        mapUnitMovement.ClearMovements();
+                        // load the existing AvatarMapUnit with boarded MapUnits
 
-                    SmallMapUnitCollection.Add(MasterAvatarMapUnit);
-                    GetAvatarMapUnit().MapLocation = location;
-                    continue;
-                }
-
-                // The zero position is always Avatar, this grabs them from the legacy save file 
-                if (i == 0 && bInitialLegacyLoad)
-                {
-                    MapUnitState theAvatarMapState =
-                        _importedGameState.GetMapUnitStatesByMap(Map.Maps.Small).GetCharacterState(0);
-                    MapUnit theAvatar = Avatar.CreateAvatar(location, mapUnitMovement,
-                        new MapUnitPosition(theAvatarMapState.X, theAvatarMapState.Y, theAvatarMapState.Floor),
-                        theAvatarMapState.Tile1Ref, _bUseExtendedSprites);
-                    SmallMapUnitCollection.Add(theAvatar);
-                    continue;
+                        SmallMapUnitCollection.Add(MasterAvatarMapUnit);
+                        GetAvatarMapUnit().MapLocation = location;
+                        continue;
+                    // The zero position is always Avatar, this grabs them from the legacy save file 
+                    case 0:
+                    {
+                        MapUnitState theAvatarMapState =
+                            _importedGameState.GetMapUnitStatesByMap(Map.Maps.Small).GetCharacterState(0);
+                        MapUnit theAvatar = Avatar.CreateAvatar(location, mapUnitMovement,
+                            new MapUnitPosition(theAvatarMapState.X, theAvatarMapState.Y, theAvatarMapState.Floor),
+                            theAvatarMapState.Tile1Ref, _bUseExtendedSprites);
+                        SmallMapUnitCollection.Add(theAvatar);
+                        continue;
+                    }
                 }
 
                 // we have extended the max characters from 32 to 64 - BUT - we have to make sure we don't
@@ -927,6 +941,9 @@ namespace Ultima5Redux.MapUnits
                     // map to the save file
                     break;
                 case Map.Maps.Combat:
+                    return;
+                case Map.Maps.Dungeon:
+                    LoadDungeonMap(mapRef.MapLocation);
                     return;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:

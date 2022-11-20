@@ -177,6 +177,7 @@ namespace Ultima5Redux.Maps
         }
 
         [IgnoreDataMember] public bool IsCombatMap => CurrentMap is CombatMap;
+        [IgnoreDataMember] public bool IsDungeonMap => CurrentMap is DungeonMap;
 
         /// <summary>
         ///     Are we currently on a large map?
@@ -2131,7 +2132,7 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <returns></returns>
         public bool IsHorizDoor(in Point2D xy)
-        { 
+        {
             if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
             if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
 
@@ -2391,6 +2392,19 @@ namespace Ultima5Redux.Maps
                 // you engage in conversation with them
                 TheMapUnits?.CurrentMapUnits.NonPlayerCharacters.All(n => n.NPCState.HasExtortedAvatar = false);
             }
+        }
+
+        public void LoadDungeonMap(SingleDungeonMapFloorReference singleDungeonMapFloorReference,
+            Point2D startingPosition)
+        {
+            ClearSmallMapFlags();
+
+            LargeMapOverUnder = Map.Maps.Dungeon;
+            //TheMapOverrides = new();
+
+            TheMapUnits.SetCurrentMapType(singleDungeonMapFloorReference.SingleMapReference, Map.Maps.Dungeon, null);
+
+            if (startingPosition != null) CurrentPosition.XY = startingPosition;
         }
 
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null,

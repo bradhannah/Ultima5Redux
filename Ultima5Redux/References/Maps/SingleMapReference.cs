@@ -31,6 +31,8 @@ namespace Ultima5Redux.References.Maps
                 Combat_resting_shrine = 41
             }
 
+            public bool IsDungeon => (int)MapLocation >= (int)Location.Deceit && (int)MapLocation <= (int)Location.Doom;
+
             /// <summary>
             ///     Map master files. These represent .DAT, .NPC and .TLK files
             /// </summary>
@@ -116,25 +118,37 @@ namespace Ultima5Redux.References.Maps
             ///     Total tiles per row
             /// </summary>
             [IgnoreDataMember]
-            public int XTiles =>
-                MapLocation switch
+            public int XTiles
+            {
+                get
                 {
-                    Location.Combat_resting_shrine => 16,
-                    Location.Britannia_Underworld => 256,
-                    _ => SmallMap.X_TILES
-                };
+                    if (IsDungeon) return SingleDungeonMapFloorReference.N_DUNGEON_COLS_PER_ROW;
+                    return MapLocation switch
+                    {
+                        Location.Combat_resting_shrine => 16,
+                        Location.Britannia_Underworld => 256,
+                        _ => SmallMap.X_TILES
+                    };
+                }
+            }
 
             /// <summary>
             ///     Total tiles per column
             /// </summary>
             [IgnoreDataMember]
-            public int YTiles =>
-                MapLocation switch
+            public int YTiles
+            {
+                get
                 {
-                    Location.Combat_resting_shrine => 16,
-                    Location.Britannia_Underworld => 256,
-                    _ => SmallMap.Y_TILES
-                };
+                    if (IsDungeon) return SingleDungeonMapFloorReference.N_DUNGEON_COLS_PER_ROW;
+                    return MapLocation switch
+                    {
+                        Location.Combat_resting_shrine => 16,
+                        Location.Britannia_Underworld => 256,
+                        _ => SmallMap.Y_TILES
+                    };
+                }
+            }
 
             private readonly string _dataDirectory;
 
