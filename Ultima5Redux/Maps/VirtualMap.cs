@@ -82,6 +82,8 @@ namespace Ultima5Redux.Maps
         [DataMember]
         public SmallMap CurrentSmallMap { get; private set; }
 
+        [DataMember] public DungeonMap CurrentDungeonMap { get; private set; }
+
         /// <summary>
         ///     Are you wanted by the guards? For example - did you murder someone?
         /// </summary>
@@ -123,6 +125,8 @@ namespace Ultima5Redux.Maps
                     throw new Ultima5ReduxException("Tried to get CurrentMap but it was false");
                 //return null;
 
+                if (currentSingleMapReference.IsDungeon) return CurrentDungeonMap;
+                
                 switch (currentSingleMapReference.MapLocation)
                 {
                     case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
@@ -2397,8 +2401,12 @@ namespace Ultima5Redux.Maps
         public void LoadDungeonMap(SingleDungeonMapFloorReference singleDungeonMapFloorReference,
             Point2D startingPosition)
         {
+            // CurrentSingleMapReference = ...
+            
             ClearSmallMapFlags();
 
+            //CurrentDungeonMap = Dungeons.GetDungeonMap();
+            
             LargeMapOverUnder = Map.Maps.Dungeon;
             //TheMapOverrides = new();
 

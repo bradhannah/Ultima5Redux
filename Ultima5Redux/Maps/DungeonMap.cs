@@ -19,6 +19,24 @@ namespace Ultima5Redux.Maps
             protected set => throw new NotImplementedException();
         }
 
+        public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
+        {
+            // XRay Mode makes sure you can see every tile
+            // if (XRayMode)
+            // {
+            Utils.Set2DArrayAllToValue(VisibleOnMap, true);
+            //     return;
+            // }
+
+            // TouchedOuterBorder = false;
+            // AvatarXyPos = initialFloodFillPosition;
+            //
+            // RefreshTestForVisibility(1);
+            // SetMaxVisibleArea(AvatarXyPos, TOTAL_VISIBLE_TILES);
+            // FloodFillMap(initialFloodFillPosition.X, initialFloodFillPosition.Y, true);
+            // RecalculatedHash = Utils.Ran.Next();
+        }
+
         protected override Dictionary<Point2D, TileOverrideReference> XYOverrides => new();
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
