@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Ultima5Redux.References
 {
@@ -7,7 +9,10 @@ namespace Ultima5Redux.References
         public enum TileType
         {
             Nothing = 0, LadderUp = 1, LadderDown = 2, LadderUpDown = 3, Chest = 4, Fountain = 5, Trap = 6,
-            OpenChest = 7, MagicField = 8, RoomsBroke = 0xA, Wall = 0xB, SecondaryWall = 0xC, SecretDoor = 0xD,
+            OpenChest = 7, MagicField = 8, RoomsBroke = 0xA, Wall = 0xB,
+
+            // secondary wall is the kind with skeletons on
+            SecondaryWall = 0xC, SecretDoor = 0xD,
             NormalDoor = 0xE, Room = 0xF
         }
 
@@ -15,11 +20,39 @@ namespace Ultima5Redux.References
 
         public enum ChestType { Normal = 0, Trapped_1 = 1, Trapped_2 = 2, Poisoned = 4 }
 
+        //char fountStr[3][7] = { "Heal", "Poison", "Hurt" };
         public enum FountainType { CurePoison = 0, Heal = 1, PoisonFountain = 2, BadTasteDamage = 3 }
 
         public enum TrapType { LowerTrapVisible, BombTrap, InvisibleTrap, UpperTrapVisible }
 
+        //char fieldStr[4][10] = { "Sleep", "Poison", "Fire", "Lightning" };
         public enum MagicFieldType { Poison = 0, Sleep = 1, Fire = 2, Energy = 3 }
+
+        private readonly int[] messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
+
+        private readonly List<string> messages = new()
+        {
+            "BOTTOMLESS PIT", "THE MAZE OF LOST SOULS",
+            // floor 0 Wrong
+            "THE PRISON WRONG", "THE CRYPT", "UPPER CRYPTS", "LOWER CRYPTS",
+            "DEBTORS ALLY", "DEEP", "DEEPER", "DEEPEST", "MOTHER LODE MAZE"
+        };
+
+
+        public string WallText
+        {
+            get
+            {
+                if (messageStarts.Contains(_subTileType))
+                {
+                    for (int i = 0; i < messageStarts.Length; i++)
+                        if (messageStarts[i] == _subTileType)
+                            return messages[i];
+                }
+
+                return "";
+            }
+        }
 
         public Point2D TilePosition { get; }
         public TileType TheTileType { get; }
@@ -28,6 +61,8 @@ namespace Ultima5Redux.References
         public FountainType TheFountainType { get; }
         public TrapType TheTrapType { get; }
         public MagicFieldType TheMagicFieldType { get; }
+
+        public int RoomNumber { get; }
 
         private byte _subTileType;
 
@@ -71,6 +106,7 @@ namespace Ultima5Redux.References
                 case TileType.NormalDoor:
                     break;
                 case TileType.Room:
+                    RoomNumber = subTypeByte;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

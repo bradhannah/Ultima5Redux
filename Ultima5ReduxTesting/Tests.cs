@@ -3510,8 +3510,51 @@ namespace Ultima5ReduxTesting
 
             SingleDungeonMapFloorReference deceitFirstFloor = GameReferences.Instance.DungeonReferences
                 .GetDungeon(SmallMapReferences.SingleMapReference.Location.Deceit)
-                .GetSingleDungeonMapFloorReferenceByFloor(0);
+                .GetSingleDungeonMapFloorReferenceByFloor(3);
             world.State.TheVirtualMap.LoadDungeonMap(deceitFirstFloor, new Point2D(2, 1));
+            Assert.True(world.State.TheVirtualMap.CurrentSingleMapReference.Floor == 3);
+        }
+
+        [Test] [TestCase(SaveFiles.fresh, false)]
+        public void test_CheckAllDungeonRoomLocations(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            Console.WriteLine("Dungeon,X,Y,Floor,RoomNumber");
+
+            foreach (DungeonMapReference dungeon in GameReferences.Instance.DungeonReferences.DungeonMapReferences)
+            {
+                Point2D dungeonLocation = GameReferences.Instance.LargeMapRef.LocationXY[dungeon.DungeonLocation];
+                Console.WriteLine($"{dungeon.DungeonLocation},{dungeonLocation.X},{dungeonLocation.Y}");
+            }
+
+            foreach (DungeonMapReference dungeon in GameReferences.Instance.DungeonReferences.DungeonMapReferences)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    SingleDungeonMapFloorReference singleFloor = dungeon.GetSingleDungeonMapFloorReferenceByFloor(i);
+
+                    world.State.TheVirtualMap.LoadDungeonMap(singleFloor, Point2D.Zero);
+                    for (int nCol = 0; nCol < 8; nCol++)
+                    {
+                        for (int nRow = 0; nRow < 8; nRow++)
+                        {
+                            var position = new Point2D(nCol, nRow);
+                            DungeonTile dungeonTile = singleFloor.GetDungeonTile(position);
+                            if (dungeonTile.TheTileType == DungeonTile.TileType.Room)
+                            {
+                                Console.WriteLine(
+                                    $"{singleFloor.DungeonLocation},{position.X},{position.Y},{singleFloor.DungeonFloor},{dungeonTile.RoomNumber}");
+                            }
+                        }
+                    }
+                }
+            }
+            
         }
         
     }

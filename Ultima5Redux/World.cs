@@ -66,17 +66,17 @@ namespace Ultima5Redux
         /// <summary>
         ///     The overworld map object
         /// </summary>
-        private LargeMap OverworldMap { get; }
+        //private LargeMap OverworldMap { get; }
 
         /// <summary>
         ///     the underworld map object
         /// </summary>
-        private LargeMap UnderworldMap { get; }
+        //private LargeMap UnderworldMap { get; }
 
         /// <summary>
         ///     A collection of all the available small maps
         /// </summary>
-        public SmallMaps AllSmallMaps { get; }
+        //public SmallMaps AllSmallMaps { get; }
 
         /// <summary>
         ///     The current conversation object
@@ -130,17 +130,19 @@ namespace Ultima5Redux
             GameReferences.Initialize(DataDirectory);
 
             // build the overworld map
-            OverworldMap = new LargeMap(Map.Maps.Overworld);
+            //OverworldMap = new LargeMap(Map.Maps.Overworld);
 
             // build the underworld map
-            UnderworldMap = new LargeMap(Map.Maps.Underworld);
+            //UnderworldMap = new LargeMap(Map.Maps.Underworld);
 
-            AllSmallMaps = new SmallMaps();
+            //AllSmallMaps = new SmallMaps();
 
             if (bLegacySave)
             {
-                State = new GameState(bLoadedInitGam ? "" : SaveGameDirectory, AllSmallMaps, OverworldMap,
-                    UnderworldMap, bUseExtendedSprites);
+                State = new GameState(bLoadedInitGam ? "" : SaveGameDirectory,
+                    // OverworldMap,
+                    // UnderworldMap, 
+                    bUseExtendedSprites);
             }
             else
             {

@@ -142,7 +142,8 @@ namespace Ultima5Redux
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
         /// <param name="bUseExtendedSprites"></param>
-        public GameState(string saveDirectory, SmallMaps smallMaps, LargeMap overworldMap, LargeMap underworldMap,
+        public GameState(string saveDirectory,
+            //LargeMap overworldMap, LargeMap underworldMap,
             bool bUseExtendedSprites)
         {
             GameStateReference.SetState(this);
@@ -171,7 +172,9 @@ namespace Ultima5Redux
             // import the players inventory
             PlayerInventory = new Inventory(ImportedGameState);
 
-            InitializeVirtualMap(smallMaps, overworldMap, underworldMap, bUseExtendedSprites,
+            InitializeVirtualMap(
+                //overworldMap, underworldMap,
+                bUseExtendedSprites,
                 ImportedGameState.Location, ImportedGameState.X, ImportedGameState.Y, ImportedGameState.Floor,
                 ImportedGameState.TheSearchItems);
         }
@@ -199,7 +202,8 @@ namespace Ultima5Redux
         /// <param name="nInitialY"></param>
         /// <param name="nInitialFloor"></param>
         /// <param name="searchItems"></param>
-        private void InitializeVirtualMap(SmallMaps smallMaps, LargeMap overworldMap, LargeMap underworldMap,
+        private void InitializeVirtualMap(
+            //LargeMap overworldMap, LargeMap underworldMap,
             bool bUseExtendedSprites, SmallMapReferences.SingleMapReference.Location location, int nInitialX,
             int nInitialY, int nInitialFloor, SearchItems searchItems)
         {
@@ -208,7 +212,9 @@ namespace Ultima5Redux
                     ? null
                     : GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(location, nInitialFloor);
 
-            TheVirtualMap = new VirtualMap(smallMaps, overworldMap, underworldMap, _initialMap, mapRef,
+            TheVirtualMap = new VirtualMap(
+                //overworldMap, underworldMap, 
+                _initialMap, mapRef,
                 bUseExtendedSprites, ImportedGameState, searchItems);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor

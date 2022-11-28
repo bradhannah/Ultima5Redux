@@ -32,12 +32,17 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Both underworld and overworld maps
         /// </summary>
-        [DataMember(Name = "LargeMaps")] private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new(2);
+        [DataMember(Name = "LargeMaps")] private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new(2)
+        {
+            { Map.Maps.Overworld, new LargeMap(Map.Maps.Overworld) },
+            { Map.Maps.Underworld, new LargeMap(Map.Maps.Underworld) }
+        };
 
         /// <summary>
         ///     All the small maps
         /// </summary>
-        [DataMember(Name = "SmallMaps")] private readonly SmallMaps _smallMaps;
+        //[DataMember(Name = "SmallMaps")]
+        private readonly SmallMaps _smallMaps = new();
 
         /// <summary>
         ///     Which map was the avatar on before this one?
@@ -273,13 +278,16 @@ namespace Ultima5Redux.Maps
         /// <param name="bUseExtendedSprites"></param>
         /// <param name="importedGameState"></param>
         /// <param name="theSearchItems"></param>
-        internal VirtualMap(SmallMaps smallMaps, LargeMap overworldMap, LargeMap underworldMap, Map.Maps initialMap,
+        internal VirtualMap(
+            //LargeMap overworldMap, LargeMap underworldMap, 
+            Map.Maps initialMap,
             SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites,
             ImportedGameState importedGameState, SearchItems theSearchItems)
         {
-            _smallMaps = smallMaps;
-            _largeMaps.Add(Map.Maps.Overworld, overworldMap);
-            _largeMaps.Add(Map.Maps.Underworld, underworldMap);
+            //_smallMaps = new SmallMaps();//smallMaps;
+
+            // _largeMaps.Add(Map.Maps.Overworld, new(Map.Maps.Overworld));
+            // _largeMaps.Add(Map.Maps.Underworld, new(Map.Maps.Underworld));
             TheSearchItems = theSearchItems;
 
             SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation ??
@@ -2402,10 +2410,14 @@ namespace Ultima5Redux.Maps
             Point2D startingPosition)
         {
             // CurrentSingleMapReference = ...
+            CurrentSingleMapReference = singleDungeonMapFloorReference.SingleMapReference;
             
             ClearSmallMapFlags();
 
-            //CurrentDungeonMap = Dungeons.GetDungeonMap();
+            // SingleDungeonMapFloorReference thing = GameReferences.Instance.DungeonReferences.GetDungeon(CurrentSingleMapReference.MapLocation)
+            //     .GetSingleDungeonMapFloorReferenceByFloor(singleDungeonMapFloorReference.DungeonFloor);
+            CurrentDungeonMap = new DungeonMap(singleDungeonMapFloorReference);
+            //Dungeons.GetDungeonMap();
             
             LargeMapOverUnder = Map.Maps.Dungeon;
             //TheMapOverrides = new();
@@ -2425,7 +2437,7 @@ namespace Ultima5Redux.Maps
             ClearSmallMapFlags();
 
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
-
+            
             TheMapOverrides = new MapOverrides(CurrentSmallMap);
 
             LargeMapOverUnder = (Map.Maps)(-1);

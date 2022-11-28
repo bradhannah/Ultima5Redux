@@ -43,7 +43,8 @@ namespace Ultima5Redux.References
 
             for (int nDungeon = 0; nDungeon < DungeonMapReference.N_DUNGEONS; nDungeon++)
             {
-                int nOffset = nDungeon * DungeonMapReference.N_BYTES_PER_DUNGEON_FLOOR;
+                int nOffset = nDungeon * DungeonMapReference.N_BYTES_PER_DUNGEON_FLOOR *
+                              DungeonMapReference.N_DUNGEON_FLOORS_PER_MAP;
                 List<byte> rawDungeon =
                     dungeonDataListContents.GetRange(nOffset, DungeonMapReference.N_BYTES_PER_DUNGEON);
                 var singleDungeonMapReference = new DungeonMapReference(
