@@ -1,18 +1,34 @@
 Dungeon,RoomNum,X,Y,Floor,Direction,Comment,Instruction
-Deceit,0,5,3,0,South,In a wall,KlimbDown
-Deceit,1,5,7,0,North,,KlimbDown
-Deceit,2,1,1,3,East,,KlimbUp
-Deceit,3,-1,-1,-1,North,,
-Deceit,4,-1,-1,-1,North,,
-Deceit,5,-1,-1,-1,North,,
-Deceit,6,-1,-1,-1,North,,
-Deceit,7,-1,-1,-1,North,,
-Deceit,8,-1,-1,-1,North,,
-Deceit,9,-1,-1,-1,North,,
-Deceit,10,-1,-1,-1,North,,
-Deceit,11,-1,-1,-1,North,,
-Deceit,12,-1,-1,-1,North,,
-Deceit,13,-1,-1,-1,North,,
-Deceit,14,-1,-1,-1,North,,
-Deceit,15,-1,-1,-1,North,,
-Deceit,15,-1,-1,-1,North,,
+Deceit,0,5,3,0,South,"#0 Fl: 1 (5, 3)",KlimbDown
+Deceit,1,5,7,0,North,"#1 Fl: 1 (5, 7)",KlimbDown
+Deceit,2,1,1,3,East,"#2 Fl: 2 (1, 1)",KlimbUp
+Deceit,3,4,7,4,East,"#3 Fl: 4 (5, 7)",Forward
+Deceit,4,0,1,5,East,"#4 Fl: 5 (1, 1)",Forward
+Deceit,5,1,6,5,North,"#5 Fl: 5 (1, 5)",Forward
+Deceit,6,7,2,5,South,"#6 Fl: 5 (7, 3)",Forward
+Deceit,7,0,7,5,North,"#7 Fl: 5 (7, 7)",Forward
+Deceit,8,4,2,6,South,"#8 Fl: 6 (4, 3)",Forward
+Deceit,9,6,5,6,East,"#9 Fl: 6 (7, 5)",Forward
+Deceit,10,1,4,7,West,"#12 Fl: 7 (0, 4)",Forward
+Deceit,11,1,5,7,West,"#14 Fl: 7 (0, 5)",Forward
+Deceit,12,1,4,7,North,"#10 Fl: 7 (1, 3)",Forward
+Deceit,13,7,3,7,South,"#11 Fl: 7 (7, 4)",Forward
+Deceit,14,7,6,7,North,"#13 Fl: 7 (7, 5)",Forward
+Deceit,15,-1,-1,-1,North,????,
+Deceit,15,7,6,7,South,"#15 Fl: 7 (7, 7)",Forward
+Destard,16,3,1,1,North,"#0 Fl: 0 (3, 1)",KlimbUp
+Destard,17,7,7,1,North,"#1 Fl: 0 (7, 7)",KlimbUp
+Destard,18,1,3,3,South,"#2 Fl: 3 (1, 4)",Forward
+Destard,19,5,3,3,South,"#3 Fl: 3 (5, 4)",Forward
+Destard,20,7,1,5,North,"#4 Fl: 5 (7, 0)",Foward
+Destard,21,6,2,5,West,"#5 Fl: 5 (5, 2)",Forward
+Destard,22,1,1,6,North,"#6 Fl: 6 (1, 0)",Forward
+Destard,23,7,2,6,West,"#7 Fl: 6 (6, 2)",Forward
+Destard,24,7,2,6,South,"#8 Fl: 6 (7, 3)",Forward
+Destard,25,3,2,6,North,"#9 Fl: 6 (3, 1)",Forward
+Destard,26,4,4,6,South,"#10 Fl: 6 (4, 5)",Forward
+Destard,27,7,6,6,East,"#11 Fl: 6 (0, 6)",Forward
+Destard,28,6,4,7,East,"#12 Fl: 7 (7, 4)",Forward
+Destard,29,0,4,7,South,"#13 Fl: 7 (0, 5)",Forward
+Destard,30,6,4,7,South,"#14 Fl: 7 (6, 5)",Forward
+Destard,31,7,6,7,North,"#15 Fl: 7 (7, 5)",Forward

@@ -353,6 +353,7 @@
         <Content Include="DataFiles\DungeonPositionsOverworld.csv" />
         <Content Include="DataFiles\DungeonRoomAccess.csv" />
         <Content Include="DataFiles\DungeonRooms.csv" />
+        <Content Include="DataFiles\FightTracking.csv" />
         <Content Include="DataFiles\InventoryDetails.csv" />
         <EmbeddedResource Include="DataFiles\MagicDefinitions.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

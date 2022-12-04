@@ -76,6 +76,8 @@ namespace Ultima5Redux.References
             {
                 case TileType.Nothing:
                     // we cool
+                    if (subTypeByte == 0x8) TheTileType = TileType.LadderUp;
+                        
                     break;
                 case TileType.LadderUp:
                 case TileType.LadderDown:
