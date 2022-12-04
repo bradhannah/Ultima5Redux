@@ -944,7 +944,7 @@ namespace Ultima5Redux.MapUnits
                     return;
                 case Map.Maps.Dungeon:
                     LoadDungeonMap(mapRef.MapLocation);
-                    return;
+                    break;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
                     CombatMapMapUnitCollection.Clear();
@@ -964,6 +964,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="mapRef"></param>
         /// <param name="mapType"></param>
+        /// <param name="bSetAvatar"></param>
         /// <exception cref="Ultima5ReduxException"></exception>
         public void SetCurrentMapTypeNoLoad(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
             bool bSetAvatar = true)

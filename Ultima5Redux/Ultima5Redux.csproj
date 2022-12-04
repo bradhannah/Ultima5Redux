@@ -351,6 +351,7 @@
         <EmbeddedResource Include="DataFiles\InitialSaveGame\BRIT.OOL" />
         <EmbeddedResource Include="DataFiles\InitialSaveGame\UNDER.OOL" />
         <Content Include="DataFiles\DungeonPositionsOverworld.csv" />
+        <Content Include="DataFiles\DungeonRoomAccess.csv" />
         <Content Include="DataFiles\DungeonRooms.csv" />
         <Content Include="DataFiles\InventoryDetails.csv" />
         <EmbeddedResource Include="DataFiles\MagicDefinitions.json">

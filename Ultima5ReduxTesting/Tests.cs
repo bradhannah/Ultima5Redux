@@ -3539,6 +3539,8 @@ namespace Ultima5ReduxTesting
                     SingleDungeonMapFloorReference singleFloor = dungeon.GetSingleDungeonMapFloorReferenceByFloor(i);
 
                     world.State.TheVirtualMap.LoadDungeonMap(singleFloor, Point2D.Zero);
+                    Assert.True(world.State.TheVirtualMap.CurrentPosition.Floor == i);
+                    
                     for (int nCol = 0; nCol < 8; nCol++)
                     {
                         for (int nRow = 0; nRow < 8; nRow++)
