@@ -2516,7 +2516,7 @@ namespace Ultima5ReduxTesting
 
             SmallMapReferences.SingleMapReference sinVraalHut =
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
-                SmallMapReferences.SingleMapReference.Location.SinVraals_Hut, 0);
+                    SmallMapReferences.SingleMapReference.Location.SinVraals_Hut, 0);
             world.State.TheVirtualMap.LoadSmallMap(sinVraalHut);
             //world.TryToEnterBuilding(
 
@@ -3420,7 +3420,7 @@ namespace Ultima5ReduxTesting
 
             TalkScript genericGuard =
                 GameReferences.Instance.TalkScriptsRef.GetCustomTalkScript("GenericGuardExtortion");
-            
+
             foreach (NonPlayerCharacter npc in
                      world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters)
             {
@@ -3540,7 +3540,7 @@ namespace Ultima5ReduxTesting
 
                     world.State.TheVirtualMap.LoadDungeonMap(singleFloor, Point2D.Zero);
                     Assert.True(world.State.TheVirtualMap.CurrentPosition.Floor == i);
-                    
+
                     for (int nCol = 0; nCol < 8; nCol++)
                     {
                         for (int nRow = 0; nRow < 8; nRow++)
@@ -3556,8 +3556,40 @@ namespace Ultima5ReduxTesting
                     }
                 }
             }
-            
         }
-        
+
+        [Test] [TestCase(SaveFiles.fresh, false)] [TestCase(SaveFiles.fresh, true)]
+        public void test_MimicShouldNotAttack(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                    SingleCombatMapReference.Territory.Dungeon, 0),
+                SingleCombatMapReference.EntryDirection.North, world.State.CharacterRecords);
+
+            CombatMap currentCombatMap = world.State.TheVirtualMap.CurrentCombatMap;
+
+            TurnResults turnResults = new();
+            // let's process a turn
+            //CombatMap.CombatTurnResult combatTurnResult = 
+
+            currentCombatMap.ProcessEnemyTurn(turnResults,
+                out CombatMapUnit activeCombatMapUnit,
+                out CombatMapUnit targetedCombatMapUnit,
+                out Point2D missedPoint);
+
+            if (activeCombatMapUnit is not Enemy enemy)
+            {
+                throw new Ultima5ReduxException("Trying to process the turn of an enemy, but the active unit is: " +
+                                                activeCombatMapUnit.GetType());
+            }
+
+            Assert.True(turnResults.HasTurnResult);
+        }
     }
 }

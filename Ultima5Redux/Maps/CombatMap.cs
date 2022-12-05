@@ -535,10 +535,14 @@ namespace Ultima5Redux.Maps
             if (!opponentCombatMapUnit.IsActive) return false;
             if (!opponentCombatMapUnit.IsAttackable) return false;
             if (nRange == 1 && !attackingUnit.CanReachForMeleeAttack(opponentCombatMapUnit, nRange)) return false;
+            //if they are not within range.. then they can't attack!
+            if (nRange > 1 &&
+                attackingUnit.MapUnitPosition.XY.DistanceBetween(opponentCombatMapUnit.MapUnitPosition.XY) > nRange)
+                return false;
             if (nRange > 1 &&
                 IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY, opponentCombatMapUnit.MapUnitPosition.XY, out _))
                 return false;
-
+            
             return true;
         }
 
