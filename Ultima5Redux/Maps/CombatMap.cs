@@ -419,24 +419,36 @@ namespace Ultima5Redux.Maps
         ///     some other tile surrounding it
         /// </summary>
         /// <param name="surroundThisPoint"></param>
-        /// <param name="notThisPoint"></param>
+        /// <param name="notThesePoints"></param>
         /// <returns></returns>
         private Point2D GetRandomSurroundingPointThatIsnt(Point2D surroundThisPoint, Point2D notThisPoint)
+            //List<Point2D> notThesePoints)
         {
             List<Point2D> surroundingCombatPlayerPoints =
                 surroundThisPoint.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
-            Point2D randomSurroundingPoint;
-            Random random = new();
-            do
-            {
-                int nIndex = random.Next() % surroundingCombatPlayerPoints.Count;
-                randomSurroundingPoint = surroundingCombatPlayerPoints[nIndex];
-                if (randomSurroundingPoint != notThisPoint)
-                    break;
-                surroundingCombatPlayerPoints.RemoveAt(nIndex);
-            } while (true);
 
+            // remove all the bad points
+            //notThesePoints.ForEach(m => surroundingCombatPlayerPoints.Remove(m));
+            // if the play character is some how in range then remove them (shouldn't happen for range)
+            surroundingCombatPlayerPoints.Remove(notThisPoint);
+
+            Random random = new();
+            // do
+            // {
+            //     top:
+            int nIndex = random.Next() % surroundingCombatPlayerPoints.Count;
+            Point2D randomSurroundingPoint = surroundingCombatPlayerPoints[nIndex];
+            // foreach (Point2D notThisPoint in notThesePoints)
+            // {
+            //     if (notThisPoint == randomSurroundingPoint)
+            //     {
+            //         surroundingCombatPlayerPoints.RemoveAt(nIndex);
+            //         goto top;
+            //     }
+            // }
             return randomSurroundingPoint;
+
+            // } while (true);
         }
 
         private WalkableType GetWalkableTypeByEnemy(Enemy enemy)
@@ -453,6 +465,15 @@ namespace Ultima5Redux.Maps
             return walkableType;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="turnResults"></param>
+        /// <param name="attackingCombatMapUnit"></param>
+        /// <param name="attackPosition"></param>
+        /// <param name="targetedCombatMapUnit"></param>
+        /// <param name="nAttackMax"></param>
+        /// <param name="missileType"></param>
+        /// <exception cref="Ultima5ReduxException"></exception>
         private void HandleRangedMissed(TurnResults turnResults, CombatMapUnit attackingCombatMapUnit,
             Point2D attackPosition, out CombatMapUnit targetedCombatMapUnit, int nAttackMax,
             CombatItemReference.MissileType missileType)
@@ -461,7 +482,10 @@ namespace Ultima5Redux.Maps
             // get a list of all surround tiles surrounding the player that they are attacking
 
             Point2D newAttackPosition =
-                GetRandomSurroundingPointThatIsnt(attackPosition, attackingCombatMapUnit.MapUnitPosition.XY);
+                GetRandomSurroundingPointThatIsnt(attackPosition, //new(),
+                    attackingCombatMapUnit.MapUnitPosition.XY);
+            //{ attackingCombatMapUnit.MapUnitPosition.XY, attackPosition });
+
             Debug.Assert(newAttackPosition != null);
             if (newAttackPosition == attackingCombatMapUnit.MapUnitPosition.XY)
             {
@@ -542,7 +566,7 @@ namespace Ultima5Redux.Maps
             if (nRange > 1 &&
                 IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY, opponentCombatMapUnit.MapUnitPosition.XY, out _))
                 return false;
-            
+
             return true;
         }
 
