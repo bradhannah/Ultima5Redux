@@ -1184,6 +1184,24 @@ namespace Ultima5Redux.Maps
                     // the top most unit is NOT a combat unit, so they hit nothing!
                     if (opponentMapUnit is not CombatMapUnit opponentCombatMapUnit)
                     {
+                        TileReference tileReference = GetTileReference(actionPosition);
+
+                        if (tileReference.Index == (int)TileReference.SpriteIndex.Portcullis)
+                        {
+                            attackStr = "";
+                            // this is for sound effects likely
+                            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OpenPortcullis));
+                            // this is to actually replace the tile
+                            GameStateReference.State.TheVirtualMap.SetOverridingTileReferece(
+                                GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    .BrickFloor), actionPosition);
+                            // Not sure I need this - but maybe I will react visually 
+                            turnResults.PushTurnResult(new TileOverrideOnCombatMap(actionPosition,
+                                GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    .BrickFloor)));
+                            return;
+                        }
+
                         attackStr += "nothing with ";
                         if (_currentCombatItemQueue == null)
                         {
@@ -1530,6 +1548,26 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new Ultima5ReduxException(
                         "Someone is trying to walk to determine they can walk on an unfamiliar WalkableType");
+            }
+        }
+
+        // public List<VirtualMap.AggressiveMapUnitInfo> TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
+        //     out bool bPushedAThing, TurnResults turnResults)
+        public void TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
+            out bool bPushedAThing, TurnResults turnResults)
+        {
+            bPushedAThing = false;
+            Point2D adjustedPos = avatarXy.GetAdjustedPosition(direction);
+
+            TileReference adjustedTileReference = GameStateReference.State.TheVirtualMap.GetTileReference(adjustedPos);
+
+            if (adjustedTileReference.Index == (int)TileReference.SpriteIndex.Portcullis)
+            {
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OpenPortcullis));
+
+                GameStateReference.State.TheVirtualMap.SetOverridingTileReferece(
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                        .BrickFloor), adjustedPos);
             }
         }
     }

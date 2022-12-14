@@ -25,7 +25,7 @@ Spider1/SPIDERS          ,                  ,3         ,FALSE       ,FALSE      
 Ghost1/GHOSTS            ,                  ,6         ,FALSE       ,FALSE      ,FALSE    ,TRUE           ,TRUE               ,TRUE           ,None           ,0                   ,0         ,0         ,0
 Slime1/SLIME             ,                  ,3         ,FALSE       ,FALSE      ,FALSE    ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,0         ,0         ,0
 Gremlin1/GREMLINS        ,                  ,3         ,FALSE       ,FALSE      ,FALSE    ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,0         ,10        ,10
-Mimic1/MIMICS            ,                  ,8         ,FALSE       ,FALSE      ,FALSE    ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,0         ,0         ,0
+Mimic1/MIMICS            ,                  ,8         ,FALSE       ,FALSE      ,TRUE,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,0         ,0         ,0
 Reaper1/REAPERS          ,                  ,11        ,FALSE       ,FALSE      ,TRUE     ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,0         ,0         ,0
 Gazer1/GAZERS            ,                  ,6         ,FALSE       ,FALSE      ,FALSE    ,TRUE           ,FALSE              ,TRUE           ,None           ,0                   ,0         ,0         ,10
 Shard/x                  ,                  ,0         ,FALSE       ,FALSE      ,TRUE     ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,0         ,0         ,0

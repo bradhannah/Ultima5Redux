@@ -77,9 +77,9 @@ namespace Ultima5Redux
         private static readonly Dictionary<TileReference.SpriteIndex, int> GenericDropAfterKillingEnemy =
             new()
             {
-                { TileReference.SpriteIndex.Nothing, 10 },
+                //{ TileReference.SpriteIndex.Nothing, 10 },
                 { TileReference.SpriteIndex.Chest, 3 },
-                { TileReference.SpriteIndex.BloodSpatter, 3 }
+                { TileReference.SpriteIndex.BloodSpatter, 6 }
                 //{ NonAttackingUnitFactory.DropSprites.DeadBody, 3 }
             };
 

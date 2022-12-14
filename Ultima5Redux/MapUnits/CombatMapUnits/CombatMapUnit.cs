@@ -189,6 +189,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             CombatItemReference.MissileType missileType, out NonAttackingUnit nonAttackingUnitDrop,
             bool bIsEnemyAttacking, bool bForceHit = false)
         {
+            // is it a portcullis in a combat map? When you attack they go away
+            //bool bIsPortcullis = nonA
+            
             bool bIsHit = IsHit(opposingCombatMapUnit, out string debugStr) || bForceHit;
 
             // drop nothing by default

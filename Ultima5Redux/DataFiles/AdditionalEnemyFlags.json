@@ -394,7 +394,7 @@
     "Experience": 8,
     "IsWaterEnemy": false,
     "IsSandEnemy": false,
-    "DoNotMove": false,
+    "DoNotMove": true,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
