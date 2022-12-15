@@ -16,6 +16,8 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public abstract class MapUnit : MapUnitDetails
     {
+        public virtual bool CanStackMapUnitsOnTop => false;
+
         private const double D_TIME_BETWEEN_ANIMATION = 0.25f;
         private const float MAX_VISIBILITY = 5;
         [DataMember(Name = "KeyTileIndex")] private int _keyTileIndex = -1;

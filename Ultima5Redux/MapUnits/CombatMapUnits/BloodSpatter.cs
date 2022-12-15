@@ -9,6 +9,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     [DataContract]
     public sealed class BloodSpatter : NonAttackingUnit
     {
+        public override bool CanStackMapUnitsOnTop => true;
+
         public override bool ExposeInnerItemsOnOpen => false;
 
         public override bool ExposeInnerItemsOnSearch => true;
@@ -30,7 +32,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
         public override bool NonAttackUnitTypeCanBeTrapped => true;
-
+        
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             GenerateItemStack(MapUnitPosition);

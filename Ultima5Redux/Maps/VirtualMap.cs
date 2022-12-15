@@ -603,7 +603,8 @@ namespace Ultima5Redux.Maps
             if (mapUnit is null)
                 bIsWalkable = tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable && !bPortcullisDown;
             else // otherwise we need to evaluate if the vehicle can moved to the tile
-                bIsWalkable = mapUnit.KeyTileReference.IsPassable(forcedAvatarState);
+                bIsWalkable = mapUnit.CanStackMapUnitsOnTop;
+            //KeyTileReference.IsPassable(forcedAvatarState);
 
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
             return bIsWalkable && !bIsAvatarTile;
@@ -1928,7 +1929,7 @@ namespace Ultima5Redux.Maps
                        throw new Ultima5ReduxException("Expected tile override at " + xy);
 
             // the GetTileReference accounts for any forced overrides across the entire world
-            return CurrentMap.GetTileReference(xy);
+            return CurrentMap.GetOriginalTileReference(xy);
         }
 
         /// <summary>

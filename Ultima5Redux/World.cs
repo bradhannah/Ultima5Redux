@@ -550,7 +550,7 @@ namespace Ultima5Redux
 
                         MapUnitPosition avatarPosition = State.TheVirtualMap.TheMapUnits.CurrentAvatarPosition;
                         TileReference currentTile = State.TheVirtualMap.CurrentMap
-                            .GetTileReference(avatarPosition.XY);
+                            .GetOriginalTileReference(avatarPosition.XY);
 
                         if (!State.TheVirtualMap.IsAvatarRidingSomething &&
                             aggressiveMapUnitInfo.AttackingMapUnit is Enemy enemy &&

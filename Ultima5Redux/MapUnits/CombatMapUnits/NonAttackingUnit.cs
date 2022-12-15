@@ -50,11 +50,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [DataMember]
         public TrapComplexity CurrentTrapComplexity { get; protected set; } = TrapComplexity.Simple;
 
-        [DataMember]
-        public bool HasBeenOpened { get; set; } = false;
+        [DataMember] public bool HasBeenOpened { get; set; }
 
-        [DataMember]
-        public bool HasBeenSearched { get; set; } = false;
+        [DataMember] public bool HasBeenSearched { get; set; }
 
         [DataMember]
         public bool IsTrapped => Trap != TrapType.NONE;

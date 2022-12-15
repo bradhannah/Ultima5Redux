@@ -20,6 +20,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead, None
         }
 
+
         [IgnoreDataMember]
         internal HitState CurrentHitState
         {

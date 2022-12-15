@@ -129,7 +129,10 @@ namespace Ultima5Redux.Maps
                 // sometimes characters are null because they don't exist - and that is OK
             {
                 if (!mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, nFloor)) continue;
-
+                // TEST: this may break stuff
+                // if you can stack map units, then we will just leave it out of the list since this is 
+                // used to set walkable tiles
+                if (mapUnit.CanStackMapUnitsOnTop) continue;
                 // check to see if the particular SPECIAL map unit is in your inventory, if so, then we exclude it
                 // for example it looks for crown, sceptre and amulet
                 if (!GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(
@@ -160,7 +163,7 @@ namespace Ultima5Redux.Maps
 
         public TileOverrideReference GetTileOverride(in Point2D xy) => XYOverrides[xy];
 
-        public TileReference GetTileReference(in Point2D xy)
+        internal TileReference GetOriginalTileReference(in Point2D xy)
         {
             if (IsXYOverride(xy, TileOverrideReference.TileType.Primary))
                 return GameReferences.Instance.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
@@ -259,7 +262,8 @@ namespace Ultima5Redux.Maps
         protected bool IsTileWalkable(in Point2D xy, WalkableType walkableType)
         {
             if (IsOpenDoor(xy)) return true;
-            TileReference tileReference = GetTileReference(xy);
+            TileReference tileReference = GameStateReference.State.TheVirtualMap.GetTileReference(xy);
+            //GetOriginalTileReference(xy);
             return IsTileWalkable(tileReference, walkableType);
         }
 
@@ -358,7 +362,8 @@ namespace Ultima5Redux.Maps
             _testForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY] = true;
 
             // if it blocks light then we make it visible but do not make subsequent tiles visible
-            TileReference tileReference = GetTileReference(adjustedPosition);
+            TileReference tileReference = GameStateReference.State.TheVirtualMap.GetTileReference(adjustedPosition);
+            //GetOriginalTileReference(adjustedPosition);
 
             bool bBlocksLight = tileReference.BlocksLight // if it says it blocks light AND 
                                 && !bFirst // it is not the first tile (aka the one you are on) AND
@@ -495,7 +500,7 @@ namespace Ultima5Redux.Maps
 
         public void SetOpenDoor(in Point2D xy)
         {
-            TileReference tileReference = GetTileReference(xy);
+            TileReference tileReference = GetOriginalTileReference(xy);
             Debug.Assert(TileReferences.IsDoor(tileReference.Index),
                 "you tried to set an open door on a tile that is not an open door");
 
@@ -509,7 +514,7 @@ namespace Ultima5Redux.Maps
 
         public void CloseDoor(in Point2D xy)
         {
-            TileReference tileReference = GetTileReference(xy);
+            TileReference tileReference = GetOriginalTileReference(xy);
             Debug.Assert(TileReferences.IsDoor(tileReference.Index),
                 "you tried to set an open door on a tile that is not an open door");
             Debug.Assert(_openDoors.ContainsKey(xy), "tried to close a door that wasn't open");
