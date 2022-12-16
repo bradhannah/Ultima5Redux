@@ -1496,6 +1496,13 @@ namespace Ultima5Redux.Maps
             // if the best combat player is attackable and reachable, then we do just that!
             if (bestCombatPlayer != null)
             {
+                if (enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.StealsFood)
+                    && OddsAndLogic.DidEnemyStealFood())
+                {
+                    GameStateReference.State.PlayerInventory.TheProvisions.FoodStolen(turnResults, enemy.EnemyReference,
+                        OddsAndLogic.DEFAULT_FOOD_STOLEN);
+                }
+
                 CombatMapUnit.HitState hitState = enemy.Attack(turnResults, bestCombatPlayer,
                     enemy.EnemyReference.TheDefaultEnemyStats.Damage, enemy.EnemyReference.TheMissileType,
                     out NonAttackingUnit _, true);

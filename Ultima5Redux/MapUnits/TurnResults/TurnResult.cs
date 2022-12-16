@@ -39,7 +39,8 @@
             ActionShoppeKeeperInteraction, NoOneToTalkTo, CantTalkSleeping, ComeBackLater, NotTalkative,
             NpcTalkInteraction, DontHurtMeAfraid, AdvanceClockNoComputation, Combat_CombatPlayerMissedTarget,
             KarmaChanged, ProvisionQuantityChanged, NpcFreedFromManacles, NpcFreedFromStocks, GuardExtortion,
-            NpcJoinedParty, GoToJail, GoToBlackthornDungeon, PoofHorse, OpenPortcullis, OverrideCombatMapTile
+            NpcJoinedParty, GoToJail, GoToBlackthornDungeon, PoofHorse, OpenPortcullis, OverrideCombatMapTile,
+            FoodStolenByEnemy
         }
 
         public bool IsSuccessfulMovement

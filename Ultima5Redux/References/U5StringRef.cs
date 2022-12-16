@@ -204,7 +204,12 @@ namespace Ultima5Redux.References
                 {
                     typeof(DataOvlReference.Battle2Strings),
                     dataRef.GetDataChunk(DataOvlReference.DataChunkName.BATTLE2).GetChunkAsStringList()
+                },
+                {
+                    typeof(DataOvlReference.ResponseToKeystroke),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.RESPONSE_TO_KEYSTROKE).GetChunkAsStringList()
                 }
+
             };
 
         public static string ThouDostFind(string thingYouFound) =>

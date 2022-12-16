@@ -12,111 +12,41 @@ namespace Ultima5Redux.References
     /// </summary>
     public class DataOvlReference
     {
-        //     [0] = {string} "Failed!\n"
-        // [1] = {string} " missed!\n"
-        // [2] = {string} " possessed!\n"
-        // [3] = {string} " reappears!"
-        // [4] = {string} " disappears!"
-        // [5] = {string} " gates in a daemon!\n"
-        // [6] = {string} " grazed!\n"
-        // [7] = {string} " killed!\n"
-        // [8] = {string} " slept!\n"
-        // [9] = {string} " dragged under!\n"
-        // [10] = {string} " hit!\n"
-        // [11] = {string} " barely wounded!\n"
-        // [12] = {string} " lightly wounded!\n"
-        // [13] = {string} " heavily wounded!\n"
-        // [14] = {string} " critical!\n"
-        // [15] = {string} " interferes!\n"
-        // [16] = {string} "Aim! "
-        // [17] = {string} "Aim! "
-        // [18] = {string} "Nothing!\n"
-        // [19] = {string} ":\n"
-        // [20] = {string} "Attack-"
-        // [21] = {string} "Attack-"
-
         public enum AdditionalStrings
         {
             THE_SCEPTRE_IS_RECLAIMED_BANG_N, A_RING_HAS_VANISHED_BANG_N, STARS_CONFLICT_STARS_N_N
         }
 
-        //     [0] = {string} "WIZARDS"
-        // [1] = {string} "BARD"
-        // [2] = {string} "FIGHTER"
-        // [3] = {string} "x"
-        // [4] = {string} "VILLAGER"
-        // [5] = {string} "MERCHANT"
-        // [6] = {string} "JESTER"
-        // [7] = {string} "BARD"
-        // [8] = {string} "PIRATES"
-        // [9] = {string} "x"
-        // [10] = {string} "CHILD"
-        // [11] = {string} "BEGGAR"
-        // [12] = {string} "GUARDS"
-        // [13] = {string} "x"
-        // [14] = {string} "BLACKTHORN"
-        // [15] = {string} "LORD BRITISH"
-        // [16] = {string} "SEA HORSES"
-        // [17] = {string} "SQUIDS"
-        // [18] = {string} "SEA SERPENTS"
-        // [19] = {string} "SHARKS"
-        // [20] = {string} "GIANT RATS"
-        // [21] = {string} "BATS"
-        // [22] = {string} "SPIDERS"
-        // [23] = {string} "GHOSTS"
-        // [24] = {string} "SLIME"
-        // [25] = {string} "GREMLINS"
-        // [26] = {string} "MIMICS"
-        // [27] = {string} "REAPERS"
-        // [28] = {string} "GAZERS"
-        // [29] = {string} "x"
-        // [30] = {string} "GARGOYLE"
-        // [31] = {string} "INSECTS"
-        // [32] = {string} "ORCS"
-        // [33] = {string} "SKELETONS"
-        // [34] = {string} "SNAKES"
-        // [35] = {string} "ETTINS"
-        // [36] = {string} "HEADLESSES"
-        // [37] = {string} "WISPS"
-        // [38] = {string} "DAEMONS"
-        // [39] = {string} "DRAGONS"
-        // [40] = {string} "SAND TRAPS"
-        // [41] = {string} "TROLLS"
-        // [42] = {string} "x"
-        // [43] = {string} "x"
-        // [44] = {string} "MONGBATS"
-        // [45] = {string} "CORPSERS"
-        // [46] = {string} "ROTWORMS"
-        // [47] = {string} "SHADOW LORD"
 
         public enum Battle2Strings
         {
             N_BATTLE_IS_LOST_BANG, N_VICTORY_BANG_N, _TELEPORTS_BANG_N, THY_SWORD_HATH_SHATTERED_BANG_N, _VANISHES_BANG,
             _DIVIDES_BANG_N, _IS_POISONED_BANG_N, _REGURGITATED_BANG_N, Q_DQ, Q_DQ2, Q_DQ3, N_N_YOUR_RESPONSE_Q_N_COLON,
             N_N, N_N2, _IS_SLICED_IN_HALF_BANG_, _DIE_BANG_DQ_, N_N3, N_N4, N_THOU_ART_SUBDUED_AND_BLINDFOLDED_BANG,
+
             N_N_STRONG_GUARDS_DRAG_THEE_AWAY_BANG
+            //     [0] = {string} "\nBATTLE IS LOST!"
+            // [1] = {string} "\nVICTORY!\n"
+            // [2] = {string} " teleports!\n"
+            // [3] = {string} "Thy sword hath shattered!\n"
+            // [4] = {string} " vanishes!"
+            // [5] = {string} " divides!\n"
+            // [6] = {string} " is poisoned!\n"
+            // [7] = {string} " regurgitated!\n"
+            // [8] = {string} "?""
+            // [9] = {string} "?""
+            // [10] = {string} "?""
+            // [11] = {string} "\n\nYour response?\n:"
+            // [12] = {string} "\n\n"
+            // [13] = {string} "\n\n"
+            // [14] = {string} " is sliced in half! "
+            // [15] = {string} " die!" "
+            // [16] = {string} "\n\n"
+            // [17] = {string} "\n\n"
+            // [18] = {string} "\nThou art subdued and blindfolded!"
+            // [19] = {string} "\n\nStrong guards drag thee away!"
         }
 
-        //     [0] = {string} "\nBATTLE IS LOST!"
-        // [1] = {string} "\nVICTORY!\n"
-        // [2] = {string} " teleports!\n"
-        // [3] = {string} "Thy sword hath shattered!\n"
-        // [4] = {string} " vanishes!"
-        // [5] = {string} " divides!\n"
-        // [6] = {string} " is poisoned!\n"
-        // [7] = {string} " regurgitated!\n"
-        // [8] = {string} "?""
-        // [9] = {string} "?""
-        // [10] = {string} "?""
-        // [11] = {string} "\n\nYour response?\n:"
-        // [12] = {string} "\n\n"
-        // [13] = {string} "\n\n"
-        // [14] = {string} " is sliced in half! "
-        // [15] = {string} " die!" "
-        // [16] = {string} "\n\n"
-        // [17] = {string} "\n\n"
-        // [18] = {string} "\nThou art subdued and blindfolded!"
-        // [19] = {string} "\n\nStrong guards drag thee away!"
 
         public enum BattleStrings
         {
@@ -124,6 +54,28 @@ namespace Ultima5Redux.References
             _GATES_IN_A_DAEMON_BANG_N, _GRAZED_BANG_N, _KILLED_BANG_N, _SLEPT_BANG_N, _DRAGGED_UNDER_BANG_N,
             _HIT_BANG_N, _BARELY_WOUNDED_BANG_N, _LIGHTLY_WOUNDED_BANG_N, HEAVILY_WOUNDED_BANG_N, _CRITICAL_BANG_N,
             _INTERFERES_BANG_N, AIM_BANG_, AIM_BANG_2, NOTHING_BANG_N, COLON_N, ATTACK_DASH, ATTACK_DASH_2
+            //     [0] = {string} "Failed!\n"
+            // [1] = {string} " missed!\n"
+            // [2] = {string} " possessed!\n"
+            // [3] = {string} " reappears!"
+            // [4] = {string} " disappears!"
+            // [5] = {string} " gates in a daemon!\n"
+            // [6] = {string} " grazed!\n"
+            // [7] = {string} " killed!\n"
+            // [8] = {string} " slept!\n"
+            // [9] = {string} " dragged under!\n"
+            // [10] = {string} " hit!\n"
+            // [11] = {string} " barely wounded!\n"
+            // [12] = {string} " lightly wounded!\n"
+            // [13] = {string} " heavily wounded!\n"
+            // [14] = {string} " critical!\n"
+            // [15] = {string} " interferes!\n"
+            // [16] = {string} "Aim! "
+            // [17] = {string} "Aim! "
+            // [18] = {string} "Nothing!\n"
+            // [19] = {string} ":\n"
+            // [20] = {string} "Attack-"
+            // [21] = {string} "Attack-"
         }
 
         public enum ChitChatStrings
@@ -131,6 +83,24 @@ namespace Ultima5Redux.References
             DOST_THOU_PAY, YES_BANG, NO_BANG, GET_HORSE_OUTTA_HERE, HALF_TO_CHARITY, GUARD_DEMANDS, XX_GP_TRIBUTE,
             GIVE_PASSWORD_BADGE, YOUR_RESPONSE_Q, PASS_FRIEND, GUARD_NO_RESPONSE, NO_RESPONSE, DONT_HURT_ME,
             MERCH_SEE_ME_AT_SHOP1, MERCH_SEE_ME_AT_SHOP2, NOBODY_HERE, ZZZ, N_NO_RESPONSE_N
+            // [0] = {string} "\n\nDost thou pay?\n\n:"
+            // [1] = {string} "Yes\n"
+            // [2] = {string} "No!\n"
+            // [3] = {string} "A merchant says:\n"GET THAT HORSE OUT OF HERE!"\n"
+            // [4] = {string} "Thou wilt give\nhalf thy gold to\ncharity!"
+            // [5] = {string} "A guard demands\na "
+            // [6] = {string} " gp tribute\nto Blackthorn!"
+            // [7] = {string} "Give now the\npassword, bearer\nof the Badge!"
+            // [8] = {string} "\n\nYour response?\n"
+            // [9] = {string} "Pass, friend!"
+            // [10] = {string} "The guard offers\nno response!\n"
+            // [11] = {string} "No response!\n"
+            // [12] = {string} "Don't hurt me!\nPlease go away!"
+            // [13] = {string} "A merchant says:\n"Come see me at\nmy shoppe, "
+            // [14] = {string} "when\nit's open!"\n"
+            // [15] = {string} "\nNobody's here!\n"
+            // [16] = {string} "\n"Zzzzzz..."\n"
+            // [17] = {string} "\nNo response!\n"
         }
 
         /// <summary>
@@ -167,12 +137,10 @@ namespace Ultima5Redux.References
             BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
             YELLING, WORLD2, MONSTER_NAMES_MIXED, MONSTER_NAMES_UPPER, ENEMY_FLAGS, ENEMY_ATTACK_RANGE,
             ENEMY_RANGE_THING, ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS, BATTLE, ADDITIONAL, BATTLE2, SEARCH_OBJECT_ID,
-            SEARCH_OBJECT_QUALITY, SEARCH_OBJECT_LOCATION, SEARCH_OBJECT_FLOOR, SEARCH_OBJECT_X, SEARCH_OBJECT_Y
+            SEARCH_OBJECT_QUALITY, SEARCH_OBJECT_LOCATION, SEARCH_OBJECT_FLOOR, SEARCH_OBJECT_X, SEARCH_OBJECT_Y,
+            RESPONSE_TO_KEYSTROKE
         }
-        // FURL!\n"
-        // [3] = {string} "HOIST!\n"
-        // [4] = {string} "what?\n:"
-        // [5] = {string} "Nothing\n"
+
 
         public enum EnemyIndividualNamesMixed
         {
@@ -181,56 +149,56 @@ namespace Ultima5Redux.References
             GREMLIN, MIMIC, REAPER, GAZER, CRAWLER, // appears to be unused asset, replaced by quest items 
             GARGOYLE, INSECT_SWARM, ORC, SKELETON, PYTHON, ETTIN, HEADLESS, WISP, DAEMON, DRAGON, SAND_TRAP, TROLL,
             MONGBAT, CORPSER, ROT_WORM, SHADOW_LORD
+            //     [0] = {string} "Mage"
+            // [1] = {string} "Bard"
+            // [2] = {string} "Fighter"
+            // [3] = {string} "Avatar"
+            // [4] = {string} "Villager"
+            // [5] = {string} "Merchant"
+            // [6] = {string} "Jester"
+            // [7] = {string} "Bard"
+            // *
+            // *
+            // [8] = {string} "Child"
+            // [9] = {string} "Beggar"
+            // [10] = {string} "Guard"
+            // [11] = {string} "Wanderer"
+            // [12] = {string} "Blackthorn"
+            // [13] = {string} "Lord British"
+            // [14] = {string} "Sea Horse"
+            // [15] = {string} "Squid"
+            // [16] = {string} "Sea Serpent"
+            // [17] = {string} "Shark"
+            // [18] = {string} "Giant Rat"
+            // [19] = {string} "Bat"
+            // [20] = {string} "Giant Spider"
+            // [21] = {string} "Ghost"
+            // [22] = {string} "Slime"
+            // [23] = {string} "Gremlin"
+            // [24] = {string} "Mimic"
+            // [25] = {string} "Reaper"
+            // [26] = {string} "Gazer"
+            // [27] = {string} "Crawler"
+            // [28] = {string} "Gargoyle"
+            // [29] = {string} "Insect Swarm"
+            // [30] = {string} "Orc"
+            // [31] = {string} "Skeleton"
+            // [32] = {string} "Python"
+            // [33] = {string} "Ettin"
+            // [34] = {string} "Headless"
+            // [35] = {string} "Wisp"
+            // [36] = {string} "Daemon"
+            // [37] = {string} "Dragon"
+            // [38] = {string} "Sand Trap"
+            // [39] = {string} "Troll"
+            // *
+            // *
+            // [40] = {string} "Mongbat"
+            // [41] = {string} "Corpser"
+            // [42] = {string} "Rot Worm"
+            // [43] = {string} "Shadow Lord"
         }
 
-        //     [0] = {string} "Mage"
-        // [1] = {string} "Bard"
-        // [2] = {string} "Fighter"
-        // [3] = {string} "Avatar"
-        // [4] = {string} "Villager"
-        // [5] = {string} "Merchant"
-        // [6] = {string} "Jester"
-        // [7] = {string} "Bard"
-        // *
-        // *
-        // [8] = {string} "Child"
-        // [9] = {string} "Beggar"
-        // [10] = {string} "Guard"
-        // [11] = {string} "Wanderer"
-        // [12] = {string} "Blackthorn"
-        // [13] = {string} "Lord British"
-        // [14] = {string} "Sea Horse"
-        // [15] = {string} "Squid"
-        // [16] = {string} "Sea Serpent"
-        // [17] = {string} "Shark"
-        // [18] = {string} "Giant Rat"
-        // [19] = {string} "Bat"
-        // [20] = {string} "Giant Spider"
-        // [21] = {string} "Ghost"
-        // [22] = {string} "Slime"
-        // [23] = {string} "Gremlin"
-        // [24] = {string} "Mimic"
-        // [25] = {string} "Reaper"
-        // [26] = {string} "Gazer"
-        // [27] = {string} "Crawler"
-        // [28] = {string} "Gargoyle"
-        // [29] = {string} "Insect Swarm"
-        // [30] = {string} "Orc"
-        // [31] = {string} "Skeleton"
-        // [32] = {string} "Python"
-        // [33] = {string} "Ettin"
-        // [34] = {string} "Headless"
-        // [35] = {string} "Wisp"
-        // [36] = {string} "Daemon"
-        // [37] = {string} "Dragon"
-        // [38] = {string} "Sand Trap"
-        // [39] = {string} "Troll"
-        // *
-        // *
-        // [40] = {string} "Mongbat"
-        // [41] = {string} "Corpser"
-        // [42] = {string} "Rot Worm"
-        // [43] = {string} "Shadow Lord"
 
         public enum EnemyOutOfCombatNamesUpper
         {
@@ -239,6 +207,54 @@ namespace Ultima5Redux.References
             GHOSTS, SLIME, GREMLINS, MIMICS, REAPERS, GAZERS, X_QUEST_ITEMS, GARGOYLE, INSECTS, ORCS, SKELETONS, SNAKES,
             ETTINS, HEADLESSES, WISPS, DAEMONS, DRAGONS, SAND_TRAPS, TROLLS, X_FIELDS, X_WHIRLPOOL, MONGBATS, CORPSERS,
             ROT_WORMS, SHADOW_LORD
+            //     [0] = {string} "WIZARDS"
+            // [1] = {string} "BARD"
+            // [2] = {string} "FIGHTER"
+            // [3] = {string} "x"
+            // [4] = {string} "VILLAGER"
+            // [5] = {string} "MERCHANT"
+            // [6] = {string} "JESTER"
+            // [7] = {string} "BARD"
+            // [8] = {string} "PIRATES"
+            // [9] = {string} "x"
+            // [10] = {string} "CHILD"
+            // [11] = {string} "BEGGAR"
+            // [12] = {string} "GUARDS"
+            // [13] = {string} "x"
+            // [14] = {string} "BLACKTHORN"
+            // [15] = {string} "LORD BRITISH"
+            // [16] = {string} "SEA HORSES"
+            // [17] = {string} "SQUIDS"
+            // [18] = {string} "SEA SERPENTS"
+            // [19] = {string} "SHARKS"
+            // [20] = {string} "GIANT RATS"
+            // [21] = {string} "BATS"
+            // [22] = {string} "SPIDERS"
+            // [23] = {string} "GHOSTS"
+            // [24] = {string} "SLIME"
+            // [25] = {string} "GREMLINS"
+            // [26] = {string} "MIMICS"
+            // [27] = {string} "REAPERS"
+            // [28] = {string} "GAZERS"
+            // [29] = {string} "x"
+            // [30] = {string} "GARGOYLE"
+            // [31] = {string} "INSECTS"
+            // [32] = {string} "ORCS"
+            // [33] = {string} "SKELETONS"
+            // [34] = {string} "SNAKES"
+            // [35] = {string} "ETTINS"
+            // [36] = {string} "HEADLESSES"
+            // [37] = {string} "WISPS"
+            // [38] = {string} "DAEMONS"
+            // [39] = {string} "DRAGONS"
+            // [40] = {string} "SAND TRAPS"
+            // [41] = {string} "TROLLS"
+            // [42] = {string} "x"
+            // [43] = {string} "x"
+            // [44] = {string} "MONGBATS"
+            // [45] = {string} "CORPSERS"
+            // [46] = {string} "ROTWORMS"
+            // [47] = {string} "SHADOW LORD"
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -256,59 +272,28 @@ namespace Ultima5Redux.References
             Nothing = 0xFF
         }
 
-        //        [0]	"Zzzzzz...\n\n"	string
-        //[1]	"Ambushed!\n\n"	string
-        //[2]	"Party rested!\n"	string
-        //[3]	"No effect...\n"	string
-        //[4]	"For how many hours? "	string
-        //[5]	"Zzzzzzz...\n"	string
-        //[6]	"Thrown out of bed!\n"	string
-        //[7]	"\nOn foot\n"	string
-        //[8]	"\nOn foot\n"	string
-        //[9]	"\nNot here!\n"	string
-        //[10]	"\"Nay!\"\n"	string
-        //[11]	"horse\n"	string
-        //[12]	"carpet\n"	string
-        //[13]	"skiff\n"	string
-        //[14]	"Ship\n"	string
-        //[15]	"\nDANGER: SHIP BADLY DAMAGED!\n"	string
-        //[16]	"\nWARNING: NO SKIFFS ON BOARD!\n"	string
-        //[17]	"What?\n"	string
-        //[18]	"What?\n"	string
-        //[19]	"Fire broadsides only!\n"	string
-        //[20]	"What?\n"	string
-        //[21]	"What?\n"	string
-        //[22]	"BOOOM!\n"	string
-        //[23]	"Door destroyed!\n"	string
-        //[24]	"None owned!\n"	string
-        //[25]	"\n\nSwap "	string
-        //[26]	"nobody!\n"	string
-        //[27]	"\n\n"	string
-//        [28]	" must lead!\n"	string
-//[29]	"\nwith "	string
-//[30]	"nobody!\n"	string
-//[31]	"\n\n"	string
-//[32]	" must lead!\n"	string
-//[33]	"!\n"	string
-//[34]	"\nNot here!\n"	string
-//[35]	"what?\n"	string
-//[36]	"\nUnder sail!\n"	string
-//[37]	"carpet!\n"	string
-//[38]	"\nNo land nearby!\n"	string
-//[39]	"\nNot here!\n"	string
-//[40]	"horse!\n"	string
-//[41]	"\nNo land nearby!\n"	string
-//[42]	"\nNot here!\n"	string
-//[43]	"skiff!\n"	string
-//[44]	"ship!\n"	string
-//[45]	"\nNo skiffs on board!\n"	string
-
         public enum EquippingStrings
         {
             ITEM_COLON, CANT_CHANGE_IN_BATTLE, AMBFDTPRS, NO_AMMO_BANG, REMOVE_HELM_FIRST_BANG,
             REMOVE_ARMOUR_FIRST_BANG, FREE_ONE_HAND_BANG, FREE_BOTH_HANDS_FIRST_BANG, REMOVE_THY_AMULET_BANG,
             ONLY_ONE_RING_BANG, NOT_STRONG_ENOUGH_BANG, N_N_RING_VANISHES_N, DONE_N, NONE_BANG_N,
             THOU_ART_EMPTY_N_HANDED_BANG_N, ITEM_COLON2
+            //            [0] "Item: "	string
+            //[1]	"Thou canst not change armour in heated battle!"	string
+            //[2]	"AMBFDTPRS"	string
+            //[3]	"Thou hast no ammunition for that weapon!"	string
+            //[4]	"Remove first thy present helm!"	string
+            //[5]	"Thou must first remove thine other armour!"	string
+            //[6]	"Thou must free one of thy hands first!"	string
+            //[7]	"Both hands must be free before thou canst wield that!"	string
+            //[8]	"Thou must remove thine other amulet!"	string
+            //[9]	"Only one magic ring may be worn at a time!"	string
+            //[10]	"Thou art not strong enough!"	string
+            //[11]	"\n\nRing vanishes!\n"	string
+            //[12]	"Done\n"	string
+            //[13]	"None!\n"	string
+            //[14]	"Thou art empty-\nhanded!\n"	string
+            //[15]	"Item: "	string
         }
 
         public enum ExclaimStrings
@@ -323,6 +308,57 @@ namespace Ultima5Redux.References
             NEGATE_TIME_BANG_N, POTION_N, HEALED_BANG_N, POISON_CURED_BANG_N, POISONED_BANG_N, SLEPT_BANG_N,
             POOF_BANG_N, INVISIBLE_BANG_N, N_NO_NOTICEABLE_EFFECT_NOW_BANG_N, MOONSTONE_SPACE, BURIED_BANG_N,
             CANNOT_BE_BURIED_HERE_BANG_N, GEM_SHARD_N_N_THOU_DOES_HOLD
+            // [43] = {string} "Slept!\n"
+            // [44] = {string} "Poof!\n"
+            // [45] = {string} "Invisible!\n"
+            // [46] = {string} "\nNo noticeable effect now!\n"
+            // [47] = {string} "Moonstone "
+            // [48] = {string} "buried!\n"
+            // [49] = {string} "cannot be buried here!\n"
+            // [50] = {string} "Gem Shard\n\nThou dost hold above t"
+            // [0] = {string} "No effect!\n"
+            // [1] = {string} "Pushed!\n"
+            // [2] = {string} "Pulled!\n"
+            // [3] = {string} "Won't budge!\n"
+            // [4] = {string} "Won't budge\n"
+            // [5] = {string} "Escape"
+            // [6] = {string} "-Not here!\n"
+            // [7] = {string} "-Not yet!\n"
+            // [8] = {string} "5346POOF!\n"
+            // [9] = {string} "Disarmed!\n"
+            // [10] = {string} "Chest opened!\n"
+            // [11] = {string} "Creature: "
+            // [12] = {string} " charmed!\n"
+            // [13] = {string} "Creature: "
+            // [14] = {string} "Creature: "
+            // [15] = {string} "To phase: "
+            // [16] = {string} "Magic absorbed!\n"
+            // [17] = {string} "Spell name:\n:"
+            // [18] = {string} "None!\n"
+            // [19] = {string} "No effect!\n"
+            // [20] = {string} "Absorbed!\n"
+            // [21] = {string} "Not here!\n"
+            // [22] = {string} "None mixed!\n"
+            // [23] = {string} "M.P. too low!\n"
+            // [24] = {string} "Success!\n"
+            // [25] = {string} "Failed!\n"
+            // [26] = {string} "Scroll\n\n"
+            // [27] = {string} "Light!\n"
+            // [28] = {string} "Wind change!\n"
+            // [29] = {string} "Protection!\n"
+            // [30] = {string} "Negate magic!\n"
+            // [31] = {string} "View!\n"
+            // [32] = {string} "Not here!\n"
+            // [33] = {string} "Summon Daemon!\n"
+            // [34] = {string} "Not here!\n"
+            // [35] = {string} "Resurrection!\n"
+            // [36] = {string} "Not here!\n"
+            // [37] = {string} "No effect!\n"
+            // [38] = {string} "Negate time!\n"
+            // [39] = {string} "Potion\n"
+            // [40] = {string} "Healed!\n"
+            // [41] = {string} "Poison cured!\n"
+            // [42] = {string} "POISONED!\n"    
         }
 
         public enum GetThingsStrings
@@ -377,24 +413,7 @@ namespace Ultima5Redux.References
         // [29] = {string} "a heavy door.\n"
         // [30] = {string} "a heavy door.\n"
         public enum KlimbingStrings { WITH_WHAT = 0, ON_FOOT, IMPASSABLE, NOT_CLIMABLE, FELL }
-        // [0] = {string} "\n\nDost thou pay?\n\n:"
-        // [1] = {string} "Yes\n"
-        // [2] = {string} "No!\n"
-        // [3] = {string} "A merchant says:\n"GET THAT HORSE OUT OF HERE!"\n"
-        // [4] = {string} "Thou wilt give\nhalf thy gold to\ncharity!"
-        // [5] = {string} "A guard demands\na "
-        // [6] = {string} " gp tribute\nto Blackthorn!"
-        // [7] = {string} "Give now the\npassword, bearer\nof the Badge!"
-        // [8] = {string} "\n\nYour response?\n"
-        // [9] = {string} "Pass, friend!"
-        // [10] = {string} "The guard offers\nno response!\n"
-        // [11] = {string} "No response!\n"
-        // [12] = {string} "Don't hurt me!\nPlease go away!"
-        // [13] = {string} "A merchant says:\n"Come see me at\nmy shoppe, "
-        // [14] = {string} "when\nit's open!"\n"
-        // [15] = {string} "\nNobody's here!\n"
-        // [16] = {string} "\n"Zzzzzz..."\n"
-        // [17] = {string} "\nNo response!\n"
+
 
         public enum LocationStrings
         {
@@ -407,57 +426,6 @@ namespace Ultima5Redux.References
             Shame = 32, Hythloth = 33, Doom = 34
         }
 
-        // [43] = {string} "Slept!\n"
-        // [44] = {string} "Poof!\n"
-        // [45] = {string} "Invisible!\n"
-        // [46] = {string} "\nNo noticeable effect now!\n"
-        // [47] = {string} "Moonstone "
-        // [48] = {string} "buried!\n"
-        // [49] = {string} "cannot be buried here!\n"
-        // [50] = {string} "Gem Shard\n\nThou dost hold above t"
-        // [0] = {string} "No effect!\n"
-        // [1] = {string} "Pushed!\n"
-        // [2] = {string} "Pulled!\n"
-        // [3] = {string} "Won't budge!\n"
-        // [4] = {string} "Won't budge\n"
-        // [5] = {string} "Escape"
-        // [6] = {string} "-Not here!\n"
-        // [7] = {string} "-Not yet!\n"
-        // [8] = {string} "5346POOF!\n"
-        // [9] = {string} "Disarmed!\n"
-        // [10] = {string} "Chest opened!\n"
-        // [11] = {string} "Creature: "
-        // [12] = {string} " charmed!\n"
-        // [13] = {string} "Creature: "
-        // [14] = {string} "Creature: "
-        // [15] = {string} "To phase: "
-        // [16] = {string} "Magic absorbed!\n"
-        // [17] = {string} "Spell name:\n:"
-        // [18] = {string} "None!\n"
-        // [19] = {string} "No effect!\n"
-        // [20] = {string} "Absorbed!\n"
-        // [21] = {string} "Not here!\n"
-        // [22] = {string} "None mixed!\n"
-        // [23] = {string} "M.P. too low!\n"
-        // [24] = {string} "Success!\n"
-        // [25] = {string} "Failed!\n"
-        // [26] = {string} "Scroll\n\n"
-        // [27] = {string} "Light!\n"
-        // [28] = {string} "Wind change!\n"
-        // [29] = {string} "Protection!\n"
-        // [30] = {string} "Negate magic!\n"
-        // [31] = {string} "View!\n"
-        // [32] = {string} "Not here!\n"
-        // [33] = {string} "Summon Daemon!\n"
-        // [34] = {string} "Not here!\n"
-        // [35] = {string} "Resurrection!\n"
-        // [36] = {string} "Not here!\n"
-        // [37] = {string} "No effect!\n"
-        // [38] = {string} "Negate time!\n"
-        // [39] = {string} "Potion\n"
-        // [40] = {string} "Healed!\n"
-        // [41] = {string} "Poison cured!\n"
-        // [42] = {string} "POISONED!\n"    
 
         public enum LongArmourString
         {
@@ -488,37 +456,48 @@ namespace Ultima5Redux.References
         }
 
         public enum ShardsStrings { FALSEHOOD, HATRED, COWARDICE }
-        // [22] = {string} "\n\n"Who needs my aid?" "
-        // [23] = {string} "No one"
-        // [24] = {string} "for % gold.\n\nWilt thou\npay?" "
-        // [25] = {string} "Yes"
-        // [26] = {string} "No"
-        // [27] = {string} "No"
-        // [28] = {string} "Yes\n\n"
-        // [29] = {string} ""We have powers to Cure, Heal, or Resurrect."\n"
-        // [30] = {string} "says $.\n\n"What is the nature of thy need?" "
-        // [31] = {string} "Curing"
-        // [32] = {string} "\n\n""
-        // [33] = {string} "Receive now the Light!""
-        // [34] = {string} "I can cure thy poisoned body "
-        // [35] = {string} "Healing"
-        // [36] = {string} "\n\n""
-        // [37] = {string} "Receive now the Light!""
-        // [38] = {string} "I can heal thee "
-        // [39] = {string} "Resurrect"
-        // [40] = {string} "\n\n""
-        // [41] = {string} "I can raise this unfortunate person from "
-        // [42] = {string} "the dead "
-        // [43] = {string} "Nothing"
-        // [44] = {string} "\n\n"Is there any other way in which I may\n"
-        // [45] = {string} "aid thee?" "
+
 
         public enum ShoppeKeeperBarKeepStrings
         {
             DQ, OF_WHAT_WOULDST_N_THOU_HEAD_MY_N_LORE_COMMA_SP, Q_DQ_N_N_YOU_RESPOND_COLON_N, N_N,
             THAT_I_CANNOT_HELP_THEE_WITH_DOT_N_N, N_N_FAIR_NUFF_Q_DQ, NO_N_N, YES_N_N, SORRY_COMMA_SP, N_SAYS_SP,
             DOT_N_N, NO, YES_N_N_2, DQ_ANYTHING_ELSE_N_FOR_THEE_Q_DQ, NO_2, YES_N_N_3, YELLS_NPC_DOT_N, MILADY, SIR,
+
             Q_DQ
+            // from 0x9f0e-9feb
+            // [0] = {string} """
+            // [1] = {string} "Of what wouldst\nthou hear my\nlore, "
+            // [2] = {string} "?"\n\nYou respond:\n"
+            // [3] = {string} "\n\n"
+            // [4] = {string} ""That, I cannot help thee with.\n\n"
+            // [5] = {string} "\n\nFair 'nuff?" "
+            // [6] = {string} "No\n\n"
+            // [7] = {string} "Yes\n\n"
+            // [8] = {string} ""Sorry, "
+            // [9] = {string} "\nsays "
+            // [10] = {string} ".\n\n"
+            // [11] = {string} "No"
+            // [12] = {string} "Yes\n\n""
+            // [13] = {string} ""Anything else\nfor thee?" "
+            // [14] = {string} "No"
+            // [15] = {string} "Yes\n\n""
+            // [16] = {string} "yells $.\n"
+            // [17] = {string} "milady"
+            // [18] = {string} "sir"
+            // [19] = {string} "?" "
+            // [20] = {string} "Yes"
+            // [21] = {string} "No"
+            // [22] = {string} "F\n\n"
+            // [23] = {string} "Yes"
+            // [24] = {string} "No"
+            // [25] = {string} "Yes\n\n"
+            // [26] = {string} "No"
+            // [27] = {string} "S\n\n"
+            // [28] = {string} "Yes\n\n"
+            // [29] = {string} "No"
+            // [30] = {string} "Yes"
+            // [31] = {string} "No"        
         }
 
         public enum ShoppeKeeperBarKeepStrings2
@@ -533,107 +512,32 @@ namespace Ultima5Redux.References
             BANG_DQ_N_N, N_N_2
         }
 
-// [0] = {string} "a chest!\n"
-// [1] = {string} "a sack of gold!\n"
-// [2] = {string} "a potion!\n"
-// [3] = {string} "a scroll!\n"
-// [4] = {string} "a weapon!\n"
-// [5] = {string} "a shield!\n"
-// [6] = {string} "a ring of keys!\n"
-// [7] = {string} "a gem!\n"
-// [8] = {string} "a helm!\n"
-// [9] = {string} "a ring!\n"
-// [10] = {string} "some armour!\n"
-// [11] = {string} "an amulet!\n"
-// [12] = {string} "some torches!\n"
-// [13] = {string} "some food!\n"
-// [14] = {string} "a strange rock!\n"
-// [15] = {string} "a rotting body!\n"
-// [16] = {string} "a moldy corpse!\n"
-// [17] = {string} "Nothing of note.\n"
-// [18] = {string} "Plague!\n"
-// [19] = {string} "nothing!\n"
-// [20] = {string} "worms!\n"
-// [21] = {string} "guts!\n"
-// [22] = {string} "a bloody pulp!\n"
-// [23] = {string} "food!\n"
-// [24] = {string} "gold!\n"
-// [25] = {string} "no trap!\n"
-// [26] = {string} "a simple trap!\n"
-// [27] = {string} "a complex trap!\n"
-// [28] = {string} "a trap!\n"
-// [29] = {string} "a strange rock!\n"
-// [30] = {string} "mandrake root!"
-// [31] = {string} "mandrake root!"
-// [32] = {string} "nightshade!"
-// [33] = {string} " sprigs of\n"
-// [34] = {string} "\n"
-// [35] = {string} "nothing of note.\n"
-// [36] = {string} "\nYou find:\ndarkness.\n"
-// [37] = {string} "You find:\n"
-// [38] = {string} "Nothing of note.\n"
-// [39] = {string} "Nothing hidden on the ladder.\n"
-// [40] = {string} "No trap\n"
-// [41] = {string} "A simple trap\n"
-// [42] = {string} "A complex trap\n"
-// [43] = {string} "A trap\n"
-// [44] = {string} "Nothing hidden on the fountain.\n"
-// [45] = {string} "Nothing hidden\nin the pit.\n"
-// [46] = {string} "A pit!\n"
-// [47] = {string} "A bomb trap!\n"
-// [48] = {string} "Nothing of note.\n"
-// [49] = {string} "Treasure!\n"
-// [50] = {string} "A sleep field.\n"
-// [51] = {string} "A poison gas field.\n"
-// [52] = {string} "A wall of fire.\n"
-// [53] = {string} "An electric field.\n"
-// [54] = {string} "An energy field.\n"
-// [55] = {string} "This tile is impossible.\n"
-// [56] = {string} "Nothing hidden on the door.\n"
-// [57] = {string} "Nothing hidden on the wall.\n"
-// [58] = {string} "Nothing in the caved in passage.\n"
-// [59] = {string} "Nothing on the stalactite.\n"
-// [60] = {string} "Nothing hidden on the skeleton.\n"
-// [61] = {string} "It crumbles away.\n"
-// [62] = {string} "A hidden door!\n"
-// [63] = {string} "Nothing hidden on the door.\n"
-// [64] = {string} "\nThou dost find\n"
-// [65] = {string} "\nThou dost find\n"
 
-        public enum ShoppeKeeperBlacksmithHello { HAIL_FRIEND_BANG_BUY_OR_SELL_Q, GREETINGS_TRAVELLER_BUY_OR_SELL_Q }
+        public enum ShoppeKeeperBlacksmithHello
+        {
+            HAIL_FRIEND_BANG_BUY_OR_SELL_Q, GREETINGS_TRAVELLER_BUY_OR_SELL_Q
+            // [0] = {string} "Hail, friend! Wouldst thou Buy or Sell?"
+            // [1] = {string} "Greetings, traveller! Wish ye to Buy, or hast thou wares to Sell?"
+        }
 
         public enum ShoppeKeeperBlacksmithPositiveExclamation
         {
             VERY_GOOD_BANG_N, EXCELLENT_BANG_N, FINE_FINE_BANG_N, BUT_OF_COURSE_BANG_N
+            // [2] = {string} "Very good!\n"
+            // [3] = {string} "Excellent!\n"
+            // [4] = {string} "Fine, fine!\n"
+            // [5] = {string} "But of course!\n"
         }
 
-        public enum ShoppeKeeperBlacksmithWeHave { WE_HAVE_COLON, WE_STOCK_COLON, THOU_CANST_BUY_COLON, WEVE_GOT_COLON }
+        public enum ShoppeKeeperBlacksmithWeHave
+        {
+            WE_HAVE_COLON, WE_STOCK_COLON, THOU_CANST_BUY_COLON, WEVE_GOT_COLON
+            // [6] = {string} "We have:"
+            // [7] = {string} "We stock:"
+            // [8] = {string} "Thou canst buy:"
+            // [9] = {string} "We've got:"
+        }
 
-        // [0] = {string} "$ asks,\n"Who will\nstay?" "
-        // [1] = {string} "Nobody\n\n"
-        // [2] = {string} "\n\n"
-        // [3] = {string} "Thy friend"
-        // [4] = {string} " will not leave thee!\n\n"
-        // [5] = {string} ""The rate for\nour most comfortable room will be "
-        // [6] = {string} "% gold per month, due at check-out."
-        // [7] = {string} "\nWilt thou take\nit?" "
-        // [8] = {string} "\n\n"
-        // [9] = {string} ""I thank thee."\nsays $.\n\n"
-        // [10] = {string} "\n\nOne must first be left behind!\n\n"
-        // [11] = {string} "\n\n"No one here is from thy party!"\nsays $.\n\n"
-        // [12] = {string} "\n\n"Who will\ncheck out?" "
-        // [13] = {string} "    GUEST"
-        // [14] = {string} "  REGISTER:\n\n"
-        // [15] = {string} "No one\n\n"
-        // [16] = {string} "\n\n"That will be % gold, please."\n\n""
-        // [17] = {string} "Thy friend has died, by the way."\n"
-        // [18] = {string} "I hope thou hast found thy stay enjoyable,"\n"
-        // [19] = {string} "says $.\n\n"
-        // [20] = {string} "No"
-        // [21] = {string} "Yes"
-        // [22] = {string} "\n\n$ asks,\n"Art thou here\nto Pick up or\n"
-        // [23] = {string} "Leave a\ncompanion, or\nto Rest for the\nnight?" "
-        // [24] = {string} ""Is there\nanything more\nI can do for\nthee?" "
 
         public enum ShoppeKeeperGeneral2Strings
         {
@@ -642,6 +546,35 @@ namespace Ultima5Redux.References
             A_DOTS_KEYS_N, B_DOTS_GEMS_N, C_DOTS_TORCHES_N_N, THY_CONCERN_Q_DQ, YES_N_N_DQ__WE_SELL_COLON_N_N, NO_2,
             N_N_DQ_THOU_CANST_CARRY_BANG_DQ_N_N, N_N_DQ_4, IS_THIS_THY_NEED_Q_DQ, N_COLON_2,
             NO_N_N_DQ_WHAT_ELSE_Q_N_N_2, YES_N_2, N_DQ_I_THANK_THEE_BANG_DQ_N_SAYS_NAME__N, DQ_ANYTHING_ELSE_Q_N_N
+            // [0] = {string} "\n\n:"
+            // [1] = {string} "\n:"
+            // [2] = {string} "\n\n""
+            // [3] = {string} "\n\n""
+            // [4] = {string} "says $.\n"
+            // [5] = {string} "No"
+            // [6] = {string} "Yes"
+            // [7] = {string} "\n\n""
+            // [8] = {string} "\n\nInterested?" "
+            // [9] = {string} "No\n\n"What else, then?\n\n"
+            // [10] = {string} "Yes\n"
+            // [11] = {string} "\n"Sold!"\nsays $.\n\n"What else, \n"
+            // [12] = {string} "m'lady"
+            // [13] = {string} "m'lord"
+            // [14] = {string} "?\n\n"
+            // [15] = {string} "a.........Keys\n"
+            // [16] = {string} "b.........Gems\n"
+            // [17] = {string} "c......Torches\n\n"
+            // [18] = {string} "Thy concern?" "
+            // [19] = {string} "Yes\n\n"We sell:\n\n"
+            // [20] = {string} "No"
+            // [21] = {string} "\n\n"Thou canst not carry any more!"\n\n"
+            // [22] = {string} "\n\n""
+            // [23] = {string} " Is this thy need?" "
+            // [24] = {string} "\n:"
+            // [25] = {string} "No\n\n"What else?\n\n"
+            // [26] = {string} "Yes\n"
+            // [27] = {string} "\n"I thank thee!"\nsays $.\n"
+            // [28] = {string} ""Anything else?\n\n"
         }
 
         public enum ShoppeKeeperGeneralStrings
@@ -649,16 +582,19 @@ namespace Ultima5Redux.References
             DOT_DOT_DOT, N_THY_INTEREST_Q_QUOTE, YES_N_N_FINE_BANG_WE_SELL_COLON, NO, THE_STABLES_ARE_CLOSED_DOT_N,
             YES_N_N, N_N_DEAL_Q_QUOTE, NO_2, YES_BANG, N_N_QUOTE_THOU_COULDST_NOT_AFFORD_TO,
             FEED_IT_BANG_QUOTE_N_YELLS_SK_N, NO_3
+            // [0] = {string} "..."
+            // [1] = {string} "\nThy interest?" "
+            // [2] = {string} "Yes\n\n"Fine! We sell:\n\n"
+            // [3] = {string} "No"
+            // [4] = {string} "The stables are closed.\n"
+            // [5] = {string} "Yes\n\n""
+            // [6] = {string} "\n\nDeal?" "
+            // [7] = {string} "No"
+            // [8] = {string} "Yes!"
+            // [9] = {string} "\n\n"Thou couldst not afford to "
+            // [10] = {string} "feed it!"\nyells $.\n"
+            // [11] = {string} "No"
         }
-
-        // [0] = {string} "Sulfur Ash"
-        // [1] = {string} "Ginseng"
-        // [2] = {string} "Garlic"
-        // [3] = {string} "Spider Silk"
-        // [4] = {string} "Blood Moss"
-        // [5] = {string} "Black Pearl"
-        // [6] = {string} "Nightshade"
-        // [7] = {string} "Mandrake"        
 
         public enum ShoppeKeeperHealerStrings
         {
@@ -667,59 +603,37 @@ namespace Ultima5Redux.References
             CURING, N_N, RECEIVE_NOW_THE_LIGHT_BANG_DQ, I_CAN_CURE_THY_POISONED_BODY, HEALING, N_N_2,
             RECEIVE_NOW_THE_LIGHT_BANG_DQ_2, I_CAN_HEAL_THEE, RESURRECT, N_N_3,
             I_CAN_RAISE_THIS_UNFORTUNATE_PERSON_FROM, THE_DEAD, NOTHING, N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N,
+
             AID_THEE_Q
+            // [22] = {string} "\n\n"Who needs my aid?" "
+            // [23] = {string} "No one"
+            // [24] = {string} "for % gold.\n\nWilt thou\npay?" "
+            // [25] = {string} "Yes"
+            // [26] = {string} "No"
+            // [27] = {string} "No"
+            // [28] = {string} "Yes\n\n"
+            // [29] = {string} ""We have powers to Cure, Heal, or Resurrect."\n"
+            // [30] = {string} "says $.\n\n"What is the nature of thy need?" "
+            // [31] = {string} "Curing"
+            // [32] = {string} "\n\n""
+            // [33] = {string} "Receive now the Light!""
+            // [34] = {string} "I can cure thy poisoned body "
+            // [35] = {string} "Healing"
+            // [36] = {string} "\n\n""
+            // [37] = {string} "Receive now the Light!""
+            // [38] = {string} "I can heal thee "
+            // [39] = {string} "Resurrect"
+            // [40] = {string} "\n\n""
+            // [41] = {string} "I can raise this unfortunate person from "
+            // [42] = {string} "the dead "
+            // [43] = {string} "Nothing"
+            // [44] = {string} "\n\n"Is there any other way in which I may\n"
+            // [45] = {string} "aid thee?" "
         }
 
-        // from 0x9f0e-9feb
-        // [0] = {string} """
-        // [1] = {string} "Of what wouldst\nthou hear my\nlore, "
-        // [2] = {string} "?"\n\nYou respond:\n"
-        // [3] = {string} "\n\n"
-        // [4] = {string} ""That, I cannot help thee with.\n\n"
-        // [5] = {string} "\n\nFair 'nuff?" "
-        // [6] = {string} "No\n\n"
-        // [7] = {string} "Yes\n\n"
-        // [8] = {string} ""Sorry, "
-        // [9] = {string} "\nsays "
-        // [10] = {string} ".\n\n"
-        // [11] = {string} "No"
-        // [12] = {string} "Yes\n\n""
-        // [13] = {string} ""Anything else\nfor thee?" "
-        // [14] = {string} "No"
-        // [15] = {string} "Yes\n\n""
-        // [16] = {string} "yells $.\n"
-        // [17] = {string} "milady"
-        // [18] = {string} "sir"
-        // [19] = {string} "?" "
-        // [20] = {string} "Yes"
-        // [21] = {string} "No"
-        // [22] = {string} "F\n\n"
-        // [23] = {string} "Yes"
-        // [24] = {string} "No"
-        // [25] = {string} "Yes\n\n"
-        // [26] = {string} "No"
-        // [27] = {string} "S\n\n"
-        // [28] = {string} "Yes\n\n"
-        // [29] = {string} "No"
-        // [30] = {string} "Yes"
-        // [31] = {string} "No"        
 
         public enum ShoppeKeeperHealerStrings2 { DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME }
-        // [0] = {string} ""I am sorry,\n"
-        // [1] = {string} "milady"
-        // [2] = {string} "sir"
-        // [3] = {string} ", but we\nhave no room\navailable."\n\n"
-        // [4] = {string} "\nWilt thou take\nit?" "
-        // [5] = {string} "\n\n"
-        // [6] = {string} ""Highwaymen!\nCheap, at that!\nOUT!" "
-        // [7] = {string} "screams\n$.\n"
-        // [8] = {string} ""Have a pleasant\nnight, "
-        // [9] = {string} "milady"
-        // [10] = {string} "sir"
-        // [11] = {string} "!"\nsays $.\n\n"
-        // [12] = {string} "Zzzzzz....\n\n"
-        // [13] = {string} "Morning!\n"
-        // [14] = {string} " has\npassed away.\n"
+
 
         public enum ShoppeKeeperInnkeeper2Strings
         {
@@ -731,73 +645,72 @@ namespace Ultima5Redux.References
             ___GUEST, __REGISTER_COLON_N_N, NO_ONE_N_N, N_N_DQ_THAT_WILL_BE_GLD_GOLD_PLEASE_DOT_DQ_N_N,
             THY_FRIEND_HAS_DIED_BY_THE_WAY_DOT_N, I_HOPE_THOU_HAST_THY_STAY_ENJOYABLE_COMMA_N, SAYS_NAME_DOT_N_N, NO,
             YES, N_N_NAME_ASKS_N_ART_THOU_HERE_TO_PICKUP_OR_N, LEAVE_A_COMPANION_OR_TO_REST_FOR_NIGHT_Q_DQ,
+
             IS_THERE_N_ANYTHING_MORE_N_I_CAN_DO_FOR_N_THEE_Q_DQ
+            // [0] = {string} "$ asks,\n"Who will\nstay?" "
+            // [1] = {string} "Nobody\n\n"
+            // [2] = {string} "\n\n"
+            // [3] = {string} "Thy friend"
+            // [4] = {string} " will not leave thee!\n\n"
+            // [5] = {string} ""The rate for\nour most comfortable room will be "
+            // [6] = {string} "% gold per month, due at check-out."
+            // [7] = {string} "\nWilt thou take\nit?" "
+            // [8] = {string} "\n\n"
+            // [9] = {string} ""I thank thee."\nsays $.\n\n"
+            // [10] = {string} "\n\nOne must first be left behind!\n\n"
+            // [11] = {string} "\n\n"No one here is from thy party!"\nsays $.\n\n"
+            // [12] = {string} "\n\n"Who will\ncheck out?" "
+            // [13] = {string} "    GUEST"
+            // [14] = {string} "  REGISTER:\n\n"
+            // [15] = {string} "No one\n\n"
+            // [16] = {string} "\n\n"That will be % gold, please."\n\n""
+            // [17] = {string} "Thy friend has died, by the way."\n"
+            // [18] = {string} "I hope thou hast found thy stay enjoyable,"\n"
+            // [19] = {string} "says $.\n\n"
+            // [20] = {string} "No"
+            // [21] = {string} "Yes"
+            // [22] = {string} "\n\n$ asks,\n"Art thou here\nto Pick up or\n"
+            // [23] = {string} "Leave a\ncompanion, or\nto Rest for the\nnight?" "
+            // [24] = {string} ""Is there\nanything more\nI can do for\nthee?" "
         }
 
-        // [0] = {string} "..."
-        // [1] = {string} "\nThy interest?" "
-        // [2] = {string} "Yes\n\n"Fine! We sell:\n\n"
-        // [3] = {string} "No"
-        // [4] = {string} "The stables are closed.\n"
-        // [5] = {string} "Yes\n\n""
-        // [6] = {string} "\n\nDeal?" "
-        // [7] = {string} "No"
-        // [8] = {string} "Yes!"
-        // [9] = {string} "\n\n"Thou couldst not afford to "
-        // [10] = {string} "feed it!"\nyells $.\n"
-        // [11] = {string} "No"
 
         public enum ShoppeKeeperInnkeeperStrings
         {
             I_AM_SORRY_COMMA_N, MILADY, SIR, COMMA_BUT_WE_HAVE_NO_ROOM_N_N, XXX_N_WILT_THOU_TAKE_N_IT_Q_DQ, N_N,
             HIGHWAYMAN_BANG_CHEAP_OUT_BANG, SCREAMS_N_NAME_N, HAVE_A_PLEASENT_NIGHT_COMMA, MILADY_2, SIR_2,
             BANG_N_SAYS_NAME_DOT_N_N, ZZZZ_DOTS_N_N, MORNING_BANG_N, _HAS_N_PASSED_AWAY_DOT_N
+            // [0] = {string} ""I am sorry,\n"
+            // [1] = {string} "milady"
+            // [2] = {string} "sir"
+            // [3] = {string} ", but we\nhave no room\navailable."\n\n"
+            // [4] = {string} "\nWilt thou take\nit?" "
+            // [5] = {string} "\n\n"
+            // [6] = {string} ""Highwaymen!\nCheap, at that!\nOUT!" "
+            // [7] = {string} "screams\n$.\n"
+            // [8] = {string} ""Have a pleasant\nnight, "
+            // [9] = {string} "milady"
+            // [10] = {string} "sir"
+            // [11] = {string} "!"\nsays $.\n\n"
+            // [12] = {string} "Zzzzzz....\n\n"
+            // [13] = {string} "Morning!\n"
+            // [14] = {string} " has\npassed away.\n"
         }
 
-        // [0] = {string} "\n\n:"
-        // [1] = {string} "\n:"
-        // [2] = {string} "\n\n""
-        // [3] = {string} "\n\n""
-        // [4] = {string} "says $.\n"
-        // [5] = {string} "No"
-        // [6] = {string} "Yes"
-        // [7] = {string} "\n\n""
-        // [8] = {string} "\n\nInterested?" "
-        // [9] = {string} "No\n\n"What else, then?\n\n"
-        // [10] = {string} "Yes\n"
-        // [11] = {string} "\n"Sold!"\nsays $.\n\n"What else, \n"
-        // [12] = {string} "m'lady"
-        // [13] = {string} "m'lord"
-        // [14] = {string} "?\n\n"
-        // [15] = {string} "a.........Keys\n"
-        // [16] = {string} "b.........Gems\n"
-        // [17] = {string} "c......Torches\n\n"
-        // [18] = {string} "Thy concern?" "
-        // [19] = {string} "Yes\n\n"We sell:\n\n"
-        // [20] = {string} "No"
-        // [21] = {string} "\n\n"Thou canst not carry any more!"\n\n"
-        // [22] = {string} "\n\n""
-        // [23] = {string} " Is this thy need?" "
-        // [24] = {string} "\n:"
-        // [25] = {string} "No\n\n"What else?\n\n"
-        // [26] = {string} "Yes\n"
-        // [27] = {string} "\n"I thank thee!"\nsays $.\n"
-        // [28] = {string} ""Anything else?\n\n"
 
         public enum ShoppeKeeperReagentStrings
         {
             SULFUR_ASH, GINSENG, GARLIC, SPIDER_SILK, BLOOD_MOSS, BLACK_PEARL, NIGHTSAHDE, MANDRAKE
+            // [0] = {string} "Sulfur Ash"
+            // [1] = {string} "Ginseng"
+            // [2] = {string} "Garlic"
+            // [3] = {string} "Spider Silk"
+            // [4] = {string} "Blood Moss"
+            // [5] = {string} "Black Pearl"
+            // [6] = {string} "Nightshade"
+            // [7] = {string} "Mandrake"        
         }
-        // [0] = {string} "Hail, friend! Wouldst thou Buy or Sell?"
-        // [1] = {string} "Greetings, traveller! Wish ye to Buy, or hast thou wares to Sell?"
-        // [2] = {string} "Very good!\n"
-        // [3] = {string} "Excellent!\n"
-        // [4] = {string} "Fine, fine!\n"
-        // [5] = {string} "But of course!\n"
-        // [6] = {string} "We have:"
-        // [7] = {string} "We stock:"
-        // [8] = {string} "Thou canst buy:"
-        // [9] = {string} "We've got:"
+
 
         public enum ShoppeKeeperSellingStrings
         {
@@ -820,7 +733,54 @@ namespace Ultima5Redux.References
             N_NOT_HERE_BANG_N, WHAT_N_LOWERCASE, N_UNDER_SAIL_BANG_N, CARPET_BANG_N, N_NO_LAND_NEARBY_BANG_N,
             N_NOT_HERE_BANG_N_3, HORSE_BANG_N, N_NO_LAND_NEARBY_BANG_N_3, N_NOT_HERE_BANG_N_4, HORSE_N_2,
             N_NO_LAND_NEARBY_BANG_N_5, N_NOT_HERE_BANG_N_6, SKIFF_BANG_N_LOWERCASE, SHIP_BANG_N_LOWERCASE,
+
             N_NO_SKIFFS_ON_BOARD_BANG_N_2
+            //        [0]	"Zzzzzz...\n\n"	string
+            //[1]	"Ambushed!\n\n"	string
+            //[2]	"Party rested!\n"	string
+            //[3]	"No effect...\n"	string
+            //[4]	"For how many hours? "	string
+            //[5]	"Zzzzzzz...\n"	string
+            //[6]	"Thrown out of bed!\n"	string
+            //[7]	"\nOn foot\n"	string
+            //[8]	"\nOn foot\n"	string
+            //[9]	"\nNot here!\n"	string
+            //[10]	"\"Nay!\"\n"	string
+            //[11]	"horse\n"	string
+            //[12]	"carpet\n"	string
+            //[13]	"skiff\n"	string
+            //[14]	"Ship\n"	string
+            //[15]	"\nDANGER: SHIP BADLY DAMAGED!\n"	string
+            //[16]	"\nWARNING: NO SKIFFS ON BOARD!\n"	string
+            //[17]	"What?\n"	string
+            //[18]	"What?\n"	string
+            //[19]	"Fire broadsides only!\n"	string
+            //[20]	"What?\n"	string
+            //[21]	"What?\n"	string
+            //[22]	"BOOOM!\n"	string
+            //[23]	"Door destroyed!\n"	string
+            //[24]	"None owned!\n"	string
+            //[25]	"\n\nSwap "	string
+            //[26]	"nobody!\n"	string
+            //[27]	"\n\n"	string
+            //        [28]	" must lead!\n"	string
+            //[29]	"\nwith "	string
+            //[30]	"nobody!\n"	string
+            //[31]	"\n\n"	string
+            //[32]	" must lead!\n"	string
+            //[33]	"!\n"	string
+            //[34]	"\nNot here!\n"	string
+            //[35]	"what?\n"	string
+            //[36]	"\nUnder sail!\n"	string
+            //[37]	"carpet!\n"	string
+            //[38]	"\nNo land nearby!\n"	string
+            //[39]	"\nNot here!\n"	string
+            //[40]	"horse!\n"	string
+            //[41]	"\nNo land nearby!\n"	string
+            //[42]	"\nNot here!\n"	string
+            //[43]	"skiff!\n"	string
+            //[44]	"ship!\n"	string
+            //[45]	"\nNo skiffs on board!\n"	string
         }
 
         public enum SpecialItemNames2Strings { SPYGLASS, HMS_CAPE_PLAN, SEXTANT, POCKET_WATCH, BLACK_BADGE, WOODEN_BOX }
@@ -853,6 +813,72 @@ namespace Ultima5Redux.References
             NOTHING_HIDDEN_ON_THE_DOOR_DOT_N_2, NOTHING_HIDDEN_ON_THE_WALL_DOT_N, NOTHING_IN_THE_CAVED_IN_PASSAGE_DOT_N,
             NOTHING_OF_THE_STALACTITE_DOT_N, NOTHING_HIDDEN_ON_THE_SKELETON_DOT_N, IT_CRUMBLES_AWAY_DOT_N,
             A_HIDDEN_DOOR_BANG_N, NOTHING_HIDDEN_ON_THE_DOOR_DOT_N_3, N_THOU_DOST_FIND_N, N_THOU_DOST_FIND_N_2
+            // [0] = {string} "a chest!\n"
+            // [1] = {string} "a sack of gold!\n"
+            // [2] = {string} "a potion!\n"
+            // [3] = {string} "a scroll!\n"
+            // [4] = {string} "a weapon!\n"
+            // [5] = {string} "a shield!\n"
+            // [6] = {string} "a ring of keys!\n"
+            // [7] = {string} "a gem!\n"
+            // [8] = {string} "a helm!\n"
+            // [9] = {string} "a ring!\n"
+            // [10] = {string} "some armour!\n"
+            // [11] = {string} "an amulet!\n"
+            // [12] = {string} "some torches!\n"
+            // [13] = {string} "some food!\n"
+            // [14] = {string} "a strange rock!\n"
+            // [15] = {string} "a rotting body!\n"
+            // [16] = {string} "a moldy corpse!\n"
+            // [17] = {string} "Nothing of note.\n"
+            // [18] = {string} "Plague!\n"
+            // [19] = {string} "nothing!\n"
+            // [20] = {string} "worms!\n"
+            // [21] = {string} "guts!\n"
+            // [22] = {string} "a bloody pulp!\n"
+            // [23] = {string} "food!\n"
+            // [24] = {string} "gold!\n"
+            // [25] = {string} "no trap!\n"
+            // [26] = {string} "a simple trap!\n"
+            // [27] = {string} "a complex trap!\n"
+            // [28] = {string} "a trap!\n"
+            // [29] = {string} "a strange rock!\n"
+            // [30] = {string} "mandrake root!"
+            // [31] = {string} "mandrake root!"
+            // [32] = {string} "nightshade!"
+            // [33] = {string} " sprigs of\n"
+            // [34] = {string} "\n"
+            // [35] = {string} "nothing of note.\n"
+            // [36] = {string} "\nYou find:\ndarkness.\n"
+            // [37] = {string} "You find:\n"
+            // [38] = {string} "Nothing of note.\n"
+            // [39] = {string} "Nothing hidden on the ladder.\n"
+            // [40] = {string} "No trap\n"
+            // [41] = {string} "A simple trap\n"
+            // [42] = {string} "A complex trap\n"
+            // [43] = {string} "A trap\n"
+            // [44] = {string} "Nothing hidden on the fountain.\n"
+            // [45] = {string} "Nothing hidden\nin the pit.\n"
+            // [46] = {string} "A pit!\n"
+            // [47] = {string} "A bomb trap!\n"
+            // [48] = {string} "Nothing of note.\n"
+            // [49] = {string} "Treasure!\n"
+            // [50] = {string} "A sleep field.\n"
+            // [51] = {string} "A poison gas field.\n"
+            // [52] = {string} "A wall of fire.\n"
+            // [53] = {string} "An electric field.\n"
+            // [54] = {string} "An energy field.\n"
+            // [55] = {string} "This tile is impossible.\n"
+            // [56] = {string} "Nothing hidden on the door.\n"
+            // [57] = {string} "Nothing hidden on the wall.\n"
+            // [58] = {string} "Nothing in the caved in passage.\n"
+            // [59] = {string} "Nothing on the stalactite.\n"
+            // [60] = {string} "Nothing hidden on the skeleton.\n"
+            // [61] = {string} "It crumbles away.\n"
+            // [62] = {string} "A hidden door!\n"
+            // [63] = {string} "Nothing hidden on the door.\n"
+            // [64] = {string} "\nThou dost find\n"
+            // [65] = {string} "\nThou dost find\n"
         }
 
         public enum TravelStrings
@@ -882,20 +908,19 @@ namespace Ultima5Redux.References
             BADGE_N_N, BADGE_WORN_BANG_N, BOX_N_HOW_N, FAILED_BANG_N, SPACE_OF_LORD_BRITISH_DOT_N
         }
 
-        public enum WordsOfPower { FALLAX, VILIS, INOPIA, MALUM, AVIDUS, INFAMA, IGANVUS, VERAMOCOR }
-        // [0] = {string} "Ship sunk!\n"
-        // [1] = {string} "Abandon ship!\n"
-        // [2] = {string} "DROWNING!!!\n"
-        // [3] = {string} "\nWHIRLPOOL!\n"
-        // [4] = {string} "\nAttacked!\n"
-        // [5] = {string} "* BOOOM! *\n\n"
-        // [6] = {string} "Caught!\n\nThe trolls demand a "
-        // [7] = {string} " gp toll!\n\nDost thou pay?"
-        // [8] = {string} "\nThou spieth trolls under the bridge!\n\n"
-        // [9] = {string} " sneaks across"
-        // [10] = {string} "\n\n"
-        // [11] = {string} "Trolls evaded!\n"
-        // [12] = {string} "BOTTOMLESS\n   PIT    "
+        public enum WordsOfPower
+        {
+            FALLAX, VILIS, INOPIA, MALUM, AVIDUS, INFAMA, IGANVUS, VERAMOCOR
+            // [0] = {string} "FALLAX"
+            // [1] = {string} "VILIS"
+            // [2] = {string} "INOPIA"
+            // [3] = {string} "MALUM"
+            // [4] = {string} "AVIDUS"
+            // [5] = {string} "INFAMA"
+            // [6] = {string} "IGNAVUS"
+            // [7] = {string} "VERAMOCOR"
+        }
+
 
         public enum WorldStrings
         {
@@ -914,34 +939,32 @@ namespace Ultima5Redux.References
             SHIP_SUNK_BANG_N, ABANDON_SHIP_BANG_N, DROWNING_BANGS_N, N_WHIRLPOOL_BANG_N, STAR_BOOM_BANG_STAR_N_N,
             CAUGHT_BANG_N_N_THE_TROLLS_DEMAND_A_SP, SP_GP_TOLL_BANG_N_N_DOST_THOU_PAY_Q,
             N_THOU_SPIETH_TROLLS_UNDER_THE_BRIDGE_BANG_N_N, SP_SNEAKS_ACROSS, N_N, TROLLS_EVADED_BANG_N,
-            BOTTOMLESS_N_SP_PIT_SP
-        }
-        // [0] = {string} "FALLAX"
-        // [1] = {string} "VILIS"
-        // [2] = {string} "INOPIA"
-        // [3] = {string} "MALUM"
-        // [4] = {string} "AVIDUS"
-        // [5] = {string} "INFAMA"
-        // [6] = {string} "IGNAVUS"
-        // [7] = {string} "VERAMOCOR"
 
-        public enum YellingStrings { FURL_BANG_N, HOIST_BANG_N, WHAT_Q_N_COLON, NOTHING_N }
-//            [0] "Item: "	string
-//[1]	"Thou canst not change armour in heated battle!"	string
-//[2]	"AMBFDTPRS"	string
-//[3]	"Thou hast no ammunition for that weapon!"	string
-//[4]	"Remove first thy present helm!"	string
-//[5]	"Thou must first remove thine other armour!"	string
-//[6]	"Thou must free one of thy hands first!"	string
-//[7]	"Both hands must be free before thou canst wield that!"	string
-//[8]	"Thou must remove thine other amulet!"	string
-//[9]	"Only one magic ring may be worn at a time!"	string
-//[10]	"Thou art not strong enough!"	string
-//[11]	"\n\nRing vanishes!\n"	string
-//[12]	"Done\n"	string
-//[13]	"None!\n"	string
-//[14]	"Thou art empty-\nhanded!\n"	string
-//[15]	"Item: "	string
+            BOTTOMLESS_N_SP_PIT_SP
+            // [0] = {string} "Ship sunk!\n"
+            // [1] = {string} "Abandon ship!\n"
+            // [2] = {string} "DROWNING!!!\n"
+            // [3] = {string} "\nWHIRLPOOL!\n"
+            // [4] = {string} "\nAttacked!\n"
+            // [5] = {string} "* BOOOM! *\n\n"
+            // [6] = {string} "Caught!\n\nThe trolls demand a "
+            // [7] = {string} " gp toll!\n\nDost thou pay?"
+            // [8] = {string} "\nThou spieth trolls under the bridge!\n\n"
+            // [9] = {string} " sneaks across"
+            // [10] = {string} "\n\n"
+            // [11] = {string} "Trolls evaded!\n"
+            // [12] = {string} "BOTTOMLESS\n   PIT    "
+        }
+
+        public enum YellingStrings
+        {
+            FURL_BANG_N, HOIST_BANG_N, WHAT_Q_N_COLON, NOTHING_N
+            // FURL!\n"
+            // [3] = {string} "HOIST!\n"
+            // [4] = {string} "what?\n:"
+            // [5] = {string} "Nothing\n"
+        }
+
 
         public enum ZstatsStrings
         {
@@ -985,6 +1008,64 @@ namespace Ultima5Redux.References
             //[31]	"Armaments"	string
             //[32]	"Done\n"	string
             //[33]	"\n\n"	string
+        }
+
+
+        public enum ResponseToKeystroke
+        {
+            N_A_, _STOLE_SOME_FOOD_BANG_N, _ESCAPES_BANG_N, CANT_BANG_N, COMMA_, COMMA_ARMED_WITH_, BARE_HANDS, COLON,
+            ARGH_BANG_N, ZZZZZ_DOT_DOT_DOT_N, BUFFER_0, FF_N, N_N, SOUNDS_, OFF_N, ON_N, CAST_DOT_DOT_DOT_N,
+            ABSORBED_BANG_N, CANT_BANG_N2, GET_DASH, JIMMY_DASH, OPEN_DASH, PUSH_DASH, READY_DOT_DOT_DOT_N_N,
+            SEARCH_DASH, USE_ITEM_N_N, YELL_, Z_DASH_STATS_DOT_DOT_DOT_N, PASS_N, SET_ACTIVE_PLR_COLON_N_NONE_BANG_N,
+            BOARD, D_DASH_WHAT_Q_N, ENTER, FIRE, HOLE_UP, IGNITE_TORCH, LOOK, MIX, NEW_ORDER, QUIT, TALK, VIEW,
+            W_DASH_WHAT_Q_N, X_DASH_IT, WHAT_Q_N
+
+
+            // [0] = {string} "\nA "
+            // [1] = {string} " stole some food!\n"
+            // [2] = {string} " escapes!\n"
+            // [3] = {string} "Can't!\n"
+            // [4] = {string} ", "
+            // [5] = {string} ", armed with "
+            // [6] = {string} "bare hands"
+            // [7] = {string} ":"
+            // [8] = {string} "ARGH!\n"
+            // [9] = {string} "Zzzzz...\n"
+            // [10] = {string} "Buffer O"
+            // [11] = {string} "ff\n"
+            // [12] = {string} "n\n"
+            // [13] = {string} "Sound "
+            // [14] = {string} "Off\n"
+            // [15] = {string} "On\n"
+            // [16] = {string} "Cast...\n"
+            // [17] = {string} "Absorbed!\n"
+            // [18] = {string} "Can't!\n"
+            // [19] = {string} "Get-"
+            // [20] = {string} "Jimmy-"
+            // [21] = {string} "Open-"
+            // [22] = {string} "Push-"
+            // [23] = {string} "Ready...\n\n"
+            // [24] = {string} "Search-"
+            // [25] = {string} "Use item\n\n"
+            // [26] = {string} "Yell "
+            // [27] = {string} "Z-stats...\n"
+            // [28] = {string} "Pass\n"
+            // [29] = {string} "Set active plr:\nNone!\n"
+            // [30] = {string} "Board"
+            // [31] = {string} "D-What?\n"
+            // [32] = {string} "Enter"
+            // [33] = {string} "Fire"
+            // [34] = {string} "Hole up"
+            // [35] = {string} "Ignite torch"
+            // [36] = {string} "Look"
+            // [37] = {string} "Mix"
+            // [38] = {string} "New order"
+            // [39] = {string} "Quit"
+            // [40] = {string} "Talk"
+            // [41] = {string} "View"
+            // [42] = {string} "W-What?\n"
+            // [43] = {string} "X-it"
+            // [44] = {string} "What?\n"
         }
 
         /// <summary>
@@ -1289,7 +1370,6 @@ namespace Ultima5Redux.References
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate", 0x40C2, 0x72,
                 0x00, DataChunkName.SEARCH_OBJECT_Y);
 
-
             // scan code translation table:
             // when the player presses a key that produces one of the scan codes in
             // the first table, the game translates it to the corresponding code in
@@ -1315,7 +1395,7 @@ namespace Ultima5Redux.References
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Stat lines (z-stats?)", 0x6d08, 0x43);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "NPC Files", 0x6d56, 0x2e);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Responses to keystroke actions", 0x6d84,
-                0x179);
+                0x179, 0, DataChunkName.RESPONSE_TO_KEYSTROKE);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle messages", 0x6efe, 0x112, 0x00,
                 DataChunkName.BATTLE2);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "MISC file names", 0x7010, 0x1a);

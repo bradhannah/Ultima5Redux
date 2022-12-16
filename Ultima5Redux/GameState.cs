@@ -313,5 +313,6 @@ namespace Ultima5Redux
             string stateJson = JsonConvert.SerializeObject(this, Formatting.Indented);
             return stateJson;
         }
+
     }
 }

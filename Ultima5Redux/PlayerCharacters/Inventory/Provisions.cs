@@ -4,6 +4,8 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
+using Ultima5Redux.References;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
@@ -93,6 +95,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity = importedGameState.Torches;
             Items[ProvisionReferences.SpecificProvisionType.SkullKeys].Quantity = importedGameState.SkullKeys;
         }
+
+        public void FoodStolen(TurnResults turnResults, EnemyReference enemyReference, int nAmountStolen)
+        {
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.FoodStolenByEnemy));
+            turnResults.PushOutputToConsole(
+                $"{enemyReference.MixedCaseSingularName}{GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ResponseToKeystroke._STOLE_SOME_FOOD_BANG_N)}");
+            AddOrRemoveProvisionQuantity(ProvisionReferences.SpecificProvisionType.Food, -nAmountStolen, turnResults);
+        }
+
 
         public void SetProvisionQuantity(ProvisionReferences.SpecificProvisionType specificProvisionType,
             int nNewQuantity, TurnResults turnResults)

@@ -103,7 +103,11 @@ namespace Ultima5Redux
 
         public const int ONE_IN_OF_BROKEN_KEY = 5;
         public const int TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU = 5;
+        public const int ODDS_OF_STEALING_FOOD = 4;
+        public const int DEFAULT_FOOD_STOLEN = 5;
 
+        public static bool DidEnemyStealFood() => Utils.OneInXOdds(ODDS_OF_STEALING_FOOD);
+        
         public static bool IsJimmySuccessful(int nDexterity) => !Utils.OneInXOdds(ONE_IN_OF_BROKEN_KEY);
 
         /// <summary>
