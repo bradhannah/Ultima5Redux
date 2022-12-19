@@ -1172,14 +1172,6 @@ namespace Ultima5Redux.Maps
         public void ProcessCombatPlayerTurn(TurnResults turnResults, SelectionAction selectedAction,
             Point2D actionPosition, out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit)
         {
-            void advanceIfSafe(CombatPlayer theCombatPlayer)
-            {
-                if (_currentCombatItemQueue != null && _currentCombatItemQueue.Count != 0) return;
-
-                theCombatPlayer?.Record.ProcessPlayerTurn(turnResults);
-                AdvanceToNextCombatMapUnit();
-            }
-
             targetedCombatMapUnit = null;
 
             CombatPlayer combatPlayer = GetCurrentCombatPlayer();
@@ -1196,62 +1188,26 @@ namespace Ultima5Redux.Maps
                 case SelectionAction.Attack:
                     string attackStr = "Attack ";
                     MapUnit opponentMapUnit = GetCombatUnit(actionPosition);
+                    
                     // you have tried to attack yourself!?
                     if (opponentMapUnit == combatPlayer)
                     {
-                        attackStr = attackStr.TrimEnd() + "... yourself? ";
-                        attackStr += "\nYou think better of it and skip your turn.";
-                        turnResults.PushOutputToConsole(attackStr);
-                        turnResults.PushTurnResult(new SinglePlayerCharacterAffected(
-                            TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackSelf, combatPlayer.Stats));
-                        advanceIfSafe(combatPlayer);
+                        HandleCombatPlayerTryingToAttackThemselves(turnResults, attackStr, combatPlayer);
                         return;
                     }
 
-                    CombatItem weapon = null;
-
-                    // the top most unit is NOT a combat unit, so they hit nothing!
+                    // the top most unit is NOT a combat unit, so they hit nothing - OR - they are attacking a trigger
                     if (opponentMapUnit is not CombatMapUnit opponentCombatMapUnit)
                     {
-                        TileReference tileReference =
-                            GameStateReference.State.TheVirtualMap.GetTileReference(actionPosition);
-                        //GetOriginalTileReference(actionPosition);
-
-                        if (tileReference.Index == (int)TileReference.SpriteIndex.Portcullis)
-                        {
-                            RemovePortcullis(turnResults, actionPosition);
-
-                            AdvanceToNextCombatMapUnit();
-                            return;
-                        }
-
-                        attackStr += "nothing with ";
-                        if (_currentCombatItemQueue == null)
-                        {
-                            // bare hands
-                            attackStr += " with bare hands!";
-                        }
-                        else
-                        {
-                            weapon = _currentCombatItemQueue.Dequeue();
-                            attackStr += weapon.LongName + "!";
-                        }
-
-                        advanceIfSafe(combatPlayer);
-
-                        turnResults.PushOutputToConsole(attackStr);
-                        CombatItemReference.MissileType missileType = weapon?.TheCombatItemReference.Missile ??
-                                                                      CombatItemReference.MissileType.None;
-                        turnResults.PushTurnResult(new AttackerTurnResult(
-                            TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackNothing,
-                            combatPlayer, null, missileType, CombatMapUnit.HitState.Missed, actionPosition));
+                        HandleCombatPlayerAttackingNoOpponent(turnResults, actionPosition, attackStr, combatPlayer);
                         return;
                     }
 
                     // if the top most unit is a combat map unit, then let's fight!
                     attackStr += opponentCombatMapUnit.Name;
 
-                    weapon = _currentCombatItemQueue.Dequeue();
+                    // TODO: might be a bug - what about bare hands?
+                    CombatItem weapon = _currentCombatItemQueue.Dequeue();
 
                     attackStr += " with " + weapon.LongName + "!";
                     turnResults.PushOutputToConsole(attackStr);
@@ -1266,21 +1222,11 @@ namespace Ultima5Redux.Maps
 
                         bool bIsBlocked = IsRangedPathBlocked(combatPlayer.MapUnitPosition.XY,
                             opponentMapUnit.MapUnitPosition.XY, out Point2D firstBlockPoint);
+                        // the character tried to attack an opponent, but was blocked
                         if (bIsBlocked)
                         {
-                            string blockedAttackStr = combatPlayer.FriendlyName +
-                                                      GameReferences.Instance.DataOvlRef.StringReferences
-                                                          .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N)
-                                                          .TrimEnd().Replace("!", " ") + opponentMapUnit.FriendlyName +
-                                                      " because it was blocked!";
-                            turnResults.PushOutputToConsole(blockedAttackStr);
-                            turnResults.PushTurnResult(new AttackerTurnResult(
-                                TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
-                                combatPlayer, null, weapon.TheCombatItemReference.Missile,
-                                CombatMapUnit.HitState.Missed, firstBlockPoint));
-
-                            advanceIfSafe(combatPlayer);
-
+                            HandleCombatPlayerBlockedAttackOnOpponent(turnResults, combatPlayer, opponentMapUnit,
+                                weapon, firstBlockPoint);
                             return;
                         }
                     }
@@ -1330,12 +1276,116 @@ namespace Ultima5Redux.Maps
                     // must check to see if any special 
                     PerformAdditionalHitProcessing(turnResults, targetedHitState, targetedCombatMapUnit);
 
-                    advanceIfSafe(combatPlayer);
+                    AdvanceIfSafe(combatPlayer, turnResults);
 
                     return;
                 default:
                     throw new InvalidEnumArgumentException(((int)selectedAction).ToString());
             }
+        }
+
+        private void HandleCombatPlayerBlockedAttackOnOpponent(TurnResults turnResults, CombatPlayer combatPlayer,
+            MapUnitDetails opponentMapUnit, CombatItem weapon, Point2D firstBlockPoint)
+        {
+            string blockedAttackStr = combatPlayer.FriendlyName +
+                                      GameReferences.Instance.DataOvlRef.StringReferences
+                                          .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N)
+                                          .TrimEnd().Replace("!", " ") + opponentMapUnit.FriendlyName +
+                                      " because it was blocked!";
+            turnResults.PushOutputToConsole(blockedAttackStr);
+            turnResults.PushTurnResult(new AttackerTurnResult(
+                TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
+                combatPlayer, null, weapon.TheCombatItemReference.Missile,
+                CombatMapUnit.HitState.Missed, firstBlockPoint));
+
+            AdvanceIfSafe(combatPlayer, turnResults);
+        }
+
+        private void HandleCombatPlayerTryingToAttackThemselves(TurnResults turnResults, string attackStr,
+            CombatPlayer combatPlayer)
+        {
+            attackStr = attackStr.TrimEnd() + "... yourself? ";
+            attackStr += "\nYou think better of it and skip your turn.";
+            turnResults.PushOutputToConsole(attackStr);
+            turnResults.PushTurnResult(new SinglePlayerCharacterAffected(
+                TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackSelf, combatPlayer.Stats));
+            AdvanceIfSafe(combatPlayer, turnResults);
+        }
+
+        private void AdvanceIfSafe(CombatPlayer theCombatPlayer, TurnResults turnResults)
+        {
+            if (_currentCombatItemQueue != null && _currentCombatItemQueue.Count != 0) return;
+
+            theCombatPlayer?.Record.ProcessPlayerTurn(turnResults);
+            AdvanceToNextCombatMapUnit();
+        }
+
+        private void HandleCombatPlayerAttackingNoOpponent(TurnResults turnResults, Point2D actionPosition,
+            string attackStr,
+            CombatPlayer combatPlayer)
+        {
+            TileReference tileReference =
+                GameStateReference.State.TheVirtualMap.GetTileReference(actionPosition);
+            //GetOriginalTileReference(actionPosition);
+            CombatItem weapon = null;
+            attackStr += "nothing with ";
+            if (_currentCombatItemQueue == null)
+            {
+                // bare hands
+                attackStr += " with bare hands!";
+            }
+            else
+            {
+                weapon = _currentCombatItemQueue.Dequeue();
+                attackStr += weapon.LongName + "!";
+            }
+
+            bool bIsRanged = (weapon?.TheCombatItemReference.Range ?? 1) > 1;
+            bool bIsBlocked = IsRangedPathBlocked(combatPlayer.MapUnitPosition.XY,
+                actionPosition, out Point2D firstBlockPoint);
+            CombatItemReference.MissileType missileType = weapon?.TheCombatItemReference.Missile ??
+                                                          CombatItemReference.MissileType.None;
+
+            if (tileReference.Index == (int)TileReference.SpriteIndex.Portcullis && !bIsBlocked)
+            {
+                RemovePortcullis(turnResults, actionPosition);
+
+                turnResults.PushTurnResult(new AttackerTurnResult(
+                    TurnResult.TurnResultType.Combat_CombatPlayerAttackedPortcullis,
+                    combatPlayer, null, missileType,
+                    CombatMapUnit.HitState.HitTrigger, actionPosition));
+
+                AdvanceToNextCombatMapUnit();
+                return;
+            }
+
+            // it's not good enough just to not show any attack - the player needs to know that
+            // their input was accepted - it just happens that it doesn't do anything of value
+            // if ranged
+            // -- If it is not ranged, then it's impossible to be "blocked" right??
+            if (bIsRanged)
+            {
+                CombatMapUnit.HitState hitState =
+                    bIsBlocked ? CombatMapUnit.HitState.Blocked : CombatMapUnit.HitState.Missed;
+                turnResults.PushTurnResult(new AttackerTurnResult(
+                    TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
+                    combatPlayer, null, missileType,
+                    hitState, firstBlockPoint));
+            }
+            // else
+            // {
+            //     turnResults.PushTurnResult(new AttackerTurnResult(
+            //         TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
+            //         combatPlayer, null, missileType,
+            //         CombatMapUnit.HitState.Missed, actionPosition));
+            // }
+
+            AdvanceIfSafe(combatPlayer, turnResults);
+
+            turnResults.PushOutputToConsole(attackStr);
+            turnResults.PushTurnResult(new AttackerTurnResult(
+                TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackNothing,
+                combatPlayer, null, missileType, CombatMapUnit.HitState.Missed, actionPosition));
         }
 
         private bool CanEnemyMoveToSpace(Point2D xy, Enemy enemy)

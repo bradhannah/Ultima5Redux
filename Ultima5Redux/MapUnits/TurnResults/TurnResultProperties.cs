@@ -17,9 +17,9 @@ namespace Ultima5Redux.MapUnits.TurnResults
         public CombatMapUnit.HitState HitState { get; }
     }
 
-    public interface IMissedPoint
+    public interface IMissedOrTriggerPoint
     {
-        public Point2D MissedPoint { get; }
+        public Point2D MissedOrTriggerPoint { get; }
     }
 
     public interface IAttacker
