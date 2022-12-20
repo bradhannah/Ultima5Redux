@@ -299,7 +299,7 @@ namespace Ultima5Redux.Maps
             return CombatMapUnitIsPresent(combatMapUnit);
         }
 
-        private bool CombatPlayerIsActive(CombatPlayer player) =>
+        internal bool CombatPlayerIsActive(CombatPlayer player) =>
             ActivePlayerCharacterRecord == null || player.Record == ActivePlayerCharacterRecord;
 
         private int GetNumberOfTurnsInQueue()

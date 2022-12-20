@@ -104,6 +104,10 @@ namespace Ultima5Redux.Maps
         public int NumberOfVisiblePlayers =>
             CombatMapUnits.CurrentMapUnits.CombatPlayers.Count(combatPlayer => combatPlayer.IsActive);
 
+        public int NumberOfAlivePlayers =>
+            CombatMapUnits.CurrentMapUnits.CombatPlayers.Count(combatPlayer =>
+                combatPlayer.IsActive && combatPlayer.Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead);
+
         public int Round => _initiativeQueue.Round;
 
         public PlayerCharacterRecord SelectedCombatPlayerRecord => _initiativeQueue.ActivePlayerCharacterRecord;
@@ -227,6 +231,8 @@ namespace Ultima5Redux.Maps
             for (int nPlayer = 0; nPlayer < activeRecords.GetNumberOfActiveCharacters(); nPlayer++)
             {
                 PlayerCharacterRecord record = activeRecords.Records[nPlayer];
+                // dead players don't show up when you are loading a fresh combat map
+                if (record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Dead) continue;
 
                 CombatPlayer combatPlayer = new(record, playerStartPositions[nPlayer]);
 
@@ -1151,10 +1157,6 @@ namespace Ultima5Redux.Maps
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                     .BrickFloor), xy);
 
-            // RecalculateWalkableTile(xy, WalkableType.CombatLand, new());
-            // RecalculateWalkableTile(xy, WalkableType.CombatFlyThroughWalls, new());
-            // RecalculateWalkableTile(xy, WalkableType.CombatLandAndWater, new());
-
             GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
                 WalkableType.CombatLand);
             GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
@@ -1188,7 +1190,7 @@ namespace Ultima5Redux.Maps
                 case SelectionAction.Attack:
                     string attackStr = "Attack ";
                     MapUnit opponentMapUnit = GetCombatUnit(actionPosition);
-                    
+
                     // you have tried to attack yourself!?
                     if (opponentMapUnit == combatPlayer)
                     {
@@ -1261,10 +1263,6 @@ namespace Ultima5Redux.Maps
                         case CombatMapUnit.HitState.Missed:
                             // we missed but are not using a ranged weapon
                             // this is now added inside the CombatMapUnit.Attack function
-                            // turnResults.PushTurnResult(new AttackerTurnResult(
-                            //     TurnResult.TurnResultType.Combat_Result_Missed_CombatPlayerMelee,
-                            //     combatPlayer, opponentCombatMapUnit, weapon.TheCombatItemReference.Missile,
-                            //     targetedHitState));
                             break;
                         default:
                             // we know they attacked this particular opponent at this point, we definitely didn't miss
@@ -1326,7 +1324,6 @@ namespace Ultima5Redux.Maps
         {
             TileReference tileReference =
                 GameStateReference.State.TheVirtualMap.GetTileReference(actionPosition);
-            //GetOriginalTileReference(actionPosition);
             CombatItem weapon = null;
             attackStr += "nothing with ";
             if (_currentCombatItemQueue == null)
@@ -1372,13 +1369,6 @@ namespace Ultima5Redux.Maps
                     combatPlayer, null, missileType,
                     hitState, firstBlockPoint));
             }
-            // else
-            // {
-            //     turnResults.PushTurnResult(new AttackerTurnResult(
-            //         TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
-            //         combatPlayer, null, missileType,
-            //         CombatMapUnit.HitState.Missed, actionPosition));
-            // }
 
             AdvanceIfSafe(combatPlayer, turnResults);
 
@@ -1484,11 +1474,6 @@ namespace Ultima5Redux.Maps
                 bool bIsTileWalkable = enemy.FleeingPath != null &&
                                        CanEnemyMoveToSpace(enemy.FleeingPath.Peek().Position, enemy);
 
-                // if (bIsTileWalkable)//combatMapUnit == null)
-                // {
-                //     bIsTileWalkable = IsTileWalkable(enemy.MapUnitPosition.XY, walkableType);
-                // }
-
                 // does the monster not yet have a flee path OR
                 // does the enemy have a flee path already established that is now block OR
                 if (enemy.FleeingPath == null || !bIsTileWalkable)
@@ -1586,7 +1571,18 @@ namespace Ultima5Redux.Maps
                     case CombatMapUnit.HitState.LightlyWounded:
                     case CombatMapUnit.HitState.HeavilyWounded:
                     case CombatMapUnit.HitState.CriticallyWounded:
+                        targetedCombatMapUnit = bestCombatPlayer;
+                        break;
                     case CombatMapUnit.HitState.Dead:
+                        // if the current active player dies - then we set it to the whole party again
+                        if (bestCombatPlayer is CombatPlayer combatPlayer &&
+                            _initiativeQueue.CombatPlayerIsActive(combatPlayer))
+                        {
+                            _initiativeQueue.SetActivePlayerCharacter(null);
+                        }
+
+                        targetedCombatMapUnit = bestCombatPlayer;
+                        break;
                     case CombatMapUnit.HitState.Fleeing:
                         targetedCombatMapUnit = bestCombatPlayer;
                         break;
