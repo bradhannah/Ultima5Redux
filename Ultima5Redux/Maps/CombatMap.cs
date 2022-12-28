@@ -1070,7 +1070,7 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        ///     Moves the active combat unit to a new map location
+        ///     Moves the active combat unit to a new map position
         /// </summary>
         /// <param name="turnResults"></param>
         /// <param name="xy"></param>
@@ -1121,6 +1121,16 @@ namespace Ultima5Redux.Maps
             }
 
             ProcessTileEffectsForMapUnit(turnResults, currentCombatUnit);
+
+            // you can trigger tiles by simply walking on them
+            if (TheCombatMapReference.HasTriggers && TheCombatMapReference.TheTriggerTiles.HasTriggerAtPosition(xy))
+            {
+                bool bWasTrigger = HandleTrigger(turnResults, xy);
+                if (bWasTrigger)
+                {
+                    _initiativeQueue.RefreshFutureRounds();
+                }
+            }
         }
 
         public Enemy MoveToClosestAttackableEnemy(TurnResults turnResults, out string outputStr, out bool bMoved) =>

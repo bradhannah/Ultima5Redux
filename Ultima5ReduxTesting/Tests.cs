@@ -1141,11 +1141,11 @@ namespace Ultima5ReduxTesting
 
             Assert.True(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
             TurnResults turnResults = new TurnResults();
-            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults);
+            world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults, false);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
             // Assert.True(tryToMoveResult == World.TryToMoveResult.Blocked);
 
             _ = "";
@@ -1181,11 +1181,11 @@ namespace Ultima5ReduxTesting
                     SingleCombatMapReference.Territory.Dungeon, 4),
                 SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
             TurnResults turnResults = new TurnResults();
-            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults);
+            world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults, false);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
             _ = "";
         }
 
@@ -1200,11 +1200,11 @@ namespace Ultima5ReduxTesting
                 SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
             TurnResults turnResults = new TurnResults();
 
-            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults);
+            world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults, false);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
 
             do
             {
@@ -1242,7 +1242,7 @@ namespace Ultima5ReduxTesting
                 Assert.True(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
                 TurnResults turnResults = new TurnResults();
 
-                world.TryToMoveCombatMap(player, Point2D.Direction.Up, turnResults);
+                world.TryToMoveCombatMap(player, Point2D.Direction.Up, turnResults, false);
             }
 
             _ = "";
@@ -2069,7 +2069,7 @@ namespace Ultima5ReduxTesting
 
             // put the avatar just up from the chest
             player.MapUnitPosition.XY = new Point2D(8, 8);
-            world.TryToMoveCombatMap(player, Point2D.Direction.Down, turnResults);
+            world.TryToMoveCombatMap(player, Point2D.Direction.Down, turnResults, false);
             Assert.IsTrue(turnResults.PeekLastTurnResult.TheTurnResultType !=
                           TurnResult.TurnResultType.ActionMoveBlocked);
 
@@ -3569,7 +3569,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
-                    SingleCombatMapReference.Territory.Dungeon, 0),
+                    SingleCombatMapReference.Territory.Dungeon, 15),
                 SingleCombatMapReference.EntryDirection.North, world.State.CharacterRecords);
 
             CombatMap currentCombatMap = world.State.TheVirtualMap.CurrentCombatMap;

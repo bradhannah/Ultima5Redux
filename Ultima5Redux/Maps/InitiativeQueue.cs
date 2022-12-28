@@ -79,6 +79,16 @@ namespace Ultima5Redux.Maps
             return GetCurrentCombatUnitAndClean();
         }
 
+        public void RefreshFutureRounds()
+        {
+            if (_initiativeQueue.Count > 1)
+            {
+                Queue<CombatMapUnit> currentRound = _initiativeQueue.Dequeue();
+                _initiativeQueue.Clear();
+                _initiativeQueue.Enqueue(currentRound);
+            }
+        }
+
         /// <summary>
         ///     Calculates an initiative queue giving the order of all attacks or moves within a single round
         /// </summary>
@@ -228,6 +238,8 @@ namespace Ultima5Redux.Maps
 
             foreach (CombatMapUnit combatMapUnit in _initiativeQueue.SelectMany(mapUnits => mapUnits))
             {
+                if (!IsCombatMapUnitVisible(combatMapUnit)) continue;
+                
                 if (CombatMapUnitIsPresentAndActive(combatMapUnit))
                 {
                     if (combatMapUnit is CombatPlayer player && !CombatPlayerIsActive(player)) continue;
@@ -276,12 +288,10 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        private bool CombatMapUnitIsPresent(CombatMapUnit combatMapUnit)
+        private bool CombatMapUnitIsPresentOnMap(CombatMapUnit combatMapUnit, bool bFilterNotVisible = true)
         {
             // if the combat unit is not visible then we skip them and don't ruin the surprise that they are on the map
-            if (_combatMap.VisibleOnMap != null &&
-                !_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
-                return false;
+            if (bFilterNotVisible && !IsCombatMapUnitVisible(combatMapUnit)) return false;
 
             // if we have enemies piled on top of each other (like dungeon 60)
             bool bIsOnTop = _combatMap.GetTopVisibleMapUnit(combatMapUnit.MapUnitPosition.XY, false) == combatMapUnit;
@@ -289,14 +299,22 @@ namespace Ultima5Redux.Maps
             return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0 && bIsOnTop;
         }
 
+        private bool IsCombatMapUnitVisible(CombatMapUnit combatMapUnit)
+        {
+            if (_combatMap.VisibleOnMap != null &&
+                !_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
+                return false;
+            return true;
+        }
+
         private bool CombatMapUnitIsPresentAndActive(CombatMapUnit combatMapUnit)
         {
             if (combatMapUnit is CombatPlayer player)
             {
-                return CombatPlayerIsActive(player) && CombatMapUnitIsPresent(combatMapUnit);
+                return CombatPlayerIsActive(player) && CombatMapUnitIsPresentOnMap(combatMapUnit);
             }
 
-            return CombatMapUnitIsPresent(combatMapUnit);
+            return CombatMapUnitIsPresentOnMap(combatMapUnit);
         }
 
         internal bool CombatPlayerIsActive(CombatPlayer player) =>
@@ -337,9 +355,9 @@ namespace Ultima5Redux.Maps
             switch (mapUnit)
             {
                 case CombatPlayer playerUnit:
-                    return CombatMapUnitIsPresent(playerUnit);
+                    return CombatMapUnitIsPresentOnMap(playerUnit);
                 case Enemy enemyUnit:
-                    return CombatMapUnitIsPresent(enemyUnit);
+                    return CombatMapUnitIsPresentOnMap(enemyUnit, false);
                 case NonAttackingUnit:
                     return false;
             }
