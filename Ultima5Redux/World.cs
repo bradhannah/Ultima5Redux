@@ -339,8 +339,8 @@ namespace Ultima5Redux
                         if (bManualMovement)
                         {
                             return GameReferences.Instance.DataOvlRef.StringReferences.GetString(
-                                DataOvlReference.WorldStrings
-                                    .HEAD) +
+                                       DataOvlReference.WorldStrings
+                                           .HEAD) +
                                    GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
                         }
 
@@ -492,7 +492,7 @@ namespace Ultima5Redux
             BoardAndCleanFromWorld(carpet);
             turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                 DataOvlReference.WearUseItemStrings
-                .CARPET_BANG), false);
+                    .CARPET_BANG), false);
         }
 
         public void AdvanceClockNoComputation(int nMinutes)
@@ -1836,19 +1836,17 @@ namespace Ultima5Redux
             return AdvanceTime(nMinutesToAdvance, turnResults);
         }
 
-        public void TryToMoveCombatMap(Point2D.Direction direction, TurnResults turnResults)
+        public void TryToMoveCombatMap(Point2D.Direction direction, TurnResults turnResults, bool bKlimb)
         {
-            TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer, direction, turnResults);
+            TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer, direction, turnResults,
+                bKlimb);
         }
 
         public void TryToMoveCombatMap(CombatPlayer combatPlayer, Point2D.Direction direction,
-            TurnResults turnResults)
+            TurnResults turnResults, bool bKlimb)
         {
             if (combatPlayer == null)
                 throw new Ultima5ReduxException("Trying to move on combat map without a CombatPlayer");
-
-            turnResults.PushOutputToConsole(
-                GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction), true, false);
 
             CombatMap currentCombatMap = State.TheVirtualMap.CurrentCombatMap;
             Debug.Assert(currentCombatMap != null);
@@ -1858,24 +1856,32 @@ namespace Ultima5Redux
             Point2D newPosition = new(combatPlayer.MapUnitPosition.X + xAdjust,
                 combatPlayer.MapUnitPosition.Y + yAdjust);
 
-            if (IsLeavingMap(newPosition))
+            // if we are klimbing then we assume all the movement checks were done ahead of time
+            if (!bKlimb)
             {
-                turnResults.PushOutputToConsole("LEAVING", false);
+                turnResults.PushOutputToConsole(
+                    GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction), true, false);
 
-                currentCombatMap.MakePlayerEscape(combatPlayer);
+                if (IsLeavingMap(newPosition))
+                {
+                    turnResults.PushOutputToConsole("LEAVING", false);
 
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OfferToExitScreen));
-                return;
-            }
+                    currentCombatMap.MakePlayerEscape(combatPlayer);
 
-            if (!State.TheVirtualMap.IsTileFreeToTravelForAvatar(combatPlayer.MapUnitPosition.XY, newPosition, false,
-                    Avatar.AvatarState.Regular))
-            {
-                turnResults.PushOutputToConsole(" - " +
-                                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(
-                                                    DataOvlReference.TravelStrings.BLOCKED), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveBlocked));
-                return;
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OfferToExitScreen));
+                    return;
+                }
+
+                if (!State.TheVirtualMap.IsTileFreeToTravelForAvatar(combatPlayer.MapUnitPosition.XY, newPosition,
+                        false,
+                        Avatar.AvatarState.Regular))
+                {
+                    turnResults.PushOutputToConsole(" - " +
+                                                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(
+                                                        DataOvlReference.TravelStrings.BLOCKED), false);
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveBlocked));
+                    return;
+                }
             }
 
             ProcessDamageOnAdvanceTimeInCombat(turnResults);

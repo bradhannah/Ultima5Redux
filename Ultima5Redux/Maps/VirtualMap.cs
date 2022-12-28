@@ -192,7 +192,7 @@ namespace Ultima5Redux.Maps
         ///     Are we currently on a large map?
         /// </summary>
         [IgnoreDataMember]
-        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small;
+        public bool IsLargeMap => LargeMapOverUnder is Map.Maps.Overworld or Map.Maps.Underworld;
 
         /// <summary>
         ///     Number of total columns for current map
