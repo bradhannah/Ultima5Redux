@@ -1148,27 +1148,28 @@ namespace Ultima5Redux.Maps
 
         public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
 
-        private void RemovePortcullis(TurnResults turnResults, Point2D xy)
-        {
-            // this is for sound effects likely
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OpenPortcullis));
-            // this is to actually replace the tile
-            GameStateReference.State.TheVirtualMap.SetOverridingTileReferece(
-                GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-                    .BrickFloor), xy);
 
-            GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
-                WalkableType.CombatLand);
-            GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
-                WalkableType.CombatLandAndWater);
-            GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
-                WalkableType.CombatFlyThroughWalls);
-
-            // Not sure I need this - but maybe I will react visually 
-            turnResults.PushTurnResult(new TileOverrideOnCombatMap(xy,
-                GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-                    .BrickFloor)));
-        }
+        // private void RemovePortcullis(TurnResults turnResults, Point2D xy)
+        // {
+        //     // this is for sound effects likely
+        //     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OpenPortcullis));
+        //     // this is to actually replace the tile
+        //     GameStateReference.State.TheVirtualMap.SetOverridingTileReferece(
+        //         GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+        //             .BrickFloor), xy);
+        //
+        //     GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
+        //         WalkableType.CombatLand);
+        //     GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
+        //         WalkableType.CombatLandAndWater);
+        //     GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
+        //         WalkableType.CombatFlyThroughWalls);
+        //
+        //     // Not sure I need this - but maybe I will react visually 
+        //     turnResults.PushTurnResult(new TileOverrideOnCombatMap(xy,
+        //         GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+        //             .BrickFloor)));
+        // }
 
 
         public void ProcessCombatPlayerTurn(TurnResults turnResults, SelectionAction selectedAction,
@@ -1318,12 +1319,63 @@ namespace Ultima5Redux.Maps
             AdvanceToNextCombatMapUnit();
         }
 
-        private void HandleCombatPlayerAttackingNoOpponent(TurnResults turnResults, Point2D actionPosition,
-            string attackStr,
-            CombatPlayer combatPlayer)
+        private void TriggerTile(TurnResults turnResults, TriggerTileData triggerTileData, Point2D triggerPosition)
         {
-            TileReference tileReference =
-                GameStateReference.State.TheVirtualMap.GetTileReference(actionPosition);
+            TileReference newTileReference = triggerTileData.TriggerSprite;
+
+            if (newTileReference.Index == (int)TileReference.SpriteIndex.Portcullis)
+            {
+                // this is for sound effects likely
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OpenPortcullis));
+            }
+
+            // this is to actually replace the tile
+            GameStateReference.State.TheVirtualMap.SetOverridingTileReferece(newTileReference
+                // GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                //     .BrickFloor)
+                , triggerPosition);
+
+            GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(triggerPosition,
+                newTileReference.IsLandEnemyPassable,
+                WalkableType.CombatLand);
+            GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(triggerPosition,
+                newTileReference.IsWalking_Passable || newTileReference.IsWaterEnemyPassable,
+                WalkableType.CombatLandAndWater);
+            GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(triggerPosition, true,
+                WalkableType.CombatFlyThroughWalls);
+
+            // Not sure I need this - but maybe I will react visually 
+            turnResults.PushTurnResult(new TileOverrideOnCombatMap(triggerPosition,
+                // GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex.BrickFloor)
+                newTileReference
+            ));
+        }
+
+        private bool HandleTrigger(TurnResults turnResults, Point2D position)
+        {
+            if (!TheCombatMapReference.TheTriggerTiles.HasTriggerAtPosition(position))
+                return false;
+
+            List<TriggerTileData> triggerTiles =
+                TheCombatMapReference.TheTriggerTiles.GetTriggerTileDataByPosition(position);
+
+            foreach (TriggerTileData triggerTileData in triggerTiles.Where(t => !t.Triggered))
+            {
+                // walk through each of the tiles that we will now be changing
+                foreach (Point2D changeTilePosition in triggerTileData.TriggerChangePositions)
+                {
+                    TriggerTile(turnResults, triggerTileData, changeTilePosition);
+                }
+            }
+
+            return true;
+        }
+
+        private void HandleCombatPlayerAttackingNoOpponent(TurnResults turnResults, Point2D actionPosition,
+            string attackStr, CombatPlayer combatPlayer)
+        {
+            // TileReference tileReference =
+            //     GameStateReference.State.TheVirtualMap.GetTileReference(actionPosition);
             CombatItem weapon = null;
             attackStr += "nothing with ";
             if (_currentCombatItemQueue == null)
@@ -1343,31 +1395,34 @@ namespace Ultima5Redux.Maps
             CombatItemReference.MissileType missileType = weapon?.TheCombatItemReference.Missile ??
                                                           CombatItemReference.MissileType.None;
 
-            if (tileReference.Index == (int)TileReference.SpriteIndex.Portcullis && !bIsBlocked)
+            // if there is a trigger on this tile - then let's trigger!
+            if (TheCombatMapReference.HasTriggers)
             {
-                RemovePortcullis(turnResults, actionPosition);
+                if (HandleTrigger(turnResults, actionPosition))
+                {
+                    // required to actually show an attack animation
+                    turnResults.PushTurnResult(new AttackerTurnResult(
+                        TurnResult.TurnResultType.Combat_CombatPlayerAttackedTrigger,
+                        combatPlayer, null, missileType,
+                        CombatMapUnit.HitState.HitTrigger, actionPosition));
 
-                turnResults.PushTurnResult(new AttackerTurnResult(
-                    TurnResult.TurnResultType.Combat_CombatPlayerAttackedPortcullis,
-                    combatPlayer, null, missileType,
-                    CombatMapUnit.HitState.HitTrigger, actionPosition));
-
-                AdvanceToNextCombatMapUnit();
-                return;
+                    AdvanceToNextCombatMapUnit();
+                    return;
+                }
             }
 
             // it's not good enough just to not show any attack - the player needs to know that
             // their input was accepted - it just happens that it doesn't do anything of value
             // if ranged
             // -- If it is not ranged, then it's impossible to be "blocked" right??
-            if (bIsRanged)
+            if (bIsRanged && bIsBlocked)
             {
-                CombatMapUnit.HitState hitState =
-                    bIsBlocked ? CombatMapUnit.HitState.Blocked : CombatMapUnit.HitState.Missed;
                 turnResults.PushTurnResult(new AttackerTurnResult(
                     TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
                     combatPlayer, null, missileType,
-                    hitState, firstBlockPoint));
+                    CombatMapUnit.HitState.Blocked, firstBlockPoint));
+                AdvanceIfSafe(combatPlayer, turnResults);
+                return;
             }
 
             AdvanceIfSafe(combatPlayer, turnResults);
@@ -1375,7 +1430,7 @@ namespace Ultima5Redux.Maps
             turnResults.PushOutputToConsole(attackStr);
             turnResults.PushTurnResult(new AttackerTurnResult(
                 TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackNothing,
-                combatPlayer, null, missileType, CombatMapUnit.HitState.Missed, actionPosition));
+                combatPlayer, null, missileType, CombatMapUnit.HitState.HitNothingOfNote, actionPosition));
         }
 
         private bool CanEnemyMoveToSpace(Point2D xy, Enemy enemy)
@@ -1694,7 +1749,8 @@ namespace Ultima5Redux.Maps
 
             if (adjustedTileReference.Index == (int)TileReference.SpriteIndex.Portcullis)
             {
-                RemovePortcullis(turnResults, adjustedPos);
+                HandleTrigger(turnResults, adjustedPos);
+                //RemovePortcullis(turnResults, adjustedPos);
             }
 
             AdvanceToNextCombatMapUnit();

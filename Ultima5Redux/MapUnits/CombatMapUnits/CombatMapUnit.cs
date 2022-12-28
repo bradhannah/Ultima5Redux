@@ -18,7 +18,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public enum HitState
         {
             Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead, None,
-            Blocked, HitTrigger
+            Blocked, HitTrigger, HitNothingOfNote
         }
 
 
