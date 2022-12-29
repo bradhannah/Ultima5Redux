@@ -58,7 +58,7 @@ namespace Ultima5Redux.Maps
 
         [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
 
-        [DataMember] private MapOverrides TheMapOverrides { get; set; }
+        [DataMember] internal MapOverrides TheMapOverrides { get; set; }
 
         //[DataMember] private bool HasBeenExtorted { get; set; }
 
@@ -517,7 +517,8 @@ namespace Ultima5Redux.Maps
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
         internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, Map.WalkableType walkableType)
         {
-            Stack<Node> nodeStack = CurrentMap.GetAStarMap(walkableType, TheMapUnits).FindPath(currentXy, targetXy);
+            Stack<Node> nodeStack = CurrentMap.GetAStarMap(walkableType, TheMapUnits, TheMapOverrides)
+                .FindPath(currentXy, targetXy);
             return nodeStack?.Count ?? 0;
         }
 
@@ -1375,13 +1376,14 @@ namespace Ultima5Redux.Maps
 
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
 
-            CurrentCombatMap = new CombatMap(singleCombatMapReference);
-
             // we only want to push the exposed items and override map if we are on a small or large map 
             // not if we are going combat to combat map (think Debug)
-            if (TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles) PreTheMapOverrides = TheMapOverrides;
+            if (CurrentCombatMap != null && TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles)
+                PreTheMapOverrides = TheMapOverrides;
 
             TheMapOverrides = new MapOverrides(CurrentCombatMap);
+
+            CurrentCombatMap = new CombatMap(singleCombatMapReference, TheMapUnits, TheMapOverrides);
 
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat, null);
             LargeMapOverUnder = Map.Maps.Combat;

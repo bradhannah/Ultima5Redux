@@ -1861,11 +1861,10 @@ namespace Ultima5Redux
 
                 if (IsLeavingMap(newPosition))
                 {
-                    turnResults.PushOutputToConsole("LEAVING", false);
-
-                    currentCombatMap.MakePlayerEscape(combatPlayer);
-
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.Combat_CombatPlayerEscaped));
+                    // can they escape in this particular direction?
+                    bool _ = currentCombatMap.TryToMakePlayerEscape(turnResults, combatPlayer,
+                        CombatMap.DirectionToEscapeType(direction));
+                    
                     return;
                 }
 

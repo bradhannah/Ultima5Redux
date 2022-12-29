@@ -1166,7 +1166,7 @@ namespace Ultima5ReduxTesting
 
             CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
             Assert.NotNull(combatMap);
-            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2], world.State.TheVirtualMap.TheMapUnits);
+            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
 
             _ = "";
         }
@@ -2005,7 +2005,7 @@ namespace Ultima5ReduxTesting
 
             CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
             Assert.NotNull(combatMap);
-            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2], world.State.TheVirtualMap.TheMapUnits);
+            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
 
             _ = "";
         }
@@ -2028,7 +2028,7 @@ namespace Ultima5ReduxTesting
 
             CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
             Assert.NotNull(combatMap);
-            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2], world.State.TheVirtualMap.TheMapUnits);
+            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
 
             _ = "";
         }

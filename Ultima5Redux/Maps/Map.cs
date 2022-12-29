@@ -204,7 +204,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Builds the A* map to be used for NPC pathfinding
         /// </summary>
-        public AStar GetAStarMap(WalkableType walkableType, MapUnits.MapUnits mapUnits)
+        public AStar GetAStarMap(WalkableType walkableType, MapUnits.MapUnits mapUnits, MapOverrides mapOverrides)
         {
             Debug.Assert(TheMap != null);
             Debug.Assert(TheMap.Length > 0);
@@ -221,8 +221,11 @@ namespace Ultima5Redux.Maps
                 for (int y = 0; y < nYTiles; y++)
                 {
                     position.Y = y;
-                    TileReference currentTile =
-                        GameReferences.Instance.SpriteTileReferences.GetTileReference(TheMap[x][y]);
+                    TileReference currentTile = mapOverrides.HasOverrideTile(position)
+                        ? mapOverrides.GetOverrideTileReference(position)
+                        : GetOriginalTileReference(position);
+                    //GameReferences.Instance.SpriteTileReferences.GetTileReference(
+                    //TheMap[x][y]);
 
                     bool bIsWalkable = IsTileWalkable(currentTile, walkableType) && !mapUnits.IsTileOccupied(position);
 
@@ -462,7 +465,6 @@ namespace Ultima5Redux.Maps
                 "you tried to set an open door on a tile that is not an open door");
 
             _openDoors.Add(xy, 10);
-
         }
 
         public bool IsOpenDoor(in Point2D xy) => _openDoors.ContainsKey(xy) && _openDoors[xy] > 0;
@@ -478,6 +480,5 @@ namespace Ultima5Redux.Maps
         }
 
         #endregion
-        
     }
 }

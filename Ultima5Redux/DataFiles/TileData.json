@@ -8163,7 +8163,7 @@
     "Name": "BlackSquare",
     "Description": "",
     "IsWalking_Passable": false,
-    "RangeWeapon_Passable": false,
+    "RangeWeapon_Passable": true,
     "IsBoat_Passable": false,
     "IsSkiff_Passable": false,
     "IsCarpet_Passable": false,

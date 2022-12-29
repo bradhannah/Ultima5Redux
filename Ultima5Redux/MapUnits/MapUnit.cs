@@ -374,7 +374,7 @@ namespace Ultima5Redux.MapUnits
                 .GetConstrainedFourDirectionSurroundingPointsFurtherAway(
                     virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
                     virtualMap.NumberOfRowTiles, virtualMap.NumberOfColumnTiles);
-            AStar aStar = CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits);
+            AStar aStar = CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits, virtualMap.TheMapOverrides);
             foreach (Point2D point in possiblePositions)
             {
                 //if (virtualMap.IsTileFreeToTravel(point, true))
@@ -391,7 +391,7 @@ namespace Ultima5Redux.MapUnits
                     virtualMap.NumberOfRowTiles, virtualMap.NumberOfColumnTiles);
 
             AStar aStar = virtualMap.CurrentMap.GetAStarMap(virtualMap.CurrentMap.GetWalkableTypeByMapUnit(this),
-                virtualMap.TheMapUnits);
+                virtualMap.TheMapUnits, virtualMap.TheMapOverrides);
             
             foreach (Point2D point in possiblePositions)
             {
@@ -560,8 +560,8 @@ namespace Ultima5Redux.MapUnits
         public NonPlayerCharacterSchedule.AiType GetCurrentAiType(TimeOfDay tod) =>
             OverrideAiType ? OverridenAiType : NPCRef.Schedule.GetCharacterAiTypeByTime(tod);
 
-        private AStar CreateAStar(Map map, MapUnits mapUnits) =>
-            map.GetAStarMap(map.GetWalkableTypeByMapUnit(this), mapUnits);
+        private AStar CreateAStar(Map map, MapUnits mapUnits, MapOverrides mapOverrides) =>
+            map.GetAStarMap(map.GetWalkableTypeByMapUnit(this), mapUnits, mapOverrides);
 
         /// <summary>
         ///     calculates and stores new path for NPC
@@ -685,7 +685,7 @@ namespace Ultima5Redux.MapUnits
                     foreach (Point2D xy in stairsAndLadderLocations)
                     {
                         bool bPathBuilt = BuildPath(this, xy,
-                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits));
+                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits, virtualMap.TheMapOverrides));
                         // if a path was successfully built, then we have no need to build another path since this is the "best" path
                         if (bPathBuilt) return;
                     }
@@ -731,7 +731,7 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
                         BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
-                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits),
+                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits, virtualMap.TheMapOverrides),
                             true);
                         break;
                     case NonPlayerCharacterSchedule.AiType.HorseWander:
@@ -771,7 +771,7 @@ namespace Ultima5Redux.MapUnits
                         else
                         {
                             BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
-                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits),
+                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits, virtualMap.TheMapOverrides),
                                 true);
                         }
 
@@ -786,7 +786,7 @@ namespace Ultima5Redux.MapUnits
                         else
                         {
                             BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
-                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits),
+                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits, virtualMap.TheMapOverrides),
                                 true);
                         }
 
@@ -813,7 +813,7 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
                         BuildPath(this, npcDestinationPosition.XY,
-                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits));
+                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits, virtualMap.TheMapOverrides));
                         break;
                     case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
                     case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:
@@ -833,7 +833,7 @@ namespace Ultima5Redux.MapUnits
                         else
                             // move to the correct position
                             BuildPath(this, npcDestinationPosition.XY,
-                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits));
+                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits, virtualMap.TheMapOverrides));
                         //, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ChildRunAway:
@@ -851,7 +851,7 @@ namespace Ultima5Redux.MapUnits
                         // check to see how close we are - if we are too far, then just go to our scheduled location
                         // we should only try to get closer, not build a whole path
                         BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
-                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits),
+                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits, virtualMap.TheMapOverrides),
                             true);
                         break;
                     case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
@@ -864,7 +864,7 @@ namespace Ultima5Redux.MapUnits
                         else // get where you are going so you can be stationary
                         {
                             BuildPath(this, npcDestinationPosition.XY,
-                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits));
+                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits, virtualMap.TheMapOverrides));
                             //, aStar);
                         }
 
@@ -922,8 +922,10 @@ namespace Ultima5Redux.MapUnits
         /// <param name="map"></param>
         /// <param name="avatarPosition"></param>
         /// <param name="walkableType"></param>
+        /// <param name="mapUnits"></param>
+        /// <param name="mapOverrides"></param>
         protected void ProcessNextMoveTowardsAvatarAStar(Map map, Point2D avatarPosition, Map.WalkableType walkableType,
-            MapUnits mapUnits) //, AStar aStar)
+            MapUnits mapUnits, MapOverrides mapOverrides) //, AStar aStar)
         {
             const int noPath = 0xFFFF;
 
@@ -932,7 +934,7 @@ namespace Ultima5Redux.MapUnits
             Point2D positionToMoveTo = null;
             if (map is not LargeMap) throw new Ultima5ReduxException("Cannot do aStar move towards Avatar on LargeMap");
 
-            AStar aStar = map.GetAStarMap(walkableType, mapUnits);
+            AStar aStar = map.GetAStarMap(walkableType, mapUnits, mapOverrides);
             // it's a small map so we can rely on the aStar to get us a decent path
             Stack<Node> theWay = aStar.FindPath(MapUnitPosition.XY, avatarPosition);
 
