@@ -127,7 +127,7 @@ namespace Ultima5Redux.MapUnits
             MapUnitPosition = mapUnitPosition;
         }
 
-        internal virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) //, AStar aStar)
+        internal virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) 
         {
             if (virtualMap.CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
@@ -151,7 +151,7 @@ namespace Ultima5Redux.MapUnits
 
             // if there is no next available movement then we gotta recalculate and see if they should move
             if (!Movement.IsNextCommandAvailable())
-                CalculateNextPath(virtualMap, timeOfDay, virtualMap.CurrentSingleMapReference.Floor); //, aStar);
+                CalculateNextPath(virtualMap, timeOfDay, virtualMap.CurrentSingleMapReference.Floor); 
 
             // if this NPC has a command in the buffer, so let's execute!
             if (!Movement.IsNextCommandAvailable()) return;
@@ -348,9 +348,7 @@ namespace Ultima5Redux.MapUnits
             {
                 // if it isn't walkable then we skip it
                 bool bIsMapUnitOnTile = virtualMap.IsMapUnitOccupiedTile(point);
-                // virtualMap.IsTileFreeToTravel(point) is for walking and stuff, not great for water creatures apparently
                 if (!bIsMapUnitOnTile && CanMoveToDumb(virtualMap, point))
-                    //aStar.GetWalkable(point))
                     wanderablePoints.Add(point);
             }
 
@@ -370,7 +368,6 @@ namespace Ultima5Redux.MapUnits
         }
 
         private void RunAwayFromAvatar(VirtualMap virtualMap,
-            //AStar aStar, 
             MapUnitPosition npcDestinationPosition)
         {
             IEnumerable<Point2D> possiblePositions = npcDestinationPosition.XY
@@ -386,7 +383,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        private void GetCloserToAvatar(VirtualMap virtualMap) //, AStar aStar)
+        private void GetCloserToAvatar(VirtualMap virtualMap) 
         {
             IEnumerable<Point2D> possiblePositions = MapUnitPosition.XY
                 .GetConstrainedFourDirectionSurroundingPointsCloserTo(
@@ -970,13 +967,8 @@ namespace Ultima5Redux.MapUnits
 
             if (positionToMoveTo == null) return;
 
-            //Point2D oldPosition = MapUnitPosition.XY;
-
             // move to the new point
             MapUnitPosition.XY = positionToMoveTo;
-            // List<MapUnit> mapUnits = virtualMap.TheMapUnits.CurrentMapUnits.AllActiveMapUnits.ToList();
-            // map.RecalculateWalkableTileForAllAstarsWithMapUnits(positionToMoveTo, mapUnits);
-            // map.RecalculateWalkableTileForAllAstarsWithMapUnits(oldPosition, mapUnits);
         }
 
         protected void ProcessNextMoveTowardsMapUnitDumb(VirtualMap virtualMap, Point2D fromPosition,

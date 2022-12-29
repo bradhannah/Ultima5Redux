@@ -49,15 +49,11 @@ namespace Ultima5Redux.Maps
         {
             // load the map into memory
             TheMap = CurrentSingleMapReference.GetDefaultMap();
-
-            //GetAStarMap(WalkableType.StandardWalking);
         }
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             TheMap = CurrentSingleMapReference.GetDefaultMap();
-
-            //GetAStarMap(WalkableType.StandardWalking);
         }
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)

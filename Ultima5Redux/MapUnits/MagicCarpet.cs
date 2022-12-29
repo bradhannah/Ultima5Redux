@@ -68,7 +68,7 @@ namespace Ultima5Redux.MapUnits
             GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition) =>
             KeyTileReference = GetNonBoardedTileReference();
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) //, AStar aStar)
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay)
         {
             // by default the thing doesn't move on it's own
         }

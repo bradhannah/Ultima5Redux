@@ -256,7 +256,7 @@ namespace Ultima5Redux.Maps
             {
                 IEnumerable<Point2D> allPoints =
                     TheMapUnits.CurrentMapUnits.AllActiveMapUnits.Select(e => e.MapUnitPosition.XY);
-                // filter out NULL mapunits - this is when a MapUnit is Active but not visible, like DisocverableLoot
+                // filter out NULL mapunits - this is when a MapUnit is Active but not visible, like DiscoverableLoot
                 IEnumerable<MapUnit> visibleMapUnits =
                     allPoints.Select(point => GetTopVisibleMapUnit(point, false)).Where(p => p != null);
                 return visibleMapUnits;
@@ -270,9 +270,6 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
-        /// <param name="smallMaps"></param>
-        /// <param name="overworldMap"></param>
-        /// <param name="underworldMap"></param>
         /// <param name="initialMap"></param>
         /// <param name="currentSmallMapReference"></param>
         /// <param name="bUseExtendedSprites"></param>
@@ -284,10 +281,6 @@ namespace Ultima5Redux.Maps
             SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites,
             ImportedGameState importedGameState, SearchItems theSearchItems)
         {
-            //_smallMaps = new SmallMaps();//smallMaps;
-
-            // _largeMaps.Add(Map.Maps.Overworld, new(Map.Maps.Overworld));
-            // _largeMaps.Add(Map.Maps.Underworld, new(Map.Maps.Underworld));
             TheSearchItems = theSearchItems;
 
             SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation ??
@@ -525,7 +518,6 @@ namespace Ultima5Redux.Maps
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
         internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, Map.WalkableType walkableType)
         {
-            //Stack<Node> nodeStack = CurrentMap.GetAStarByWalkableType(walkableType).FindPath(currentXy, targetXy);
             Stack<Node> nodeStack = CurrentMap.GetAStarMap(walkableType, TheMapUnits).FindPath(currentXy, targetXy);
             return nodeStack?.Count ?? 0;
         }
@@ -626,7 +618,6 @@ namespace Ultima5Redux.Maps
                 // if the map unit doesn't haven't a particular aggression then it moves 
                 if (aggressiveMapUnitInfo.GetDecidedAction() == AggressiveMapUnitInfo.DecidedAction.MoveUnit)
                     mapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay); //,
-                //CurrentMap.GetAStarByMapUnit(mapUnit));
             }
         }
 
@@ -946,7 +937,7 @@ namespace Ultima5Redux.Maps
                 if (enemyRef == null) continue;
 
                 // add the new character to our list of characters currently on the map
-                Enemy enemy = TheMapUnits.CreateEnemy(tilePosition, enemyRef, CurrentLargeMap.CurrentSingleMapReference,
+                Enemy _ = TheMapUnits.CreateEnemy(tilePosition, enemyRef, CurrentLargeMap.CurrentSingleMapReference,
                     out int _);
 
                 return true;
@@ -977,9 +968,6 @@ namespace Ultima5Redux.Maps
             List<MapUnit> mapUnits = TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, attackToPosition,
                 CurrentSingleMapReference.Floor);
 
-            MapUnit targettedMapUnit = null;
-            TileReference targettedMapUniTileReference = null;
-
             switch (mapUnits.Count)
             {
                 case 0:
@@ -988,19 +976,12 @@ namespace Ultima5Redux.Maps
                     // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
                     if (mapUnits.Any(m => m is Avatar))
                     {
-                        targettedMapUnit = mapUnits.OfType<Avatar>().First();
-                        targettedMapUniTileReference = targettedMapUnit.KeyTileReference;
                     }
                     else
                     {
                         throw new Ultima5ReduxException($"Did not expect {mapUnits.Count} mapunits on targeted tile");
                     }
 
-                    break;
-                default:
-                    // a little lazy for now
-                    targettedMapUnit = mapUnits[0];
-                    //targettedMapUniTileReference = targettedMapUnit.KeyTileReference;
                     break;
             }
 
@@ -1104,7 +1085,6 @@ namespace Ultima5Redux.Maps
                             // they only attack when you are wanted by the popo
                             if (IsWantedManByThePoPo) ForceAttack(mapUnitInfo, attackFromTileReference);
 
-                            //goto case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing;
                             break;
                         case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
                             ForceAttack(mapUnitInfo, attackFromTileReference);
@@ -1891,7 +1871,7 @@ namespace Ultima5Redux.Maps
         /// <returns>stair sprite</returns>
         public TileReference GetStairsSprite(in Point2D xy)
         {
-            bool bGoingUp = IsStairGoingUp(xy, out TileReference stairTileReference);
+            bool _ = IsStairGoingUp(xy, out TileReference stairTileReference);
             return stairTileReference;
         }
 
@@ -2212,6 +2192,7 @@ namespace Ultima5Redux.Maps
         ///     Be sure to check if they are stairs first
         /// </summary>
         /// <param name="xy"></param>
+        /// <param name="stairTileReference"></param>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
         public bool IsStairGoingDown(in Point2D xy, out TileReference stairTileReference)
@@ -2403,7 +2384,8 @@ namespace Ultima5Redux.Maps
                 // most maps only have one jerky guard, but Blackthorn's is crawling with them
                 // and when you give them your password, they tend to leave you alone after unless
                 // you engage in conversation with them
-                TheMapUnits?.CurrentMapUnits.NonPlayerCharacters.All(n => n.NPCState.HasExtortedAvatar = false);
+                bool? _ = TheMapUnits?.CurrentMapUnits.NonPlayerCharacters.All(
+                    n => n.NPCState.HasExtortedAvatar = false);
             }
         }
 

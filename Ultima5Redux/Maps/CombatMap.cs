@@ -128,11 +128,6 @@ namespace Ultima5Redux.Maps
             CombatMapUnits = GameStateReference.State.TheVirtualMap.TheMapUnits;
             TheCombatMapReference = singleCombatMapReference;
             XYOverrides = GameReferences.Instance.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
-
-            // GetAStarMap(WalkableType.CombatLand);
-            // GetAStarMap(WalkableType.CombatWater);
-            // GetAStarMap(WalkableType.CombatFlyThroughWalls);
-            // GetAStarMap(WalkableType.CombatLandAndWater);
         }
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
@@ -236,10 +231,6 @@ namespace Ultima5Redux.Maps
 
                 CombatPlayer combatPlayer = new(record, playerStartPositions[nPlayer]);
 
-                // make sure the tile that the player occupies is not walkable
-                // RecalculateWalkableTileForAllAstarsWithMapUnits(playerStartPositions[nPlayer],
-                //     new List<MapUnit> { combatPlayer });
-
                 CombatMapUnits.CurrentMapUnits.AllMapUnits[nPlayer] = combatPlayer;
             }
         }
@@ -320,10 +311,6 @@ namespace Ultima5Redux.Maps
                     throw new InvalidEnumArgumentException(((int)combatMapSpriteType).ToString());
             }
 
-            // make sure the tile that the enemy occupies is not walkable
-            // we do both land and water in case there are overlapping tiles (which there shouldn't be!?)
-            // if (combatMapUnit != null)
-            //     RecalculateWalkableTileForAllAstarsWithMapUnits(mapUnitPosition, new List<MapUnit> { combatMapUnit });
             return combatMapUnit;
         }
 
@@ -427,10 +414,9 @@ namespace Ultima5Redux.Maps
         ///     some other tile surrounding it
         /// </summary>
         /// <param name="surroundThisPoint"></param>
-        /// <param name="notThesePoints"></param>
+        /// <param name="notThisPoint"></param>
         /// <returns></returns>
         private Point2D GetRandomSurroundingPointThatIsnt(Point2D surroundThisPoint, Point2D notThisPoint)
-            //List<Point2D> notThesePoints)
         {
             List<Point2D> surroundingCombatPlayerPoints =
                 surroundThisPoint.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
@@ -441,22 +427,9 @@ namespace Ultima5Redux.Maps
             surroundingCombatPlayerPoints.Remove(notThisPoint);
 
             Random random = new();
-            // do
-            // {
-            //     top:
             int nIndex = random.Next() % surroundingCombatPlayerPoints.Count;
             Point2D randomSurroundingPoint = surroundingCombatPlayerPoints[nIndex];
-            // foreach (Point2D notThisPoint in notThesePoints)
-            // {
-            //     if (notThisPoint == randomSurroundingPoint)
-            //     {
-            //         surroundingCombatPlayerPoints.RemoveAt(nIndex);
-            //         goto top;
-            //     }
-            // }
             return randomSurroundingPoint;
-
-            // } while (true);
         }
 
         private WalkableType GetWalkableTypeByEnemy(Enemy enemy)
@@ -774,16 +747,6 @@ namespace Ultima5Redux.Maps
                         {
                             deadEnemy.NPCState.IsDead = true;
                         }
-
-                        // List<MapUnit> mapUnits = AllVisibleCombatMapUnits.Cast<MapUnit>().ToList();
-                        // RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand,
-                        //     mapUnits);
-                        // RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatWater,
-                        //     mapUnits);
-                        // RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
-                        //     WalkableType.CombatFlyThroughWalls, mapUnits);
-                        // RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
-                        //     WalkableType.CombatLandAndWater, mapUnits);
                     }
 
                     break;
@@ -976,7 +939,6 @@ namespace Ultima5Redux.Maps
             foreach (Point2D destinationPoint in points)
             {
                 Stack<Node> currentPath = GetAStarMap(walkableType, mapUnits)
-                    //GetAStarByWalkableType(walkableType)
                     .FindPath(fromPosition, destinationPoint);
                 if (currentPath?.Count >= nShortestPath || currentPath == null) continue;
 
@@ -1103,12 +1065,6 @@ namespace Ultima5Redux.Maps
 
             currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
 
-            // since we are leaving this tile, we will recalculate the "walkableness" of the tile
-            // for all the aStar maps
-            // List<MapUnit> mapUnits = AllVisibleCombatMapUnits.Cast<MapUnit>().ToList();
-            // RecalculateWalkableTileForAllAstarsWithMapUnits(currentCombatUnit.MapUnitPosition.XY, mapUnits);
-            // RecalculateWalkableTileForAllAstarsWithMapUnits(originalPosition, mapUnits);
-
             switch (currentCombatUnit)
             {
                 case Enemy enemy:
@@ -1165,30 +1121,6 @@ namespace Ultima5Redux.Maps
         }
 
         public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
-
-
-        // private void RemovePortcullis(TurnResults turnResults, Point2D xy)
-        // {
-        //     // this is for sound effects likely
-        //     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OpenPortcullis));
-        //     // this is to actually replace the tile
-        //     GameStateReference.State.TheVirtualMap.SetOverridingTileReferece(
-        //         GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-        //             .BrickFloor), xy);
-        //
-        //     GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
-        //         WalkableType.CombatLand);
-        //     GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
-        //         WalkableType.CombatLandAndWater);
-        //     GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(xy, true,
-        //         WalkableType.CombatFlyThroughWalls);
-        //
-        //     // Not sure I need this - but maybe I will react visually 
-        //     turnResults.PushTurnResult(new TileOverrideOnCombatMap(xy,
-        //         GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-        //             .BrickFloor)));
-        // }
-
 
         public void ProcessCombatPlayerTurn(TurnResults turnResults, SelectionAction selectedAction,
             Point2D actionPosition, out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit,
@@ -1263,9 +1195,6 @@ namespace Ultima5Redux.Maps
                     {
                         // it's already created - we just add it to the mapunits list we track
                         CombatMapUnits.AddCombatMapUnit(nonAttackingUnitDrop);
-                        // A* is not automatically updated, so we update it
-                        // RecalculateWalkableTileForAllAstarsWithMapUnits(nonAttackingUnitDrop.MapUnitPosition.XY,
-                        //     new List<MapUnit> { nonAttackingUnitDrop });
                     }
 
                     // if the player attacks, but misses with a range weapon the we need see if they
@@ -1350,22 +1279,10 @@ namespace Ultima5Redux.Maps
 
             // this is to actually replace the tile
             GameStateReference.State.TheVirtualMap.SetOverridingTileReferece(newTileReference
-                // GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-                //     .BrickFloor)
                 , triggerPosition);
-
-            // GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(triggerPosition,
-            //     newTileReference.IsLandEnemyPassable,
-            //     WalkableType.CombatLand);
-            // GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(triggerPosition,
-            //     newTileReference.IsWalking_Passable || newTileReference.IsWaterEnemyPassable,
-            //     WalkableType.CombatLandAndWater);
-            // GameStateReference.State.TheVirtualMap.CurrentCombatMap.SetWalkableTile(triggerPosition, true,
-            //     WalkableType.CombatFlyThroughWalls);
 
             // Not sure I need this - but maybe I will react visually 
             turnResults.PushTurnResult(new TileOverrideOnCombatMap(triggerPosition,
-                // GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex.BrickFloor)
                 newTileReference
             ));
         }
@@ -1393,8 +1310,6 @@ namespace Ultima5Redux.Maps
         private void HandleCombatPlayerAttackingNoOpponent(TurnResults turnResults, Point2D actionPosition,
             string attackStr, CombatPlayer combatPlayer)
         {
-            // TileReference tileReference =
-            //     GameStateReference.State.TheVirtualMap.GetTileReference(actionPosition);
             CombatItem weapon = null;
             attackStr += "nothing with ";
             if (_currentCombatItemQueue == null)
@@ -1454,19 +1369,6 @@ namespace Ultima5Redux.Maps
 
         private bool CanEnemyMoveToSpace(Point2D xy, Enemy enemy)
         {
-            // TileReference tileReference = enemy.FleeingPath != null
-            //     ? GetTileReference(enemy.FleeingPath.Peek().Position)
-            //     : null;
-
-            // CombatMapUnit combatMapUnit =
-            // enemy.FleeingPath != null ? 
-            //GetCombatUnit(enemy.FleeingPath.Peek().Position)
-            // IsMapUnitBlockingSpace(enemy.FleeingPath.Peek().Position)
-            // : null;
-
-            // if the map unit is stackable then we don't worry about it
-            //if (combatMapUnit?.CanStackMapUnitsOnTop ?? false) combatMapUnit = null;
-
             bool bIsTileWalkable = false;
             // let's check to see if a map unit is blocking - but not all block, such as blood spatter
             if (enemy.FleeingPath != null)
@@ -1700,29 +1602,6 @@ namespace Ultima5Redux.Maps
         {
             return AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList()
                 .Any(m => !m.CanStackMapUnitsOnTop);
-
-            // this is inefficient, but the lists are so small it is unlikely to matter
-            // foreach (Type type in _visibilePriorityOrder)
-            // {
-            //     if (bExcludeAvatar && type == typeof(Avatar)) continue;
-            //     foreach (CombatMapUnit combatMapUnit in combatMapUnits)
-            //     {
-            //         if (!combatMapUnit.IsActive) continue;
-            //         // if it's a combat unit but they dead or gone then we skip
-            //         if ((combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0) &&
-            //             combatMapUnit is not NonAttackingUnit) continue;
-            //
-            //         // if we find the first highest priority item, then we simply return it
-            //         if (combatMapUnit.GetType() == type) return combatMapUnit;
-            //     }
-            // }
-            //
-            // MapUnit mapUnit = GameStateReference.State.TheVirtualMap.TheMapUnits.GetMapUnitCollection(Maps.Combat).
-            //GetTopVisibleMapUnit(unitPosition, true);
-
-            // if (mapUnit is CombatMapUnit unit) return unit;
-            //
-            // return TheMapUnit
         }
 
         protected override float GetAStarWeight(in Point2D xy) => 1.0f;
@@ -1756,8 +1635,6 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        // public List<VirtualMap.AggressiveMapUnitInfo> TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
-        //     out bool bPushedAThing, TurnResults turnResults)
         public void TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
             out bool bPushedAThing, TurnResults turnResults)
         {
@@ -1769,7 +1646,6 @@ namespace Ultima5Redux.Maps
             if (adjustedTileReference.Index == (int)TileReference.SpriteIndex.Portcullis)
             {
                 HandleTrigger(turnResults, adjustedPos);
-                //RemovePortcullis(turnResults, adjustedPos);
             }
 
             AdvanceToNextCombatMapUnit();

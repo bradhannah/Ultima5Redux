@@ -161,7 +161,7 @@ namespace Ultima5Redux.MapUnits
             BoardMapUnitFromAvatarState(CurrentAvatarState);
         }
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) //, AStar aStar)
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) 
         {
             // by default the thing doesn't move on it's own
         }

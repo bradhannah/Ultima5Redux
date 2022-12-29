@@ -58,7 +58,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = new();
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) //, AStar aStar)
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay)
         {
             // by default the thing doesn't move on it's own
         }
