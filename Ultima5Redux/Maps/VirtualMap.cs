@@ -56,9 +56,9 @@ namespace Ultima5Redux.Maps
         [DataMember]
         private MapUnitPosition PreMapUnitPosition { get; set; } = new();
 
-        [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
+        // [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
 
-        [DataMember] internal MapOverrides TheMapOverrides { get; set; }
+        // [DataMember] internal MapOverrides TheMapOverrides { get; set; }
 
         //[DataMember] private bool HasBeenExtorted { get; set; }
 
@@ -313,7 +313,7 @@ namespace Ultima5Redux.Maps
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            TheMapOverrides.TheMap = CurrentMap;
+            // TheMapOverrides.TheMap = CurrentMap;
             // this is so we don't break old save games
             if (TheSearchItems == null)
             {
@@ -517,7 +517,7 @@ namespace Ultima5Redux.Maps
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
         internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, Map.WalkableType walkableType)
         {
-            Stack<Node> nodeStack = CurrentMap.GetAStarMap(walkableType, TheMapUnits, TheMapOverrides)
+            Stack<Node> nodeStack = CurrentMap.GetAStarMap(walkableType, TheMapUnits)
                 .FindPath(currentXy, targetXy);
             return nodeStack?.Count ?? 0;
         }
@@ -1378,12 +1378,10 @@ namespace Ultima5Redux.Maps
 
             // we only want to push the exposed items and override map if we are on a small or large map 
             // not if we are going combat to combat map (think Debug)
-            if (CurrentCombatMap != null && TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles)
-                PreTheMapOverrides = TheMapOverrides;
+            // if (CurrentCombatMap != null && TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles)
+            //     PreTheMapOverrides = TheMapOverrides;
 
-            TheMapOverrides = new MapOverrides(CurrentCombatMap);
-
-            CurrentCombatMap = new CombatMap(singleCombatMapReference, TheMapUnits, TheMapOverrides);
+            CurrentCombatMap = new CombatMap(singleCombatMapReference, TheMapUnits);
 
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat, null);
             LargeMapOverUnder = Map.Maps.Combat;
@@ -1905,8 +1903,8 @@ namespace Ultima5Redux.Maps
                        throw new Ultima5ReduxException("Supposed to get a moongate override: " + xy);
 
             // we check to see if our override map has something on top of it
-            if (TheMapOverrides.HasOverrideTile(xy))
-                return TheMapOverrides.GetOverrideTileReference(xy.X, xy.Y) ??
+            if (CurrentMap.TheMapOverrides.HasOverrideTile(xy))
+                return CurrentMap.TheMapOverrides.GetOverrideTileReference(xy.X, xy.Y) ??
                        throw new Ultima5ReduxException("Expected tile override at " + xy);
 
             // the GetTileReference accounts for any forced overrides across the entire world
@@ -2347,7 +2345,7 @@ namespace Ultima5Redux.Maps
 
             // this will probably fail, which means creating a new map was a good idea
             // bajh: maybe we store each map override indefinitely so we never lose anything 
-            TheMapOverrides = new MapOverrides(CurrentLargeMap);
+            //TheMapOverrides = new MapOverrides(CurrentLargeMap);
 
             TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), map,
                 null);
@@ -2421,8 +2419,8 @@ namespace Ultima5Redux.Maps
             ClearSmallMapFlags();
 
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
-            
-            TheMapOverrides = new MapOverrides(CurrentSmallMap);
+
+            //TheMapOverrides = new MapOverrides(CurrentSmallMap);
 
             LargeMapOverUnder = (Map.Maps)(-1);
 
@@ -2502,7 +2500,7 @@ namespace Ultima5Redux.Maps
                 case LargeMap _:
                 case SmallMap _:
                     // restore our old map overrides
-                    TheMapOverrides = PreTheMapOverrides;
+                    //TheMapOverrides = PreTheMapOverrides;
 
                     LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
                     CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
@@ -2521,23 +2519,14 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        /// <summary>
-        ///     Sets an override for the current tile which will be favoured over the static map tile
-        /// </summary>
-        /// <param name="tileReference">the reference (sprite)</param>
-        /// <param name="xy"></param>
-        public void SetOverridingTileReferece(TileReference tileReference, Point2D xy)
-        {
-            TheMapOverrides.SetOverrideTile(xy, tileReference);
-        }
 
         public void SwapTiles(Point2D tile1Pos, Point2D tile2Pos)
         {
             TileReference tileRef1 = GetTileReference(tile1Pos);
             TileReference tileRef2 = GetTileReference(tile2Pos);
 
-            SetOverridingTileReferece(tileRef1, tile2Pos);
-            SetOverridingTileReferece(tileRef2, tile1Pos);
+            CurrentMap.SetOverridingTileReferece(tileRef1, tile2Pos);
+            CurrentMap.SetOverridingTileReferece(tileRef2, tile1Pos);
         }
 
         /// <summary>

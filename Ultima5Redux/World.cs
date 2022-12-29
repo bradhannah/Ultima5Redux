@@ -439,7 +439,7 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            State.TheVirtualMap.SetOverridingTileReferece(
+            State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(
                 GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
 
             Map currentMap = State.TheVirtualMap.CurrentMap;
@@ -690,7 +690,7 @@ namespace Ultima5Redux
                     false);
                 TileReference brokenMirrorTileReference =
                     GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("MirrorBroken");
-                State.TheVirtualMap.SetOverridingTileReferece(brokenMirrorTileReference,
+                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(brokenMirrorTileReference,
                     attackTargetPosition);
 
                 tryToAttackResult = TryToAttackResult.BrokenMirror;
@@ -1060,7 +1060,7 @@ namespace Ultima5Redux
             {
                 State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity++;
 
-                State.TheVirtualMap.SetOverridingTileReferece(
+                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(
                     GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
                 turnResults.PushOutputToConsole(
                     GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings
@@ -1085,7 +1085,7 @@ namespace Ultima5Redux
 
             if (tileReference.Index == (int)TileReference.SpriteIndex.WheatInField)
             {
-                State.TheVirtualMap.SetOverridingTileReferece(
+                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(
                     GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                         .PlowedField), xy);
                 turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
@@ -1108,13 +1108,13 @@ namespace Ultima5Redux
                                 // do nothing
                                 break;
                             case (int)TileReference.SpriteIndex.TableFoodBoth:
-                                State.TheVirtualMap.SetOverridingTileReferece(
+                                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(
                                     GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                                         .TableFoodBottom), xy);
                                 bAte = true;
                                 break;
                             case (int)TileReference.SpriteIndex.TableFoodTop:
-                                State.TheVirtualMap.SetOverridingTileReferece(
+                                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(
                                     GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                                         .TableMiddle), xy);
                                 bAte = true;
@@ -1126,14 +1126,14 @@ namespace Ultima5Redux
                         switch (tileReference.Index)
                         {
                             case (int)TileReference.SpriteIndex.TableFoodBottom:
-                                State.TheVirtualMap.SetOverridingTileReferece(
+                                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(
                                     GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                                         .TableMiddle), xy);
                                 bAte = true;
                                 // do nothing
                                 break;
                             case (int)TileReference.SpriteIndex.TableFoodBoth:
-                                State.TheVirtualMap.SetOverridingTileReferece(
+                                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(
                                     GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                                         .TableFoodTop), xy);
                                 bAte = true;
@@ -1298,7 +1298,7 @@ namespace Ultima5Redux
 
             if (bIsDoorLocked)
             {
-                State.TheVirtualMap.SetOverridingTileReferece(
+                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(
                     TileReferences.IsDoorWithView(tileReference.Index)
                         ? GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                             .RegularDoorView)
@@ -1984,7 +1984,7 @@ namespace Ultima5Redux
             if (TileReferences.IsChair(adjustedTileReference.Index))
             {
                 adjustedTileReference = GetChairNewDirection(direction);
-                State.TheVirtualMap.SetOverridingTileReferece(adjustedTileReference, adjustedPos);
+                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(adjustedTileReference, adjustedPos);
             }
 
             // is there an NPC on the tile? if so, we won't move anything into them
@@ -2091,7 +2091,7 @@ namespace Ultima5Redux
                 // like searching a wall that turns into a door
                 TileReference replacementTile =
                     GameReferences.Instance.SpriteTileReferences.GetTileReference(tileReference.SearchReplacementIndex);
-                State.TheVirtualMap.SetOverridingTileReferece(replacementTile, xy);
+                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(replacementTile, xy);
                 turnResults.PushTurnResult(new OutputToConsole(U5StringRef.ThouDostFind(
                     GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                         .A_HIDDEN_DOOR_BANG_N)), false));

@@ -26,6 +26,8 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public bool XRayMode { get; set; }
 
+        [DataMember] internal MapOverrides TheMapOverrides { get; set; }
+
         public abstract int NumOfXTiles { get; }
 
         public abstract int NumOfYTiles { get; }
@@ -41,11 +43,24 @@ namespace Ultima5Redux.Maps
 
         protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
 
-        [JsonConstructor] protected Map()
+        [JsonConstructor] protected Map() => TheMapOverrides = new MapOverrides(this);
+
+        /// <summary>
+        ///     Sets an override for the current tile which will be favoured over the static map tile
+        /// </summary>
+        /// <param name="tileReference">the reference (sprite)</param>
+        /// <param name="xy"></param>
+        public void SetOverridingTileReferece(TileReference tileReference, Point2D xy)
         {
+            TheMapOverrides.SetOverrideTile(xy, tileReference);
         }
 
         internal abstract void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit);
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            TheMapOverrides.TheMap = this;
+        }
 
         /// <summary>
         ///     Filthy little map to assign single letter to map elements
@@ -204,7 +219,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Builds the A* map to be used for NPC pathfinding
         /// </summary>
-        public AStar GetAStarMap(WalkableType walkableType, MapUnits.MapUnits mapUnits, MapOverrides mapOverrides)
+        public AStar GetAStarMap(WalkableType walkableType, MapUnits.MapUnits mapUnits)
         {
             Debug.Assert(TheMap != null);
             Debug.Assert(TheMap.Length > 0);
@@ -221,8 +236,8 @@ namespace Ultima5Redux.Maps
                 for (int y = 0; y < nYTiles; y++)
                 {
                     position.Y = y;
-                    TileReference currentTile = mapOverrides.HasOverrideTile(position)
-                        ? mapOverrides.GetOverrideTileReference(position)
+                    TileReference currentTile = TheMapOverrides.HasOverrideTile(position)
+                        ? TheMapOverrides.GetOverrideTileReference(position)
                         : GetOriginalTileReference(position);
                     //GameReferences.Instance.SpriteTileReferences.GetTileReference(
                     //TheMap[x][y]);

@@ -23,7 +23,7 @@ namespace Ultima5Redux.Maps
     {
         private readonly MapUnits.MapUnits _mapUnits;
 
-        private readonly MapOverrides _mapOverrides;
+        //private readonly MapOverrides _mapOverrides;
         // when computing what should happen when a player hits - these states can be triggered 
 
         public enum SelectionAction { None, Magic, Attack }
@@ -135,11 +135,10 @@ namespace Ultima5Redux.Maps
         /// <param name="singleCombatMapReference"></param>
         /// <param name="mapUnits"></param>
         /// <param name="mapOverrides"></param>
-        public CombatMap(SingleCombatMapReference singleCombatMapReference, MapUnits.MapUnits mapUnits,
-            MapOverrides mapOverrides)
+        public CombatMap(SingleCombatMapReference singleCombatMapReference, MapUnits.MapUnits mapUnits)
         {
             _mapUnits = mapUnits;
-            _mapOverrides = mapOverrides;
+            //_mapOverrides = mapOverrides;
             CombatMapUnits = GameStateReference.State.TheVirtualMap.TheMapUnits;
             TheCombatMapReference = singleCombatMapReference;
             XYOverrides = GameReferences.Instance.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
@@ -403,7 +402,7 @@ namespace Ultima5Redux.Maps
             List<Point2D> surroundingPoints =
                 enemy.MapUnitPosition.XY.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
             List<Point2D> emptySpacePoints = new();
-            AStar aStar = GetAStarMap(GetWalkableTypeByEnemy(enemy), _mapUnits, _mapOverrides);
+            AStar aStar = GetAStarMap(GetWalkableTypeByEnemy(enemy), _mapUnits);
             foreach (Point2D point in surroundingPoints)
             {
                 // the check for IsTileWalkable may be redundant, but just in case
@@ -613,7 +612,7 @@ namespace Ultima5Redux.Maps
             CombatMapUnit preferredAttackVictim = null;
 
             AStar aStar =
-                GetAStarMap(GetWalkableTypeByMapUnit(activeCombatUnit), _mapUnits, _mapOverrides); 
+                GetAStarMap(GetWalkableTypeByMapUnit(activeCombatUnit), _mapUnits); 
     
             List<Point2D> potentialTargetsPoints = new();
 
@@ -949,7 +948,7 @@ namespace Ultima5Redux.Maps
 
             foreach (Point2D destinationPoint in points)
             {
-                Stack<Node> currentPath = GetAStarMap(walkableType, _mapUnits, _mapOverrides)
+                Stack<Node> currentPath = GetAStarMap(walkableType, _mapUnits)
                     .FindPath(fromPosition, destinationPoint);
                 if (currentPath?.Count >= nShortestPath || currentPath == null) continue;
 
@@ -1322,8 +1321,8 @@ namespace Ultima5Redux.Maps
             }
 
             // this is to actually replace the tile
-            GameStateReference.State.TheVirtualMap.SetOverridingTileReferece(newTileReference
-                , triggerPosition);
+            //GameStateReference.State.TheVirtualMap.CurrentMap.
+            SetOverridingTileReferece(newTileReference, triggerPosition);
 
             // Not sure I need this - but maybe I will react visually 
             turnResults.PushTurnResult(new TileOverrideOnCombatMap(triggerPosition,

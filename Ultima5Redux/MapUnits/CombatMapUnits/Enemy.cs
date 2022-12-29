@@ -97,7 +97,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
             ProcessNextMoveTowardsAvatarAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
                 virtualMap.CurrentMap.GetWalkableTypeByMapUnit(this), virtualMap.TheMapUnits,
-                virtualMap.TheMapOverrides);
+                virtualMap.CurrentMap.TheMapOverrides);
         }
 
         public override TileReference GetNonBoardedTileReference() => KeyTileReference;
