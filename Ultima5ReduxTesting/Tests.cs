@@ -1858,7 +1858,7 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] [TestCase(SaveFiles.Britain2)] public void test_BlackthorneThingCheck(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.fresh)] public void test_BlackthorneThingCheck(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -3140,7 +3140,7 @@ namespace Ultima5ReduxTesting
             //GameReferences.Instance.Initialize(DataDirectory);
             CombatItem ring =
                 world.State.PlayerInventory.GetItemFromEquipment(DataOvlReference.Equipment.RingProtection);
-            Assert.IsTrue(ring.Quantity == 11);
+            Assert.IsTrue(ring.Quantity == 35);
 
             // ring of protection, avatar
             PlayerCharacterRecord avatar = world.State.CharacterRecords.AvatarRecord;
@@ -3148,7 +3148,7 @@ namespace Ultima5ReduxTesting
                 world.State.PlayerInventory, ring.SpecificEquipment);
 
             Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.Success);
-            Assert.IsTrue(ring.Quantity == 10);
+            Assert.IsTrue(ring.Quantity == 34);
         }
 
         [Test] [TestCase(SaveFiles.b_carpet, false)] [TestCase(SaveFiles.b_carpet, true)]
@@ -3163,7 +3163,7 @@ namespace Ultima5ReduxTesting
             //GameReferences.Instance.Initialize(DataDirectory);
             CombatItem ring =
                 world.State.PlayerInventory.GetItemFromEquipment(DataOvlReference.Equipment.RingProtection);
-            Assert.IsTrue(ring.Quantity == 11);
+            Assert.IsTrue(ring.Quantity == 35);
 
             // ring of protection, avatar
             PlayerCharacterRecord avatar = world.State.CharacterRecords.AvatarRecord;
@@ -3171,7 +3171,7 @@ namespace Ultima5ReduxTesting
                 world.State.PlayerInventory, ring.SpecificEquipment);
 
             Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.Success);
-            Assert.IsTrue(ring.Quantity == 10);
+            Assert.IsTrue(ring.Quantity == 34);
 
             equipResult = avatar.EquipEquipment(world.State.PlayerInventory, DataOvlReference.Equipment.TwoHHammer);
             Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.SuccessUnequipRight);

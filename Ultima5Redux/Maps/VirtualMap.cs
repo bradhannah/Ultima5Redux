@@ -128,7 +128,6 @@ namespace Ultima5Redux.Maps
                 SmallMapReferences.SingleMapReference currentSingleMapReference = CurrentSingleMapReference;
                 if (currentSingleMapReference == null)
                     throw new Ultima5ReduxException("Tried to get CurrentMap but it was false");
-                //return null;
 
                 if (currentSingleMapReference.IsDungeon) return CurrentDungeonMap;
                 
