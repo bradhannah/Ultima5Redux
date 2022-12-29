@@ -3591,5 +3591,19 @@ namespace Ultima5ReduxTesting
 
             Assert.True(turnResults.HasTurnResult);
         }
+
+        [Test] public void test_DiagonalAttackSim()
+        {
+            var from = new Point2D(3, 5);
+            var to = new Point2D(4, 4);
+            List<Point2D> result = from.Raytrace(to);
+            Assert.IsTrue(result.Count == 2);
+
+            var from2 = new Point2D(5, 3);
+            var to2 = new Point2D(4, 4);
+            List<Point2D> result2 = from2.Raytrace(to2);
+            Assert.IsTrue(result2.Count == 2);
+        }
     }
+    
 }

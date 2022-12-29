@@ -138,6 +138,14 @@ namespace Ultima5Redux
         /// <remarks>stolen from http://playtechs.blogspot.com/2007/03/raytracing-on-grid.html and reworked</remarks>
         public static List<Point2D> Raytrace(Point2D startPoint, Point2D endPoint)
         {
+            // if the points are adjacent then we simplify it and just return the first and last point
+            // if we don't do this then it will pollute the attack path with another tile which can
+            // cause blocked shots when attacking diagonally
+            if (Math.Abs(startPoint.X - endPoint.X) <= 1 && Math.Abs(startPoint.Y - endPoint.Y) <= 1)
+            {
+                return new List<Point2D> { startPoint, endPoint };
+            }
+            
             int dx = Math.Abs(endPoint.X - startPoint.X);
             int dy = Math.Abs(endPoint.Y - startPoint.Y);
             int x = startPoint.X;
