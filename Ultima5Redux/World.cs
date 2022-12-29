@@ -1865,7 +1865,7 @@ namespace Ultima5Redux
 
                     currentCombatMap.MakePlayerEscape(combatPlayer);
 
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OfferToExitScreen));
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.Combat_CombatPlayerEscaped));
                     return;
                 }
 
