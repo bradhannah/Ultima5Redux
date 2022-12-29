@@ -1688,12 +1688,7 @@ namespace Ultima5Redux.Maps
             bPushedAThing = false;
             Point2D adjustedPos = avatarXy.GetAdjustedPosition(direction);
 
-            TileReference adjustedTileReference = GameStateReference.State.TheVirtualMap.GetTileReference(adjustedPos);
-
-            if (adjustedTileReference.Index == (int)TileReference.SpriteIndex.Portcullis)
-            {
-                HandleTrigger(turnResults, adjustedPos);
-            }
+            HandleTrigger(turnResults, adjustedPos);
 
             AdvanceToNextCombatMapUnit();
         }
