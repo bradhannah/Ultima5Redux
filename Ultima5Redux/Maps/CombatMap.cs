@@ -126,7 +126,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public enum EscapeType { None, EscapeKey, KlimbDown, KlimbUp, North, South, East, West }
 
-        private readonly EscapeType _escapeType = EscapeType.None;
+        private EscapeType _escapeType = EscapeType.None;
 
         /// <summary>
         ///     Creates CombatMap.
@@ -134,7 +134,6 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="singleCombatMapReference"></param>
         /// <param name="mapUnits"></param>
-        /// <param name="mapOverrides"></param>
         public CombatMap(SingleCombatMapReference singleCombatMapReference, MapUnits.MapUnits mapUnits)
         {
             _mapUnits = mapUnits;
@@ -1056,19 +1055,18 @@ namespace Ultima5Redux.Maps
 
         public bool TryToMakePlayerEscape(TurnResults turnResults, CombatPlayer combatPlayer, EscapeType escapeType)
         {
-            turnResults.PushOutputToConsole("\nLEAVING", false);
-
-            //EscapeType escapeType = DirectionToEscapeType(direction);
+            turnResults.PushOutputToConsole("LEAVING", false);
 
             if (_escapeType == EscapeType.None || _escapeType == escapeType)
             {
                 // allowed to escape
                 MakePlayerEscape(combatPlayer);
+                _escapeType = escapeType;
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.Combat_CombatPlayerEscaped));
                 return true;
             }
 
-            turnResults.PushOutputToConsole("All must use the same exit!");
+            turnResults.PushOutputToConsole("All must use the same exit!", false);
 
             return false;
         }
@@ -1078,6 +1076,12 @@ namespace Ultima5Redux.Maps
             Debug.Assert(!combatPlayer.HasEscaped);
 
             combatPlayer.HasEscaped = true;
+
+            if (combatPlayer.Record == _initiativeQueue.ActivePlayerCharacterRecord)
+            {
+                //_initiativeQueue.SetActivePlayerCharacter(null);
+                SetActivePlayerCharacter(null);
+            }
             AdvanceToNextCombatMapUnit();
         }
 
