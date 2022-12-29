@@ -50,14 +50,14 @@ namespace Ultima5Redux.Maps
             // load the map into memory
             TheMap = CurrentSingleMapReference.GetDefaultMap();
 
-            InitializeAStarMap(WalkableType.StandardWalking);
+            //GetAStarMap(WalkableType.StandardWalking);
         }
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             TheMap = CurrentSingleMapReference.GetDefaultMap();
 
-            InitializeAStarMap(WalkableType.StandardWalking);
+            //GetAStarMap(WalkableType.StandardWalking);
         }
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
@@ -128,7 +128,7 @@ namespace Ultima5Redux.Maps
             return fCost;
         }
 
-        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             return mapUnit switch
             {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
@@ -128,7 +127,7 @@ namespace Ultima5Redux.MapUnits
             MapUnitPosition = mapUnitPosition;
         }
 
-        internal virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        internal virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) //, AStar aStar)
         {
             if (virtualMap.CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
@@ -152,7 +151,7 @@ namespace Ultima5Redux.MapUnits
 
             // if there is no next available movement then we gotta recalculate and see if they should move
             if (!Movement.IsNextCommandAvailable())
-                CalculateNextPath(virtualMap, timeOfDay, virtualMap.CurrentSingleMapReference.Floor, aStar);
+                CalculateNextPath(virtualMap, timeOfDay, virtualMap.CurrentSingleMapReference.Floor); //, aStar);
 
             // if this NPC has a command in the buffer, so let's execute!
             if (!Movement.IsNextCommandAvailable()) return;
@@ -370,29 +369,38 @@ namespace Ultima5Redux.MapUnits
             UpdateScheduleTracking(tod);
         }
 
-        private void RunAwayFromAvatar(VirtualMap virtualMap, AStar aStar, MapUnitPosition npcDestinationPosition)
+        private void RunAwayFromAvatar(VirtualMap virtualMap,
+            //AStar aStar, 
+            MapUnitPosition npcDestinationPosition)
         {
             IEnumerable<Point2D> possiblePositions = npcDestinationPosition.XY
                 .GetConstrainedFourDirectionSurroundingPointsFurtherAway(
                     virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
                     virtualMap.NumberOfRowTiles, virtualMap.NumberOfColumnTiles);
+            AStar aStar = CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits);
             foreach (Point2D point in possiblePositions)
             {
-                if (virtualMap.IsTileFreeToTravel(point, true))
-                    BuildPath(this, point, aStar, true);
+                //if (virtualMap.IsTileFreeToTravel(point, true))
+                // this will return ASAP if the end point is not travelable by the mapunit
+                BuildPath(this, point, aStar, true);
             }
         }
 
-        private void GetCloserToAvatar(VirtualMap virtualMap, AStar aStar)
+        private void GetCloserToAvatar(VirtualMap virtualMap) //, AStar aStar)
         {
             IEnumerable<Point2D> possiblePositions = MapUnitPosition.XY
                 .GetConstrainedFourDirectionSurroundingPointsCloserTo(
                     virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
                     virtualMap.NumberOfRowTiles, virtualMap.NumberOfColumnTiles);
+
+            AStar aStar = virtualMap.CurrentMap.GetAStarMap(virtualMap.CurrentMap.GetWalkableTypeByMapUnit(this),
+                virtualMap.TheMapUnits);
+            
             foreach (Point2D point in possiblePositions)
             {
                 if (virtualMap.IsTileFreeToTravel(point, true))
-                    BuildPath(this, point, aStar, true);
+                    BuildPath(this, point, aStar,
+                        true);
             }
         }
 
@@ -501,8 +509,10 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapUnit">where the character is presently</param>
         /// <param name="targetXy">where you want them to go</param>
         /// <param name="aStar"></param>
+        /// <param name="bOnlyOne">provide the first path you find, don't bother looking for more</param>
         /// <returns>returns true if a path was found, false if it wasn't</returns>
-        protected static bool BuildPath(MapUnit mapUnit, Point2D targetXy, AStar aStar, bool bOnlyOne = false)
+        protected static bool BuildPath(MapUnit mapUnit, Point2D targetXy, AStar aStar,
+            bool bOnlyOne = false)
         {
             if (mapUnit.MapUnitPosition.XY == targetXy) return true;
 
@@ -553,11 +563,15 @@ namespace Ultima5Redux.MapUnits
         public NonPlayerCharacterSchedule.AiType GetCurrentAiType(TimeOfDay tod) =>
             OverrideAiType ? OverridenAiType : NPCRef.Schedule.GetCharacterAiTypeByTime(tod);
 
+        private AStar CreateAStar(Map map, MapUnits mapUnits) =>
+            map.GetAStarMap(map.GetWalkableTypeByMapUnit(this), mapUnits);
+
         /// <summary>
         ///     calculates and stores new path for NPC
         ///     Placed outside into the VirtualMap since it will need information from the active map, VMap and the MapUnit itself
         /// </summary>
-        protected void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor, AStar aStar)
+        protected void
+            CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor) //., AStar aStar)
         {
             // added some safety to save potential exceptions
             // if there is no NPC reference (currently only horses) then we just assign their intended position
@@ -673,7 +687,8 @@ namespace Ultima5Redux.MapUnits
                             npcDestinationPosition.XY, MapUnitPosition.XY);
                     foreach (Point2D xy in stairsAndLadderLocations)
                     {
-                        bool bPathBuilt = BuildPath(this, xy, aStar);
+                        bool bPathBuilt = BuildPath(this, xy,
+                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits));
                         // if a path was successfully built, then we have no need to build another path since this is the "best" path
                         if (bPathBuilt) return;
                     }
@@ -705,18 +720,22 @@ namespace Ultima5Redux.MapUnits
                         WanderWithinN(virtualMap, timeOfDay, 4);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ChildRunAway:
-                        RunAwayFromAvatar(virtualMap, aStar, MapUnitPosition);
+                        RunAwayFromAvatar(virtualMap,
+                            //aStar, 
+                            MapUnitPosition);
                         break;
                     case NonPlayerCharacterSchedule.AiType.CustomAi:
                     case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:                        
                         // don't think they move....?
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
-                        GetCloserToAvatar(virtualMap, aStar);
+                        GetCloserToAvatar(virtualMap); //, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
-                        BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                        BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
+                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits),
+                            true);
                         break;
                     case NonPlayerCharacterSchedule.AiType.HorseWander:
                         WanderWithinN(virtualMap, timeOfDay, 4);
@@ -736,7 +755,8 @@ namespace Ultima5Redux.MapUnits
                         if (virtualMap.IsWantedManByThePoPo)
                         {
                             //BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
-                            GetCloserToAvatar(virtualMap, aStar);
+                            GetCloserToAvatar(virtualMap);
+                            //, aStar);
                         }
 
                         // else they stay where they are
@@ -753,7 +773,9 @@ namespace Ultima5Redux.MapUnits
                         }
                         else
                         {
-                            BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                            BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
+                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits),
+                                true);
                         }
 
                         break;
@@ -766,7 +788,9 @@ namespace Ultima5Redux.MapUnits
                         }
                         else
                         {
-                            BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                            BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
+                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits),
+                                true);
                         }
 
                         break;
@@ -791,7 +815,8 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:                        
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
-                        BuildPath(this, npcDestinationPosition.XY, aStar);
+                        BuildPath(this, npcDestinationPosition.XY,
+                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits));
                         break;
                     case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
                     case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:
@@ -810,30 +835,40 @@ namespace Ultima5Redux.MapUnits
                             WanderWithinN(virtualMap, timeOfDay, nWanderTiles);
                         else
                             // move to the correct position
-                            BuildPath(this, npcDestinationPosition.XY, aStar);
+                            BuildPath(this, npcDestinationPosition.XY,
+                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits));
+                        //, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         // if the avatar is close by then move away from him, otherwise return to original path, one move at a time
-                        RunAwayFromAvatar(virtualMap, aStar, MapUnitPosition);
+                        RunAwayFromAvatar(virtualMap,
+                            //aStar, 
+                            MapUnitPosition);
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
-                        GetCloserToAvatar(virtualMap, aStar);
+                        GetCloserToAvatar(virtualMap);
+                        //, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
                         // check to see how close we are - if we are too far, then just go to our scheduled location
                         // we should only try to get closer, not build a whole path
-                        BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                        BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
+                            CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits),
+                            true);
                         break;
                     case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
                         if (virtualMap.IsWantedManByThePoPo)
                         {
-                            GetCloserToAvatar(virtualMap, aStar);
+                            GetCloserToAvatar(virtualMap);
+                            //, aStar);
                             //BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
                         }
                         else // get where you are going so you can be stationary
                         {
-                            BuildPath(this, npcDestinationPosition.XY, aStar);
+                            BuildPath(this, npcDestinationPosition.XY,
+                                CreateAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits));
+                            //, aStar);
                         }
 
                         break;
@@ -889,16 +924,18 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="map"></param>
         /// <param name="avatarPosition"></param>
-        /// <param name="aStar"></param>
-        protected void ProcessNextMoveTowardsAvatarAStar(VirtualMap virtualMap, Point2D avatarPosition, AStar aStar)
+        /// <param name="walkableType"></param>
+        protected void ProcessNextMoveTowardsAvatarAStar(Map map, Point2D avatarPosition, Map.WalkableType walkableType,
+            MapUnits mapUnits) //, AStar aStar)
         {
             const int noPath = 0xFFFF;
 
-            Map map = virtualMap.CurrentMap;
+            //Map map = virtualMap.CurrentMap;
 
             Point2D positionToMoveTo = null;
             if (map is not LargeMap) throw new Ultima5ReduxException("Cannot do aStar move towards Avatar on LargeMap");
 
+            AStar aStar = map.GetAStarMap(walkableType, mapUnits);
             // it's a small map so we can rely on the aStar to get us a decent path
             Stack<Node> theWay = aStar.FindPath(MapUnitPosition.XY, avatarPosition);
 
@@ -933,17 +970,17 @@ namespace Ultima5Redux.MapUnits
 
             if (positionToMoveTo == null) return;
 
-            Point2D oldPosition = MapUnitPosition.XY;
+            //Point2D oldPosition = MapUnitPosition.XY;
 
             // move to the new point
             MapUnitPosition.XY = positionToMoveTo;
-            List<MapUnit> mapUnits = virtualMap.TheMapUnits.CurrentMapUnits.AllActiveMapUnits.ToList();
-            map.RecalculateWalkableTileForAllAstarsWithMapUnits(positionToMoveTo, mapUnits);
-            map.RecalculateWalkableTileForAllAstarsWithMapUnits(oldPosition, mapUnits);
+            // List<MapUnit> mapUnits = virtualMap.TheMapUnits.CurrentMapUnits.AllActiveMapUnits.ToList();
+            // map.RecalculateWalkableTileForAllAstarsWithMapUnits(positionToMoveTo, mapUnits);
+            // map.RecalculateWalkableTileForAllAstarsWithMapUnits(oldPosition, mapUnits);
         }
 
         protected void ProcessNextMoveTowardsMapUnitDumb(VirtualMap virtualMap, Point2D fromPosition,
-            Point2D toPosition, AStar aStar)
+            Point2D toPosition) //, AStar aStar)
         {
             Point2D positionToMoveTo = null;
 

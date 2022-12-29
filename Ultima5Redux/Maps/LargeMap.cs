@@ -52,13 +52,13 @@ namespace Ultima5Redux.Maps
             // for now combat maps don't have overrides
 
             BuildMap(mapChoice);
-            BuildAStar();
+            //BuildAStar();
         }
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             BuildMap(_mapChoice);
-            BuildAStar();
+            //BuildAStar();
         }
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
@@ -66,11 +66,11 @@ namespace Ultima5Redux.Maps
             // TBD
         }
 
-        private void BuildAStar()
-        {
-            InitializeAStarMap(WalkableType.StandardWalking);
-            InitializeAStarMap(WalkableType.CombatWater);
-        }
+        // private void BuildAStar()
+        // {
+        //     GetAStarMap(WalkableType.StandardWalking);
+        //     GetAStarMap(WalkableType.CombatWater);
+        // }
 
         private void BuildMap(Maps mapChoice)
         {
@@ -118,7 +118,7 @@ namespace Ultima5Redux.Maps
 
         protected override float GetAStarWeight(in Point2D xy) => 1;
 
-        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             switch (mapUnit)
             {

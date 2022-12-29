@@ -67,7 +67,7 @@ namespace Ultima5Redux.Maps
 
         protected override float GetAStarWeight(in Point2D xy) => 1.0f; //throw new System.NotImplementedException();
 
-        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => WalkableType.StandardWalking;
+        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => WalkableType.StandardWalking;
 
         public override bool IsRepeatingMap => false;
 

@@ -84,19 +84,20 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Stats.CurrentMp = 0;
         }
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) //, AStar aStar)
         {
             if (EnemyReference.DoesNotMove) return;
             // are we water, sand or land?
             if (virtualMap.IsLargeMap)
             {
                 ProcessNextMoveTowardsMapUnitDumb(virtualMap, MapUnitPosition.XY,
-                    virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar);
+                    virtualMap.TheMapUnits.CurrentAvatarPosition.XY); //, aStar);
                 return;
             }
 
-            ProcessNextMoveTowardsAvatarAStar(virtualMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
-                aStar);
+            ProcessNextMoveTowardsAvatarAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
+                virtualMap.CurrentMap.GetWalkableTypeByMapUnit(this), virtualMap.TheMapUnits);
+            //, aStar);
         }
 
         public override TileReference GetNonBoardedTileReference() => KeyTileReference;

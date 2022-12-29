@@ -2,7 +2,6 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
-using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.References;
@@ -69,7 +68,7 @@ namespace Ultima5Redux.MapUnits
             GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition) =>
             KeyTileReference = GetNonBoardedTileReference();
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) //, AStar aStar)
         {
             // by default the thing doesn't move on it's own
         }

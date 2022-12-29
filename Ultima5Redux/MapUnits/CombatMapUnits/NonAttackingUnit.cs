@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Ultima5Redux.DayNightMoon;
-using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
@@ -59,7 +58,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = new();
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) //, AStar aStar)
         {
             // by default the thing doesn't move on it's own
         }

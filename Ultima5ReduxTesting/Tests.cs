@@ -1166,7 +1166,7 @@ namespace Ultima5ReduxTesting
 
             CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
             Assert.NotNull(combatMap);
-            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
+            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2], world.State.TheVirtualMap.TheMapUnits);
 
             _ = "";
         }
@@ -2005,7 +2005,7 @@ namespace Ultima5ReduxTesting
 
             CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
             Assert.NotNull(combatMap);
-            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
+            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2], world.State.TheVirtualMap.TheMapUnits);
 
             _ = "";
         }
@@ -2028,7 +2028,7 @@ namespace Ultima5ReduxTesting
 
             CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
             Assert.NotNull(combatMap);
-            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
+            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2], world.State.TheVirtualMap.TheMapUnits);
 
             _ = "";
         }
@@ -2212,19 +2212,19 @@ namespace Ultima5ReduxTesting
                 out CombatMapUnit activeCombatMapUnit,
                 out CombatMapUnit targetedCombatMapUnit,
                 //out string preAttackOutputStr, out string postAttackOutputStr,
-                out Point2D missedPoint);
+                out Point2D missedPoint, world.State.TheVirtualMap.TheMapUnits);
             Assert.IsInstanceOf<Enemy>(activeCombatMapUnit);
 
             world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(turnResults,
                 out activeCombatMapUnit, out targetedCombatMapUnit,
                 //out preAttackOutputStr, out postAttackOutputStr,
-                out missedPoint);
+                out missedPoint, world.State.TheVirtualMap.TheMapUnits);
             Assert.IsInstanceOf<Enemy>(activeCombatMapUnit);
 
             world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(turnResults,
                 out activeCombatMapUnit, out targetedCombatMapUnit,
                 //out preAttackOutputStr, out postAttackOutputStr,
-                out missedPoint);
+                out missedPoint, world.State.TheVirtualMap.TheMapUnits);
             Assert.IsInstanceOf<Enemy>(activeCombatMapUnit);
         }
 
@@ -3581,7 +3581,7 @@ namespace Ultima5ReduxTesting
             currentCombatMap.ProcessEnemyTurn(turnResults,
                 out CombatMapUnit activeCombatMapUnit,
                 out CombatMapUnit targetedCombatMapUnit,
-                out Point2D missedPoint);
+                out Point2D missedPoint, world.State.TheVirtualMap.TheMapUnits);
 
             if (activeCombatMapUnit is not Enemy enemy)
             {

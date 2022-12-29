@@ -525,8 +525,8 @@ namespace Ultima5Redux.Maps
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
         internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, Map.WalkableType walkableType)
         {
-            Stack<Node> nodeStack = CurrentMap.GetAStarByWalkableType(walkableType).FindPath(currentXy, targetXy);
-
+            //Stack<Node> nodeStack = CurrentMap.GetAStarByWalkableType(walkableType).FindPath(currentXy, targetXy);
+            Stack<Node> nodeStack = CurrentMap.GetAStarMap(walkableType, TheMapUnits).FindPath(currentXy, targetXy);
             return nodeStack?.Count ?? 0;
         }
 
@@ -625,8 +625,8 @@ namespace Ultima5Redux.Maps
 
                 // if the map unit doesn't haven't a particular aggression then it moves 
                 if (aggressiveMapUnitInfo.GetDecidedAction() == AggressiveMapUnitInfo.DecidedAction.MoveUnit)
-                    mapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay,
-                        CurrentMap.GetAStarByMapUnit(mapUnit));
+                    mapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay); //,
+                //CurrentMap.GetAStarByMapUnit(mapUnit));
             }
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -27,9 +26,9 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public bool XRayMode { get; set; }
 
-        [IgnoreDataMember] private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new();
-
-        [IgnoreDataMember] private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes = new();
+        // [IgnoreDataMember] private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new();
+        //
+        // [IgnoreDataMember] private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes = new();
 
         public abstract int NumOfXTiles { get; }
 
@@ -143,23 +142,23 @@ namespace Ultima5Redux.Maps
             return false;
         }
 
-        public AStar GetAStarByMapUnit(MapUnit mapUnit)
-        {
-            WalkableType walkableType = GetWalkableTypeByMapUnit(mapUnit);
+        // public AStar GetAStarByMapUnit(MapUnit mapUnit)
+        // {
+        //     WalkableType walkableType = GetWalkableTypeByMapUnit(mapUnit);
+        //
+        //     return GetAStarByWalkableType(walkableType);
+        // }
 
-            return GetAStarByWalkableType(walkableType);
-        }
-
-        public AStar GetAStarByWalkableType(WalkableType walkableType)
-        {
-            if (!_aStarDictionary.ContainsKey(walkableType))
-            {
-                throw new Ultima5ReduxException("Tried to get AStar with walkableType=" + walkableType + " in class " +
-                                                GetType());
-            }
-
-            return _aStarDictionary[walkableType];
-        }
+        // public AStar GetAStarByWalkableType(WalkableType walkableType)
+        // {
+        //     if (!_aStarDictionary.ContainsKey(walkableType))
+        //     {
+        //         throw new Ultima5ReduxException("Tried to get AStar with walkableType=" + walkableType + " in class " +
+        //                                         GetType());
+        //     }
+        //
+        //     return _aStarDictionary[walkableType];
+        // }
 
         public TileOverrideReference GetTileOverride(in Point2D xy) => XYOverrides[xy];
 
@@ -171,7 +170,7 @@ namespace Ultima5Redux.Maps
             return GameReferences.Instance.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
         }
 
-        public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
+        // public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
 
         public bool IsXYOverride(in Point2D xy, TileOverrideReference.TileType tileType) =>
             // this is kind of hacky - but the map is only aware of the primary tile, so if the override is 
@@ -209,7 +208,7 @@ namespace Ultima5Redux.Maps
         protected abstract float GetAStarWeight(in Point2D xy);
 
 
-        protected abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
+        public abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
 
         protected virtual bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
@@ -229,7 +228,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Builds the A* map to be used for NPC pathfinding
         /// </summary>
-        protected void InitializeAStarMap(WalkableType walkableType)
+        public AStar GetAStarMap(WalkableType walkableType, MapUnits.MapUnits mapUnits)
         {
             Debug.Assert(TheMap != null);
             Debug.Assert(TheMap.Length > 0);
@@ -238,25 +237,31 @@ namespace Ultima5Redux.Maps
 
             // load the A-Star compatible map into memory
             List<List<Node>> aStarNodesLists = Utils.Init2DList<Node>(nXTiles, nYTiles);
-            _aStarNodes.Add(walkableType, aStarNodesLists);
+            //Dictionary<WalkableType, List<List<Node>>>
+            //Dictionary<WalkableType, List<List<Node>>>;
+            //_aStarNodes.Add(walkableType, aStarNodesLists);
 
+            Point2D position = new();
             for (int x = 0; x < nXTiles; x++)
             {
+                position.X = x;
                 for (int y = 0; y < nYTiles; y++)
                 {
+                    position.Y = y;
                     TileReference currentTile =
                         GameReferences.Instance.SpriteTileReferences.GetTileReference(TheMap[x][y]);
 
-                    bool bIsWalkable = IsTileWalkable(currentTile, walkableType);
+                    bool bIsWalkable = IsTileWalkable(currentTile, walkableType) && !mapUnits.IsTileOccupied(position);
 
-                    float fWeight = GetAStarWeight(new Point2D(x, y));
+                    float fWeight = GetAStarWeight(position);
 
-                    Node node = new(new Point2D(x, y), bIsWalkable, fWeight);
+                    Node node = new(position.Copy(), bIsWalkable, fWeight);
                     aStarNodesLists[x].Add(node);
                 }
             }
 
-            _aStarDictionary.Add(walkableType, new AStar(aStarNodesLists));
+            //_aStarDictionary.Add(walkableType, new AStar(aStarNodesLists));
+            return new AStar(aStarNodesLists);
         }
 
         protected bool IsTileWalkable(in Point2D xy, WalkableType walkableType)
@@ -267,19 +272,19 @@ namespace Ultima5Redux.Maps
             return IsTileWalkable(tileReference, walkableType);
         }
 
-        protected void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType,
-            List<MapUnit> mapUnits)
-        {
-            bool bIsMapUnitOccupyingNextTile = false;
-            if (mapUnits != null) bIsMapUnitOccupyingNextTile = IsMapUnitOccupiedFromList(xy, 0, mapUnits);
-            SetWalkableTile(xy, IsTileWalkable(xy, walkableType) && !bIsMapUnitOccupyingNextTile, walkableType);
-        }
+        // protected void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType,
+        //     List<MapUnit> mapUnits)
+        // {
+        //     bool bIsMapUnitOccupyingNextTile = false;
+        //     if (mapUnits != null) bIsMapUnitOccupyingNextTile = IsMapUnitOccupiedFromList(xy, 0, mapUnits);
+        //     SetWalkableTile(xy, IsTileWalkable(xy, walkableType) && !bIsMapUnitOccupyingNextTile, walkableType);
+        // }
 
-        protected void SetWalkableTile(in Point2D xy, bool bWalkable, WalkableType walkableType)
-        {
-            Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
-            _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
-        }
+        // protected void SetWalkableTile(in Point2D xy, bool bWalkable, WalkableType walkableType)
+        // {
+        //     Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
+        //     _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
+        // }
 
         #region FLOOD FILL
 
@@ -427,11 +432,11 @@ namespace Ultima5Redux.Maps
             WalkableType.CombatLandAndWater
         };
 
-        public void RecalculateWalkableTileForAllAstarsWithMapUnits(Point2D xy, List<MapUnit> mapUnits)
-        {
-            foreach (WalkableType walkableType in _allAStars.Where(IsAStarMap))
-                RecalculateWalkableTile(xy, walkableType, mapUnits);
-        }
+        // public void RecalculateWalkableTileForAllAstarsWithMapUnits(Point2D xy, List<MapUnit> mapUnits)
+        // {
+        //     foreach (WalkableType walkableType in _allAStars.Where(IsAStarMap))
+        //         RecalculateWalkableTile(xy, walkableType, mapUnits);
+        // }
 
         protected virtual Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy) =>
             xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
@@ -506,8 +511,8 @@ namespace Ultima5Redux.Maps
 
             _openDoors.Add(xy, 10);
 
-            if (IsAStarMap(WalkableType.CombatLand)) SetWalkableTile(xy, true, WalkableType.CombatLand);
-            if (IsAStarMap(WalkableType.StandardWalking)) SetWalkableTile(xy, true, WalkableType.StandardWalking);
+            // if (IsAStarMap(WalkableType.CombatLand)) SetWalkableTile(xy, true, WalkableType.CombatLand);
+            // if (IsAStarMap(WalkableType.StandardWalking)) SetWalkableTile(xy, true, WalkableType.StandardWalking);
         }
 
         public bool IsOpenDoor(in Point2D xy) => _openDoors.ContainsKey(xy) && _openDoors[xy] > 0;
@@ -523,5 +528,6 @@ namespace Ultima5Redux.Maps
         }
 
         #endregion
+        
     }
 }

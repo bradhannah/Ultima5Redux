@@ -1173,9 +1173,9 @@ namespace Ultima5Redux
                     if (!itemStack.HasStackableItems)
                     {
                         State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
-                        State.TheVirtualMap.CurrentMap.RecalculateWalkableTileForAllAstarsWithMapUnits(
-                            itemStack.MapUnitPosition.XY,
-                            State.TheVirtualMap.AllVisibleActiveMapUnits.ToList());
+                        // State.TheVirtualMap.CurrentMap.RecalculateWalkableTileForAllAstarsWithMapUnits(
+                        //     itemStack.MapUnitPosition.XY,
+                        //     State.TheVirtualMap.AllVisibleActiveMapUnits.ToList());
                     }
 
                     turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(invItem.FindDescription), false);
