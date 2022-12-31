@@ -1934,7 +1934,12 @@ namespace Ultima5Redux.Maps
             // if the position of the tile is no longer inside the bounds of the visibility
             // or has become invisible, then destroy the voxels and return right away
             bool bOutsideOfVisibilityArray = !IsInsideBounds(xy);
-            if (bOutsideOfVisibilityArray || !CurrentMap.VisibleOnMap[xy.X][xy.Y]) return tileStack;
+            if (bOutsideOfVisibilityArray || !CurrentMap.VisibleOnMap[xy.X][xy.Y])
+            {
+                if (!bOutsideOfVisibilityArray)
+                    tileStack.PushTileReference(GameReferences.Instance.SpriteTileReferences.GetTileReference(255));
+                return tileStack;
+            }
 
             // get the reference as per the original game data
             TileReference origTileReference = GetTileReference(xy);

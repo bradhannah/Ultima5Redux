@@ -51,7 +51,7 @@ Index, Name, DungeonLocation, DirEastLeft, DirWestRight, DirWestRight, DirSouthD
 49, Dungeon-49, 0, False, True, True, False, False, False, False, 
 50, Dungeon-50, 0, False, False, False, True, False, False, False, 
 51, Dungeon-51, 0, False, False, False, False, False, False, False, 
-52, Dungeon-52, 0, False, True, True, False, False, False, False, 
+52, Dungeon-52, 0, False, True, True, False, False, False, False,"No monsters, two exits"
 53, Dungeon-53, 0, False, False, False, True, False, False, False, 
 54, Dungeon-54, 0, False, True, True, True, False, False, False, 
 55, Dungeon-55, 0, False, True, True, True, False, False, False, 
