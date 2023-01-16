@@ -168,6 +168,8 @@ namespace Ultima5Redux.References.Maps
         }
 
 
+        public bool Is(SpriteIndex spriteIndex) => Index == (int)spriteIndex;
+        
         public bool IsPassable(Avatar.AvatarState avatarState)
         {
             switch (avatarState)
