@@ -51,7 +51,7 @@ namespace Ultima5ReduxTesting
         public enum SaveFiles
         {
             Britain, Britain2, Britain3, BucDen1, BucDen3, b_carpet, b_frigat, b_horse, b_skiff, quicksave, fresh,
-            blackt, BucDenEntrance
+            blackt, BucDenEntrance, brandnew
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -3603,6 +3603,18 @@ namespace Ultima5ReduxTesting
             var to2 = new Point2D(4, 4);
             List<Point2D> result2 = from2.Raytrace(to2);
             Assert.IsTrue(result2.Count == 2);
+        }
+
+        [Test] [TestCase(SaveFiles.brandnew, false)] [TestCase(SaveFiles.brandnew, true)]
+        public void test_BasicNewFileLoad(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(new Point2D(15, 15));
         }
     }
     

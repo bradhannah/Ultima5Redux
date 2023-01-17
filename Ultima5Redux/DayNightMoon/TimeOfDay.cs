@@ -138,6 +138,8 @@ namespace Ultima5Redux.DayNightMoon
             Minute = (byte)minute;
         }
 
+        public bool IsFirstDay() => Day == 5 && Month == 4 && Year == 139;
+
         /// <summary>
         ///     Advances the clock by certain number of minutes
         /// </summary>

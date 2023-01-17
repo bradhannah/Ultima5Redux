@@ -64,21 +64,6 @@ namespace Ultima5Redux
         private readonly Random _random = new();
 
         /// <summary>
-        ///     The overworld map object
-        /// </summary>
-        //private LargeMap OverworldMap { get; }
-
-        /// <summary>
-        ///     the underworld map object
-        /// </summary>
-        //private LargeMap UnderworldMap { get; }
-
-        /// <summary>
-        ///     A collection of all the available small maps
-        /// </summary>
-        //public SmallMaps AllSmallMaps { get; }
-
-        /// <summary>
         ///     The current conversation object
         /// </summary>
         public Conversation CurrentConversation { get; private set; }

@@ -130,7 +130,7 @@ namespace Ultima5Redux.Maps
                     throw new Ultima5ReduxException("Tried to get CurrentMap but it was false");
 
                 if (currentSingleMapReference.IsDungeon) return CurrentDungeonMap;
-                
+
                 switch (currentSingleMapReference.MapLocation)
                 {
                     case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
@@ -2398,20 +2398,47 @@ namespace Ultima5Redux.Maps
         {
             // CurrentSingleMapReference = ...
             CurrentSingleMapReference = singleDungeonMapFloorReference.SingleMapReference;
-            
+
             ClearSmallMapFlags();
 
             // SingleDungeonMapFloorReference thing = GameReferences.Instance.DungeonReferences.GetDungeon(CurrentSingleMapReference.MapLocation)
             //     .GetSingleDungeonMapFloorReferenceByFloor(singleDungeonMapFloorReference.DungeonFloor);
             CurrentDungeonMap = new DungeonMap(singleDungeonMapFloorReference);
             //Dungeons.GetDungeonMap();
-            
+
             LargeMapOverUnder = Map.Maps.Dungeon;
             //TheMapOverrides = new();
 
             TheMapUnits.SetCurrentMapType(singleDungeonMapFloorReference.SingleMapReference, Map.Maps.Dungeon, null);
 
             if (startingPosition != null) CurrentPosition.XY = startingPosition;
+        }
+
+        /// <summary>
+        ///     Some logic has to be processed afterwards and requires special conditions
+        /// </summary>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        private void HandleSpecialCasesForSmallMapLoad()
+        {
+            if (CurrentSingleMapReference.MapLocation == SmallMapReferences.SingleMapReference.Location.Iolos_Hut
+                && GameStateReference.State.TheTimeOfDay.IsFirstDay())
+            {
+                // this is a bit redundant, but left in just in case
+                // it it is the first day then we don't include Smith or the Rats. Let's start the day off
+                // on a positive note!
+                NonPlayerCharacter smith = TheMapUnits.CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
+                                               (TileReference.SpriteIndex)m.NPCRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
+                                               or TileReference.SpriteIndex.HorseRight) ??
+                                           throw new Ultima5ReduxException("Smith was not in Iolo's hut");
+
+                TheMapUnits.CurrentMapUnits.ClearMapUnit(smith);
+                TheMapUnits.CurrentMapUnits.AllMapUnits.RemoveAll(m => m is NonPlayerCharacter);
+
+                // foreach (NonPlayerCharacter npc in TheMapUnits.CurrentMapUnits.NonPlayerCharacters)
+                // {
+                //     TheMapUnits.CurrentMapUnits.ClearMapUnit(npc);
+                // }
+            }
         }
 
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null,
@@ -2425,8 +2452,6 @@ namespace Ultima5Redux.Maps
 
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
 
-            //TheMapOverrides = new MapOverrides(CurrentSmallMap);
-
             LargeMapOverUnder = (Map.Maps)(-1);
 
             TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, TheSearchItems, bLoadFromDisk);
@@ -2435,6 +2460,8 @@ namespace Ultima5Redux.Maps
             TheMapUnits.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;
 
             if (xy != null) CurrentPosition.XY = xy;
+
+            HandleSpecialCasesForSmallMapLoad();
         }
 
         public void MoveAvatar(Point2D newPosition)

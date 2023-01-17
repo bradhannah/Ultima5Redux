@@ -138,9 +138,6 @@ namespace Ultima5Redux
         ///     Construct the GameState from a legacy save file
         /// </summary>
         /// <param name="saveDirectory">Directory of the game State files</param>
-        /// <param name="smallMaps"></param>
-        /// <param name="overworldMap"></param>
-        /// <param name="underworldMap"></param>
         /// <param name="bUseExtendedSprites"></param>
         public GameState(string saveDirectory,
             //LargeMap overworldMap, LargeMap underworldMap,
