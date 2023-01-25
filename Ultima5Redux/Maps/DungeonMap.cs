@@ -34,6 +34,17 @@ namespace Ultima5Redux.Maps
             //throw new NotImplementedException();
         }
 
+        // dungeon map
+        internal void LoadDungeonMap(SmallMapReferences.SingleMapReference.Location location)
+        {
+            CurrentMapUnits.Clear();
+
+            MapUnit theAvatar = Avatar.CreateAvatar(location, new MapUnitMovement(0),
+                new MapUnitPosition(0, 0, 0),
+                GameReferences.Instance.SpriteTileReferences.GetTileReference(284), UseExtendedSprites);
+            CurrentMapUnits.Add(theAvatar);
+        }
+        
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
             if (VisibleOnMap == null)
@@ -47,6 +58,8 @@ namespace Ultima5Redux.Maps
         }
 
         private SmallMapReferences.SingleMapReference _currentSingleMapReference;
+
+        public override Maps TheMapType => Maps.Dungeon;
 
         [IgnoreDataMember]
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
@@ -17,11 +18,13 @@ using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
+//using Ultima5Redux.MapUnits.CurrentMapUnits;
+
 namespace Ultima5Redux.Maps
 {
     public class CombatMap : Map
     {
-        private readonly MapUnits.MapUnits _mapUnits;
+        //private readonly MapUnits.MapUnits _mapUnits;
 
         //private readonly MapOverrides _mapOverrides;
         // when computing what should happen when a player hits - these states can be triggered 
@@ -47,10 +50,11 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Current combat map units for current combat map
         /// </summary>
-        private MapUnits.MapUnits CombatMapUnits { get; }
+        //private MapUnits.MapUnits CurrentMapUnits { get; }
 
         public override bool IsRepeatingMap => false;
 
+        public override Maps TheMapType => Maps.Combat;
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
         public override int NumOfYTiles => SingleCombatMapReference.YTILES;
 
@@ -73,18 +77,18 @@ namespace Ultima5Redux.Maps
         /// <returns>active player character record OR null if none selected</returns>
         public PlayerCharacterRecord ActivePlayerCharacterRecord => _initiativeQueue.ActivePlayerCharacterRecord;
 
-        public IEnumerable<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers;
-        public IEnumerable<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
+        public IEnumerable<CombatPlayer> AllCombatPlayers => CurrentMapUnits.CombatPlayers;
+        public IEnumerable<Enemy> AllEnemies => CurrentMapUnits.Enemies;
 
-        public IEnumerable<MapUnit> AllMapUnits => CombatMapUnits.CurrentMapUnits.AllMapUnits;
-        public IEnumerable<NonAttackingUnit> AllNonAttackUnits => CombatMapUnits.CurrentMapUnits.NonAttackingUnits;
+        public IEnumerable<MapUnit> AllMapUnits => CurrentMapUnits.AllMapUnits;
+        public IEnumerable<NonAttackingUnit> AllNonAttackUnits => CurrentMapUnits.NonAttackingUnits;
 
-        public IEnumerable<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
-            CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
+        public IEnumerable<CombatMapUnit> AllVisibleAttackableCurrentMapUnits =>
+            CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
                 combatMapUnit.IsAttackable && combatMapUnit.IsActive);
 
-        public IEnumerable<CombatMapUnit> AllVisibleCombatMapUnits =>
-            CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
+        public IEnumerable<CombatMapUnit> AllVisibleCurrentMapUnits =>
+            CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
                 combatMapUnit.IsActive);
 
         public bool AreCombatItemsInQueue => _currentCombatItemQueue is { Count: > 0 };
@@ -102,13 +106,59 @@ namespace Ultima5Redux.Maps
         public bool InEscapeMode { get; set; } = false;
         public int NumberOfCombatItemInQueue => _currentCombatItemQueue.Count;
 
-        public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.Enemies.Count(enemy => enemy.IsActive);
+        public int NumberOfEnemies => CurrentMapUnits.Enemies.Count(enemy => enemy.IsActive);
+
+
+        public Enemy CreateEnemyOnCombatMap(Point2D xy, EnemyReference enemyReference, out int nIndex)
+        {
+            Debug.Assert(TheMapType == Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
+            if (nIndex == -1) return null;
+
+            // Enemy enemy = new(importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
+            Enemy enemy = new(new MapUnitMovement(nIndex), enemyReference, CurrentLocation, null,
+                new MapUnitPosition(xy.X, xy.Y, 0));
+
+            nIndex = AddCombatMapUnit(enemy);
+
+            return enemy;
+        }
+
+        internal int AddCombatMapUnit(CombatMapUnit mapUnit)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
+            if (nIndex < 0) return -1;
+
+            AddNewMapUnit(Maps.Combat, mapUnit);
+
+            return nIndex;
+        }
+
+        public NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)
+        {
+            Debug.Assert(TheMapType == Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
+            if (nIndex == -1) return null;
+
+            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
+            NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite,
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, mapUnitPosition);
+
+            if (nonAttackingUnit == null)
+                throw new Ultima5ReduxException(
+                    $"Tried to create NonAttackingUnitFactory: {nSprite} but was given null");
+
+            nIndex = AddCombatMapUnit(nonAttackingUnit);
+
+            return nonAttackingUnit;
+        }
+
 
         public int NumberOfVisiblePlayers =>
-            CombatMapUnits.CurrentMapUnits.CombatPlayers.Count(combatPlayer => combatPlayer.IsActive);
+            CurrentMapUnits.CombatPlayers.Count(combatPlayer => combatPlayer.IsActive);
 
         public int NumberOfAlivePlayers =>
-            CombatMapUnits.CurrentMapUnits.CombatPlayers.Count(combatPlayer =>
+            CurrentMapUnits.CombatPlayers.Count(combatPlayer =>
                 combatPlayer.IsActive && combatPlayer.Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead);
 
         public int Round => _initiativeQueue.Round;
@@ -133,12 +183,11 @@ namespace Ultima5Redux.Maps
         ///     Note: Does not initialize the combat map units.
         /// </summary>
         /// <param name="singleCombatMapReference"></param>
-        /// <param name="mapUnits"></param>
-        public CombatMap(SingleCombatMapReference singleCombatMapReference, MapUnits.MapUnits mapUnits)
+        public CombatMap(SingleCombatMapReference singleCombatMapReference) //, MapUnits.MapUnits mapUnits)
         {
-            _mapUnits = mapUnits;
+            //_mapUnits = mapUnits;
             //_mapOverrides = mapOverrides;
-            CombatMapUnits = GameStateReference.State.TheVirtualMap.TheMapUnits;
+            //CurrentMapUnits = GameStateReference.State.TheVirtualMap.TheMapUnits;
             TheCombatMapReference = singleCombatMapReference;
             XYOverrides = GameReferences.Instance.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
         }
@@ -146,9 +195,9 @@ namespace Ultima5Redux.Maps
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
         {
             // we need to check for elemental fields for the current map unit and apply traps
-            List<CombatMapUnit> combatMapUnits =
-                AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == mapUnit.MapUnitPosition.XY).ToList();
-            foreach (CombatMapUnit combatMapUnit in combatMapUnits)
+            List<CombatMapUnit> currentVisibleMapUnitsAtPosition =
+                AllVisibleCurrentMapUnits.Where(m => m.MapUnitPosition.XY == mapUnit.MapUnitPosition.XY).ToList();
+            foreach (CombatMapUnit combatMapUnit in currentVisibleMapUnitsAtPosition)
             {
                 switch (combatMapUnit)
                 {
@@ -160,6 +209,14 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        [IgnoreDataMember]
+        public override MapUnitPosition CurrentPosition
+        {
+            get => CurrentCombatPlayer?.MapUnitPosition;
+            set => CurrentCombatPlayer.MapUnitPosition = value;
+        }
+
+        
         /// <summary>
         ///     Creates enemies in the combat map. If the map contains hard coded enemies then it will ignore the
         ///     specified enemies
@@ -231,7 +288,7 @@ namespace Ultima5Redux.Maps
             _playerCharacterRecords = activeRecords;
 
             // clear any previous combat map units
-            CombatMapUnits.InitializeCombatMapReferences();
+            InitializeCombatMapReferences();
 
             List<Point2D> playerStartPositions = TheCombatMapReference.GetPlayerStartPositions(entryDirection);
 
@@ -244,13 +301,23 @@ namespace Ultima5Redux.Maps
 
                 CombatPlayer combatPlayer = new(record, playerStartPositions[nPlayer]);
 
-                CombatMapUnits.CurrentMapUnits.AllMapUnits[nPlayer] = combatPlayer;
+                CurrentMapUnits.AllMapUnits[nPlayer] = combatPlayer;
             }
         }
 
+        public void InitializeCombatMapReferences()
+        {
+            CurrentMapUnits.Clear();
+            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
+            {
+                CurrentMapUnits.Add(new EmptyMapUnit());
+            }
+        }
+
+
         internal void InitializeInitiativeQueue()
         {
-            _initiativeQueue = new InitiativeQueue(CombatMapUnits, _playerCharacterRecords, this);
+            _initiativeQueue = new InitiativeQueue(CurrentMapUnits, _playerCharacterRecords, this);
             _initiativeQueue.InitializeInitiativeQueue();
             RefreshCurrentCombatPlayer();
         }
@@ -306,17 +373,17 @@ namespace Ultima5Redux.Maps
                 case SingleCombatMapReference.CombatMapSpriteType.Field:
                 case SingleCombatMapReference.CombatMapSpriteType.Thing:
                     Debug.WriteLine("It's a chest or maybe a dead body!");
-                    combatMapUnit = CombatMapUnits.CreateNonAttackUnitOnCombatMap(mapUnitPosition,
-                        nEnemySprite, out int nIndex);
+                    combatMapUnit = CreateNonAttackUnitOnCombatMap(mapUnitPosition,
+                        nEnemySprite, out int _);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
-                    combatMapUnit = CombatMapUnits.CreateEnemyOnCombatMap(
+                    combatMapUnit = CreateEnemyOnCombatMap(
                         singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         GameReferences.Instance.EnemyRefs.GetEnemyReference(nEnemySprite), out int _);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
                     Debug.Assert(!(mapUnitPosition.X == 0 && mapUnitPosition.Y == 0));
-                    combatMapUnit = CombatMapUnits.CreateEnemyOnCombatMap(
+                    combatMapUnit = CreateEnemyOnCombatMap(
                         singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         enemyReference, out int _);
                     break;
@@ -329,7 +396,7 @@ namespace Ultima5Redux.Maps
 
         private Enemy CreateEnemiesAndNonAttackingUnits(Point2D position, EnemyReference enemyReference)
         {
-            Enemy enemy = CombatMapUnits.CreateEnemyOnCombatMap(position, enemyReference, out int _);
+            Enemy enemy = CreateEnemyOnCombatMap(position, enemyReference, out int _);
             return enemy;
         }
 
@@ -338,7 +405,7 @@ namespace Ultima5Redux.Maps
             double dBestDistanceToAttack = 150f;
             T bestOpponent = null;
 
-            foreach (CombatMapUnit combatMapUnit in CombatMapUnits.CombatMapMapUnitCollection.AllCombatMapUnits)
+            foreach (CombatMapUnit combatMapUnit in CurrentMapUnits.AllCombatMapUnits)
             {
                 if (combatMapUnit is not T enemy) continue;
                 if (!IsCombatMapUnitInRange(attackingUnit, enemy, nRange)) continue;
@@ -363,9 +430,9 @@ namespace Ultima5Redux.Maps
         private int GetCombatMapUnitIndex(CombatMapUnit combatMapUnit)
         {
             if (combatMapUnit == null) return -1;
-            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.AllMapUnits.Count; i++)
+            for (int i = 0; i < CurrentMapUnits.AllMapUnits.Count; i++)
             {
-                if (CombatMapUnits.CurrentMapUnits.AllMapUnits[i] == combatMapUnit) return i;
+                if (CurrentMapUnits.AllMapUnits[i] == combatMapUnit) return i;
             }
 
             return -1;
@@ -383,9 +450,9 @@ namespace Ultima5Redux.Maps
 
         private int GetNextAvailableCombatMapUnitIndex()
         {
-            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.AllMapUnits.Count; i++)
+            for (int i = 0; i < CurrentMapUnits.AllMapUnits.Count; i++)
             {
-                if (CombatMapUnits.CurrentMapUnits.AllMapUnits[i] is EmptyMapUnit) return i;
+                if (CurrentMapUnits.AllMapUnits[i] is EmptyMapUnit) return i;
             }
 
             return -1;
@@ -401,12 +468,12 @@ namespace Ultima5Redux.Maps
             List<Point2D> surroundingPoints =
                 enemy.MapUnitPosition.XY.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
             List<Point2D> emptySpacePoints = new();
-            AStar aStar = GetAStarMap(GetWalkableTypeByEnemy(enemy), _mapUnits);
+            AStar aStar = GetAStarMap(GetWalkableTypeByEnemy(enemy));
             foreach (Point2D point in surroundingPoints)
             {
                 // the check for IsTileWalkable may be redundant, but just in case
                 // we create a list of potential free spaces around the enemy
-                bool bIsAStarWalkable = aStar.GetWalkable(point); 
+                bool bIsAStarWalkable = aStar.GetWalkable(point);
                 if (IsTileWalkable(point, GetWalkableTypeByEnemy(enemy))
                     && bIsAStarWalkable)
                 {
@@ -524,7 +591,7 @@ namespace Ultima5Redux.Maps
                 attackingCombatMapUnit is Enemy, true);
 
             // if they drop something then we add it to the map
-            if (nonAttackingUnitDrop != null) CombatMapUnits.AddCombatMapUnit(nonAttackingUnitDrop);
+            if (nonAttackingUnitDrop != null) AddCombatMapUnit(nonAttackingUnitDrop);
 
             AdvanceToNextCombatMapUnit();
             switch (attackingCombatMapUnit)
@@ -583,7 +650,7 @@ namespace Ultima5Redux.Maps
 
         private bool IsTileRangePathBlocked(Point2D xy)
         {
-            TileReference tileReference = GameStateReference.State.TheVirtualMap.GetTileReference(xy);
+            TileReference tileReference = GetTileReference(xy);
             //GetOriginalTileReference(xy);
             return !tileReference.RangeWeapon_Passable;
         }
@@ -611,11 +678,11 @@ namespace Ultima5Redux.Maps
             CombatMapUnit preferredAttackVictim = null;
 
             AStar aStar =
-                GetAStarMap(GetWalkableTypeByMapUnit(activeCombatUnit), _mapUnits); 
-    
+                GetAStarMap(GetWalkableTypeByMapUnit(activeCombatUnit));
+
             List<Point2D> potentialTargetsPoints = new();
 
-            foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
+            foreach (CombatMapUnit combatMapUnit in GetActiveCurrentMapUnitsByType(preferredAttackTarget))
             {
                 Point2D combatMapUnitXY = combatMapUnit.MapUnitPosition.XY;
 
@@ -692,7 +759,7 @@ namespace Ultima5Redux.Maps
                 CombatPlayer;
 
         private Enemy MoveToClosestAttackableEnemy(TurnResults turnResults, CombatMapUnit activeMapUnit,
-            out string outputStr, out bool bMoved, MapUnits.MapUnits mapUnits)
+            out string outputStr, out bool bMoved)
         {
             var enemy =
                 MoveToClosestAttackableCombatMapUnit(turnResults, activeMapUnit, SpecificCombatMapUnit.Enemy,
@@ -700,8 +767,9 @@ namespace Ultima5Redux.Maps
             outputStr = "";
             if (enemy == null)
             {
-                if (bMoved) outputStr = $"{activeMapUnit.FriendlyName} moved.\nUnable to target enemy.";
-                else outputStr = "Unable to target or advance on enemy.";
+                outputStr = bMoved
+                    ? $"{activeMapUnit.FriendlyName} moved.\nUnable to target enemy."
+                    : "Unable to target or advance on enemy.";
             }
             else
             {
@@ -793,7 +861,7 @@ namespace Ultima5Redux.Maps
             // reinitialize the array for all potential party members
             IEnumerable<CombatPlayer> combatPlayers = AllCombatPlayers;
 
-            RefreshTestForVisibility(MapUnits.MapUnits.MAX_MAP_CHARACTERS);
+            RefreshTestForVisibility(MAX_MAP_CHARACTERS);
 
             int nIndex = 0;
             foreach (CombatPlayer combatPlayer in combatPlayers)
@@ -850,12 +918,12 @@ namespace Ultima5Redux.Maps
             return newEnemy;
         }
 
-        public IEnumerable<CombatMapUnit> GetActiveCombatMapUnitsByType(SpecificCombatMapUnit specificCombatMapUnit)
+        public IEnumerable<CombatMapUnit> GetActiveCurrentMapUnitsByType(SpecificCombatMapUnit specificCombatMapUnit)
         {
             switch (specificCombatMapUnit)
             {
                 case SpecificCombatMapUnit.All:
-                    return AllVisibleAttackableCombatMapUnits;
+                    return AllVisibleAttackableCurrentMapUnits;
                 case SpecificCombatMapUnit.CombatPlayer:
                     return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive);
                 case SpecificCombatMapUnit.Enemy:
@@ -882,7 +950,7 @@ namespace Ultima5Redux.Maps
 
         public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record)
         {
-            return CombatMapUnits.CurrentMapUnits.CombatPlayers.FirstOrDefault(player => player.Record == record);
+            return CurrentMapUnits.CombatPlayers.FirstOrDefault(player => player.Record == record);
         }
 
         public string GetCombatPlayerOutputText()
@@ -895,7 +963,7 @@ namespace Ultima5Redux.Maps
 
         public CombatMapUnit GetCombatUnit(Point2D unitPosition)
         {
-            MapUnit mapUnit = GameStateReference.State.TheVirtualMap.GetTopVisibleMapUnit(unitPosition, true);
+            MapUnit mapUnit = GetTopVisibleMapUnit(unitPosition, true);
 
             if (mapUnit is CombatMapUnit unit) return unit;
 
@@ -947,7 +1015,7 @@ namespace Ultima5Redux.Maps
 
             foreach (Point2D destinationPoint in points)
             {
-                Stack<Node> currentPath = GetAStarMap(walkableType, _mapUnits)
+                Stack<Node> currentPath = GetAStarMap(walkableType)
                     .FindPath(fromPosition, destinationPoint);
                 if (currentPath?.Count >= nShortestPath || currentPath == null) continue;
 
@@ -973,13 +1041,13 @@ namespace Ultima5Redux.Maps
             // -1 indicates it wasn't found, so could be dead or null. We set it to the beginning
             if (nOffset == -1) nOffset = 0;
 
-            int nMapUnits = CombatMapUnits.CurrentMapUnits.AllMapUnits.Count;
+            int nMapUnits = CurrentMapUnits.AllMapUnits.Count;
 
             for (int i = 0; i < nMapUnits; i++)
             {
                 // we start at the next position, and wrap around ensuring we have hit all possible enemies
                 int nIndex = (i + nOffset + 1) % nMapUnits;
-                if (!(CombatMapUnits.CurrentMapUnits.AllMapUnits[nIndex] is Enemy enemy)) continue;
+                if (!(CurrentMapUnits.AllMapUnits[nIndex] is Enemy enemy)) continue;
                 if (!enemy.IsActive) continue;
                 if (CurrentCombatPlayer == null)
                     throw new Ultima5ReduxException("Tried to get next enemy, but couldn't find the active player");
@@ -989,18 +1057,18 @@ namespace Ultima5Redux.Maps
             return null;
         }
 
-        public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
-        {
-            // if there aren't the minimum number of turns, then we force it to add additional turns to at least
-            // the stated number of units
-            if (_initiativeQueue.TotalTurnsInQueue < nUnits)
-                _initiativeQueue.CalculateNextInitiativeQueue();
+        // public List<CombatMapUnit> GetTopNCurrentMapUnits(int nUnits)
+        // {
+        //     // if there aren't the minimum number of turns, then we force it to add additional turns to at least
+        //     // the stated number of units
+        //     if (_initiativeQueue.TotalTurnsInQueue < nUnits)
+        //         _initiativeQueue.CalculateNextInitiativeQueue();
+        //
+        //     return _initiativeQueue.GetTopNCurrentMapUnits(nUnits);
+        // }
 
-            return _initiativeQueue.GetTopNCombatMapUnits(nUnits);
-        }
 
-
-        private readonly List<Type> _visibilePriorityOrder = new()
+        private readonly List<Type> _visiblePriorityOrder = new()
         {
             typeof(DiscoverableLoot), typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate),
             typeof(NonPlayerCharacter),
@@ -1017,14 +1085,14 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
         {
-            List<CombatMapUnit> combatMapUnits =
-                AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList();
+            List<CombatMapUnit> currentMapUnitsAtPosition =
+                AllVisibleCurrentMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList();
 
             // this is inefficient, but the lists are so small it is unlikely to matter
-            foreach (Type type in _visibilePriorityOrder)
+            foreach (Type type in _visiblePriorityOrder)
             {
                 if (bExcludeAvatar && type == typeof(Avatar)) continue;
-                foreach (CombatMapUnit combatMapUnit in combatMapUnits)
+                foreach (CombatMapUnit combatMapUnit in currentMapUnitsAtPosition)
                 {
                     if (!combatMapUnit.IsActive) continue;
                     // if it's a combat unit but they dead or gone then we skip
@@ -1070,7 +1138,7 @@ namespace Ultima5Redux.Maps
 
             return false;
         }
-        
+
         public void MakePlayerEscape(CombatPlayer combatPlayer)
         {
             Debug.Assert(!combatPlayer.HasEscaped);
@@ -1082,6 +1150,7 @@ namespace Ultima5Redux.Maps
                 //_initiativeQueue.SetActivePlayerCharacter(null);
                 SetActivePlayerCharacter(null);
             }
+
             AdvanceToNextCombatMapUnit();
         }
 
@@ -1101,7 +1170,7 @@ namespace Ultima5Redux.Maps
             Point2D originalPosition = currentCombatUnit.MapUnitPosition.XY;
 
             bool bIsMapUnitOccupyingNextTile =
-                IsMapUnitOccupiedFromList(xy, 0, AllVisibleCombatMapUnits.Where(m => !m.CanStackMapUnitsOnTop));
+                IsMapUnitOccupiedFromList(xy, 0, AllVisibleCurrentMapUnits.Where(m => !m.CanStackMapUnitsOnTop));
 
             if (bIsMapUnitOccupyingNextTile)
             {
@@ -1122,7 +1191,7 @@ namespace Ultima5Redux.Maps
                 case CombatPlayer combatPlayer:
                     turnResults.PushTurnResult(new CombatPlayerMoved(TurnResult.TurnResultType.Combat_CombatPlayerMoved,
                         combatPlayer, originalPosition, combatPlayer.MapUnitPosition.XY,
-                        GameStateReference.State.TheVirtualMap.GetTileReference(combatPlayer.MapUnitPosition.XY)));
+                        GetTileReference(combatPlayer.MapUnitPosition.XY)));
                     break;
                 default:
                     throw new Ultima5ReduxException(
@@ -1145,7 +1214,7 @@ namespace Ultima5Redux.Maps
 
         public Enemy MoveToClosestAttackableEnemy(TurnResults turnResults, out string outputStr, out bool bMoved,
             MapUnits.MapUnits mapUnits) =>
-            MoveToClosestAttackableEnemy(turnResults, CurrentCombatPlayer, out outputStr, out bMoved, mapUnits);
+            MoveToClosestAttackableEnemy(turnResults, CurrentCombatPlayer, out outputStr, out bMoved);
 
         /// <summary>
         ///     Makes the next available character escape
@@ -1154,7 +1223,7 @@ namespace Ultima5Redux.Maps
         /// <returns>true if a player escaped, false if none were found</returns>
         public bool NextCharacterEscape(out CombatPlayer escapedPlayer)
         {
-            foreach (CombatPlayer combatPlayer in CombatMapUnits.CurrentMapUnits.CombatPlayers)
+            foreach (CombatPlayer combatPlayer in CurrentMapUnits.CombatPlayers)
             {
                 if (combatPlayer.HasEscaped) continue;
 
@@ -1241,7 +1310,7 @@ namespace Ultima5Redux.Maps
                     if (nonAttackingUnitDrop != null)
                     {
                         // it's already created - we just add it to the mapunits list we track
-                        CombatMapUnits.AddCombatMapUnit(nonAttackingUnitDrop);
+                        AddCombatMapUnit(nonAttackingUnitDrop);
                     }
 
                     // if the player attacks, but misses with a range weapon the we need see if they
@@ -1443,7 +1512,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public void ProcessEnemyTurn(TurnResults turnResults, out CombatMapUnit activeCombatMapUnit,
             out CombatMapUnit targetedCombatMapUnit,
-            out Point2D missedPoint, MapUnits.MapUnits mapUnits)
+            out Point2D missedPoint)
         {
             activeCombatMapUnit = _initiativeQueue.GetCurrentCombatUnitAndClean();
             targetedCombatMapUnit = null;
@@ -1454,7 +1523,7 @@ namespace Ultima5Redux.Maps
             Debug.Assert(activeCombatMapUnit is Enemy);
             var enemy = activeCombatMapUnit as Enemy;
 
-            // if the enemy is charmed then the player get's to control them instead!
+            // if the enemy is charmed then the player gets to control them instead!
             if (enemy == null)
                 throw new Ultima5ReduxException("Enemy unexpectedly null");
             if (enemy.IsCharmed)
@@ -1647,7 +1716,7 @@ namespace Ultima5Redux.Maps
 
         private bool IsMapUnitBlockingSpace(Point2D xy)
         {
-            return AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList()
+            return AllVisibleCurrentMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList()
                 .Any(m => !m.CanStackMapUnitsOnTop);
         }
 

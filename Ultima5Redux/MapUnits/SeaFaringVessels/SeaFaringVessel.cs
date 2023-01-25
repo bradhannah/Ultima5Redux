@@ -24,7 +24,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         {
         }
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) 
+        internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay)
         {
             // by default the thing doesn't move on it's own
         }

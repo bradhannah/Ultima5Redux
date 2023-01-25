@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
@@ -122,7 +123,7 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public IEnumerable<MapUnit> AllActiveMapUnits => AllMapUnits.Where(s => s.IsActive);
 
         [IgnoreDataMember] public IEnumerable<CombatMapUnit> AllCombatMapUnits => GetMapUnitByType<CombatMapUnit>();
-        [IgnoreDataMember] public List<MapUnit> AllMapUnits { get; } = new(MapUnits.MAX_MAP_CHARACTERS);
+        [IgnoreDataMember] public List<MapUnit> AllMapUnits { get; } = new(Map.MAX_MAP_CHARACTERS);
 
         [IgnoreDataMember] public IEnumerable<Avatar> Avatars => GetMapUnitByType<Avatar>();
 

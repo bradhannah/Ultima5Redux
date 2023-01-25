@@ -24,6 +24,8 @@ namespace Ultima5Redux.References.Maps
         public const int
             YTiles = TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
+        public enum LargeMapType { Underworld = -1, Overworld }
+
         /// <summary>
         ///     Maps the xy based on the location
         /// </summary>

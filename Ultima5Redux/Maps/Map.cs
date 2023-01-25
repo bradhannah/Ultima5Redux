@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.CombatMapUnits;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.Maps
 {
@@ -24,17 +29,448 @@ namespace Ultima5Redux.Maps
 
         [DataMember(Name = "OpenDoors")] private readonly Dictionary<Point2D, int> _openDoors = new();
 
+        [DataMember(Name = "UseExtendedSprites")]
+        public readonly bool UseExtendedSprites = true;
+
+        public const int MAX_LEGACY_MAP_CHARACTERS = 32;
+        public const int MAX_MAP_CHARACTERS = 64;
+
+        // TODO: this will cause a problem in deserialization that i will need to solve
+        [DataMember] public abstract Maps TheMapType { get; }
+
+        public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, //Map.Maps mapType,
+            SearchItems searchItems, bool bLoadFromDisk = false)
+        {
+        }
+
+        /// <summary>
+        ///     Detailed reference of current small map
+        /// </summary>
+        [DataMember]
+        public SmallMapReferences.SingleMapReference CurrentSingleMapReference
+        {
+            get
+            {
+                if (_currentSingleMapReference == null)
+                    return null;
+                if (_currentSingleMapReference.MapLocation ==
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
+                    return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+                return _currentSingleMapReference;
+            }
+            private set => _currentSingleMapReference = value;
+        }
+
+        [IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
+
+        internal void ClearMapUnit(MapUnit mapUnit)
+        {
+            int nIndex = CurrentMapUnits.AllMapUnits.IndexOf(mapUnit);
+            CurrentMapUnits.AllMapUnits[nIndex] = new EmptyMapUnit();
+        }
+
+
+        
         [DataMember] public bool XRayMode { get; set; }
 
         [DataMember] internal MapOverrides TheMapOverrides { get; set; }
+
+        [DataMember] public SmallMapReferences.SingleMapReference.Location CurrentLocation { get; private set; }
+
+        //[DataMember] protected Maps CurrentMapType { get; set; }
+
+        [IgnoreDataMember] public MapUnitCollection CurrentMapUnits { get; protected set; } = new();
 
         public abstract int NumOfXTiles { get; }
 
         public abstract int NumOfYTiles { get; }
 
+        public bool AreAnyTilesWithinFourDirections(Point2D position, IEnumerable<TileReference> tileReferences)
+        {
+            return tileReferences.Any(tileReference => IsTileWithinFourDirections(position, tileReference));
+        }
+
+        public bool IsTileWithinFourDirections(Point2D position, TileReference tileReference) =>
+            IsTileWithinFourDirections(position, tileReference.Index);
+
+        public bool IsTileWithinFourDirections(Point2D position, int nTileIndex)
+        {
+            List<Point2D> positions;
+            //if (CurrentMap is LargeMap)
+            if (IsRepeatingMap)
+                positions = position.GetConstrainedFourDirectionSurroundingPointsWrapAround(
+                    LargeMapLocationReferences.XTiles,
+                    LargeMapLocationReferences.YTiles);
+            else
+                positions = position.GetConstrainedFourDirectionSurroundingPoints(NumOfXTiles, NumOfYTiles);
+
+            return positions.Any(testPosition => GetTileReference(testPosition).Index == nTileIndex);
+        }
+
+
+        /// <summary>
+        ///     Gets a tile reference from the given coordinate
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="bIgnoreExposed"></param>
+        /// <param name="bIgnoreMoongate"></param>
+        /// <returns></returns>
+        public TileReference
+            GetTileReference(int x, int y, bool bIgnoreExposed = false, bool bIgnoreMoongate = false) =>
+            GetTileReference(new Point2D(x, y));
+
+        /// <summary>
+        ///     Gets a tile reference from the given coordinate
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="bIgnoreMoongate"></param>
+        /// <returns></returns>
+        public TileReference GetTileReference(in Point2D xy, bool bIgnoreMoongate = false)
+        {
+            // we check to see if our override map has something on top of it
+            if (TheMapOverrides.HasOverrideTile(xy))
+                return TheMapOverrides.GetOverrideTileReference(xy.X, xy.Y) ??
+                       throw new Ultima5ReduxException("Expected tile override at " + xy);
+
+            // the GetTileReference accounts for any forced overrides across the entire world
+            return GetOriginalTileReference(xy);
+        }
+
+        /// <summary>
+        ///     If an NPC is on a tile, then it will get them
+        ///     assumes it's on the same floor
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns>the NPC or null if one does not exist</returns>
+        public List<MapUnit> GetMapUnitsOnTile(in Point2D xy)
+        {
+            if (CurrentSingleMapReference == null)
+                throw new Ultima5ReduxException("No single map is set in virtual map");
+
+            List<MapUnit> mapUnits =
+                GetMapUnitsByPosition(xy, CurrentSingleMapReference.Floor);
+
+            return mapUnits;
+        }
+
+        [IgnoreDataMember] protected readonly List<Type> VisiblePriorityOrder = new()
+        {
+            typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
+            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(MoonstoneNonAttackingUnit), typeof(ItemStack),
+            typeof(StackableItem), typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField),
+            typeof(Whirlpool)
+        };
+
+
+        /// <summary>
+        ///     Gets the top visible map unit - excluding the Avatar
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="bExcludeAvatar"></param>
+        /// <returns>MapUnit or null</returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public MapUnit GetTopVisibleMapUnit(in Point2D xy, bool bExcludeAvatar)
+        {
+            List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
+
+            // this is inefficient, but the lists are so small it is unlikely to matter
+            foreach (Type type in VisiblePriorityOrder)
+            {
+                if (bExcludeAvatar && type == typeof(Avatar)) continue;
+                foreach (MapUnit mapUnit in mapUnits)
+                {
+                    if (!mapUnit.IsActive) continue;
+                    // if it's a combat unit but they dead or gone then we skip
+                    if (mapUnit is CombatMapUnit { HasEscaped: true } and not NonAttackingUnit)
+                        continue;
+
+                    // we don't show NPCs who are now in our party
+                    if (mapUnit is NonPlayerCharacter { IsInParty: true }) continue;
+
+                    // if we find the first highest priority item, then we simply return it
+                    if (mapUnit.GetType() == type) return mapUnit;
+                }
+            }
+
+            return null;
+        }
+
+        [IgnoreDataMember] public abstract MapUnitPosition CurrentPosition { get; set; }
+
+        /// <summary>
+        ///     Is there an NPC on the tile specified?
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsMapUnitOccupiedTile(in Point2D xy) =>
+            IsMapUnitOccupiedFromList(xy, _currentSingleMapReference.Floor,
+                CurrentMapUnits.AllActiveMapUnits);
+        
         // ReSharper disable once NotAccessedField.Global
         // ReSharper disable once MemberCanBePrivate.Global
 
+        /// <summary>
+        ///     Adds a new map unit to the next position available
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="mapUnit"></param>
+        /// <returns>true if successful, false if no room was found</returns>
+        // ReSharper disable once UnusedMethodReturnValue.Local
+        public bool AddNewMapUnit(Maps map, MapUnit mapUnit)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(map);
+            return AddNewMapUnit(map, mapUnit, nIndex);
+        }
+
+        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference,
+            SmallMapReferences.SingleMapReference singleMapReference, out int nIndex)
+        {
+            Debug.Assert(CurrentMapType != Maps.Combat);
+
+            nIndex = FindNextFreeMapUnitIndex(singleMapReference.MapType);
+            if (nIndex == -1) return null;
+
+            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, singleMapReference.Floor);
+            Enemy enemy = new(new MapUnitMovement(0), enemyReference, singleMapReference.MapLocation, null,
+                mapUnitPosition);
+
+            CurrentMapUnits.AddMapUnit(enemy);
+
+            enemy.UseFourDirections = UseExtendedSprites;
+
+            return enemy;
+        }
+
+        /// <summary>
+        ///     Gets a particular map unit on a tile in a given location
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="nFloor"></param>
+        /// <returns>MapUnit or null if non exist at location</returns>
+        public List<MapUnit> GetMapUnitsByPosition(in Point2D xy, int nFloor)
+        {
+            List<MapUnit> mapUnits = new();
+
+            foreach (MapUnit mapUnit in CurrentMapUnits.AllMapUnits)
+            {
+                if (!mapUnit.IsActive) continue;
+
+                if (mapUnit.MapUnitPosition.X == xy.X && mapUnit.MapUnitPosition.Y == xy.Y &&
+                    mapUnit.MapUnitPosition.Floor == nFloor)
+                {
+                    int nTileIndex = mapUnit.KeyTileReference.Index;
+                    if (GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(nTileIndex)) continue;
+                    mapUnits.Add(mapUnit);
+                }
+            }
+
+            return mapUnits;
+        }
+
+        public bool IsTileOccupied(Point2D xy)
+        {
+            return CurrentMapUnits.AllActiveMapUnits.Any(m => m.MapUnitPosition.XY == xy);
+        }
+
+        public bool RePlaceNonAttackingUnit(NonAttackingUnit originalNonAttackingUnit,
+            NonAttackingUnit replacementNonAttackingUnit, MapUnitPosition mapUnitPosition,
+            Maps map)
+        {
+            int nIndex = 0;
+            bool bFound = false;
+            foreach (MapUnit mapUnit in CurrentMapUnits.AllMapUnits)
+            {
+                if (mapUnit == originalNonAttackingUnit)
+                {
+                    bFound = true;
+                    break;
+                }
+
+                nIndex++;
+            }
+
+            if (!bFound)
+                throw new Ultima5ReduxException(
+                    $"Tried to replace NonAttackingMapUnit but could find in the current MapUnit list (orgi: {originalNonAttackingUnit.FriendlyName}");
+
+            // int nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
+            // if (nIndex == -1) return false;
+
+            replacementNonAttackingUnit.MapUnitPosition = mapUnitPosition;
+
+            // set position of frigate in the world
+            AddNewMapUnit(map, replacementNonAttackingUnit, nIndex);
+            return true;
+        }
+
+        /// <summary>
+        ///     Places an existing non attacking unit on a map
+        ///     This is often used when an item stack exists in a chest OR if an enemy leaves a body or blood spatter
+        /// </summary>
+        /// <param name="nonAttackingUnit"></param>
+        /// <param name="mapUnitPosition"></param>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public bool PlaceNonAttackingUnit(NonAttackingUnit nonAttackingUnit, MapUnitPosition mapUnitPosition,
+            Maps map)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            if (nIndex == -1) return false;
+
+            nonAttackingUnit.MapUnitPosition = mapUnitPosition;
+
+            // set position of frigate in the world
+            AddNewMapUnit(map, nonAttackingUnit, nIndex);
+            return true;
+        }
+
+        private bool IsCurrentPositionFreeToMoveDirection(in Point2D.Direction direction,
+            Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
+
+        public bool IsLandNearby(in Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState) ||
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState) ||
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState) ||
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
+
+        public bool IsLandNearby(in Avatar.AvatarState avatarState) =>
+            IsCurrentPositionFreeToMoveDirection(Point2D.Direction.Down, avatarState) ||
+            IsCurrentPositionFreeToMoveDirection(Point2D.Direction.Up, avatarState) ||
+            IsCurrentPositionFreeToMoveDirection(Point2D.Direction.Left, avatarState) ||
+            IsCurrentPositionFreeToMoveDirection(Point2D.Direction.Right, avatarState);
+
+        internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState) =>
+            IsTileFreeToTravel(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
+
+        /// <summary>
+        ///     Is the particular tile eligible to be moved onto
+        /// </summary>
+        /// <param name="currentPosition"></param>
+        /// <param name="newPosition"></param>
+        /// <param name="bNoStaircases"></param>
+        /// <param name="forcedAvatarState"></param>
+        /// <returns>true if you can move onto the tile</returns>
+        internal bool IsTileFreeToTravel(in Point2D currentPosition, in Point2D newPosition,
+            bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
+        {
+            if (newPosition.X < 0 || newPosition.Y < 0) return false;
+
+            bool bIsAvatarTile = currentPosition == newPosition;
+
+            // get the regular tile reference AND get the map unit (NPC, frigate etc)
+            // we need to evaluate both
+            TileReference tileReference = GetTileReference(newPosition);
+            MapUnit mapUnit = GetTopVisibleMapUnit(newPosition, true);
+
+            // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
+            // true indicates that it is walkable
+            bool bStaircaseWalkable =
+                !(bNoStaircases && GameReferences.Instance.SpriteTileReferences.IsStaircase(tileReference.Index));
+
+            // if it's nighttime then the portcullises go down and you cannot pass
+            bool bPortcullisDown =
+                GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("BrickWallArchway") ==
+                tileReference.Index && !GameStateReference.State.TheTimeOfDay.IsDayLight;
+
+            // we check both the tile reference below as well as the map unit that occupies the tile
+            bool bIsWalkable;
+            // if the MapUnit is null then we do a basic evaluation 
+            if (mapUnit is null)
+                bIsWalkable = tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable && !bPortcullisDown;
+            else // otherwise we need to evaluate if the vehicle can moved to the tile
+                bIsWalkable = mapUnit.CanStackMapUnitsOnTop;
+            //KeyTileReference.IsPassable(forcedAvatarState);
+
+            // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
+            return bIsWalkable && !bIsAvatarTile;
+        }
+
+        public T GetSpecificMapUnitByLocation<T>(Point2D xy, int nFloor, bool bCheckBaseToo = false)
+            where T : MapUnit
+        {
+            foreach (T mapUnit in CurrentMapUnits.GetMapUnitByType<T>())
+            {
+                if (mapUnit == null)
+                    throw new Ultima5ReduxException(
+                        "Getting a specific map unit by location, but the list has a null entry");
+                // sometimes characters are null because they don't exist - and that is OK
+                if (!mapUnit.IsActive) continue;
+
+                if (mapUnit.MapUnitPosition.XY == xy &&
+                    mapUnit.MapUnitPosition.Floor == nFloor) //&& mapUnit.MapLocation == location)
+                {
+                    if (bCheckBaseToo && mapUnit.GetType().BaseType == typeof(T)) return mapUnit;
+                    // the map unit is at the right position AND is the correct type
+                    Debug.Assert(mapUnit != null);
+                    if (mapUnit.GetType() == typeof(T)) return mapUnit;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Clear a current map unit, essentially removing it from the world
+        ///     Commonly used when something is boarded, and collapses into the Avatar himself
+        ///     note: the MapUnit is no longer referenced - but it will often exist within the Avatar
+        ///     object if they have in fact boarded it
+        /// </summary>
+        /// <param name="mapUnitToClear"></param>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        public void ClearAndSetEmptyMapUnits(MapUnit mapUnitToClear)
+        {
+            for (int index = 0; index < CurrentMapUnits.AllMapUnits.Count; index++)
+            {
+                MapUnit mapUnit = CurrentMapUnits.AllMapUnits[index];
+
+                if (mapUnit != mapUnitToClear) continue;
+
+                CurrentMapUnits.AllMapUnits[index] = new EmptyMapUnit();
+                return;
+            }
+
+            throw new Ultima5ReduxException(
+                "You provided a MapUnit to clear, but it is not in the active MapUnit list");
+        }
+
+        /// <summary>
+        ///     Finds the next available index in the available map unit list
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns>>= 0 is an index, or -1 means no room found</returns>
+        protected int FindNextFreeMapUnitIndex(Maps map)
+        {
+            int nIndex = 0;
+            foreach (MapUnit mapUnit in CurrentMapUnits.AllMapUnits)
+            {
+                if (mapUnit is EmptyMapUnit) return nIndex;
+
+                nIndex++;
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        ///     Adds a new map unit to a given position
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="mapUnit"></param>
+        /// <param name="nIndex"></param>
+        /// <returns></returns>
+        public bool AddNewMapUnit(Maps map, MapUnit mapUnit, int nIndex)
+        {
+            if (nIndex == -1) return false;
+
+            List<MapUnit> mapUnits = CurrentMapUnits.AllMapUnits;
+            Debug.Assert(nIndex < mapUnits.Count);
+            mapUnits[nIndex] = mapUnit;
+            mapUnit.UseFourDirections = UseExtendedSprites;
+            return true;
+        }
+        
         public abstract bool ShowOuterSmallMapTiles { get; }
 
         public abstract byte[][] TheMap { get; protected set; }
@@ -219,7 +655,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Builds the A* map to be used for NPC pathfinding
         /// </summary>
-        public AStar GetAStarMap(WalkableType walkableType, MapUnits.MapUnits mapUnits)
+        public AStar GetAStarMap(WalkableType walkableType)
         {
             Debug.Assert(TheMap != null);
             Debug.Assert(TheMap.Length > 0);
@@ -242,7 +678,7 @@ namespace Ultima5Redux.Maps
                     //GameReferences.Instance.SpriteTileReferences.GetTileReference(
                     //TheMap[x][y]);
 
-                    bool bIsWalkable = IsTileWalkable(currentTile, walkableType) && !mapUnits.IsTileOccupied(position);
+                    bool bIsWalkable = IsTileWalkable(currentTile, walkableType) && !IsTileOccupied(position);
 
                     float fWeight = GetAStarWeight(position);
 
@@ -257,7 +693,7 @@ namespace Ultima5Redux.Maps
         protected bool IsTileWalkable(in Point2D xy, WalkableType walkableType)
         {
             if (IsOpenDoor(xy)) return true;
-            TileReference tileReference = GameStateReference.State.TheVirtualMap.GetTileReference(xy);
+            TileReference tileReference = GetTileReference(xy);
             return IsTileWalkable(tileReference, walkableType);
         }
 
@@ -342,7 +778,7 @@ namespace Ultima5Redux.Maps
             _testForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY] = true;
 
             // if it blocks light then we make it visible but do not make subsequent tiles visible
-            TileReference tileReference = GameStateReference.State.TheVirtualMap.GetTileReference(adjustedPosition);
+            TileReference tileReference = GetTileReference(adjustedPosition);
             //GetOriginalTileReference(adjustedPosition);
 
             bool bBlocksLight = tileReference.BlocksLight // if it says it blocks light AND 

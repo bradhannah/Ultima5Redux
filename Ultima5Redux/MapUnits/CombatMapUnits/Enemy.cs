@@ -84,20 +84,21 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Stats.CurrentMp = 0;
         }
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay) 
+        internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay) 
         {
             if (EnemyReference.DoesNotMove) return;
             // are we water, sand or land?
-            if (virtualMap.IsLargeMap)
+            if (regularMap is LargeMap)
             {
-                ProcessNextMoveTowardsMapUnitDumb(virtualMap, MapUnitPosition.XY,
-                    virtualMap.TheMapUnits.CurrentAvatarPosition.XY); //, aStar);
+                ProcessNextMoveTowardsMapUnitDumb(regularMap, MapUnitPosition.XY,
+                    regularMap.CurrentAvatarPosition.XY); //, aStar);
                 return;
             }
 
-            ProcessNextMoveTowardsAvatarAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
-                virtualMap.CurrentMap.GetWalkableTypeByMapUnit(this), virtualMap.TheMapUnits,
-                virtualMap.CurrentMap.TheMapOverrides);
+            ProcessNextMoveTowardsAvatarAStar(regularMap);
+            // , regularMap.CurrentAvatarPosition.XY,
+            // regularMap.GetWalkableTypeByMapUnit(this), //virtualMap.TheMapUnits,
+            // regularMap.TheMapOverrides);
         }
 
         public override TileReference GetNonBoardedTileReference() => KeyTileReference;
@@ -109,14 +110,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public bool CanReachForMeleeAttack(CombatMapUnit combatMapUnit) =>
             CanReachForMeleeAttack(combatMapUnit, EnemyReference.AttackRange);
 
-        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
+        protected override bool CanMoveToDumb(Map map, Point2D mapUnitPosition)
         {
             if (EnemyReference.DoesNotMove) return false;
 
             bool bCanMove = false;
-            TileReference tileReference = virtualMap.GetTileReference(mapUnitPosition);
+            TileReference tileReference = map.GetTileReference(mapUnitPosition);
 
-            bool bIsMapUnitOnTile = virtualMap.IsMapUnitOccupiedTile(mapUnitPosition);
+            bool bIsMapUnitOnTile = map.IsMapUnitOccupiedTile(mapUnitPosition);
             if (bIsMapUnitOnTile) return false;
 
             if (EnemyReference.IsSandEnemy)

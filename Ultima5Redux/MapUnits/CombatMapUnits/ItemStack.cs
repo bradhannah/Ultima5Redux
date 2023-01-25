@@ -83,7 +83,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             _stackableItems.Push(item);
         }
 
-        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition) =>
+        protected override bool CanMoveToDumb(Map map, Point2D mapUnitPosition) =>
             throw new NotImplementedException();
     }
 }

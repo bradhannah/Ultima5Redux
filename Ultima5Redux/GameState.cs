@@ -107,19 +107,20 @@ namespace Ultima5Redux
         {
             get
             {
-                if (!TheVirtualMap.IsLargeMap)
+                if (TheVirtualMap.CurrentMap is not LargeMap)
                 {
-                    if (TheVirtualMap.CurrentSingleMapReference == null)
+                    if (TheVirtualMap.CurrentMap.CurrentSingleMapReference == null)
                         throw new Ultima5ReduxException("No single map is set in virtual map");
 
-                    return GameReferences.Instance.SmallMapRef.GetLocationName(TheVirtualMap.CurrentSingleMapReference
+                    return GameReferences.Instance.SmallMapRef.GetLocationName(TheVirtualMap.CurrentMap
+                        .CurrentSingleMapReference
                         .MapLocation);
                 }
 
-                if (TheVirtualMap.CurrentSingleMapReference == null)
+                if (TheVirtualMap.CurrentMap.CurrentSingleMapReference == null)
                     throw new Ultima5ReduxException("No single map is set in virtual map");
 
-                return TheVirtualMap.CurrentSingleMapReference.Floor == -1 ? "Underworld" : "Overworld";
+                return TheVirtualMap.CurrentMap.CurrentSingleMapReference.Floor == -1 ? "Underworld" : "Overworld";
             }
         }
 
@@ -180,8 +181,8 @@ namespace Ultima5Redux
         {
             // we do this because we need to load the NPC information from the main state - not a copy in  
             // the JSON. If we don't do this then it creates two sets of NPCs
-            if (TheVirtualMap.LargeMapOverUnder == Map.Maps.Small)
-                TheVirtualMap.TheMapUnits.ReloadNpcData(TheVirtualMap.CurrentSingleMapReference.MapLocation);
+            if (TheVirtualMap.CurrentMap is SmallMap smallMap)
+                smallMap.ReloadNpcData(TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation);
         }
 
         /// <summary>
@@ -190,9 +191,6 @@ namespace Ultima5Redux
         /// This is ONLY for loading from a legacy game state - all future JSON loads will
         /// use deserialization and this method will not be called
         /// </summary>
-        /// <param name="smallMaps"></param>
-        /// <param name="overworldMap"></param>
-        /// <param name="underworldMap"></param>
         /// <param name="bUseExtendedSprites"></param>
         /// <param name="location"></param>
         /// <param name="nInitialX"></param>
@@ -212,10 +210,15 @@ namespace Ultima5Redux
             TheVirtualMap = new VirtualMap(
                 //overworldMap, underworldMap, 
                 _initialMap, mapRef,
-                bUseExtendedSprites, ImportedGameState, searchItems);
-            // we have to set the initial xy, not the floor because that is part of the SingleMapReference
-            // I should probably just add yet another thing to the constructor
-            TheVirtualMap.CurrentPosition.XY = new Point2D(nInitialX, nInitialY);
+                bUseExtendedSprites, ImportedGameState, searchItems)
+            {
+                CurrentPosition =
+                {
+                    // we have to set the initial xy, not the floor because that is part of the SingleMapReference
+                    // I should probably just add yet another thing to the constructor
+                    XY = new Point2D(nInitialX, nInitialY)
+                }
+            };
         }
 
         private void MoveFileAsBackup(string currentSaveGamePathAndFile)

@@ -58,7 +58,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = new();
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay)
+        internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay)
         {
             // by default the thing doesn't move on it's own
         }
@@ -116,6 +116,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Trap = TrapType.NONE;
         }
 
-        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition) => false;
+        protected override bool CanMoveToDumb(Map map, Point2D mapUnitPosition) => false;
     }
 }

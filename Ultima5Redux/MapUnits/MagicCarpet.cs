@@ -68,11 +68,11 @@ namespace Ultima5Redux.MapUnits
             GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition) =>
             KeyTileReference = GetNonBoardedTileReference();
 
-        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay)
+        internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay)
         {
             // by default the thing doesn't move on it's own
         }
 
-        public override bool CanBeExited(VirtualMap virtualMap) => virtualMap.IsLandNearby();
+        //public override bool CanBeExited(VirtualMap virtualMap) => virtualMap.IsLandNearbyForAvatar();
     }
 }

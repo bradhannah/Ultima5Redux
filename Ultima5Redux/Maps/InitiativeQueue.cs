@@ -19,7 +19,8 @@ namespace Ultima5Redux.Maps
 
         private readonly CombatMap _combatMap;
 
-        private readonly MapUnits.MapUnits _combatMapUnits;
+        // private readonly MapUnits.MapUnits _combatMapUnits;
+        private readonly MapUnitCollection _mapUnitCollection;
 
         /// <summary>
         ///     Queue that provides order attack for all players and enemies
@@ -44,10 +45,10 @@ namespace Ultima5Redux.Maps
 
         public int TurnsLeftsInRound => _initiativeQueue?.Peek()?.Count ?? 0;
 
-        public InitiativeQueue(MapUnits.MapUnits combatMapUnits, PlayerCharacterRecords playerCharacterRecords,
+        public InitiativeQueue(MapUnitCollection combatMapUnits, PlayerCharacterRecords playerCharacterRecords,
             CombatMap combatMap)
         {
-            _combatMapUnits = combatMapUnits;
+            _mapUnitCollection = combatMapUnits;
             _playerCharacterRecords = playerCharacterRecords;
             _combatMap = combatMap;
             InitializeInitiativeQueue();
@@ -110,7 +111,7 @@ namespace Ultima5Redux.Maps
                 Dictionary<int, List<CombatMapUnit>> dexterityToCombatUnits = new();
 
                 // go through each combat map unit and place them in priority order based on their dexterity values 
-                foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(
+                foreach (CombatMapUnit combatMapUnit in _mapUnitCollection.AllCombatMapUnits.Where(
                              IsCombatMapUnit))
                 {
                     Debug.Assert(IsCombatMapUnit(combatMapUnit));
@@ -268,7 +269,7 @@ namespace Ultima5Redux.Maps
             Round = 0;
             Turn = 0;
 
-            foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits)
+            foreach (CombatMapUnit combatMapUnit in _mapUnitCollection.AllCombatMapUnits)
             {
                 // if it's an enemy and they aren't an active attacker such as a POISON FIELD
                 // then we just skip them since they have a DEX of 0

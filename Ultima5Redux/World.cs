@@ -61,7 +61,7 @@ namespace Ultima5Redux
                 { Potion.PotionColor.Purple, MagicReference.SpellWords.Rel_Xen_Bet }
             };
 
-        private readonly Random _random = new();
+        //private readonly Random _random = new();
 
         /// <summary>
         ///     The current conversation object
@@ -73,7 +73,7 @@ namespace Ultima5Redux
         /// </summary>
         public string DataDirectory { get; }
 
-        public bool IsCombatMap => State.TheVirtualMap.IsCombatMap;
+        //public bool IsCombatMap => State.TheVirtualMap.IsCombatMap;
 
         /// <summary>
         ///     Is the Avatar positioned to fall? When falling from multiple floors this will be activated
@@ -191,17 +191,7 @@ namespace Ultima5Redux
             }
         }
 
-        /// <summary>
-        ///     Safe method to board a MapUnit and removing it from the world
-        /// </summary>
-        /// <param name="mapUnit"></param>
-        private void BoardAndCleanFromWorld(MapUnit mapUnit)
-        {
-            // board the unit
-            State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().BoardMapUnit(mapUnit);
-            // clean it from the world so it no longer appears
-            State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(mapUnit);
-        }
+
 
         /// <summary>
         ///     Checks if you can fire
@@ -210,7 +200,7 @@ namespace Ultima5Redux
         private bool CanFireInPlace(TurnResults turnResults)
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
-            if (State.TheVirtualMap.IsLargeMap)
+            if (State.TheVirtualMap.CurrentMap is LargeMap)
             {
                 if (State.TheVirtualMap.IsAvatarInFrigate)
                 {
@@ -226,7 +216,7 @@ namespace Ultima5Redux
                 return false;
             }
 
-            if (IsCombatMap)
+            if (State.TheVirtualMap.CurrentMap is CombatMap)
             {
                 turnResults.PushOutputToConsole(
                     GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
@@ -247,7 +237,7 @@ namespace Ultima5Redux
             // small map
             // if a cannon is any of the four directions
             // 180 - 183
-            if (State.TheVirtualMap.AreAnyTilesWithinFourDirections(State.TheVirtualMap.CurrentPosition.XY,
+            if (State.TheVirtualMap.CurrentMap.AreAnyTilesWithinFourDirections(State.TheVirtualMap.CurrentPosition.XY,
                     cannonReferences)) return true;
 
             turnResults.PushOutputToConsole(
@@ -348,19 +338,7 @@ namespace Ultima5Redux
             }
         }
 
-        private bool IsAllowedToBuryMoongate()
-        {
-            if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Overworld &&
-                State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Underworld)
-                return false;
-
-            // don't bury one on top of the other
-            if (State.TheMoongates.IsMoonstoneBuried(State.TheVirtualMap.CurrentPosition.XYZ)) return false;
-
-            // we check the current terrain and make sure it's buriable
-            TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
-            return GameReferences.Instance.SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
-        }
+      
 
         private bool IsLeavingMap(Point2D xyProposedPosition) =>
             xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
@@ -368,10 +346,13 @@ namespace Ultima5Redux
 
         private void MurderNpc(NonPlayerCharacter npc, TurnResults turnResults)
         {
+            if (State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+                throw new Ultima5ReduxException("Should be small map");
+            
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackMurder));
             npc.NPCState.IsDead = true;
             State.ChangeKarma(-10, turnResults);
-            State.TheVirtualMap.IsWantedManByThePoPo = true;
+            smallMap.IsWantedManByThePoPo = true;
         }
 
         /// <summary>
@@ -381,10 +362,12 @@ namespace Ultima5Redux
         private void ProcessDamageOnAdvanceTimeNonCombat(TurnResults turnResults)
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                throw new Ultima5ReduxException("ProcessDamageOnAdvanceTimeNonCombat called not on regular map");
 
             Avatar.AvatarState currentAvatarState =
-                State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState;
-            TileReference currentTileReference = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
+                regularMap.GetAvatarMapUnit().CurrentAvatarState;
+            TileReference currentTileReference = regularMap.GetTileReferenceOnCurrentTile();
 
             // swamp - we poison them, but the actual damage occurs further down in case they were already poisoned
             if (currentAvatarState != Avatar.AvatarState.Carpet && currentTileReference.Index == 4)
@@ -443,11 +426,12 @@ namespace Ultima5Redux
         /// <summary>
         ///     Use a magic carpet from your inventory
         /// </summary>
+        /// <param name="turnResults"></param>
         /// <param name="bWasUsed">was the magic carpet used?</param>
         /// <returns>string to print and show user</returns>
         private void UseMagicCarpet(TurnResults turnResults, out bool bWasUsed)
         {
-            if (IsCombatMap)
+            if (State.TheVirtualMap.CurrentMap is CombatMap)
             {
                 bWasUsed = false;
                 turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
@@ -456,11 +440,14 @@ namespace Ultima5Redux
                 return;
             }
 
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                throw new Ultima5ReduxException("UseMagicCarpet called not on regular map");
+            
             bWasUsed = true;
             Debug.Assert(State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .HasOneOrMore);
 
-            if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().IsAvatarOnBoardedThing)
+            if (regularMap.GetAvatarMapUnit().IsAvatarOnBoardedThing)
             {
                 bWasUsed = false;
                 turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
@@ -470,11 +457,11 @@ namespace Ultima5Redux
             }
 
             State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet].Quantity--;
-            MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(
+            MagicCarpet carpet = regularMap.CreateMagicCarpet(
                 State.TheVirtualMap.CurrentPosition.XY,
-                State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().Direction,
+                regularMap.GetAvatarMapUnit().Direction,
                 out int _);
-            BoardAndCleanFromWorld(carpet);
+            regularMap.BoardAndCleanFromWorld(carpet);
             turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                 DataOvlReference.WearUseItemStrings
                     .CARPET_BANG), false);
@@ -501,17 +488,20 @@ namespace Ultima5Redux
 
             AdvanceClockNoComputation(nMinutes);
 
-            if (IsCombatMap)
+            if (State.TheVirtualMap.CurrentMap is CombatMap)
             {
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.Ignore));
                 ProcessDamageOnAdvanceTimeInCombat(turnResults);
             }
             else
             {
+                if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                    throw new Ultima5ReduxException("Tried to advance time on non RegularMap");
+                
                 ProcessDamageOnAdvanceTimeNonCombat(turnResults);
 
-                aggressiveMapUnitInfos = State.TheVirtualMap.GetAggressiveMapUnitInfo(turnResults);
-                State.TheVirtualMap.MoveMapUnitsToNextMove(aggressiveMapUnitInfos);
+                aggressiveMapUnitInfos = State.TheVirtualMap.GetNonCombatMapAggressiveMapUnitInfo(turnResults);
+                State.TheVirtualMap.MoveNonCombatMapMapUnitsToNextMove(aggressiveMapUnitInfos);
                 VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo = null;
                 if (bNoAggression)
                 {
@@ -523,7 +513,7 @@ namespace Ultima5Redux
                     // and ignore all other work
                     if (MonsterAi)
                     {
-                        State.TheVirtualMap.ProcessAggressiveMapUnitAttacks(State.CharacterRecords,
+                        State.TheVirtualMap.ProcessNonCombatMapAggressiveMapUnitAttacks(State.CharacterRecords,
                             aggressiveMapUnitInfos, out aggressiveMapUnitInfo, turnResults);
                     }
 
@@ -533,7 +523,7 @@ namespace Ultima5Redux
                         Debug.Assert(aggressiveMapUnitInfo.CombatMapReference != null);
                         // issue here is I need to be able to tell the caller to load a combat map
 
-                        MapUnitPosition avatarPosition = State.TheVirtualMap.TheMapUnits.CurrentAvatarPosition;
+                        MapUnitPosition avatarPosition = regularMap.CurrentAvatarPosition;
                         TileReference currentTile = State.TheVirtualMap.CurrentMap
                             .GetOriginalTileReference(avatarPosition.XY);
 
@@ -550,7 +540,7 @@ namespace Ultima5Redux
                         else
                         {
                             // let's delete the map unit from the map too since they disappear regardless of result
-                            State.TheVirtualMap.TheMapUnits.ClearMapUnit(aggressiveMapUnitInfo.AttackingMapUnit);
+                            regularMap.ClearMapUnit(aggressiveMapUnitInfo.AttackingMapUnit);
 
                             State.TheVirtualMap.LoadCombatMapWithCalculation(aggressiveMapUnitInfo.CombatMapReference,
                                 State.CharacterRecords, aggressiveMapUnitInfo.AttackingMapUnit);
@@ -609,7 +599,7 @@ namespace Ultima5Redux
         /// <returns>the coordinates</returns>
         public Point3D GetMoongateTeleportLocation()
         {
-            Debug.Assert(State.TheVirtualMap.IsLargeMap);
+            Debug.Assert(State.TheVirtualMap.CurrentMap is LargeMap);
 
             return State.TheMoongates.GetMoongatePosition(
                 (int)GameReferences.Instance.MoonPhaseRefs.GetMoonGateMoonPhase(State.TheTimeOfDay));
@@ -621,14 +611,17 @@ namespace Ultima5Redux
         /// <returns>true if the Avatar is on an active moongate</returns>
         public bool IsAvatarOnActiveMoongate()
         {
-            if (!State.TheVirtualMap.IsLargeMap || State.TheTimeOfDay.IsDayLight) return false;
+            if (State.TheVirtualMap.CurrentMap is not LargeMap || State.TheTimeOfDay.IsDayLight) return false;
 
             return State.TheMoongates.IsMoonstoneBuried(State.TheVirtualMap.GetCurrent3DPosition());
         }
 
         public void ProcessDamageOnAdvanceTimeInCombat(TurnResults turnResults)
         {
-            CombatPlayer combatPlayer = State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+            if (State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
+                throw new Ultima5ReduxException("Should be combat map");
+
+            CombatPlayer combatPlayer = combatMap.CurrentCombatPlayer;
 
             combatPlayer?.Record.ProcessPlayerTurn(turnResults);
         }
@@ -661,10 +654,13 @@ namespace Ultima5Redux
             out MapUnit mapUnit, out SingleCombatMapReference singleCombatMapReference,
             out TryToAttackResult tryToAttackResult, TurnResults turnResults)
         {
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                throw new Ultima5ReduxException("Called TryToAttackNonCombatMap on non RegularMap");
+            
             singleCombatMapReference = null;
             mapUnit = null;
 
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(attackTargetPosition);
+            TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(attackTargetPosition);
 
             // if you are attacking an unbroken mirror - then we break it and override the tile
             if (TileReferences.IsUnbrokenMirror(tileReference.Index))
@@ -675,7 +671,7 @@ namespace Ultima5Redux
                     false);
                 TileReference brokenMirrorTileReference =
                     GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("MirrorBroken");
-                State.TheVirtualMap.CurrentMap.SetOverridingTileReferece(brokenMirrorTileReference,
+                regularMap.SetOverridingTileReferece(brokenMirrorTileReference,
                     attackTargetPosition);
 
                 tryToAttackResult = TryToAttackResult.BrokenMirror;
@@ -683,7 +679,7 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(attackTargetPosition, true);
+            mapUnit = State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(attackTargetPosition, true);
 
             if (mapUnit is not { IsAttackable: true })
             {
@@ -699,7 +695,7 @@ namespace Ultima5Redux
                 GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.ATTACK) +
                 mapUnit.FriendlyName, false);
 
-            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
+            Avatar avatar = regularMap.GetAvatarMapUnit();
 
             // we get the combat map reference, if any - it also tells us if there should be a ranged attack in the overworld
             // instead of a combat map
@@ -732,7 +728,7 @@ namespace Ultima5Redux
             switch (mapUnit)
             {
                 case Enemy:
-                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
+                    State.TheVirtualMap.CurrentMap.ClearMapUnit(mapUnit);
                     tryToAttackResult = TryToAttackResult.CombatMapEnemy;
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackCombatMapEnemy));
                     break;
@@ -779,6 +775,7 @@ namespace Ultima5Redux
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
 
+            
             MapUnit currentAvatarTileRef = State.TheVirtualMap.GetMapUnitOnCurrentTile();
             bWasSuccessful = true;
 
@@ -795,6 +792,9 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                throw new Ultima5ReduxException("Tried to board on non regular map");
+            
             bool bAvatarIsBoarded = State.TheVirtualMap.IsAvatarRidingSomething;
             MapUnit boardableMapUnit = State.TheVirtualMap.GetMapUnitOnCurrentTile();
             if (boardableMapUnit is null)
@@ -822,16 +822,16 @@ namespace Ultima5Redux
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionBoardNoOnFoot));
                     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                 case MagicCarpet _:
-                    BoardAndCleanFromWorld(boardableMapUnit);
+                    regularMap.BoardAndCleanFromWorld(boardableMapUnit);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionBoardCarpet));
                     break;
                 case Horse _:
                     // delete or deactivate the horse we just mounted
-                    BoardAndCleanFromWorld(boardableMapUnit);
+                    regularMap.BoardAndCleanFromWorld(boardableMapUnit);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionBoardHorse));
                     break;
                 case Skiff _:
-                    BoardAndCleanFromWorld(boardableMapUnit);
+                    regularMap.BoardAndCleanFromWorld(boardableMapUnit);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionBoardSkiff));
                     break;
                 case Frigate boardableFrigate:
@@ -857,7 +857,7 @@ namespace Ultima5Redux
                     if (boardableFrigate.SkiffsAboard == 0)
                         retStr += GameReferences.Instance.DataOvlRef.StringReferences
                             .GetString(DataOvlReference.SleepTransportStrings.M_WARNING_NO_SKIFFS_N).TrimEnd();
-                    BoardAndCleanFromWorld(boardableFrigate);
+                    regularMap.BoardAndCleanFromWorld(boardableFrigate);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionBoardFrigate));
                     if (State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.HMSCape].Quantity > 0)
                     {
@@ -953,15 +953,18 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                throw new Ultima5ReduxException("TryToFire called on non RegularMap");
+
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireCannon));
 
-            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
+            Avatar avatar = regularMap.GetAvatarMapUnit();
             cannonBallDestination = null;
 
             // TODO: need small map code for cannons like in LBs castle
 
             // if overworld
-            if (!State.TheVirtualMap.IsLargeMap) return null;
+            if (State.TheVirtualMap.CurrentMap is not LargeMap) return null;
 
             // we assume they are in a frigate
             if (!State.TheVirtualMap.IsAvatarInFrigate)
@@ -1000,13 +1003,13 @@ namespace Ultima5Redux
             {
                 adjustedPosition = new Point2D(adjustedPosition.X + nXOffset, adjustedPosition.Y + nYOffset);
 
-                if (!State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPosition)) continue;
+                if (!State.TheVirtualMap.CurrentMap.IsMapUnitOccupiedTile(adjustedPosition)) continue;
 
                 // kill them
-                MapUnit targetedMapUnit = State.TheVirtualMap.GetMapUnitsOnTile(adjustedPosition)[0];
+                MapUnit targetedMapUnit = State.TheVirtualMap.CurrentMap.GetMapUnitsOnTile(adjustedPosition)[0];
                 turnResults.PushOutputToConsole(
                     "Killed " + targetedMapUnit.FriendlyName, false);
-                State.TheVirtualMap.TheMapUnits.ClearMapUnit(targetedMapUnit);
+                regularMap.ClearMapUnit(targetedMapUnit);
                 cannonBallDestination = adjustedPosition;
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireEnemyKilled));
 
@@ -1034,9 +1037,9 @@ namespace Ultima5Redux
             bGotAThing = true;
             inventoryItem = null;
 
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
+            TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(xy);
 
-            if (State.TheVirtualMap.CurrentSingleMapReference == null)
+            if (State.TheVirtualMap.CurrentMap.CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
 
             // wall sconces - BORROWED!
@@ -1055,13 +1058,13 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            var magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
-                State.TheVirtualMap.LargeMapOverUnder, xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
+            var magicCarpet = State.TheVirtualMap.CurrentMap.GetSpecificMapUnitByLocation<MagicCarpet>(xy,
+                State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.Floor);
             if (magicCarpet != null)
             {
                 // add the carpet to the players inventory and remove it from the map
                 State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet].Quantity++;
-                State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(magicCarpet);
+                State.TheVirtualMap.CurrentMap.ClearAndSetEmptyMapUnits(magicCarpet);
                 turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.GetThingsStrings.A_MAGIC_CARPET), false);
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetMagicCarpet));
@@ -1142,9 +1145,9 @@ namespace Ultima5Redux
                 // we just fall through for the default handling if there is no food directly in front of us
             }
 
-            if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
+            if (State.TheVirtualMap.CurrentMap.IsMapUnitOccupiedTile(xy))
             {
-                MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
+                MapUnit mapUnit = State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(xy, true);
                 if (mapUnit is ItemStack { HasStackableItems: true } itemStack)
                 {
                     StackableItem stackableItem = itemStack.PopStackableItem();
@@ -1157,7 +1160,7 @@ namespace Ultima5Redux
                     // NOTE: lets try not deleting it so the 3d program knows to not draw it
                     if (!itemStack.HasStackableItems)
                     {
-                        State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
+                        State.TheVirtualMap.CurrentMap.ClearAndSetEmptyMapUnits(itemStack);
                     }
 
                     turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(invItem.FindDescription), false);
@@ -1174,7 +1177,7 @@ namespace Ultima5Redux
                         U5StringRef.ThouDostFind(moonstoneNonAttackingUnit.TheMoonstone.FindDescription), false);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetMoonstone));
                     // get rid of it from the map
-                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(moonstoneNonAttackingUnit);
+                    State.TheVirtualMap.CurrentMap.ClearMapUnit(moonstoneNonAttackingUnit);
                     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                 }
             }
@@ -1230,7 +1233,7 @@ namespace Ultima5Redux
             out bool bWasSuccessful, TurnResults turnResults)
         {
             bWasSuccessful = false;
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
+            TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(xy);
 
             //bool isDoorInDirection = tileReference.IsOpenable;
             bool bIsStocks = TileReferences.IsStocks(tileReference.Index);
@@ -1240,7 +1243,7 @@ namespace Ultima5Redux
             bool bIsDoorLocked = TileReferences.IsDoorLocked(tileReference.Index);
 
             // the stocks 
-            MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
+            MapUnit mapUnit = State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(xy, true);
             bool bIsNpc = mapUnit is NonPlayerCharacter;
 
             if (!bIsDoorMagical &&
@@ -1336,10 +1339,8 @@ namespace Ultima5Redux
                        output;
             }
 
-            TileReference curTileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
-
             // if it's a large map, we either klimb with the grapple or don't klimb at all
-            if (State.TheVirtualMap.IsLargeMap)
+            if (State.TheVirtualMap.CurrentMap is LargeMap)
             {
                 if (State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Grapple]
                     .HasOneOrMore)
@@ -1359,6 +1360,25 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
+            if (State.TheVirtualMap.CurrentMap is DungeonMap)
+            {
+                // TODO
+                klimbResult = KlimbResult.CantKlimb;
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            if (State.TheVirtualMap.CurrentMap is CombatMap)
+            {
+                // TODO
+                klimbResult = KlimbResult.CantKlimb;
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            // implied small map
+            if (State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+                throw new Ultima5ReduxException("Should be small map");
+            TileReference curTileRef = smallMap.GetTileReferenceOnCurrentTile();
+            
             // we can't klimb on the current tile, so we need to pick a direction
             if (!GameReferences.Instance.SpriteTileReferences.IsLadder(curTileRef.Index) &&
                 !TileReferences.IsGrate(curTileRef.Index))
@@ -1369,17 +1389,18 @@ namespace Ultima5Redux
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
             }
 
-            if (State.TheVirtualMap.CurrentSingleMapReference == null)
+            if (smallMap.CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
 
             SmallMapReferences.SingleMapReference.Location location =
-                State.TheVirtualMap.CurrentSingleMapReference.MapLocation;
-            int nCurrentFloor = State.TheVirtualMap.CurrentSingleMapReference.Floor;
+                smallMap.CurrentSingleMapReference.MapLocation;
+            int nCurrentFloor = smallMap.CurrentSingleMapReference.Floor;
             bool hasBasement = GameReferences.Instance.SmallMapRef.HasBasement(location);
             int nTotalFloors = GameReferences.Instance.SmallMapRef.GetNumberOfFloors(location);
             int nTopFloor = hasBasement ? nTotalFloors - 1 : nTotalFloors;
 
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition.XY);
+            TileReference tileReference =
+                State.TheVirtualMap.CurrentMap.GetTileReference(State.TheVirtualMap.CurrentPosition.XY);
             if (TileReferences.IsLadderDown(tileReference.Index) ||
                 TileReferences.IsGrate(tileReference.Index))
             {
@@ -1430,8 +1451,8 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToKlimbInDirection(Point2D xy, out KlimbResult klimbResult,
             TurnResults turnResults)
         {
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
-            if (State.TheVirtualMap.IsLargeMap)
+            TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(xy);
+            if (State.TheVirtualMap.CurrentMap is LargeMap)
             {
                 // is it even klimbable?
                 if (tileReference.IsKlimable)
@@ -1506,11 +1527,11 @@ namespace Ultima5Redux
             specialLookCommand = SpecialLookCommand.None;
             string lookStr;
 
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
+            TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(xy);
             // if there is an NPC on the tile, then we assume they want to look at the NPC, not whatever else may be on the tiles
-            if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
+            if (State.TheVirtualMap.CurrentMap.IsMapUnitOccupiedTile(xy))
             {
-                List<MapUnit> mapUnits = State.TheVirtualMap.GetMapUnitsOnTile(xy);
+                List<MapUnit> mapUnits = State.TheVirtualMap.CurrentMap.GetMapUnitsOnTile(xy);
                 if (mapUnits.Count <= 0)
                 {
                     throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
@@ -1531,8 +1552,8 @@ namespace Ultima5Redux
                 {
                     case (int)TileReference.SpriteIndex.Well:
                         var wishingWell =
-                            WishingWell.Create(State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
-                                xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
+                            WishingWell.Create(State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation,
+                                xy, State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.Floor);
                         turnResults.PushTurnResult(new NpcTalkInteraction(wishingWell, "WishingWell"));
                         return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                     case (int)TileReference.SpriteIndex.Clock1 or (int)TileReference.SpriteIndex.Clock2:
@@ -1571,20 +1592,23 @@ namespace Ultima5Redux
         /// <param name="turnResults"></param>
         /// <param name="bManualMovement">true if movement is manual</param>
         /// <returns>output string (may be empty)</returns>
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToMove(Point2D.Direction direction, bool bKlimb,
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToMoveNonCombatMap(Point2D.Direction direction, bool bKlimb,
             bool bFreeMove, TurnResults turnResults, bool bManualMovement = true)
         {
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                throw new Ultima5ReduxException("TryToMoveNonCombatMap called on non RegularMap");
+            
             int nTimeAdvanceFactor =
-                State.TheVirtualMap.LargeMapOverUnder == Map.Maps.Small ? 1 : N_DEFAULT_ADVANCE_TIME;
-            int nTilesPerMapRow = State.TheVirtualMap.NumberOfRowTiles;
-            int nTilesPerMapCol = State.TheVirtualMap.NumberOfColumnTiles;
+                regularMap is SmallMap ? 1 : N_DEFAULT_ADVANCE_TIME;
+            int nTilesPerMapRow = regularMap.NumOfXTiles;
+            int nTilesPerMapCol = regularMap.NumOfYTiles;
 
             // if we were to move, which direction would we move
             GetAdjustments(direction, out int xAdjust, out int yAdjust);
 
             // would we be leaving a small map if we went forward?
-            if (!State.TheVirtualMap.IsLargeMap && IsLeavingMap(new Point2D(
-                    State.TheVirtualMap.CurrentPosition.X + xAdjust, State.TheVirtualMap.CurrentPosition.Y + yAdjust)))
+            if (regularMap is not LargeMap && IsLeavingMap(new Point2D(
+                    regularMap.CurrentPosition.X + xAdjust, regularMap.CurrentPosition.Y + yAdjust)))
             {
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OfferToExitScreen));
                 // it is expected that the called will offer an exit option, but we won't move the avatar because the space
@@ -1592,12 +1616,12 @@ namespace Ultima5Redux
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
             }
 
-            Point2D originalPos = State.TheVirtualMap.CurrentPosition.XY;
+            Point2D originalPos = regularMap.CurrentPosition.XY;
 
             // calculate our new x and y values based on the adjustments
-            Point2D newPosition = new((State.TheVirtualMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol,
-                (State.TheVirtualMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow);
-            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
+            Point2D newPosition = new((regularMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol,
+                (regularMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow);
+            Avatar avatar = regularMap.GetAvatarMapUnit();
             // we change the direction of the Avatar map unit
             // this will be used to determine which is the appropriate sprite to show
             bool bAvatarActuallyMoved = avatar.Move(direction);
@@ -1634,20 +1658,20 @@ namespace Ultima5Redux
             // this should only be true if it is a RepeatMap
             if (newPosition.X < 0)
             {
-                Debug.Assert(State.TheVirtualMap.IsLargeMap,
+                Debug.Assert(regularMap is LargeMap,
                     "You should not reach the very end of a map +/- 1 if you are not on a repeating map");
                 newPosition.X += nTilesPerMapCol;
             }
 
             if (newPosition.Y < 0)
             {
-                Debug.Assert(State.TheVirtualMap.IsLargeMap,
+                Debug.Assert(regularMap is LargeMap,
                     "You should not reach the very end of a map +/- 1 if you are not on a repeating map");
                 newPosition.Y = nTilesPerMapRow + newPosition.Y;
             }
 
             // we get the newTile so that we can determine if it's passable
-            TileReference newTileReference = State.TheVirtualMap.GetTileReference(newPosition.X, newPosition.Y);
+            TileReference newTileReference = regularMap.GetTileReference(newPosition.X, newPosition.Y);
 
             if (newTileReference.Index ==
                 GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("BrickFloorHole") &&
@@ -1655,7 +1679,7 @@ namespace Ultima5Redux
             {
                 State.TheVirtualMap.UseStairs(newPosition, true);
                 // we need to evaluate in the game and let the game know that they should continue to fall
-                TileReference newTileRef = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition.XY);
+                TileReference newTileRef = regularMap.GetTileReference(regularMap.CurrentPosition.XY);
                 if (newTileRef.Index ==
                     GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("BrickFloorHole"))
                     IsPendingFall = true;
@@ -1670,7 +1694,7 @@ namespace Ultima5Redux
 
             // it's passable if it's marked as passable, 
             // but we double check if the portcullis is down
-            bool bPassable = State.TheVirtualMap.IsTileFreeToTravel(newPosition);
+            bool bPassable = regularMap.IsTileFreeToTravelForAvatar(newPosition);
 
             // this is insufficient in case I am in a boat
             if ((bKlimb && newTileReference.IsKlimable) || bPassable || bFreeMove)
@@ -1682,7 +1706,7 @@ namespace Ultima5Redux
             {
                 if (!bManualMovement && avatar.AreSailsHoisted)
                 {
-                    State.TheVirtualMap.DamageShip(State.WindDirection, turnResults);
+                    regularMap.DamageShip(State.WindDirection, turnResults);
                 }
                 else
                 {
@@ -1723,7 +1747,7 @@ namespace Ultima5Redux
             }
 
             Avatar.AvatarState currentAvatarState =
-                State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState;
+                regularMap.GetAvatarMapUnit().CurrentAvatarState;
 
             bool bIsOnHorseOrCarpet =
                 State.TheVirtualMap.IsAvatarRidingCarpet || State.TheVirtualMap.IsAvatarRidingHorse;
@@ -1731,12 +1755,12 @@ namespace Ultima5Redux
 
             // We are on a small map which means all movements use the time passing minutes
             // if we are on a big map then we may issue extra information about slow moving terrain
-            if (!State.TheVirtualMap.IsLargeMap)
+            if (State.TheVirtualMap.CurrentMap is not LargeMap)
             {
                 turnResults.PushTurnResult(
                     new PlayerMoved(GetTurnResultMovedByAvatarState(avatar, bManualMovement),
-                        originalPos, State.TheVirtualMap.CurrentPosition.XY,
-                        State.TheVirtualMap.GetTileReferenceOnCurrentTile()));
+                        originalPos, regularMap.CurrentPosition.XY,
+                        regularMap.GetTileReferenceOnCurrentTile()));
 
                 if (bIsOnHorseOrCarpet && State.TheTimeOfDay.Tick % 2 == 0)
                 {
@@ -1752,7 +1776,7 @@ namespace Ultima5Redux
             bool bIsSailingWithSailsHoisted = false;
             if (State.TheVirtualMap.IsAvatarInFrigate)
             {
-                if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is not Frigate
+                if (regularMap.GetAvatarMapUnit().CurrentBoardedMapUnit is not Frigate
                     avatarsFrigate)
                     throw new Ultima5ReduxException("Tried get Avatar's frigate, but it was null");
 
@@ -1763,11 +1787,11 @@ namespace Ultima5Redux
 
             bool bIsSailingWithWindBehindMe = bIsSailingWithSailsHoisted &&
                                               !Point2D.IsOppositeDirection(State.WindDirection,
-                                                  State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().Direction);
+                                                  regularMap.GetAvatarMapUnit().Direction);
 
             int nDefaultMinutesToAdvance =
                 GameReferences.Instance.SpriteTileReferences.GetMinuteIncrement(newTileReference.Index);
-            if (State.TheVirtualMap.LargeMapOverUnder == Map.Maps.Small)
+            if (State.TheVirtualMap.TheCurrentMapType == Map.Maps.Small)
                 nDefaultMinutesToAdvance = Math.Max(1, nTimeAdvanceFactor / 2);
             // if avatar is on a horse or carpet then we cut it in half, but let's make sure we don't 
             // end up with zero minutes
@@ -1790,7 +1814,7 @@ namespace Ultima5Redux
 
             // if you are on the carpet or skiff and hit rough seas then we injure the players and report it back 
             if (currentAvatarState is Avatar.AvatarState.Carpet or Avatar.AvatarState.Skiff
-                && newTileReference.Index == (int)TileReference.SpriteIndex.Water) // rough seas
+                && newTileReference.Is(TileReference.SpriteIndex.Water)) // rough seas
             {
                 State.CharacterRecords.RoughSeasInjure(turnResults);
                 turnResults.PushOutputToConsole(
@@ -1802,8 +1826,8 @@ namespace Ultima5Redux
             {
                 turnResults.PushTurnResult(
                     new PlayerMoved(GetTurnResultMovedByAvatarState(avatar, bManualMovement),
-                        originalPos, State.TheVirtualMap.CurrentPosition.XY,
-                        State.TheVirtualMap.GetTileReferenceOnCurrentTile()));
+                        originalPos, regularMap.CurrentPosition.XY,
+                        regularMap.GetTileReferenceOnCurrentTile()));
             }
 
             // if you are on a horse or carpet then only every other move actually results in the enemies and npcs moving
@@ -1820,7 +1844,10 @@ namespace Ultima5Redux
 
         public void TryToMoveCombatMap(Point2D.Direction direction, TurnResults turnResults, bool bKlimb)
         {
-            TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer, direction, turnResults,
+            if (State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
+                throw new Ultima5ReduxException("Should be combat map");
+
+            TryToMoveCombatMap(combatMap.CurrentCombatPlayer, direction, turnResults,
                 bKlimb);
         }
 
@@ -1830,8 +1857,11 @@ namespace Ultima5Redux
             if (combatPlayer == null)
                 throw new Ultima5ReduxException("Trying to move on combat map without a CombatPlayer");
 
-            CombatMap currentCombatMap = State.TheVirtualMap.CurrentCombatMap;
-            Debug.Assert(currentCombatMap != null);
+            if (State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
+                throw new Ultima5ReduxException("Called TryToMoveCombatMap on non CombatMap");
+
+            // CombatMap currentCombatMap = State.TheVirtualMap.CurrentCombatMap;
+            // Debug.Assert(currentCombatMap != null);
 
             // if we were to move, which direction would we move
             GetAdjustments(direction, out int xAdjust, out int yAdjust);
@@ -1847,13 +1877,13 @@ namespace Ultima5Redux
                 if (IsLeavingMap(newPosition))
                 {
                     // can they escape in this particular direction?
-                    bool _ = currentCombatMap.TryToMakePlayerEscape(turnResults, combatPlayer,
+                    bool _ = combatMap.TryToMakePlayerEscape(turnResults, combatPlayer,
                         CombatMap.DirectionToEscapeType(direction));
                     
                     return;
                 }
 
-                if (!State.TheVirtualMap.IsTileFreeToTravelForAvatar(combatPlayer.MapUnitPosition.XY, newPosition,
+                if (!combatMap.IsTileFreeToTravel(combatPlayer.MapUnitPosition.XY, newPosition,
                         false,
                         Avatar.AvatarState.Regular))
                 {
@@ -1866,11 +1896,11 @@ namespace Ultima5Redux
             }
 
             ProcessDamageOnAdvanceTimeInCombat(turnResults);
-            currentCombatMap.MoveActiveCombatMapUnit(turnResults, newPosition);
+            combatMap.MoveActiveCombatMapUnit(turnResults, newPosition);
 
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMovedCombatPlayerOnCombatMap));
 
-            currentCombatMap.AdvanceToNextCombatMapUnit();
+            combatMap.AdvanceToNextCombatMapUnit();
         }
 
         /// <summary>
@@ -1886,12 +1916,12 @@ namespace Ultima5Redux
         {
             bWasSuccessful = false;
 
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
+            TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(xy);
 
             bool isDoorInDirection = tileReference.IsOpenable;
             if (isDoorInDirection) return ProcessOpenDoor(xy, ref bWasSuccessful, turnResults, tileReference);
 
-            MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
+            MapUnit mapUnit = State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(xy, true);
 
             if (mapUnit is NonAttackingUnit { IsOpenable: true } nonAttackingUnit)
             {
@@ -1937,10 +1967,10 @@ namespace Ultima5Redux
             bPushedAThing = false;
             Point2D adjustedPos = avatarXy.GetAdjustedPosition(direction);
 
-            TileReference adjustedTileReference = State.TheVirtualMap.GetTileReference(adjustedPos);
+            TileReference adjustedTileReference = State.TheVirtualMap.CurrentMap.GetTileReference(adjustedPos);
 
             // it's not pushable OR if an NPC occupies the tile -so let's bail
-            if (!adjustedTileReference.IsPushable || State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPos))
+            if (!adjustedTileReference.IsPushable || State.TheVirtualMap.CurrentMap.IsMapUnitOccupiedTile(adjustedPos))
             {
                 turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.ExclaimStrings
@@ -1951,10 +1981,11 @@ namespace Ultima5Redux
 
             // we get the thing one tile further than the thing to see if we have room to push it forward
             Point2D oneMoreTileAdjusted = adjustedPos.GetAdjustedPosition(direction);
-            TileReference oneMoreTileReference = State.TheVirtualMap.GetTileReference(oneMoreTileAdjusted);
+            TileReference oneMoreTileReference = State.TheVirtualMap.CurrentMap.GetTileReference(oneMoreTileAdjusted);
 
             // if I'm sitting and the proceeding tile is an upright tile then I can't swap things 
-            if (State.TheVirtualMap.IsAvatarSitting() && oneMoreTileReference.IsUpright)
+            if (State.TheVirtualMap.CurrentMap is SmallMap smallMap && smallMap.IsAvatarSitting() &&
+                oneMoreTileReference.IsUpright)
             {
                 turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.ExclaimStrings
@@ -1973,7 +2004,7 @@ namespace Ultima5Redux
             }
 
             // is there an NPC on the tile? if so, we won't move anything into them
-            bool bIsNpcOneMoreTile = State.TheVirtualMap.IsMapUnitOccupiedTile(oneMoreTileAdjusted);
+            bool bIsNpcOneMoreTile = State.TheVirtualMap.CurrentMap.IsMapUnitOccupiedTile(oneMoreTileAdjusted);
 
             // is the next tile walkable and is there NOT an NPC on it
             if (oneMoreTileReference.IsWalking_Passable && !bIsNpcOneMoreTile)
@@ -2022,8 +2053,8 @@ namespace Ultima5Redux
             bWasSuccessful = false;
 
             SpecialSearchLocation specialSearchLocation = GetSpecialSearchLocation(
-                State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
-                State.TheVirtualMap.CurrentSingleMapReference.Floor, xy);
+                State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation,
+                State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.Floor, xy);
 
             if (specialSearchLocation == SpecialSearchLocation.GlassSwords)
             {
@@ -2049,14 +2080,19 @@ namespace Ultima5Redux
             }
 
             bool bHasInnerNonAttackUnits = false;
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
+            TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(xy);
 
+            Moonstone moonstone = null;
             // we search the tile and expose any items that may be on it
-            Moonstone moonstone = State.TheVirtualMap.SearchAndExposeMoonstone(xy);
+            if (State.TheVirtualMap.CurrentMap is LargeMap largeMap)
+            {
+                moonstone = largeMap.SearchAndExposeMoonstone(xy);
+            }
             if (moonstone == null)
             {
                 bHasInnerNonAttackUnits =
-                    State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults, State.CharacterRecords.AvatarRecord,
+                    State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
+                        State.CharacterRecords.AvatarRecord,
                         State.CharacterRecords);
             }
 
@@ -2100,14 +2136,17 @@ namespace Ultima5Redux
                     GameReferences.Instance.CombatItemRefs.GetWeaponReferenceFromEquipment(DataOvlReference.Equipment
                         .GlassSword), 1);
             List<InventoryItem> invItems = new() { newGlassSword };
-            MapUnitPosition glassSwordMapUnitPosition = new();
-            glassSwordMapUnitPosition.Floor = State.TheVirtualMap.CurrentSingleMapReference.Floor;
-            glassSwordMapUnitPosition.XY = xy;
-            DiscoverableLoot discoverableLoot = new(State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+            MapUnitPosition glassSwordMapUnitPosition = new()
+            {
+                Floor = State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.Floor,
+                XY = xy
+            };
+            DiscoverableLoot discoverableLoot = new(
+                State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation,
                 glassSwordMapUnitPosition, invItems);
 
             // I plant it, only so it can be then found immediately again
-            State.TheVirtualMap.TheMapUnits.CurrentMapUnits.AddMapUnit(discoverableLoot);
+            State.TheVirtualMap.CurrentMap.CurrentMapUnits.AddMapUnit(discoverableLoot);
 
             bool bFoundGlassSword = State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
                 State.CharacterRecords.AvatarRecord, State.CharacterRecords);
@@ -2120,6 +2159,9 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToTalk(MapUnitMovement.MovementCommandDirection direction,
             TurnResults turnResults)
         {
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                throw new Ultima5ReduxException("TryToTalk on a non RegularMap");
+            
             NonPlayerCharacter npc = State.TheVirtualMap.GetNpcToTalkTo(direction);
 
             if (npc == null)
@@ -2135,23 +2177,27 @@ namespace Ultima5Redux
             bool bHasNpcRef = npc.NPCRef != null;
             // bool bIsShoppeKeeper = bHasNpcRef && npc.NPCRef.IsShoppeKeeper;
 
-            if (State.TheVirtualMap.IsNPCInBed(npc))
+            if (regularMap is SmallMap smallMap)
             {
-                turnResults.PushOutputToConsole(
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings.ZZZ),
-                    false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.CantTalkSleeping));
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
+                if (smallMap.IsNPCInBed(npc))
+                {
+                    turnResults.PushOutputToConsole(
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings
+                            .ZZZ),
+                        false);
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.CantTalkSleeping));
+                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                }
 
-            if (State.TheVirtualMap.IsWantedManByThePoPo)
-            {
-                turnResults.PushOutputToConsole(
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings
-                        .DONT_HURT_ME),
-                    false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.DontHurtMeAfraid));
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                if (smallMap.IsWantedManByThePoPo)
+                {
+                    turnResults.PushOutputToConsole(
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings
+                            .DONT_HURT_ME),
+                        false);
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.DontHurtMeAfraid));
+                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                }
             }
 
             if (!bHasNpcRef)
@@ -2277,9 +2323,15 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseMoonstone(Moonstone moonstone, out bool bMoonstoneBuried,
             TurnResults turnResults)
         {
+            if (State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
+            {
+                bMoonstoneBuried = false;
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
             bMoonstoneBuried = false;
 
-            if (!IsAllowedToBuryMoongate())
+            if (!largeMap.IsAllowedToBuryMoongate())
             {
                 turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                                                     DataOvlReference.ExclaimStrings
@@ -2321,7 +2373,7 @@ namespace Ultima5Redux
             }
 
             spell = _potionColorToSpellMap[potion.Color];
-            if (IsCombatMap) State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
+            if (State.TheVirtualMap.CurrentMap is CombatMap combatMap) combatMap.AdvanceToNextCombatMapUnit();
 
             potion.Quantity--;
 
@@ -2391,7 +2443,6 @@ namespace Ultima5Redux
                     if (bSucceeded)
                     {
                         turnResults.PushOutputToConsole("X-Ray!", false);
-                        break;
                     }
 
                     // if you fail with the x-ray then 
@@ -2511,10 +2562,13 @@ namespace Ultima5Redux
         /// <returns>string to print out for user</returns>
         public List<VirtualMap.AggressiveMapUnitInfo> TryToXit(out bool bWasSuccessful, TurnResults turnResults)
         {
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                throw new Ultima5ReduxException("TryToXit on non-regular map");
+            
             bWasSuccessful = true;
 
             MapUnit unboardedMapUnit =
-                State.TheVirtualMap.TheMapUnits.XitCurrentMapUnit(State.TheVirtualMap, out string retStr);
+                regularMap.XitCurrentMapUnit(out string retStr);
 
             bWasSuccessful = unboardedMapUnit != null;
 
@@ -2535,9 +2589,12 @@ namespace Ultima5Redux
         /// <returns>output string</returns>
         public List<VirtualMap.AggressiveMapUnitInfo> TryToYellForSails(out bool bSailsHoisted, TurnResults turnResults)
         {
-            Debug.Assert(State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is Frigate);
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
+                throw new Ultima5ReduxException("TryToXit on non-regular map");
 
-            if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is not Frigate avatarsFrigate)
+            Debug.Assert(regularMap.GetAvatarMapUnit().CurrentBoardedMapUnit is Frigate);
+
+            if (regularMap.GetAvatarMapUnit().CurrentBoardedMapUnit is not Frigate avatarsFrigate)
                 throw new Ultima5ReduxException("Tried get Avatar's frigate, but it was null");
 
             avatarsFrigate.SailsHoisted = !avatarsFrigate.SailsHoisted;

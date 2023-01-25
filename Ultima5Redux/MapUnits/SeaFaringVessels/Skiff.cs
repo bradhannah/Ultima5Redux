@@ -55,6 +55,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             PlayerCharacterRecords records) =>
             GetAdjustedPrice(records, Prices[location]);
 
-        public override bool CanBeExited(VirtualMap virtualMap) => virtualMap.IsLandNearby(Avatar.AvatarState.Regular);
+        public override bool CanBeExited(RegularMap map) => virtualMap.IsLandNearby(Avatar.AvatarState.Regular);
     }
 }

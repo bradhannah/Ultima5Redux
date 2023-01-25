@@ -204,14 +204,18 @@ namespace Ultima5Redux.References.Maps
                 };
             }
 
-            public static SingleMapReference GetLargeMapSingleInstance(Map.Maps map)
+            public static SingleMapReference GetLargeMapSingleInstance(
+                LargeMapLocationReferences.LargeMapType largeMapType) //Map.Maps map)
             {
-                if (map == Map.Maps.Small)
-                    throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
-
+                // if (map == Map.Maps.Small)
+                //     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
+                //
                 return new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory,
                     Location.Britannia_Underworld,
-                    map == Map.Maps.Overworld ? 0 : -1, 0);
+                    largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1, 0);
+                // return new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory,
+                //     Location.Britannia_Underworld,
+                //     map == Map.Maps.Overworld ? 0 : -1, 0);
             }
 
             /// <summary>

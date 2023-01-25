@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
@@ -715,11 +716,14 @@ namespace Ultima5Redux.Dialogue
 
         public void ProcessScriptItem(TalkScript.ScriptItem scriptItem)
         {
+            if (_gameState.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+                throw new Ultima5ReduxException("Should be small map");
+            
             switch (scriptItem.Command)
             {
                 case TalkScript.TalkCommand.MakeAHorse:
                     // well, we make a horse!
-                    _ = _gameState.TheVirtualMap.CreateHorseAroundAvatar(TheTurnResults);
+                    _ = smallMap.CreateHorseAroundAvatar(TheTurnResults);
                     break;
                 case TalkScript.TalkCommand.GoToJail:
                     TheTurnResults.PushTurnResult(new GoToJail());
@@ -748,10 +752,11 @@ namespace Ultima5Redux.Dialogue
                     _gameState.ChangeKarma(-1, TheTurnResults);
                     break;
                 case TalkScript.TalkCommand.CallGuards:
-                    _gameState.TheVirtualMap.IsWantedManByThePoPo = true;
+
+                    smallMap.IsWantedManByThePoPo = true;
                     CallForGuardsAfterConversation = true;
                     // if it's a guard that calls guards then they will attack you immediately, you had your chance!
-                    if (TheNonPlayerCharacterState.NPCRef.IsGuard) _gameState.TheVirtualMap.DeclinedExtortion = true;
+                    if (TheNonPlayerCharacterState.NPCRef.IsGuard) smallMap.DeclinedExtortion = true;
                     break;
                 case TalkScript.TalkCommand.Gold:
                     _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
@@ -759,7 +764,7 @@ namespace Ultima5Redux.Dialogue
                     break;
                 case TalkScript.TalkCommand.JoinParty:
                     NonPlayerCharacter npc =
-                        _gameState.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters.First(m =>
+                        _gameState.TheVirtualMap.CurrentMap.CurrentMapUnits.NonPlayerCharacters.First(m =>
                             m.NpcRefIndex == TheNonPlayerCharacterState.NPCRef.DialogIndex);
                     if (npc == null)
                     {

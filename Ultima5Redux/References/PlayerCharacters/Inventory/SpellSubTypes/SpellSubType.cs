@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
 {
@@ -13,12 +14,13 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
 
         public bool IsCastablePresently(GameState state)
         {
+            bool bIsCombatMap = state.TheVirtualMap.CurrentMap is CombatMap;
             bool bResult = MagicRef.TimePermitted switch
             {
-                MagicReference.SpecificTimePermitted.Peace => !state.TheVirtualMap.IsCombatMap,
-                MagicReference.SpecificTimePermitted.Combat => state.TheVirtualMap.IsCombatMap,
+                MagicReference.SpecificTimePermitted.Peace => !bIsCombatMap,
+                MagicReference.SpecificTimePermitted.Combat => bIsCombatMap,
                 MagicReference.SpecificTimePermitted.Anytime => true,
-                MagicReference.SpecificTimePermitted.Combat_Dungeon => state.TheVirtualMap.IsCombatMap || true,
+                MagicReference.SpecificTimePermitted.Combat_Dungeon => bIsCombatMap || true,
                 MagicReference.SpecificTimePermitted.Dungeon => false,
                 MagicReference.SpecificTimePermitted.Never => false,
                 _ => throw new InvalidEnumArgumentException(((int)MagicRef.TimePermitted).ToString())
