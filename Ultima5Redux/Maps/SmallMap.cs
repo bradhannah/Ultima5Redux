@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -104,9 +105,12 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
-        internal void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLegacyLoad,
+        internal void LoadSmallMap(SmallMaps smallMaps, SmallMapReferences.SingleMapReference.Location location,
+            bool bInitialLegacyLoad,
             SearchItems searchItems)
         {
+            _smallMaps = smallMaps;
+            
             if (location is SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
                 or SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
                 throw new Ultima5ReduxException("Tried to load " + location + " into a small map");
@@ -209,6 +213,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        [IgnoreDataMember] private SmallMaps _smallMaps;
 
         [IgnoreDataMember] public override bool IsRepeatingMap => false;
 
@@ -319,6 +324,206 @@ namespace Ultima5Redux.Maps
                 CombatPlayer _ => WalkableType.StandardWalking,
                 _ => WalkableType.StandardWalking
             };
+        }
+
+        /// <summary>
+        ///     Are the stairs at the given position going down?
+        ///     Be sure to check if they are stairs first
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="stairTileReference"></param>
+        /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public bool IsStairGoingDown(in Point2D xy, out TileReference stairTileReference)
+        {
+            stairTileReference = null;
+            if (!TileReferences.IsStaircase(GetTileReference(xy).Index))
+                return false;
+            bool bStairGoUp = _smallMaps.DoStairsGoUp(MapLocation, MapFloor, xy,
+                out stairTileReference);
+            return !bStairGoUp;
+        }
+
+        /// <summary>
+        ///     Are the stairs at the given position going up?
+        ///     Be sure to check if they are stairs first
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="stairTileReference"></param>
+        /// <returns></returns>
+        public bool IsStairGoingUp(in Point2D xy, out TileReference stairTileReference)
+        {
+            stairTileReference = null;
+            if (!TileReferences.IsStaircase(GetTileReference(xy).Index))
+                return false;
+
+            bool bStairGoUp = _smallMaps.DoStairsGoUp(MapLocation, MapFloor, xy,
+                out stairTileReference);
+            return bStairGoUp;
+        }
+
+        /// <summary>
+        ///     Gets the best possible stair or ladder location
+        ///     to go to the destinedPosition
+        ///     Ladder/Stair -> destinedPosition
+        /// </summary>
+        /// <param name="ladderOrStairDirection">go up or down a ladder/stair</param>
+        /// <param name="destinedPosition">the position to go to</param>
+        /// <returns></returns>
+        internal List<Point2D> GetBestStairsAndLadderLocation(VirtualMap.LadderOrStairDirection ladderOrStairDirection,
+            Point2D destinedPosition)
+        {
+            // get all ladder and stairs locations based (only up or down ladders/stairs)
+            List<Point2D> allLaddersAndStairList = GetListOfAllLaddersAndStairs(ladderOrStairDirection);
+
+            // get an ordered dictionary of the shortest straight line paths
+            SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
+
+            // ordered list of the best choice paths (only valid paths) 
+            List<Point2D> bestChoiceList = new(sortedPoints.Count);
+
+            // to make it more familiar, we will transfer to an ordered list
+            foreach (Point2D xy in sortedPoints.Values)
+            {
+                bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy, WalkableType.StandardWalking) > 0;
+                // we first make sure that the path even exists before we add it to the list
+                if (bPathBuilt) bestChoiceList.Add(xy);
+            }
+
+            return bestChoiceList;
+        }
+
+        /// <summary>
+        ///     Gets the best possible stair or ladder locations from the current position to the given ladder/stair direction
+        ///     currentPosition -> best ladder/stair
+        /// </summary>
+        /// <param name="ladderOrStairDirection">which direction will we try to get to</param>
+        /// <param name="destinedPosition">the position you are trying to get to</param>
+        /// <param name="currentPosition">the current position of the character</param>
+        /// <returns></returns>
+        internal List<Point2D> getBestStairsAndLadderLocationBasedOnCurrentPosition(
+            VirtualMap.LadderOrStairDirection ladderOrStairDirection, Point2D destinedPosition, Point2D currentPosition)
+        {
+            // get all ladder and stairs locations based (only up or down ladders/stairs)
+            List<Point2D> allLaddersAndStairList = GetListOfAllLaddersAndStairs(ladderOrStairDirection);
+
+            // get an ordered dictionary of the shortest straight line paths
+            SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
+
+            // ordered list of the best choice paths (only valid paths) 
+            List<Point2D> bestChoiceList = new(sortedPoints.Count);
+
+            // to make it more familiar, we will transfer to an ordered list
+            foreach (Point2D xy in sortedPoints.Values)
+            {
+                bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy, WalkableType.StandardWalking) > 0;
+                // we first make sure that the path even exists before we add it to the list
+                if (bPathBuilt) bestChoiceList.Add(xy);
+            }
+
+            return bestChoiceList;
+        }
+
+        /// <summary>
+        ///     Gets a list of points for all stairs and ladders
+        /// </summary>
+        /// <param name="ladderOrStairDirection">direction of all stairs and ladders</param>
+        /// <returns></returns>
+        private List<Point2D> GetListOfAllLaddersAndStairs(VirtualMap.LadderOrStairDirection ladderOrStairDirection)
+        {
+            List<Point2D> laddersAndStairs = new();
+
+            // go through every single tile on the map looking for ladders and stairs
+            for (int x = 0; x < X_TILES; x++)
+            {
+                for (int y = 0; y < Y_TILES; y++)
+                {
+                    TileReference tileReference = GetTileReference(x, y);
+                    if (ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down)
+                    {
+                        // if this is a ladder or staircase and it's in the right direction, then add it to the list
+                        if (TileReferences.IsLadderDown(tileReference.Index) ||
+                            IsStairGoingDown(new Point2D(x, y), out _))
+                            laddersAndStairs.Add(new Point2D(x, y));
+                    }
+                    else // otherwise we know you are going up
+                    {
+                        if (TileReferences.IsLadderUp(tileReference.Index) ||
+                            (TileReferences.IsStaircase(tileReference.Index) &&
+                             IsStairGoingUp(new Point2D(x, y), out _)))
+                            laddersAndStairs.Add(new Point2D(x, y));
+                    }
+                } // end y for
+            }
+
+            // end x for
+            return laddersAndStairs;
+        }
+
+        /// <summary>
+        ///     Returns the total number of moves to the number of moves for the character to reach a point
+        /// </summary>
+        /// <param name="currentXy"></param>
+        /// <param name="targetXy">where the character would move</param>
+        /// <param name="walkableType"></param>
+        /// <returns>the number of moves to the targetXy</returns>
+        /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
+        internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, WalkableType walkableType)
+        {
+            Stack<Node> nodeStack = GetAStarMap(walkableType).FindPath(currentXy, targetXy);
+            return nodeStack?.Count ?? 0;
+        }
+
+        /// <summary>
+        ///     Gets the shortest path between a list of
+        /// </summary>
+        /// <param name="positionList">list of positions</param>
+        /// <param name="destinedPosition">the destination position</param>
+        /// <returns>an ordered directory list of paths based on the shortest path (straight line path)</returns>
+        private SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList,
+            in Point2D destinedPosition)
+        {
+            SortedDictionary<double, Point2D> sortedPoints = new();
+
+            // get the distances and add to the sorted dictionary
+            foreach (Point2D xy in positionList)
+            {
+                double dDistance = destinedPosition.DistanceBetween(xy);
+                // make them negative so they sort backwards
+
+                // if the distance is the same then we just add a bit to make sure there is no conflict
+                while (sortedPoints.ContainsKey(dDistance)) dDistance += 0.0000001;
+
+                sortedPoints.Add(dDistance, xy);
+            }
+
+            return sortedPoints;
+        }
+
+        /// <summary>
+        ///     Are the stairs at the player characters current position going up?
+        /// </summary>
+        /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public bool IsStairGoingUp(out TileReference stairTileReference) =>
+            IsStairGoingUp(CurrentPosition.XY, out stairTileReference);
+
+        /// <summary>
+        ///     Are the stairs at the player characters current position going down?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsStairsGoingDown(out TileReference stairTileReference) =>
+            IsStairGoingDown(CurrentPosition.XY, out stairTileReference);
+
+        /// <summary>
+        ///     Given the orientation of the stairs, it returns the correct sprite to display
+        /// </summary>
+        /// <param name="xy">position of stairs</param>
+        /// <returns>stair sprite</returns>
+        public TileReference GetStairsSprite(in Point2D xy)
+        {
+            bool _ = IsStairGoingUp(xy, out TileReference stairTileReference);
+            return stairTileReference;
         }
     }
 }

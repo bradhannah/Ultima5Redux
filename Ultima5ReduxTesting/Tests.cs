@@ -3584,13 +3584,15 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Jhelom, 1));
-
+            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+                throw new Ultima5ReduxException("Should be small map");
+            
             var eastAndDownPosition = new Point2D(7, 28);
             TileReference eastAndDown = world.State.TheVirtualMap.CurrentMap.GetTileReference(eastAndDownPosition);
-            Assert.IsTrue(GameReferences.Instance.SpriteTileReferences.IsStaircase(eastAndDown.Index));
-            Assert.IsTrue(world.State.TheVirtualMap.IsStairGoingDown(eastAndDownPosition,
+            Assert.IsTrue(TileReferences.IsStaircase(eastAndDown.Index));
+            Assert.IsTrue(smallMap.IsStairGoingDown(eastAndDownPosition,
                 out TileReference eastAndDownCalcReference));
-            Assert.IsTrue(GameReferences.Instance.SpriteTileReferences.IsStaircase(eastAndDownCalcReference.Index));
+            Assert.IsTrue(TileReferences.IsStaircase(eastAndDownCalcReference.Index));
         }
 
         [Test] [TestCase(SaveFiles.Britain2)] public void test_DoorsInRightDirection(SaveFiles saveFiles)

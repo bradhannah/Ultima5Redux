@@ -254,7 +254,7 @@ namespace Ultima5Redux.Maps
                 return null;
             }
 
-            if (!GetAvatarMapUnit().CurrentBoardedMapUnit.CanBeExited(virtualMap))
+            if (!GetAvatarMapUnit().CurrentBoardedMapUnit.CanBeExited(this))
             {
                 retStr += "\n" + GameReferences.Instance.DataOvlRef.StringReferences
                     .GetString(DataOvlReference.SleepTransportStrings.N_NO_LAND_NEARBY_BANG_N).Trim();
@@ -279,7 +279,8 @@ namespace Ultima5Redux.Maps
             Debug.Assert(avatarFrigate != null, nameof(avatarFrigate) + " != null");
 
             // if we have skiffs, AND do not have land close by then we deploy a skiff
-            if (avatarFrigate.SkiffsAboard <= 0 || IsLandNearby()) return unboardedMapUnit;
+            if (avatarFrigate.SkiffsAboard <= 0 || IsLandNearby(GetAvatarMapUnit().CurrentAvatarState))
+                return unboardedMapUnit;
 
             MakeAndBoardSkiff();
             avatarFrigate.SkiffsAboard--;

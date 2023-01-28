@@ -73,6 +73,6 @@ namespace Ultima5Redux.MapUnits
             // by default the thing doesn't move on it's own
         }
 
-        //public override bool CanBeExited(VirtualMap virtualMap) => virtualMap.IsLandNearbyForAvatar();
+        public override bool CanBeExited(RegularMap regularMap) => regularMap.IsLandNearbyForAvatar();
     }
 }

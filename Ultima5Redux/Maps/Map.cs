@@ -226,7 +226,7 @@ namespace Ultima5Redux.Maps
         public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference,
             SmallMapReferences.SingleMapReference singleMapReference, out int nIndex)
         {
-            Debug.Assert(CurrentMapType != Maps.Combat);
+            Debug.Assert(TheMapType != Maps.Combat);
 
             nIndex = FindNextFreeMapUnitIndex(singleMapReference.MapType);
             if (nIndex == -1) return null;
@@ -367,7 +367,7 @@ namespace Ultima5Redux.Maps
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
             // true indicates that it is walkable
             bool bStaircaseWalkable =
-                !(bNoStaircases && GameReferences.Instance.SpriteTileReferences.IsStaircase(tileReference.Index));
+                !(bNoStaircases && TileReferences.IsStaircase(tileReference.Index));
 
             // if it's nighttime then the portcullises go down and you cannot pass
             bool bPortcullisDown =

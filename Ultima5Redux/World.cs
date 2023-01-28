@@ -1733,11 +1733,12 @@ namespace Ultima5Redux
             State.TheVirtualMap.SavePreviousPosition(State.TheVirtualMap.CurrentPosition);
 
             // if you walk on top of a staircase then we will immediately jump to the next floor
-            if (GameReferences.Instance.SpriteTileReferences.IsStaircase(newTileReference.Index))
+            if (TileReferences.IsStaircase(newTileReference.Index) &&
+                State.TheVirtualMap.CurrentMap is SmallMap smallMap)
             {
                 State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition.XY);
                 turnResults.PushOutputToConsole(
-                    State.TheVirtualMap.IsStairGoingDown(State.TheVirtualMap.CurrentPosition.XY, out _)
+                    smallMap.IsStairGoingDown(State.TheVirtualMap.CurrentPosition.XY, out _)
                         ? GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
                             .DOWN)
                         : GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings

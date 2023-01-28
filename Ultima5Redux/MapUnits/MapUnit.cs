@@ -84,7 +84,7 @@ namespace Ultima5Redux.MapUnits
         protected virtual NonPlayerCharacterSchedule.AiType OverridenAiType =>
             NPCState?.OverridenAiType ?? NonPlayerCharacterSchedule.AiType.Fixed;
 
-        
+
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
         /// </summary>
@@ -127,7 +127,7 @@ namespace Ultima5Redux.MapUnits
             MapUnitPosition = mapUnitPosition;
         }
 
-        internal virtual void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay) 
+        internal virtual void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay)
         {
             if (regularMap.CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
@@ -151,7 +151,7 @@ namespace Ultima5Redux.MapUnits
 
             // if there is no next available movement then we gotta recalculate and see if they should move
             if (regularMap is SmallMap smallMap && !Movement.IsNextCommandAvailable())
-                CalculateNextPathOnSmallMap(smallMap, timeOfDay, regularMap.CurrentSingleMapReference.Floor); 
+                CalculateNextPathOnSmallMap(smallMap, timeOfDay, regularMap.CurrentSingleMapReference.Floor);
 
             // if this NPC has a command in the buffer, so let's execute!
             if (!Movement.IsNextCommandAvailable()) return;
@@ -266,15 +266,16 @@ namespace Ultima5Redux.MapUnits
         {
             // is player on a ladder or staircase going in the direction they intend to go?
             bool bIsOnStairCaseOrLadder =
-                GameReferences.Instance.SpriteTileReferences.IsStaircase(currentTileRef.Index) ||
+                TileReferences.IsStaircase(currentTileRef.Index) ||
                 GameReferences.Instance.SpriteTileReferences.IsLadder(currentTileRef.Index);
 
             if (!bIsOnStairCaseOrLadder) return false;
 
             // are they destined to go up or down it?
-            if (GameReferences.Instance.SpriteTileReferences.IsStaircase(currentTileRef.Index))
+            if (TileReferences.IsStaircase(currentTileRef.Index))
             {
-                if (map.IsStairGoingUp(xy, out _))
+                if (GameReferences.Instance.SmallMapRef.DoStairsGoUp(map.CurrentLocation,
+                        map.CurrentSingleMapReference.Floor, xy, out _))
                     return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
                 return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
             }
@@ -385,7 +386,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        private void GetCloserToAvatar(RegularMap regularMap) 
+        private void GetCloserToAvatar(RegularMap regularMap)
         {
             IEnumerable<Point2D> possiblePositions = MapUnitPosition.XY
                 .GetConstrainedFourDirectionSurroundingPointsCloserTo(
@@ -393,7 +394,7 @@ namespace Ultima5Redux.MapUnits
                     regularMap.NumOfXTiles, regularMap.NumOfYTiles);
 
             AStar aStar = regularMap.GetAStarMap(regularMap.GetWalkableTypeByMapUnit(this));
-            
+
             foreach (Point2D point in possiblePositions)
             {
                 if (regularMap.IsTileFreeToTravelForAvatar(point, true))
@@ -432,7 +433,7 @@ namespace Ultima5Redux.MapUnits
         }
 
 
-        //public virtual bool CanBeExited(VirtualMap virtualMap) => true;
+        public virtual bool CanBeExited(RegularMap regularMap) => true;
 
         // ReSharper disable once UnusedMember.Global
         public virtual string GetDebugDescription(TimeOfDay timeOfDay) =>
@@ -569,8 +570,7 @@ namespace Ultima5Redux.MapUnits
         ///     calculates and stores new path for NPC
         ///     Placed outside into the VirtualMap since it will need information from the active map, VMap and the MapUnit itself
         /// </summary>
-        protected void
-            CalculateNextPathOnSmallMap(SmallMap smallMap, TimeOfDay timeOfDay, int nMapCurrentFloor) //., AStar aStar)
+        protected void CalculateNextPathOnSmallMap(SmallMap smallMap, TimeOfDay timeOfDay, int nMapCurrentFloor)
         {
             // added some safety to save potential exceptions
             // if there is no NPC reference (currently only horses) then we just assign their intended position
@@ -708,7 +708,7 @@ namespace Ultima5Redux.MapUnits
                         // do nothing, they are where they are supposed to be 
                         break;
                     case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:
-                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:                        
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:
                     case NonPlayerCharacterSchedule.AiType.Wander:
                         // choose a tile within N tiles that is not blocked, and build a single path
                         WanderWithinN(smallMap, timeOfDay, 2);
@@ -724,7 +724,7 @@ namespace Ultima5Redux.MapUnits
                             MapUnitPosition);
                         break;
                     case NonPlayerCharacterSchedule.AiType.CustomAi:
-                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:                        
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:
                         // don't think they move....?
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
@@ -811,7 +811,7 @@ namespace Ultima5Redux.MapUnits
                         break;
                     case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
                     case NonPlayerCharacterSchedule.AiType.CustomAi:
-                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:                        
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
                         BuildPath(this, npcDestinationPosition.XY,
@@ -819,7 +819,7 @@ namespace Ultima5Redux.MapUnits
                         break;
                     case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
                     case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:
-                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:                        
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:
                     case NonPlayerCharacterSchedule.AiType.Wander:
                     case NonPlayerCharacterSchedule.AiType.BigWander:
                         // different wanders have different different radius'
@@ -935,7 +935,7 @@ namespace Ultima5Redux.MapUnits
             // regularMap.TheMapOverrides);
             Map.WalkableType walkableType = regularMap.GetWalkableTypeByMapUnit(this);
             Point2D avatarPosition = regularMap.CurrentAvatarPosition.XY;
-            
+
             const int noPath = 0xFFFF;
 
             //Map map = virtualMap.CurrentMap;

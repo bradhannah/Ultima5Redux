@@ -441,7 +441,7 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsStaircase(int nSprite)
+        public static bool IsStaircase(int nSprite)
         {
             bool bIsLadder = nSprite is >= 196 and <= 199;
             // nSprite == GetTileNumberByName("StairsWest") ||

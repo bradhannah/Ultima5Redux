@@ -342,5 +342,95 @@ namespace Ultima5Redux.References.Maps
         }
 
         public bool HasBasement(SingleMapReference.Location location) => _smallMapBasementDictionary[location];
+
+        public bool DoesFloorExist(SingleMapReference.Location location, int nFloor) =>
+            _mapReferenceDictionary[location].ContainsKey(nFloor);
+
+
+        public bool DoStairsGoDown(SingleMapReference.Location location, int nFloor,
+            Point2D tilePos, out TileReference stairTileReference) =>
+            !DoStairsGoUp(location, nFloor, tilePos, out stairTileReference);
+
+        public bool DoStairsGoUp(SingleMapReference.Location location, int nFloor, Point2D tilePos,
+            out TileReference stairTileReference)
+        {
+            stairTileReference = null;
+
+            if (!TileReferences.IsStaircase(
+                    GetSingleMapByLocation(location, nFloor).GetDefaultMap()[tilePos.X][tilePos.Y]))
+            {
+                throw new Ultima5ReduxException(
+                    $"You wanted to see if a staircase goes up, but there is no staircase at {tilePos.X},{tilePos.Y}");
+            }
+
+            // nothing above it, so it doesn't go up
+            if (!DoesFloorExist(location, nFloor + 1)) return false;
+            // nothing below it, so it doesn't go down
+            if (DoesFloorExist(location, nFloor - 1)) return true;
+
+            // get the floor above it since we are certain there is one
+            // note: the way this is written, it won't (yet?) support overloaded tiles
+            SingleMapReference upperFloor = GetSingleMapByLocation(location, nFloor + 1);
+            byte[][] upperFloorMap = upperFloor.GetDefaultMap();
+            bool isStairUp = TileReferences.IsStaircase(upperFloorMap[tilePos.X][tilePos.Y]);
+
+            if (isStairUp)
+            {
+                stairTileReference =
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(upperFloorMap[tilePos.X][tilePos.Y]);
+                return true;
+            }
+
+            // stairs go down
+            byte[][] lowerFloorMap = GetSingleMapByLocation(location, nFloor - 1).GetDefaultMap();
+            stairTileReference =
+                GameReferences.Instance.SpriteTileReferences.GetTileReference(lowerFloorMap[tilePos.X][tilePos.Y]);
+            return false;
+
+            //SmallMap currentFloorSmallMap = _mapLocationDictionary[location][nFloor];
+            // bool bHasLowerFloor = _mapLocationDictionary[location].ContainsKey(nFloor - 1);
+            // bool bHasHigherFloor = _mapLocationDictionary[location].ContainsKey(nFloor + 1);
+
+            // is it a stair case?
+            // Debug.Assert(
+            //     TileReferences.IsStaircase(
+            //         currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
+            // is it the bottom or top floor? if so, then we know
+            // if (!bHasLowerFloor)
+            // {
+            //     // no lower floor? then it's going up
+            //     // we use the existing tile reference - it is fine
+            //     stairTileReference =
+            //         GameReferences.Instance.SpriteTileReferences.GetTileReference(
+            //             currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]);
+            //     return true;
+            // }
+
+            // if no higher floor OR s there a stair case on the lower floor?
+            // if (!bHasHigherFloor)
+            // {
+            //     // no higher floor? Definitely going down, so let's get the lower stair sprite
+            //     stairTileReference =
+            //         GameReferences.Instance.SpriteTileReferences.GetTileReference(
+            //             _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]);
+            //     return false;
+            // }
+
+            // if the floor below has a staircase, then we know it's a down
+            // if (TileReferences.IsStaircase(
+            //         _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]))
+            // {
+            //     stairTileReference =
+            //         GameReferences.Instance.SpriteTileReferences.GetTileReference(
+            //             _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]);
+            //
+            //     return false;
+            // }
+            //
+            // stairTileReference =
+            //     GameReferences.Instance.SpriteTileReferences.GetTileReference(
+            //         currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]);
+            // return true;
+        }
     }
 }

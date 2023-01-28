@@ -54,7 +54,7 @@ namespace Ultima5Redux.Maps
 
             // is it a stair case?
             Debug.Assert(
-                GameReferences.Instance.SpriteTileReferences.IsStaircase(
+                TileReferences.IsStaircase(
                     currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
             // is it the bottom or top floor? if so, then we know
             if (!bHasLowerFloor)
@@ -78,7 +78,7 @@ namespace Ultima5Redux.Maps
             }
 
             // if the floor below has a staircase, then we know it's a down
-            if (GameReferences.Instance.SpriteTileReferences.IsStaircase(
+            if (TileReferences.IsStaircase(
                     _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y]))
             {
                 stairTileReference =
