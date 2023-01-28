@@ -274,7 +274,7 @@ namespace Ultima5Redux.MapUnits
             // are they destined to go up or down it?
             if (TileReferences.IsStaircase(currentTileRef.Index))
             {
-                if (GameReferences.Instance.SmallMapRef.DoStairsGoUp(map.CurrentLocation,
+                if (GameReferences.Instance.SmallMapRef.DoStairsGoUp(map.MapLocation,
                         map.CurrentSingleMapReference.Floor, xy, out _))
                     return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
                 return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;

@@ -23,9 +23,17 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] public partial class VirtualMap
+    [DataContract] public class MapHolder
     {
-        internal enum LadderOrStairDirection { Up, Down }
+        public SmallMaps SmallMaps => _smallMaps;
+        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
+        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
+
+        public LargeMap GetLargeMapByLargeMapType(LargeMapLocationReferences.LargeMapType largeMapType) =>
+            largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? OverworldMap : UnderworldMap;
+
+        public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference singleMapReference) =>
+            _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
 
         /// <summary>
         ///     Both underworld and overworld maps
@@ -39,13 +47,26 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     All the small maps
         /// </summary>
-        //[DataMember(Name = "SmallMaps")]
-        private readonly SmallMaps _smallMaps = new();
+        [DataMember(Name = "SmallMaps")] private readonly SmallMaps _smallMaps = new();
+
+
+        /// <summary>
+        ///     The current small map (null if on large map)
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        // [DataMember]
+        // public SmallMap CurrentSmallMap { get; private set; }
+
+        [DataMember]
+        public DungeonMap TheDungeonMap { get; private set; }
+
+        [DataMember] public CombatMap TheCombatMap { get; internal set; }
+
 
         /// <summary>
         ///     Which map was the avatar on before this one?
         /// </summary>
-        [DataMember]
+        [IgnoreDataMember]
         private RegularMap PreCombatMap { get; set; }
 
         /// <summary>
@@ -53,25 +74,155 @@ namespace Ultima5Redux.Maps
         /// </summary>
         [DataMember]
         private MapUnitPosition PreMapUnitPosition { get; set; } = new();
+    }
+
+    [DataContract] public class SavedMapRefs
+    {
+        [DataMember] public SmallMapReferences.SingleMapReference.Location Location { get; private set; }
+        [DataMember] public int Floor { get; private set; }
+        [DataMember] public Map.Maps MapType { get; private set; }
+
+        // this is loaded, and only re-set before a save
+        [DataMember] public MapUnitPosition MapUnitPosition { get; private set; } = new();
+
+        private void SetMapUnitPosition(Point2D playerPosition)
+        {
+            if (playerPosition == null)
+            {
+                MapUnitPosition.X = 0;
+                MapUnitPosition.Y = 0;
+            }
+            else
+            {
+                MapUnitPosition.X = playerPosition.X;
+                MapUnitPosition.Y = playerPosition.Y;
+            }
+
+            MapUnitPosition.Floor = Floor;
+        }
+
+        public void SetByLargeMapType(LargeMapLocationReferences.LargeMapType largeMapType, Point2D playerPosition)
+        {
+            Location = SmallMapReferences.SingleMapReference.Location.Britannia_Underworld;
+            Floor = largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1;
+            MapType = largeMapType == LargeMapLocationReferences.LargeMapType.Overworld
+                ? Map.Maps.Overworld
+                : Map.Maps.Underworld;
+            SetMapUnitPosition(playerPosition);
+        }
+
+        public void SetBySingleDungeonMapFloorReference(SingleDungeonMapFloorReference singleDungeonMapFloorReference,
+            Point2D playerPosition)
+        {
+            Location = singleDungeonMapFloorReference.DungeonLocation;
+            Floor = singleDungeonMapFloorReference.DungeonFloor;
+            MapType = Map.Maps.Dungeon;
+            SetMapUnitPosition(playerPosition);
+        }
+
+        public void SetBySingleCombatMapReference(SingleCombatMapReference singleCombatMapReference)
+        {
+            // not entirely sure we need to actually save much here since we never actually save games
+            // while in combat
+            Location = SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine;
+            Floor = 0;
+            MapType = Map.Maps.Combat;
+        }
+
+        public void SetBySingleMapReference(SmallMapReferences.SingleMapReference singleMapReference,
+            Point2D playerPosition)
+        {
+            Location = singleMapReference.MapLocation;
+            Floor = singleMapReference.Floor;
+            MapType = singleMapReference.MapType;
+            SetMapUnitPosition(playerPosition);
+        }
+
+        public SmallMapReferences.SingleMapReference GetSingleMapReference()
+        {
+            if (Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                return SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(Floor == 0
+                    ? LargeMapLocationReferences.LargeMapType.Overworld
+                    : LargeMapLocationReferences.LargeMapType.Underworld);
+            if (Location == SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
+            {
+                return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+            }
+
+            return GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor);
+        }
+
+        internal SavedMapRefs Copy() =>
+            new SavedMapRefs
+            {
+                Location = Location,
+                Floor = Floor,
+                MapType = MapType
+            };
+    }
+
+    [DataContract] public partial class VirtualMap
+    {
+        [DataMember] public MapHolder TheMapHolder { get; private set; }
+        [DataMember] public SavedMapRefs SavedMapRefs { get; private set; }
+        public SavedMapRefs PreCombatMapSavedMapRefs { get; private set; }
+
+        // private SmallMapReferences.SingleMapReference _currentSingleMapReference;
+
+
+        // public void test()
+        // {
+        //     _currentSingleMapReference.MapLocation;
+        //     _currentSingleMapReference.Floor;
+        //     _currentSingleMapReference.MapType;
+        // }
+
+        /// <summary>
+        ///     Both underworld and overworld maps
+        /// </summary>
+        // [DataMember(Name = "LargeMaps")] private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new(2)
+        // {
+        //     { Map.Maps.Overworld, new LargeMap(LargeMapLocationReferences.LargeMapType.Overworld) },
+        //     { Map.Maps.Underworld, new LargeMap(LargeMapLocationReferences.LargeMapType.Underworld) }
+        // };
+
+        /// <summary>
+        ///     All the small maps
+        /// </summary>
+        // [DataMember(Name = "SmallMaps")]
+        // private readonly SmallMaps _smallMaps = new();
+
+        /// <summary>
+        ///     Which map was the avatar on before this one?
+        /// </summary>
+        // [DataMember]
+        // private RegularMap PreCombatMap { get; set; }
+
+        /// <summary>
+        ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
+        /// </summary>
+        // [DataMember]
+        // private MapUnitPosition PreMapUnitPosition { get; set; } = new();
 
 
         /// <summary>
         ///     The current small map (null if on large map)
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        [DataMember]
-        public SmallMap CurrentSmallMap { get; private set; }
-
-        [DataMember] public DungeonMap CurrentDungeonMap { get; private set; }
+        // [DataMember]
+        // public SmallMap CurrentSmallMap { get; private set; }
+        //
+        // [DataMember] public DungeonMap CurrentDungeonMap { get; private set; }
 
 
         /// <summary>
         ///     If we are on a large map - then are we on overworld or underworld
         /// </summary>
-        [DataMember]
-        public Map.Maps TheCurrentMapType { get; private set; } = (Map.Maps)(-1);
+        // [DataMember]
+        // public Map.Maps TheCurrentMapType { get; private set; } = (Map.Maps)(-1);
 
-        [DataMember] public int OneInXOddsOfNewMonster { get; set; } = 16;
+        [DataMember]
+        public int OneInXOddsOfNewMonster { get; set; } = 16;
 
         //[DataMember] public MapUnits.MapUnits CurrentMap { get; private set; }
 
@@ -80,8 +231,8 @@ namespace Ultima5Redux.Maps
         ///     Current large map (null if on small map)
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        [IgnoreDataMember]
-        public LargeMap CurrentLargeMap => _largeMaps[TheCurrentMapType];
+        // [IgnoreDataMember]
+        // public LargeMap CurrentLargeMap => _largeMaps[TheCurrentMapType];
 
         /// <summary>
         ///     The abstracted Map object for the current map
@@ -92,21 +243,24 @@ namespace Ultima5Redux.Maps
         {
             get
             {
+                SmallMapReferences.SingleMapReference singleMapReference = SavedMapRefs.GetSingleMapReference();
                 //SmallMapReferences.SingleMapReference CurrentMap.CurrentSingleMapReference = CurrentMap.CurrentSingleMapReference;
-                if (CurrentMap.CurrentSingleMapReference == null)
+                if (singleMapReference == null)
                     throw new Ultima5ReduxException("Tried to get CurrentMap but it was false");
 
-                if (CurrentMap.CurrentSingleMapReference.IsDungeon) return CurrentDungeonMap;
+                if (singleMapReference.IsDungeon) return TheMapHolder.TheDungeonMap;
 
-                switch (CurrentMap.CurrentSingleMapReference.MapLocation)
+                switch (SavedMapRefs.Location)
                 {
+                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
+                        when SavedMapRefs.MapType == Map.Maps.Combat:
+                        return TheMapHolder.TheCombatMap;
                     case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
-                        if (CurrentMap is CombatMap) return CurrentMap;
                         throw new Ultima5ReduxException("Resting and Shrines have not been implemented yet");
                     case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
-                        return CurrentMap.CurrentSingleMapReference.Floor == 0 ? OverworldMap : UnderworldMap;
+                        return SavedMapRefs.Floor == 0 ? TheMapHolder.OverworldMap : TheMapHolder.UnderworldMap;
                     default:
-                        return CurrentSmallMap;
+                        return TheMapHolder.GetSmallMap(singleMapReference);
                 }
             }
         }
@@ -167,18 +321,19 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     The persistant overworld map
         /// </summary>
-        [IgnoreDataMember]
-        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
+        // [IgnoreDataMember]
+        // public LargeMap OverworldMap => TheMapHolder.OverworldMap;//_largeMaps[Map.Maps.Overworld];
 
         /// <summary>
         ///     The persistant underworld map
         /// </summary>
-        [IgnoreDataMember]
-        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
+        // [IgnoreDataMember]
+        // public LargeMap UnderworldMap => TheMapHolder.UnderworldMap;//_largeMaps[Map.Maps.Underworld];
 
         //[IgnoreDataMember] public CombatMap CurrentCombatMap { get; private set; }
 
-        [IgnoreDataMember] public MapUnitPosition CurrentPosition => CurrentMap.CurrentPosition;
+        [IgnoreDataMember]
+        public MapUnitPosition CurrentPosition => CurrentMap.CurrentPosition;
 
         public IEnumerable<MapUnit> AllVisibleActiveMapUnits
         {
@@ -203,7 +358,7 @@ namespace Ultima5Redux.Maps
         /// <param name="location"></param>
         // ReSharper disable once UnusedMethodReturnValue.Global
         public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location) =>
-            OverworldMap.CreateFrigate(GetLocationOfDock(location), Point2D.Direction.Right, out _, 1);
+            TheMapHolder.OverworldMap.CreateFrigate(GetLocationOfDock(location), Point2D.Direction.Right, out _, 1);
 
 
         /// <summary>
@@ -213,10 +368,12 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         // ReSharper disable once UnusedMethodReturnValue.Global
         public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location) =>
-            OverworldMap.CreateSkiff(GetLocationOfDock(location), Point2D.Direction.Right, out _);
+            TheMapHolder.OverworldMap.CreateSkiff(GetLocationOfDock(location), Point2D.Direction.Right, out _);
 
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
+        ///
+        ///     This is only called on legacy game initiation - future 'new' loads will use deserialization
         /// </summary>
         /// <param name="initialMap"></param>
         /// <param name="currentSmallMapReference"></param>
@@ -224,26 +381,37 @@ namespace Ultima5Redux.Maps
         /// <param name="importedGameState"></param>
         /// <param name="theSearchItems"></param>
         internal VirtualMap(
-            //LargeMap overworldMap, LargeMap underworldMap, 
             Map.Maps initialMap,
             SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites,
             ImportedGameState importedGameState, SearchItems theSearchItems)
         {
             TheSearchItems = theSearchItems;
+            TheMapHolder = new MapHolder();
 
-            SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation ??
-                                                                         SmallMapReferences.SingleMapReference.Location
-                                                                             .Britannia_Underworld;
+            // SavedMapRefs = new();
+            // PreCombatMapSavedMapRefs = new();
+            // SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation ??
+            //                                                              SmallMapReferences.SingleMapReference.Location
+            //                                                                  .Britannia_Underworld;
 
             // load the characters for the very first time from disk
             // subsequent loads may not have all the data stored on disk and will need to recalculate
-            CurrentMap = new MapUnits.MapUnits(initialMap, bUseExtendedSprites, importedGameState, TheSearchItems,
-                mapLocation);
+            // CurrentMap = new MapUnits.MapUnits(initialMap, bUseExtendedSprites, importedGameState, TheSearchItems,
+            //     mapLocation);
+
+            TheMapHolder.OverworldMap.InitializeFromLegacy(theSearchItems, importedGameState);
+            TheMapHolder.UnderworldMap.InitializeFromLegacy(theSearchItems, importedGameState);
 
             switch (initialMap)
             {
                 case Map.Maps.Small:
-                    LoadSmallMap(currentSmallMapReference, null, !importedGameState.IsInitialSaveFile);
+                    LoadSmallMap(currentSmallMapReference, null, !importedGameState.IsInitialSaveFile,
+                        importedGameState);
+                    if (CurrentMap is not SmallMap smallMap)
+                        throw new Ultima5ReduxException("Tried to load Small Map initially but wasn't set correctly");
+                    // smallMap.InitializeFromLegacy(TheMapHolder.SmallMaps, currentSmallMapReference.MapLocation,
+                    //     importedGameState, true,
+                    //     TheSearchItems);
                     break;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
@@ -281,7 +449,6 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException(
                     "Tried to GenerateAndCleanupEnemies but CurrentMap.CurrentSingleMapReference was null");
 
-            //switch (CurrentMap.CurrentSingleMapReference.MapType)
             switch (CurrentMap)
             {
                 case LargeMap largeMap:
@@ -292,7 +459,7 @@ namespace Ultima5Redux.Maps
                     if (largeMap.TotalMapUnitsOnMap >= Map.MAX_MAP_CHARACTERS) break;
                     if (OneInXOddsOfNewMonster > 0 && Utils.OneInXOdds(OneInXOddsOfNewMonster))
                         // make a random monster
-                        CreateRandomMonster(nTurn);
+                        largeMap.CreateRandomMonster(nTurn);
 
                     break;
                 case CombatMap:
@@ -353,9 +520,6 @@ namespace Ultima5Redux.Maps
 
             return aggressiveMapUnitInfos;
         }
-
-
-
 
 
         /// <summary>
@@ -646,48 +810,6 @@ namespace Ultima5Redux.Maps
             // HURT THE PLAYER IF THEY ARE AFFECTED BY TRAP
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns>true if a monster was created</returns>
-        /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
-        private bool CreateRandomMonster(int nTurn)
-        {
-            const int maxTries = 10;
-            const int nDistanceAway = 7;
-
-            // find a position or give up
-            int dX = nDistanceAway;
-            int dY;
-            for (int i = 0; i < maxTries; i++)
-            {
-                dY = Utils.Ran.Next() % nDistanceAway;
-
-                // this logic borrowed from Xu4 to create some randomness
-                if (Utils.OneInXOdds(2)) dX = -dX;
-                if (Utils.OneInXOdds(2)) dY = -dY;
-                if (Utils.OneInXOdds(2)) Utils.SwapInts(ref dX, ref dY);
-
-                Point2D tilePosition = new((CurrentPosition.X + dX) % NumberOfColumnTiles,
-                    (CurrentPosition.Y + dY) % NumberOfRowTiles);
-                tilePosition.AdjustXAndYToMax(CurrentMap.NumOfXTiles);
-
-                if (CurrentMap.IsTileOccupied(tilePosition)) continue;
-
-                // it's not occupied so we can create a monster
-                EnemyReference enemyRef =
-                    GameReferences.Instance.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn,
-                        CurrentMap.GetTileReference(tilePosition));
-                if (enemyRef == null) continue;
-
-                // add the new character to our list of characters currently on the map
-                Enemy _ = CurrentMap.CreateEnemy(tilePosition, enemyRef, CurrentLargeMap.CurrentSingleMapReference,
-                    out int _);
-
-                return true;
-            }
-
-            return false;
-        }
 
         /// <summary>
         ///     Gets the appropriate (if any) SingleCombatMapReference based on the map and mapunits attempting to engage in
@@ -943,8 +1065,6 @@ namespace Ultima5Redux.Maps
         }
 
 
-
-
         private bool IsInsideBounds(in Point2D xy)
         {
             Map currentMap = CurrentMap;
@@ -974,19 +1094,38 @@ namespace Ultima5Redux.Maps
                 Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0,
                     "when assigning an NPC, you must have single enemy");
 
-            // if the PreCombatMap is not set OR the existing map is not already a combat map then
-            // we set the PreCombatMap so we know which map to return to
-            if (PreCombatMap == null || CurrentMap is not CombatMap)
+            if (PreCombatMapSavedMapRefs == null || CurrentMap is not CombatMap)
             {
                 Debug.Assert(CurrentMap is RegularMap,
                     "You can't load a combat map when you are already in a combat map");
-                PreCombatMap = (RegularMap)CurrentMap;
-                PreMapUnitPosition.Floor = CurrentPosition.Floor;
-                PreMapUnitPosition.X = CurrentPosition.X;
-                PreMapUnitPosition.Y = CurrentPosition.Y;
+                // save the existing map details to return to
+                // we also grab the latest XYZ and save it since we don't keep track of the 
+                // the XY coords expect at load and save
+                PreCombatMapSavedMapRefs = SavedMapRefs.Copy();
+                PreCombatMapSavedMapRefs.MapUnitPosition.Floor = CurrentPosition.Floor;
+                PreCombatMapSavedMapRefs.MapUnitPosition.X = CurrentPosition.X;
+                PreCombatMapSavedMapRefs.MapUnitPosition.Y = CurrentPosition.Y;
             }
 
-            CurrentMap.CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+            TheMapHolder.TheCombatMap = new CombatMap(singleCombatMapReference);
+
+            // if the PreCombatMap is not set OR the existing map is not already a combat map then
+            // we set the PreCombatMap so we know which map to return to
+            // if (PreCombatMap == null || CurrentMap is not CombatMap)
+            // {
+            //     Debug.Assert(CurrentMap is RegularMap,
+            //         "You can't load a combat map when you are already in a combat map");
+            //     PreCombatMap = (RegularMap)CurrentMap;
+            //     PreMapUnitPosition.Floor = CurrentPosition.Floor;
+            //     PreMapUnitPosition.X = CurrentPosition.X;
+            //     PreMapUnitPosition.Y = CurrentPosition.Y;
+            // }
+
+            SavedMapRefs.SetBySingleCombatMapReference(singleCombatMapReference);
+            // CombatMap c;
+            // c.TheCombatMapReference
+            //
+            // CurrentMap.CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
 
             // we only want to push the exposed items and override map if we are on a small or large map 
             // not if we are going combat to combat map (think Debug)
@@ -997,8 +1136,8 @@ namespace Ultima5Redux.Maps
 
             //CurrentCombatMap = new CombatMap(singleCombatMapReference);
 
-            CurrentMap.SetCurrentMapType(CurrentMap.CurrentSingleMapReference, Map.Maps.Combat, null);
-            TheCurrentMapType = Map.Maps.Combat;
+            // CurrentMap.SetCurrentMapType(CurrentMap.CurrentSingleMapReference, Map.Maps.Combat, null);
+            // TheCurrentMapType = Map.Maps.Combat;
 
             combatMap.CreateParty(entryDirection, records);
 
@@ -1113,7 +1252,8 @@ namespace Ultima5Redux.Maps
 
             bool bIsSearchableMapUnit = mapUnits.Any(m => m is Chest or DeadBody or BloodSpatter or DiscoverableLoot) ||
                                         tileReference.HasSearchReplacement;
-            bool bIsMoonstoneBuried = GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, TheCurrentMapType);
+            bool bIsMoonstoneBuried =
+                GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, CurrentMap.TheMapType);
 
             return (CurrentMap is not LargeMap && bIsMoonstoneBuried) || bIsSearchableMapUnit;
         }
@@ -1330,11 +1470,11 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public Point3D GetCurrent3DPosition()
         {
-            if (TheCurrentMapType == Map.Maps.Small)
-                return new Point3D(CurrentPosition.X, CurrentPosition.Y, CurrentSmallMap.MapFloor);
+            if (CurrentMap is SmallMap smallMap)
+                return new Point3D(CurrentPosition.X, CurrentPosition.Y, smallMap.MapFloor);
 
             return new Point3D(CurrentPosition.X, CurrentPosition.Y,
-                TheCurrentMapType == Map.Maps.Overworld ? 0 : 0xFF);
+                CurrentMap.TheMapType == Map.Maps.Overworld ? 0 : 0xFF);
         }
 
         /// <summary>
@@ -1434,8 +1574,6 @@ namespace Ultima5Redux.Maps
             if (!CurrentMap.GetTileReference(xy.X, xy.Y + 1).IsSolidSprite) return Point2D.Direction.Down;
             throw new Ultima5ReduxException("Can't get stair direction - something is amiss....");
         }
-
-
 
 
         public TileStack GetTileStack(Point2D xy, bool bSkipMapUnit)
@@ -1721,33 +1859,40 @@ namespace Ultima5Redux.Maps
         ///     Loads a large map -either overworld or underworld
         /// </summary>
         /// <param name="largeMapType"></param>
-        public void LoadLargeMap(LargeMapLocationReferences.LargeMapType largeMapType) //Map.Maps map)
+        /// <param name="playerPosition"></param>
+        public void LoadLargeMap(LargeMapLocationReferences.LargeMapType largeMapType,
+            Point2D playerPosition = null) //Map.Maps map)
         {
             // if you are somehow transported between two different small map locations, then the guards
             // forget about your transgressions
-            if (CurrentMap is SmallMap smallMap)
-            {
-                smallMap.ClearSmallMapFlags();
-            }
+            ClearAllFlagsBeforeMapLoad();
 
-            TheCurrentMapType = LargeMap.GetLargeMapTypeToMapType(largeMapType);
+            //TheCurrentMapType = LargeMap.GetLargeMapTypeToMapType(largeMapType);
+            SavedMapRefs ??= new SavedMapRefs();
+            SavedMapRefs.SetByLargeMapType(largeMapType, playerPosition);
 
-            switch (largeMapType)
-            {
-                case LargeMapLocationReferences.LargeMapType.Overworld:
-                case LargeMapLocationReferences.LargeMapType.Underworld:
-                    CurrentMap.CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(largeMapType), largeMapType, null);
-            }
+            // if (CurrentMap is not LargeMap largeMap)
+            //     throw new Ultima5ReduxException("Loaded large map, but CurrentMap not set correctly");
+            //
+            LargeMap largeMap = TheMapHolder.GetLargeMapByLargeMapType(largeMapType);
+            //largeMap.LoadLargeMap(TheSearchItems, importedGameState);
+
+            // switch (largeMapType)
+            // {
+            //     case LargeMapLocationReferences.LargeMapType.Overworld:
+            //     case LargeMapLocationReferences.LargeMapType.Underworld:
+            //         CurrentMap.CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
+            //         break;
+            //     default:
+            //         throw new ArgumentOutOfRangeException(nameof(largeMapType), largeMapType, null);
+            // }
 
             // this will probably fail, which means creating a new map was a good idea
             // bajh: maybe we store each map override indefinitely so we never lose anything 
             //TheMapOverrides = new MapOverrides(CurrentLargeMap);
 
-            CurrentMap.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(largeMapType),
-                map, null);
+            // CurrentMap.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(largeMapType),
+            //     map, null);
 
             // // you got out, and the guards have short memories
             // IsWantedManByThePoPo = false;
@@ -1759,23 +1904,22 @@ namespace Ultima5Redux.Maps
         {
             // if you are somehow transported between two different small map locations, then the guards
             // forget about your transgressions
-            if (CurrentMap is SmallMap smallMap)
-            {
-                smallMap.ClearSmallMapFlags();
-            }
+            ClearAllFlagsBeforeMapLoad();
 
             // CurrentMap.CurrentSingleMapReference = ...
-            CurrentMap.CurrentSingleMapReference = singleDungeonMapFloorReference.SingleMapReference;
+            SavedMapRefs ??= new SavedMapRefs();
+            SavedMapRefs.SetBySingleDungeonMapFloorReference(singleDungeonMapFloorReference, startingPosition);
+            //CurrentMap.CurrentSingleMapReference = singleDungeonMapFloorReference.SingleMapReference;
 
             // SingleDungeonMapFloorReference thing = GameReferences.Instance.DungeonReferences.GetDungeon(CurrentMap.CurrentSingleMapReference.MapLocation)
             //     .GetSingleDungeonMapFloorReferenceByFloor(singleDungeonMapFloorReference.DungeonFloor);
-            CurrentDungeonMap = new DungeonMap(singleDungeonMapFloorReference);
+            //CurrentDungeonMap = new DungeonMap(singleDungeonMapFloorReference);
             //Dungeons.GetDungeonMap();
 
-            TheCurrentMapType = Map.Maps.Dungeon;
+            //TheCurrentMapType = Map.Maps.Dungeon;
             //TheMapOverrides = new();
 
-            CurrentMap.SetCurrentMapType(singleDungeonMapFloorReference.SingleMapReference, Map.Maps.Dungeon, null);
+            //CurrentMap.SetCurrentMapType(singleDungeonMapFloorReference.SingleMapReference, Map.Maps.Dungeon, null);
 
             if (startingPosition != null) CurrentPosition.XY = startingPosition;
         }
@@ -1800,43 +1944,74 @@ namespace Ultima5Redux.Maps
 
                 CurrentMap.CurrentMapUnits.ClearMapUnit(smith);
                 CurrentMap.CurrentMapUnits.AllMapUnits.RemoveAll(m => m is NonPlayerCharacter);
-
-                // foreach (NonPlayerCharacter npc in CurrentMap.CurrentMapUnits.NonPlayerCharacters)
-                // {
-                //     CurrentMap.CurrentMapUnits.ClearMapUnit(npc);
-                // }
             }
         }
 
+        private void ClearAllFlagsBeforeMapLoad()
+        {
+            // this likely means it's our first load and there is nothing to clear
+            if (SavedMapRefs == null) return;
+            switch (CurrentMap)
+            {
+                case SmallMap smallMap:
+                    smallMap.ClearSmallMapFlags();
+                    break;
+                case CombatMap:
+                    GameStateReference.State.CharacterRecords.ClearCombatStatuses();
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Used in initial legacy loads, as well as pretty much any other small map load
+        /// </summary>
+        /// <param name="singleMapReference"></param>
+        /// <param name="xy"></param>
+        /// <param name="bLoadFromDisk"></param>
+        /// <exception cref="Ultima5ReduxException"></exception>
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null,
-            bool bLoadFromDisk = false)
+            bool bLoadFromDisk = false, ImportedGameState importedGameState = null)
         {
             // if you are somehow transported between two different small map locations, then the guards
             // forget about your transgressions
-            if (CurrentMap is SmallMap smallMap)
-            {
-                smallMap.ClearSmallMapFlags();
-            }
+            ClearAllFlagsBeforeMapLoad();
 
-            CurrentMap.CurrentSingleMapReference = singleMapReference ??
-                                                   throw new Ultima5ReduxException(
-                                                       "Tried to load a small map, but null map reference was given");
+            // setting this will make everything think we have a new map
+            // CurrentMap will now point to the new map as well
+            SavedMapRefs ??= new SavedMapRefs();
+            SavedMapRefs.SetBySingleMapReference(singleMapReference, xy);
 
-            // setting these two will result in CurrentMap  
-            CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
-            TheCurrentMapType = Map.Maps.Small;
-
-            if (CurrentMap is not SmallMap newSmallMap)
+            // safety check
+            if (CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("CurrentMap did not switch to SmallMap on load");
 
-            newSmallMap.SetCurrentMapType(singleMapReference, Map.Maps.Small, TheSearchItems, bLoadFromDisk);
+            smallMap.InitializeFromLegacy(TheMapHolder.SmallMaps, singleMapReference.MapLocation,
+                importedGameState, bLoadFromDisk,
+                TheSearchItems);
+            
+            HandleSpecialCasesForSmallMapLoad();
+
+            // NOTE: took this from the MapUnits LoadSmallMap
+            // wipe all existing characters since they cannot exist beyond the load
+            // CurrentMapUnits.Clear();
+            // CombatMapUnit.Clear();
+            // DungeonMapUnitCollection.Clear();
+
+            // CurrentMap.CurrentSingleMapReference = singleMapReference ??
+            //                                        throw new Ultima5ReduxException(
+            //                                            "Tried to load a small map, but null map reference was given");
+            // we get the small maps from our small map collection..
+
+            // setting these two will result in CurrentMap  
+            // CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
+            // TheCurrentMapType = Map.Maps.Small;
+
+            //smallMap.CurrentMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, TheSearchItems, bLoadFromDisk);
 
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
-            newSmallMap.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;
+            //smallMap.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;
 
-            if (xy != null) CurrentPosition.XY = xy;
-
-            HandleSpecialCasesForSmallMapLoad();
+            //if (xy != null) CurrentPosition.XY = xy;
         }
 
 
@@ -1854,7 +2029,7 @@ namespace Ultima5Redux.Maps
                 if (nonAttackingUnit is DiscoverableLoot discoverableLoot)
                 {
                     CurrentMap.PlaceNonAttackingUnit(discoverableLoot.AlternateNonAttackingUnit,
-                        discoverableLoot.AlternateNonAttackingUnit.MapUnitPosition, TheCurrentMapType);
+                        discoverableLoot.AlternateNonAttackingUnit.MapUnitPosition, CurrentMap.TheMapType);
 
                     bHasInnerItems = true;
 
@@ -1890,35 +2065,51 @@ namespace Ultima5Redux.Maps
             if (bHasInnerItems)
                 // there were items inside the thing, so we place them 
                 CurrentMap.RePlaceNonAttackingUnit(nonAttackingUnit, itemStack, nonAttackingUnit.MapUnitPosition,
-                    TheCurrentMapType);
+                    CurrentMap.TheMapType);
 
             return bHasInnerItems;
         }
 
         public void ReturnToPreviousMapAfterCombat()
         {
-            switch (PreCombatMap)
+            switch (PreCombatMapSavedMapRefs.MapType)
             {
-                case LargeMap _:
-                case SmallMap _:
-                    // restore our old map overrides
-                    //TheMapOverrides = PreTheMapOverrides;
-
-                    TheCurrentMapType = PreCombatMap.CurrentSingleMapReference.MapType;
-                    CurrentMap.CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
-
-                    // this ensure the old small map is not reloaded entirely
-                    // it is a dirty function, but any "cleared" units before the combat will stay cleared
-                    PreCombatMap.SetCurrentMapTypeNoLoad(PreCombatMap.CurrentSingleMapReference, TheCurrentMapType);
-
-                    PreCombatMap.GetAvatarMapUnit().MapUnitPosition = PreMapUnitPosition;
-                    PreCombatMap = null;
+                case Map.Maps.Small:
+                case Map.Maps.Overworld:
+                case Map.Maps.Underworld:
+                    SavedMapRefs = PreCombatMapSavedMapRefs.Copy();
                     break;
+                case Map.Maps.Dungeon:
+                    break;
+                case Map.Maps.Combat:
                 default:
                     throw new Ultima5ReduxException(
                         "Attempting to return to previous map after combat with an unsupported map type: " +
-                        PreCombatMap?.GetType());
+                        PreCombatMapSavedMapRefs.MapType);
             }
+
+            // switch (TheMapHolder.PreCombatMap)
+            // {
+            //     case LargeMap _:
+            //     case SmallMap _:
+            //         // restore our old map overrides
+            //         //TheMapOverrides = PreTheMapOverrides;
+            //
+            //         TheCurrentMapType = PreCombatMap.CurrentSingleMapReference.MapType;
+            //         CurrentMap.CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
+            //
+            //         // this ensure the old small map is not reloaded entirely
+            //         // it is a dirty function, but any "cleared" units before the combat will stay cleared
+            //         PreCombatMap.SetCurrentMapTypeNoLoad(PreCombatMap.CurrentSingleMapReference, TheCurrentMapType);
+            //
+            //         PreCombatMap.GetAvatarMapUnit().MapUnitPosition = PreMapUnitPosition;
+            //         PreCombatMap = null;
+            //         break;
+            //     default:
+            //         throw new Ultima5ReduxException(
+            //             "Attempting to return to previous map after combat with an unsupported map type: " +
+            //             PreCombatMap?.GetType());
+            // }
         }
 
 
@@ -1948,7 +2139,7 @@ namespace Ultima5Redux.Maps
 
             LoadSmallMap(GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                 CurrentMap.CurrentSingleMapReference.MapLocation,
-                CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
+                smallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
         }
     }
 }

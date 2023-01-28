@@ -198,7 +198,6 @@ namespace Ultima5Redux
         /// <param name="nInitialFloor"></param>
         /// <param name="searchItems"></param>
         private void InitializeVirtualMap(
-            //LargeMap overworldMap, LargeMap underworldMap,
             bool bUseExtendedSprites, SmallMapReferences.SingleMapReference.Location location, int nInitialX,
             int nInitialY, int nInitialFloor, SearchItems searchItems)
         {
@@ -208,7 +207,6 @@ namespace Ultima5Redux
                     : GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(location, nInitialFloor);
 
             TheVirtualMap = new VirtualMap(
-                //overworldMap, underworldMap, 
                 _initialMap, mapRef,
                 bUseExtendedSprites, ImportedGameState, searchItems)
             {

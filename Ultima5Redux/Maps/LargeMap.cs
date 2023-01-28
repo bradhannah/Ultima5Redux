@@ -9,6 +9,7 @@ using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.Maps
 {
@@ -49,7 +50,7 @@ namespace Ultima5Redux.Maps
             return base.GetTileReference(xy, bIgnoreMoongate);
         }
 
-        
+
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             _currentSingleMapReference ??=
                 SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(TheLargeMapType);
@@ -73,9 +74,9 @@ namespace Ultima5Redux.Maps
             };
 
 
-        [DataMember] public LargeMapLocationReferences.LargeMapType TheLargeMapType { get; private set; } 
+        [DataMember] public LargeMapLocationReferences.LargeMapType TheLargeMapType { get; private set; }
 
-        
+
         [JsonConstructor] private LargeMap()
         {
             // for now combat maps don't have overrides
@@ -123,7 +124,7 @@ namespace Ultima5Redux.Maps
 
             if (nIndex == -1) return null;
 
-            Frigate frigate = new(importedMovements.GetMovement(nIndex),
+            Frigate frigate = new(new MapUnitMovement(nIndex), //importedMovements.GetMovement(nIndex),
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
                 new MapUnitPosition(xy.X, xy.Y, 0))
             {
@@ -178,32 +179,28 @@ namespace Ultima5Redux.Maps
         ///     such as movement as required.
         ///     Called only once on load - the state of the large map will persist in and out of small maps
         /// </summary>
-        /// <param name="map"></param>
+        /// <param name="largeMapType"></param>
         /// <param name="bInitialLoad"></param>
         /// <param name="searchItems"></param>
+        /// <param name="importedGameState"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void GenerateMapUnitsForLargeMap(Maps map, bool bInitialLoad, SearchItems searchItems)
+        private void GenerateMapUnitsForLargeMapForLegacyImport(LargeMapLocationReferences.LargeMapType largeMapType,
+            bool bInitialLoad, SearchItems searchItems, ImportedGameState importedGameState)
         {
-            //MapUnitCollection mapUnitCollection;
             // the over and underworld animation states are already loaded and can stick around
             MapUnitStates currentMapUnitStates;
-            switch (map)
+            switch (largeMapType)
             {
-                case Maps.Overworld:
-                    //mapUnitCollection = OverworldMapMapUnitCollection;
+                case LargeMapLocationReferences.LargeMapType.Overworld:
                     currentMapUnitStates =
                         bInitialLoad ? importedGameState.OverworldMapUnitStates : new MapUnitStates();
                     break;
-                case Maps.Underworld:
-                    //mapUnitCollection = UnderworldMapUnitCollection;
+                case LargeMapLocationReferences.LargeMapType.Underworld:
                     currentMapUnitStates =
                         bInitialLoad ? importedGameState.UnderworldMapUnitStates : new MapUnitStates();
                     break;
-                case Maps.Combat:
-                case Maps.Small:
-                    throw new Ultima5ReduxException("You asked for a Small map when loading a large one");
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(map), map, null);
+                    throw new ArgumentOutOfRangeException(nameof(largeMapType), largeMapType, null);
             }
 
             // populate each of the map characters individually
@@ -212,7 +209,7 @@ namespace Ultima5Redux.Maps
                 // if this is not the initial load of the map then we can trust character states and
                 // movements that are already loaded into memory
                 MapUnitMovement mapUnitMovement =
-                    (bInitialLoad ? importedMovements.GetMovement(i) : new MapUnitMovement(i)) ??
+                    // (bInitialLoad ? importedMovements.GetMovement(i) : new MapUnitMovement(i)) ??
                     new MapUnitMovement(i);
 
                 // always clear movements because they are not stored in the data for a LargeMap because
@@ -244,7 +241,7 @@ namespace Ultima5Redux.Maps
                 CurrentMapUnits.AddMapUnit(newUnit);
             }
 
-            int nFloor = map == Maps.Underworld ? -1 : 0;
+            int nFloor = largeMapType == LargeMapLocationReferences.LargeMapType.Underworld ? -1 : 0;
             Dictionary<Point2D, List<SearchItem>> searchItemsInMap = searchItems.GetUnDiscoveredSearchItemsByLocation(
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, nFloor);
             foreach (KeyValuePair<Point2D, List<SearchItem>> kvp in searchItemsInMap)
@@ -291,7 +288,7 @@ namespace Ultima5Redux.Maps
             enemiesToClear?.ForEach(ClearMapUnit);
         }
 
-        
+
         private void BuildMap(Maps mapChoice)
         {
             switch (mapChoice)
@@ -349,6 +346,59 @@ namespace Ultima5Redux.Maps
                 default:
                     return WalkableType.StandardWalking;
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns>true if a monster was created</returns>
+        /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
+        internal bool CreateRandomMonster(int nTurn)
+        {
+            const int maxTries = 10;
+            const int nDistanceAway = 7;
+
+            // find a position or give up
+            int dX = nDistanceAway;
+            int dY;
+            for (int i = 0; i < maxTries; i++)
+            {
+                dY = Utils.Ran.Next() % nDistanceAway;
+
+                // this logic borrowed from Xu4 to create some randomness
+                if (Utils.OneInXOdds(2)) dX = -dX;
+                if (Utils.OneInXOdds(2)) dY = -dY;
+                if (Utils.OneInXOdds(2)) Utils.SwapInts(ref dX, ref dY);
+
+                Point2D tilePosition = new((CurrentPosition.X + dX) % NumOfXTiles,
+                    (CurrentPosition.Y + dY) % NumOfYTiles);
+                tilePosition.AdjustXAndYToMax(NumOfXTiles);
+
+                if (IsTileOccupied(tilePosition)) continue;
+
+                // it's not occupied so we can create a monster
+                EnemyReference enemyRef =
+                    GameReferences.Instance.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn,
+                        GetTileReference(tilePosition));
+                if (enemyRef == null) continue;
+
+                // add the new character to our list of characters currently on the map
+                Enemy _ = CreateEnemy(tilePosition, enemyRef, CurrentSingleMapReference,
+                    out int _);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        // we don't need to "LoadLargeMap" because it being active or inactive is managed in VirtualMap
+        // public void LoadLargeMap(SearchItems searchItems)
+        // {
+        // }
+
+        public void InitializeFromLegacy(SearchItems searchItems, ImportedGameState importedGameState)
+        {
+            GenerateMapUnitsForLargeMapForLegacyImport(_mapChoice, true, searchItems, importedGameState);
         }
     }
 }

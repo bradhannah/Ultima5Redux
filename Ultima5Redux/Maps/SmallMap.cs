@@ -105,25 +105,22 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
-        internal void LoadSmallMap(SmallMaps smallMaps, SmallMapReferences.SingleMapReference.Location location,
-            bool bInitialLegacyLoad,
-            SearchItems searchItems)
+        internal void InitializeFromLegacy(SmallMaps smallMaps, SmallMapReferences.SingleMapReference.Location location,
+            ImportedGameState importedGameState,
+            bool bInitialLegacyLoad, SearchItems searchItems)
         {
+            // save this so we can check other floors for stairs and ladders
             _smallMaps = smallMaps;
             
             if (location is SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
                 or SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
                 throw new Ultima5ReduxException("Tried to load " + location + " into a small map");
 
-            // wipe all existing characters since they cannot exist beyond the load
-            CurrentMapUnits.Clear();
-            CombatMapUnit.Clear();
-            DungeonMapUnitCollection.Clear();
-
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
-                MapUnitMovement mapUnitMovement = importedMovements.GetMovement(i) ?? new MapUnitMovement(i);
+                // MapUnitMovement mapUnitMovement = importedMovements.GetMovement(i) ?? new MapUnitMovement(i);
+                var mapUnitMovement = new MapUnitMovement(i);
 
                 switch (i)
                 {
@@ -132,8 +129,10 @@ namespace Ultima5Redux.Maps
                     case 0 when !bInitialLegacyLoad:
                         mapUnitMovement.ClearMovements();
                         // load the existing AvatarMapUnit with boarded MapUnits
-
-                        CurrentMapUnits.Add(MasterAvatarMapUnit);
+                        var avatar = Avatar.CreateAvatar(location, new MapUnitMovement(i), new MapUnitPosition(),
+                            GameReferences.Instance.SpriteTileReferences.GetTileReference(284),
+                            true);
+                        CurrentMapUnits.Add(avatar);
                         GetAvatarMapUnit().MapLocation = location;
                         continue;
                     // The zero position is always Avatar, this grabs them from the legacy save file 

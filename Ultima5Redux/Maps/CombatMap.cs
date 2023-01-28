@@ -55,6 +55,10 @@ namespace Ultima5Redux.Maps
         public override bool IsRepeatingMap => false;
 
         public override Maps TheMapType => Maps.Combat;
+
+        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
+            SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
         public override int NumOfYTiles => SingleCombatMapReference.YTILES;
 
@@ -116,7 +120,7 @@ namespace Ultima5Redux.Maps
             if (nIndex == -1) return null;
 
             // Enemy enemy = new(importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
-            Enemy enemy = new(new MapUnitMovement(nIndex), enemyReference, CurrentLocation, null,
+            Enemy enemy = new(new MapUnitMovement(nIndex), enemyReference, MapLocation, null,
                 new MapUnitPosition(xy.X, xy.Y, 0));
 
             nIndex = AddCombatMapUnit(enemy);
@@ -216,7 +220,7 @@ namespace Ultima5Redux.Maps
             set => CurrentCombatPlayer.MapUnitPosition = value;
         }
 
-        
+
         /// <summary>
         ///     Creates enemies in the combat map. If the map contains hard coded enemies then it will ignore the
         ///     specified enemies
@@ -1212,8 +1216,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public Enemy MoveToClosestAttackableEnemy(TurnResults turnResults, out string outputStr, out bool bMoved,
-            MapUnits.MapUnits mapUnits) =>
+        public Enemy MoveToClosestAttackableEnemy(TurnResults turnResults, out string outputStr, out bool bMoved) =>
             MoveToClosestAttackableEnemy(turnResults, CurrentCombatPlayer, out outputStr, out bMoved);
 
         /// <summary>
@@ -1239,8 +1242,7 @@ namespace Ultima5Redux.Maps
         public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
 
         public void ProcessCombatPlayerTurn(TurnResults turnResults, SelectionAction selectedAction,
-            Point2D actionPosition, out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit,
-            MapUnits.MapUnits mapUnits)
+            Point2D actionPosition, out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit)
         {
             targetedCombatMapUnit = null;
 

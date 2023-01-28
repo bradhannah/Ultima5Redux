@@ -19,11 +19,9 @@ namespace Ultima5Redux.Maps
 {
     public abstract class RegularMap : Map
     {
-        [DataMember] public int MapFloor { get; private set; }
+        //[DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; private set; }
 
-        [DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; private set; }
-
-        [IgnoreDataMember] public abstract SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
+        
 
         [IgnoreDataMember]
         protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides =>
@@ -265,7 +263,7 @@ namespace Ultima5Redux.Maps
             Debug.Assert(unboardedMapUnit != null);
 
             // set the current positions to the equal the Avatar's as he exits the vehicle 
-            unboardedMapUnit.MapLocation = CurrentLocation;
+            unboardedMapUnit.MapLocation = MapLocation;
             unboardedMapUnit.MapUnitPosition = CurrentAvatarPosition;
             unboardedMapUnit.Direction = GetAvatarMapUnit().Direction;
             unboardedMapUnit.KeyTileReference = unboardedMapUnit.GetNonBoardedTileReference();
@@ -386,7 +384,10 @@ namespace Ultima5Redux.Maps
             nIndex = FindNextFreeMapUnitIndex(TheMapType);
             if (nIndex == -1) return null;
 
-            Horse horse = new(importedMovements.GetMovement(nIndex), CurrentLocation, Point2D.Direction.Right,
+            Horse horse = new(
+                new MapUnitMovement(nIndex),
+                //importedMovements.GetMovement(nIndex), 
+                MapLocation, Point2D.Direction.Right,
                 null, mapUnitPosition)
             {
                 MapUnitPosition = mapUnitPosition
@@ -409,7 +410,9 @@ namespace Ultima5Redux.Maps
             nIndex = FindNextFreeMapUnitIndex(TheMapType);
             if (nIndex == -1) return null;
 
-            Skiff skiff = new(importedMovements.GetMovement(nIndex),
+            Skiff skiff = new(
+                new MapUnitMovement(nIndex),
+                //importedMovements.GetMovement(nIndex),
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
                 new MapUnitPosition(xy.X, xy.Y, 0));
 
@@ -432,7 +435,7 @@ namespace Ultima5Redux.Maps
 
             if (nIndex == -1) return null;
 
-            MagicCarpet magicCarpet = new(CurrentLocation, direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
+            MagicCarpet magicCarpet = new(MapLocation, direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
 
             AddNewMapUnit(TheMapType, magicCarpet, nIndex);
             return magicCarpet;
@@ -442,10 +445,10 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember]
         public int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
 
-        [IgnoreDataMember] protected Avatar MasterAvatarMapUnit { get; set; }
-        [IgnoreDataMember] protected readonly ImportedGameState importedGameState;
+        //[IgnoreDataMember] protected Avatar MasterAvatarMapUnit { get; set; }
+        //[IgnoreDataMember] protected readonly ImportedGameState importedGameState;
 
-        [IgnoreDataMember] protected readonly MapUnitMovements importedMovements;
+        //[IgnoreDataMember] protected readonly MapUnitMovements importedMovements;
 
 
         internal void DamageShip(Point2D.Direction windDirection, TurnResults turnResults)
@@ -507,10 +510,9 @@ namespace Ultima5Redux.Maps
         {
         }
 
-        protected RegularMap(SmallMapReferences.SingleMapReference.Location location, int nFloor)
+        protected RegularMap(SmallMapReferences.SingleMapReference.Location location, int mapFloor) : base(location,
+            mapFloor)
         {
-            MapLocation = location;
-            MapFloor = nFloor;
         }
     }
 }

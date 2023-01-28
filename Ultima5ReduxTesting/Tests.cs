@@ -247,11 +247,14 @@ namespace Ultima5ReduxTesting
                 Debug.WriteLine("***** Loading " + smr.MapLocation + " on floor " + smr.Floor);
                 SmallMapReferences.SingleMapReference singleMapReference =
                     GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
+                if (smr.MapLocation == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                    throw new Ultima5ReduxException("OOOF");
                 if (singleMapReference.MapType == Map.Maps.Dungeon) continue;
                 world.State.TheVirtualMap.LoadSmallMap(
                     GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
 
                 int i = (24 * (60 / 2));
+                //i = 1;
                 while (i > 0)
                 {
                     TurnResults turnResults = new TurnResults();
@@ -935,7 +938,7 @@ namespace Ultima5ReduxTesting
 
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
-            
+
             TurnResults turnResults = new TurnResults();
             world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
@@ -1204,7 +1207,6 @@ namespace Ultima5ReduxTesting
             if (world.State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
                 throw new Ultima5ReduxException("Should be combat map");
 
-            
             TurnResults turnResults = new TurnResults();
             world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
             combatMap.AdvanceToNextCombatMapUnit();
@@ -2046,7 +2048,6 @@ namespace Ultima5ReduxTesting
             world.TryToOpenAThing(new Point2D(5, 4), out bWasSuccessful, turnResults);
             Assert.IsTrue(bWasSuccessful);
 
-            
             Assert.NotNull(combatMap);
             combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
 
@@ -2525,7 +2526,7 @@ namespace Ultima5ReduxTesting
 
             if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
                 throw new Ultima5ReduxException("Should be large map");
-            
+
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn, 1));
@@ -2726,7 +2727,7 @@ namespace Ultima5ReduxTesting
 
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
-            
+
             // directly in front of the guard
             smallMap.MoveAvatar(new Point2D(15, 23));
 
@@ -2759,7 +2760,7 @@ namespace Ultima5ReduxTesting
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
 
-            LargeMap overworldMap = world.State.TheVirtualMap.OverworldMap;
+            LargeMap overworldMap = world.State.TheVirtualMap.TheMapHolder.OverworldMap;
 
             world.State.TheVirtualMap.CreateFrigateAtDock(
                 SmallMapReferences.SingleMapReference.Location.Minoc);
@@ -2985,7 +2986,7 @@ namespace Ultima5ReduxTesting
             world.ReLoadFromJson();
 
             Assert.True(
-                world.State.TheVirtualMap.OverworldMap.CurrentMapUnits.Enemies.Count(m => m.IsActive) > 0);
+                world.State.TheVirtualMap.TheMapHolder.OverworldMap.CurrentMapUnits.Enemies.Count(m => m.IsActive) > 0);
 
             bool bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
@@ -3031,13 +3032,13 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Underworld);
             if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
                 throw new Ultima5ReduxException("Should be large map");
-            
+
             var avatarPost = new Point2D(232, 233);
             var thingPos = new Point2D(233, 233);
             largeMap.MoveAvatar(avatarPost);
 
             Assert.True(
-                world.State.TheVirtualMap.OverworldMap.CurrentMapUnits.Enemies.Count(m => m.IsActive) > 0);
+                world.State.TheVirtualMap.TheMapHolder.OverworldMap.CurrentMapUnits.Enemies.Count(m => m.IsActive) > 0);
 
             MapUnit mapUnit = world.State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(thingPos, false);
             Assert.IsNull(mapUnit);
@@ -3452,7 +3453,7 @@ namespace Ultima5ReduxTesting
                     SmallMapReferences.SingleMapReference.Location.Yew, 0));
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
-            
+
             foreach (NonPlayerCharacter npc in
                      world.State.TheVirtualMap.CurrentMap.CurrentMapUnits.NonPlayerCharacters)
             {
@@ -3492,7 +3493,7 @@ namespace Ultima5ReduxTesting
 
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
-            
+
             TurnResults turnResults = new();
             world.AdvanceTime(2, turnResults);
 
@@ -3586,7 +3587,7 @@ namespace Ultima5ReduxTesting
                     SmallMapReferences.SingleMapReference.Location.Jhelom, 1));
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
-            
+
             var eastAndDownPosition = new Point2D(7, 28);
             TileReference eastAndDown = world.State.TheVirtualMap.CurrentMap.GetTileReference(eastAndDownPosition);
             Assert.IsTrue(TileReferences.IsStaircase(eastAndDown.Index));

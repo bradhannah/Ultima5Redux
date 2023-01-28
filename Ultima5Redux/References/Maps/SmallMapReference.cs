@@ -335,6 +335,7 @@ namespace Ultima5Redux.References.Maps
         /// <returns>a single map reference providing details on the map itself</returns>
         public SingleMapReference GetSingleMapByLocation(SingleMapReference.Location location, int floor)
         {
+            // if (location == SingleMapReference.Location.Britannia_Underworld) return 
             if (!_mapReferenceDictionary[location].ContainsKey(floor))
                 throw new Ultima5ReduxException(location + ": " + floor + " was not found!");
 

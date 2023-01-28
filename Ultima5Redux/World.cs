@@ -1792,7 +1792,7 @@ namespace Ultima5Redux
 
             int nDefaultMinutesToAdvance =
                 GameReferences.Instance.SpriteTileReferences.GetMinuteIncrement(newTileReference.Index);
-            if (State.TheVirtualMap.TheCurrentMapType == Map.Maps.Small)
+            if (State.TheVirtualMap.CurrentMap is SmallMap)
                 nDefaultMinutesToAdvance = Math.Max(1, nTimeAdvanceFactor / 2);
             // if avatar is on a horse or carpet then we cut it in half, but let's make sure we don't 
             // end up with zero minutes
@@ -2239,8 +2239,10 @@ namespace Ultima5Redux
                 case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:
                 case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:
                 case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:
+                    if (State.TheVirtualMap.CurrentMap is not SmallMap merchantSmallMap)
+                        throw new Ultima5ReduxException("Cannot have merchant AI outside of a small map");
                     ShoppeKeeper shoppeKeeper = GameReferences.Instance.ShoppeKeeperDialogueReference.GetShoppeKeeper(
-                        State.TheVirtualMap.CurrentSmallMap.MapLocation, npc.NPCRef.NpcType,
+                        merchantSmallMap.MapLocation, npc.NPCRef.NpcType,
                         State.CharacterRecords, State.PlayerInventory);
 
                     if (npc.ArrivedAtLocation && shoppeKeeper.IsOnDuty(State.TheTimeOfDay))

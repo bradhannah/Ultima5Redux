@@ -17,6 +17,11 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.Maps
 {
+    public partial class VirtualMap
+    {
+        internal enum LadderOrStairDirection { Up, Down }
+    }
+
     [DataContract] public abstract class Map
     {
         [JsonConverter(typeof(StringEnumConverter))]
@@ -38,30 +43,38 @@ namespace Ultima5Redux.Maps
         // TODO: this will cause a problem in deserialization that i will need to solve
         [DataMember] public abstract Maps TheMapType { get; }
 
-        public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, //Map.Maps mapType,
-            SearchItems searchItems, bool bLoadFromDisk = false)
-        {
-        }
+        //[IgnoreDataMember] public abstract SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
+        // public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, //Map.Maps mapType,
+        //     SearchItems searchItems, bool bLoadFromDisk = false)
+        // {
+        // }
 
         /// <summary>
         ///     Detailed reference of current small map
         /// </summary>
-        [DataMember]
-        public SmallMapReferences.SingleMapReference CurrentSingleMapReference
+        [IgnoreDataMember]
+        public abstract SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
+        // public virtual SmallMapReferences.SingleMapReference CurrentSingleMapReference
+        // {
+        //     get
+        //     {
+        //         if (_currentSingleMapReference == null)
+        //             return null;
+        //         if (_currentSingleMapReference.MapLocation ==
+        //             SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
+        //             return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+        //         return _currentSingleMapReference;
+        //     }
+        //     private set => _currentSingleMapReference = value;
+        // }
+
+        public Map(SmallMapReferences.SingleMapReference.Location mapLocation, int mapFloor) : this()
         {
-            get
-            {
-                if (_currentSingleMapReference == null)
-                    return null;
-                if (_currentSingleMapReference.MapLocation ==
-                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
-                    return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
-                return _currentSingleMapReference;
-            }
-            private set => _currentSingleMapReference = value;
+            MapLocation = mapLocation;
+            MapFloor = mapFloor;
         }
 
-        [IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
+        //[IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
         internal void ClearMapUnit(MapUnit mapUnit)
         {
@@ -70,12 +83,12 @@ namespace Ultima5Redux.Maps
         }
 
 
-        
         [DataMember] public bool XRayMode { get; set; }
 
         [DataMember] internal MapOverrides TheMapOverrides { get; set; }
 
-        [DataMember] public SmallMapReferences.SingleMapReference.Location CurrentLocation { get; private set; }
+        [DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; protected set; }
+        [DataMember] public int MapFloor { get; protected set; }
 
         //[DataMember] protected Maps CurrentMapType { get; set; }
 
@@ -204,9 +217,9 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <returns></returns>
         public bool IsMapUnitOccupiedTile(in Point2D xy) =>
-            IsMapUnitOccupiedFromList(xy, _currentSingleMapReference.Floor,
+            IsMapUnitOccupiedFromList(xy, CurrentSingleMapReference.Floor,
                 CurrentMapUnits.AllActiveMapUnits);
-        
+
         // ReSharper disable once NotAccessedField.Global
         // ReSharper disable once MemberCanBePrivate.Global
 
@@ -470,7 +483,7 @@ namespace Ultima5Redux.Maps
             mapUnit.UseFourDirections = UseExtendedSprites;
             return true;
         }
-        
+
         public abstract bool ShowOuterSmallMapTiles { get; }
 
         public abstract byte[][] TheMap { get; protected set; }
