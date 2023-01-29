@@ -3633,6 +3633,23 @@ namespace Ultima5ReduxTesting
             Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.Floor == 3);
         }
 
+        [Test] [TestCase(SaveFiles.fresh)] [TestCase(SaveFiles.Britain2)]
+        public void test_LoadDeceitDungeonFromLegacyAndReloadJson(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            SingleDungeonMapFloorReference deceitFirstFloor = GameReferences.Instance.DungeonReferences
+                .GetDungeon(SmallMapReferences.SingleMapReference.Location.Deceit)
+                .GetSingleDungeonMapFloorReferenceByFloor(3);
+            world.State.TheVirtualMap.LoadDungeonMap(deceitFirstFloor, new Point2D(2, 1));
+
+            world.ReLoadFromJson();
+
+            Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.Floor == 3);
+        }
+
         [Test] [TestCase(SaveFiles.fresh, false)]
         public void test_CheckAllDungeonRoomLocations(SaveFiles saveFiles, bool bReloadJson)
         {

@@ -58,22 +58,22 @@ namespace Ultima5Redux.Maps
         // public SmallMap CurrentSmallMap { get; private set; }
 
         [DataMember]
-        public DungeonMap TheDungeonMap { get; internal set; } 
+        public DungeonMap TheDungeonMap { get; internal set; }
 
-        [DataMember] public CombatMap TheCombatMap { get; internal set; }
+        [IgnoreDataMember] public CombatMap TheCombatMap { get; internal set; }
 
 
         /// <summary>
         ///     Which map was the avatar on before this one?
         /// </summary>
-        [IgnoreDataMember]
-        private RegularMap PreCombatMap { get; set; }
+        // [IgnoreDataMember]
+        // private RegularMap PreCombatMap { get; set; }
 
         /// <summary>
         ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
         /// </summary>
-        [DataMember]
-        private MapUnitPosition PreMapUnitPosition { get; set; } = new();
+        // [DataMember]
+        // private MapUnitPosition PreMapUnitPosition { get; set; } = new();
     }
 
     [DataContract] public class SavedMapRefs

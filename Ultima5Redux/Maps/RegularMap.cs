@@ -513,6 +513,8 @@ namespace Ultima5Redux.Maps
         protected RegularMap(SmallMapReferences.SingleMapReference.Location location, int mapFloor) : base(location,
             mapFloor)
         {
+            MapLocation = location;
+            MapFloor = mapFloor;
         }
     }
 }

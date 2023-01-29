@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
@@ -73,6 +74,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Record = record;
             KeyTileReference = GameReferences.Instance.SpriteTileReferences.GetTileReference(record.PrimarySpriteIndex);
             MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
+        }
+
+        [JsonConstructor] public CombatPlayer()
+        {
         }
 
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is Enemy;

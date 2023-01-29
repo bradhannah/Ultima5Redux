@@ -13,8 +13,9 @@ namespace Ultima5Redux.Maps
         public override int NumOfYTiles => SingleDungeonMapFloorReference.N_DUNGEON_ROWS_PER_MAP;
         public override bool ShowOuterSmallMapTiles => false;
 
-        private SingleDungeonMapFloorReference _singleDungeonMapFloorReference;
+        [IgnoreDataMember] private SingleDungeonMapFloorReference _singleDungeonMapFloorReference;
 
+        [IgnoreDataMember]
         public SingleDungeonMapFloorReference SingleDungeonMapFloorReference
         {
             get
@@ -39,7 +40,7 @@ namespace Ultima5Redux.Maps
         // {
         //
         // }
-        
+
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
             if (VisibleOnMap == null)
@@ -47,9 +48,8 @@ namespace Ultima5Redux.Maps
                 VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
                 RecalculatedHash = Utils.Ran.Next();
             }
-            
+
             Utils.Set2DArrayAllToValue(VisibleOnMap, true);
-          
         }
 
         private SmallMapReferences.SingleMapReference _currentSingleMapReference;
@@ -73,13 +73,22 @@ namespace Ultima5Redux.Maps
             //throw new System.NotImplementedException();
         }
 
-        protected override float GetAStarWeight(in Point2D xy) => 1.0f; 
+        protected override float GetAStarWeight(in Point2D xy) => 1.0f;
 
         public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => WalkableType.StandardWalking;
 
         public override bool IsRepeatingMap => false;
 
-        [JsonConstructor] public DungeonMap() => TheMap = SingleDungeonMapFloorReference.GetDefaultDungeonMap();
+        [JsonConstructor] public DungeonMap()
+        {
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            SingleDungeonMapFloorReference = GameReferences.Instance.DungeonReferences.GetDungeon(MapLocation)
+                .GetSingleDungeonMapFloorReferenceByFloor(MapFloor);
+            TheMap = SingleDungeonMapFloorReference.GetDefaultDungeonMap();
+        }
 
         public DungeonMap(SingleDungeonMapFloorReference singleDungeonMapFloorReference) : base(
             singleDungeonMapFloorReference.DungeonLocation, singleDungeonMapFloorReference.DungeonFloor)
