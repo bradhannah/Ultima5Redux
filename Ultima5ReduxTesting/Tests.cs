@@ -1036,10 +1036,10 @@ namespace Ultima5ReduxTesting
             Utils.Ran = new Random(4);
             World world = CreateWorldFromLegacy(saveFiles);
 
-            if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
+            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be large map");
 
-            Avatar avatar = largeMap.GetAvatarMapUnit();
+            Avatar avatar = smallMap.GetAvatarMapUnit();
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
@@ -3346,10 +3346,10 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, -1));
-            if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
+            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be large map");
             Point2D getAttackedPosition = new(12, 11);
-            largeMap.MoveAvatar(getAttackedPosition);
+            smallMap.MoveAvatar(getAttackedPosition);
 
             var turnResults = new TurnResults();
             world.AdvanceTime(2, turnResults);
