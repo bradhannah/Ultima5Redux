@@ -15,7 +15,7 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public sealed class LargeMap : RegularMap
     {
-        [DataMember(Name = "MapChoice")] private readonly LargeMapLocationReferences.LargeMapType _mapChoice;
+        //[DataMember(Name = "MapChoice")] private readonly LargeMapLocationReferences.LargeMapType _mapChoice;
 
         [DataMember(Name = "BottomRightExtent")]
         private Point2D _bottomRightExtent;
@@ -93,8 +93,8 @@ namespace Ultima5Redux.Maps
             // if (mapChoice != Maps.Overworld && mapChoice != Maps.Underworld)
             //     throw new Ultima5ReduxException("Tried to create a large map with " + mapChoice);
 
-            _mapChoice = mapChoice;
-
+            //_mapChoice = mapChoice;
+            TheLargeMapType = mapChoice;
             // for now combat maps don't have overrides
 
             BuildMap(TheMapType);
@@ -398,7 +398,7 @@ namespace Ultima5Redux.Maps
 
         public void InitializeFromLegacy(SearchItems searchItems, ImportedGameState importedGameState)
         {
-            GenerateMapUnitsForLargeMapForLegacyImport(_mapChoice, true, searchItems, importedGameState);
+            GenerateMapUnitsForLargeMapForLegacyImport(TheLargeMapType, true, searchItems, importedGameState);
         }
     }
 }

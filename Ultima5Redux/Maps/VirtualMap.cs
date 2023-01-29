@@ -58,7 +58,7 @@ namespace Ultima5Redux.Maps
         // public SmallMap CurrentSmallMap { get; private set; }
 
         [DataMember]
-        public DungeonMap TheDungeonMap { get; private set; }
+        public DungeonMap TheDungeonMap { get; internal set; } 
 
         [DataMember] public CombatMap TheCombatMap { get; internal set; }
 
@@ -1554,7 +1554,8 @@ namespace Ultima5Redux.Maps
             // 3 = Buccaneer's Den
 
             var seaFaringVessel =
-                CurrentMap.GetSpecificMapUnitByLocation<SeaFaringVessel>(GetLocationOfDock(location), 0, true);
+                TheMapHolder.OverworldMap.GetSpecificMapUnitByLocation<SeaFaringVessel>(GetLocationOfDock(location), 0,
+                    true);
             return seaFaringVessel;
         }
 
@@ -1875,6 +1876,8 @@ namespace Ultima5Redux.Maps
             //     throw new Ultima5ReduxException("Loaded large map, but CurrentMap not set correctly");
             //
             LargeMap largeMap = TheMapHolder.GetLargeMapByLargeMapType(largeMapType);
+            // largeMap.CurrentPosition.Floor =
+            //     largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1;
             //largeMap.LoadLargeMap(TheSearchItems, importedGameState);
 
             // switch (largeMapType)
@@ -1909,6 +1912,8 @@ namespace Ultima5Redux.Maps
             // CurrentMap.CurrentSingleMapReference = ...
             SavedMapRefs ??= new SavedMapRefs();
             SavedMapRefs.SetBySingleDungeonMapFloorReference(singleDungeonMapFloorReference, startingPosition);
+
+            TheMapHolder.TheDungeonMap = new DungeonMap(singleDungeonMapFloorReference);
             //CurrentMap.CurrentSingleMapReference = singleDungeonMapFloorReference.SingleMapReference;
 
             // SingleDungeonMapFloorReference thing = GameReferences.Instance.DungeonReferences.GetDungeon(CurrentMap.CurrentSingleMapReference.MapLocation)

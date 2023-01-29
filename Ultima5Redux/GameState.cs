@@ -214,7 +214,8 @@ namespace Ultima5Redux
                 {
                     // we have to set the initial xy, not the floor because that is part of the SingleMapReference
                     // I should probably just add yet another thing to the constructor
-                    XY = new Point2D(nInitialX, nInitialY)
+                    XY = new Point2D(nInitialX, nInitialY),
+                    Floor = nInitialFloor
                 }
             };
         }

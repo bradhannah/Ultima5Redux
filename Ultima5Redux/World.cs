@@ -2068,6 +2068,19 @@ namespace Ultima5Redux
                 }
             }
 
+            // we search the tile and expose any items that may be on it
+            if (State.TheVirtualMap.CurrentMap is LargeMap largeMap)
+            {
+                // Search for Moonstones before whatever is next
+                Moonstone moonstone = largeMap.SearchAndExposeMoonstone(xy);
+                if (moonstone != null)
+                {
+                    bWasSuccessful = true;
+                    turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(moonstone.FindDescription), false);
+                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                }
+            }
+
             // if there is something exposed already OR there is nothing found
             // OR if special search location has fallen through to here, then we want to make sure
             // we don't do any additional processing - such as glass swords
@@ -2080,29 +2093,12 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            bool bHasInnerNonAttackUnits = false;
+            bool bHasInnerNonAttackUnits = State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
+                State.CharacterRecords.AvatarRecord, State.CharacterRecords);
+            
             TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(xy);
 
-            Moonstone moonstone = null;
-            // we search the tile and expose any items that may be on it
-            if (State.TheVirtualMap.CurrentMap is LargeMap largeMap)
-            {
-                moonstone = largeMap.SearchAndExposeMoonstone(xy);
-            }
-            if (moonstone == null)
-            {
-                bHasInnerNonAttackUnits =
-                    State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
-                        State.CharacterRecords.AvatarRecord,
-                        State.CharacterRecords);
-            }
-
-            if (moonstone != null)
-            {
-                bWasSuccessful = true;
-                turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(moonstone.FindDescription), false);
-            }
-            else if (bHasInnerNonAttackUnits)
+            if (bHasInnerNonAttackUnits)
             {
                 // do nothing, I think? The SearchNonAttackingMapUnit method takes care of the chatter
                 bWasSuccessful = true;

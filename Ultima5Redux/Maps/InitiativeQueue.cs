@@ -225,7 +225,7 @@ namespace Ultima5Redux.Maps
             return combatMapUnit;
         }
 
-        internal List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
+        public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
         {
             int nTally = 0;
             List<CombatMapUnit> combatMapUnits = new(nUnits);

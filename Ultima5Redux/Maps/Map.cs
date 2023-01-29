@@ -92,7 +92,7 @@ namespace Ultima5Redux.Maps
 
         //[DataMember] protected Maps CurrentMapType { get; set; }
 
-        [IgnoreDataMember] public MapUnitCollection CurrentMapUnits { get; protected set; } = new();
+        [DataMember] public MapUnitCollection CurrentMapUnits { get; protected set; } = new();
 
         public abstract int NumOfXTiles { get; }
 

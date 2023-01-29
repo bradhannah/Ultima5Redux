@@ -35,15 +35,10 @@ namespace Ultima5Redux.Maps
         }
 
         // dungeon map
-        internal void LoadDungeonMap(SmallMapReferences.SingleMapReference.Location location)
-        {
-            CurrentMapUnits.Clear();
-
-            MapUnit theAvatar = Avatar.CreateAvatar(location, new MapUnitMovement(0),
-                new MapUnitPosition(0, 0, 0),
-                GameReferences.Instance.SpriteTileReferences.GetTileReference(284), UseExtendedSprites);
-            CurrentMapUnits.Add(theAvatar);
-        }
+        // internal void LoadDungeonMap(SmallMapReferences.SingleMapReference.Location location)
+        // {
+        //
+        // }
         
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
@@ -91,6 +86,14 @@ namespace Ultima5Redux.Maps
         {
             SingleDungeonMapFloorReference = singleDungeonMapFloorReference;
             TheMap = SingleDungeonMapFloorReference.GetDefaultDungeonMap();
+            CurrentMapUnits ??= new MapUnitCollection();
+            CurrentMapUnits.Clear();
+
+            MapUnit theAvatar = Avatar.CreateAvatar(singleDungeonMapFloorReference.DungeonLocation,
+                new MapUnitMovement(0),
+                new MapUnitPosition(0, 0, singleDungeonMapFloorReference.DungeonFloor),
+                GameReferences.Instance.SpriteTileReferences.GetTileReference(284), UseExtendedSprites);
+            CurrentMapUnits.Add(theAvatar);
         }
     }
 }

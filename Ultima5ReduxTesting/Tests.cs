@@ -936,11 +936,11 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
-            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
-                throw new Ultima5ReduxException("Should be small map");
-
             TurnResults turnResults = new TurnResults();
             world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
+
+            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+                throw new Ultima5ReduxException("Should be small map");
 
             Horse horse = smallMap.CreateHorseAroundAvatar(turnResults);
             Assert.True(horse != null);
@@ -1647,6 +1647,8 @@ namespace Ultima5ReduxTesting
 
             //GameReferences.Instance.Initialize(DataDirectory);
 
+            ///// HEY BRAD
+            /// we are at that part where the loading new JSON save files becomes super broken!
             world.ReLoadFromJson();
 
             Assert.True(
@@ -3305,9 +3307,9 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Jhelom, 0));
-            if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
-                throw new Ultima5ReduxException("Should be large map");
-            largeMap.MoveAvatar(avatarPos);
+            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+                throw new Ultima5ReduxException("Expected SmallMap");
+            smallMap.MoveAvatar(avatarPos);
 
             TurnResults turnResults = new();
             List<VirtualMap.AggressiveMapUnitInfo> aggressiveStuff = world.TryToTalk(

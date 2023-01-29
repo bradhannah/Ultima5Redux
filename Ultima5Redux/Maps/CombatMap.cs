@@ -37,7 +37,7 @@ namespace Ultima5Redux.Maps
 
         private Queue<CombatItem> _currentCombatItemQueue;
 
-        private InitiativeQueue _initiativeQueue;
+        public InitiativeQueue TheInitiativeQueue { get; private set; }
 
         /// <summary>
         ///     All current player characters
@@ -73,13 +73,13 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnitAndClean() is Enemy enemy ? enemy : null;
+        public Enemy ActiveEnemy => TheInitiativeQueue.GetCurrentCombatUnitAndClean() is Enemy enemy ? enemy : null;
 
         /// <summary>
         ///     The player character who the player has selected to focus on (#1-#6)
         /// </summary>
         /// <returns>active player character record OR null if none selected</returns>
-        public PlayerCharacterRecord ActivePlayerCharacterRecord => _initiativeQueue.ActivePlayerCharacterRecord;
+        public PlayerCharacterRecord ActivePlayerCharacterRecord => TheInitiativeQueue.ActivePlayerCharacterRecord;
 
         public IEnumerable<CombatPlayer> AllCombatPlayers => CurrentMapUnits.CombatPlayers;
         public IEnumerable<Enemy> AllEnemies => CurrentMapUnits.Enemies;
@@ -100,7 +100,7 @@ namespace Ultima5Redux.Maps
         public bool AreEnemiesLeft => NumberOfEnemies > 0;
 
         public CombatPlayer CurrentCombatPlayer =>
-            _initiativeQueue.GetCurrentCombatUnitAndClean() is CombatPlayer player ? player : null;
+            TheInitiativeQueue.GetCurrentCombatUnitAndClean() is CombatPlayer player ? player : null;
 
         /// <summary>
         ///     Current player or enemy who is active in current round
@@ -165,13 +165,13 @@ namespace Ultima5Redux.Maps
             CurrentMapUnits.CombatPlayers.Count(combatPlayer =>
                 combatPlayer.IsActive && combatPlayer.Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead);
 
-        public int Round => _initiativeQueue.Round;
+        public int Round => TheInitiativeQueue.Round;
 
-        public PlayerCharacterRecord SelectedCombatPlayerRecord => _initiativeQueue.ActivePlayerCharacterRecord;
+        public PlayerCharacterRecord SelectedCombatPlayerRecord => TheInitiativeQueue.ActivePlayerCharacterRecord;
 
         public SingleCombatMapReference TheCombatMapReference { get; }
 
-        public int Turn => _initiativeQueue.Turn;
+        public int Turn => TheInitiativeQueue.Turn;
 
         protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
 
@@ -321,8 +321,8 @@ namespace Ultima5Redux.Maps
 
         internal void InitializeInitiativeQueue()
         {
-            _initiativeQueue = new InitiativeQueue(CurrentMapUnits, _playerCharacterRecords, this);
-            _initiativeQueue.InitializeInitiativeQueue();
+            TheInitiativeQueue = new InitiativeQueue(CurrentMapUnits, _playerCharacterRecords, this);
+            TheInitiativeQueue.InitializeInitiativeQueue();
             RefreshCurrentCombatPlayer();
         }
 
@@ -444,7 +444,7 @@ namespace Ultima5Redux.Maps
 
         private CombatPlayer GetCurrentCombatPlayer()
         {
-            CombatMapUnit activeCombatMapUnit = _initiativeQueue.GetCurrentCombatUnitAndClean();
+            CombatMapUnit activeCombatMapUnit = TheInitiativeQueue.GetCurrentCombatUnitAndClean();
 
             if (!(activeCombatMapUnit is CombatPlayer combatPlayer))
                 throw new Ultima5ReduxException("Tried to get CurrentCombatPlayer, but there isn't one");
@@ -881,7 +881,7 @@ namespace Ultima5Redux.Maps
 
         public CombatMapUnit AdvanceToNextCombatMapUnit()
         {
-            CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
+            CombatMapUnit combatMapUnit = TheInitiativeQueue.AdvanceToNextCombatMapUnit();
 
             _bPlayerHasChanged = true;
 
@@ -918,7 +918,7 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException("Tried to divide enemy, but they were null: " +
                                                 enemy.EnemyReference.KeyTileReference.Name);
             newEnemy.MapUnitPosition = new MapUnitPosition(newEnemyPosition.X, newEnemyPosition.Y, 0);
-            _initiativeQueue.AddCombatMapUnitToQueue(newEnemy);
+            TheInitiativeQueue.AddCombatMapUnitToQueue(newEnemy);
             return newEnemy;
         }
 
@@ -941,7 +941,7 @@ namespace Ultima5Redux.Maps
 
         public CombatMapUnit GetAndRefreshCurrentCombatMapUnit()
         {
-            CombatMapUnit combatUnit = _initiativeQueue.GetCurrentCombatUnitAndClean();
+            CombatMapUnit combatUnit = TheInitiativeQueue.GetCurrentCombatUnitAndClean();
             // we need to refresh current combat player in case the preceding method rips out some old
             // or hidden enemies - this way we know that the CombatItem queue is up to date
             RefreshCurrentCombatPlayer();
@@ -1149,7 +1149,7 @@ namespace Ultima5Redux.Maps
 
             combatPlayer.HasEscaped = true;
 
-            if (combatPlayer.Record == _initiativeQueue.ActivePlayerCharacterRecord)
+            if (combatPlayer.Record == TheInitiativeQueue.ActivePlayerCharacterRecord)
             {
                 //_initiativeQueue.SetActivePlayerCharacter(null);
                 SetActivePlayerCharacter(null);
@@ -1165,7 +1165,7 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         public void MoveActiveCombatMapUnit(TurnResults turnResults, Point2D xy)
         {
-            CombatMapUnit currentCombatUnit = _initiativeQueue.GetCurrentCombatUnitAndClean();
+            CombatMapUnit currentCombatUnit = TheInitiativeQueue.GetCurrentCombatUnitAndClean();
             if (currentCombatUnit == null)
                 throw new Ultima5ReduxException(
                     "Tried to move active combat unit, but couldn't find them in initiative queue");
@@ -1211,7 +1211,7 @@ namespace Ultima5Redux.Maps
                 bool bWasTrigger = HandleTrigger(turnResults, xy);
                 if (bWasTrigger)
                 {
-                    _initiativeQueue.RefreshFutureRounds();
+                    TheInitiativeQueue.RefreshFutureRounds();
                 }
             }
         }
@@ -1516,7 +1516,7 @@ namespace Ultima5Redux.Maps
             out CombatMapUnit targetedCombatMapUnit,
             out Point2D missedPoint)
         {
-            activeCombatMapUnit = _initiativeQueue.GetCurrentCombatUnitAndClean();
+            activeCombatMapUnit = TheInitiativeQueue.GetCurrentCombatUnitAndClean();
             targetedCombatMapUnit = null;
             missedPoint = null;
 
@@ -1670,9 +1670,9 @@ namespace Ultima5Redux.Maps
                     case CombatMapUnit.HitState.Dead:
                         // if the current active player dies - then we set it to the whole party again
                         if (bestCombatPlayer is CombatPlayer combatPlayer &&
-                            _initiativeQueue.CombatPlayerIsActive(combatPlayer))
+                            TheInitiativeQueue.CombatPlayerIsActive(combatPlayer))
                         {
-                            _initiativeQueue.SetActivePlayerCharacter(null);
+                            TheInitiativeQueue.SetActivePlayerCharacter(null);
                         }
 
                         targetedCombatMapUnit = bestCombatPlayer;
@@ -1711,7 +1711,7 @@ namespace Ultima5Redux.Maps
 
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)
         {
-            _initiativeQueue.SetActivePlayerCharacter(record);
+            TheInitiativeQueue.SetActivePlayerCharacter(record);
             _bPlayerHasChanged = true;
             RefreshCurrentCombatPlayer();
         }
