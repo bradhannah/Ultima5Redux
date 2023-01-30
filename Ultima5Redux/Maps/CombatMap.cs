@@ -24,6 +24,10 @@ namespace Ultima5Redux.Maps
 {
     public class CombatMap : Map
     {
+        /// <summary>
+        ///     For tracking which escape route was used
+        /// </summary>
+        public enum EscapeType { None, EscapeKey, KlimbDown, KlimbUp, North, South, East, West }
         //private readonly MapUnits.MapUnits _mapUnits;
 
         //private readonly MapOverrides _mapOverrides;
@@ -33,11 +37,37 @@ namespace Ultima5Redux.Maps
 
         public enum SpecificCombatMapUnit { All, CombatPlayer, Enemy, NonAttackUnit }
 
+        [IgnoreDataMember]
+        public override MapUnitPosition CurrentPosition
+        {
+            get => CurrentCombatPlayer?.MapUnitPosition;
+            set => CurrentCombatPlayer.MapUnitPosition = value;
+        }
+
+        // public List<CombatMapUnit> GetTopNCurrentMapUnits(int nUnits)
+        // {
+        //     // if there aren't the minimum number of turns, then we force it to add additional turns to at least
+        //     // the stated number of units
+        //     if (_initiativeQueue.TotalTurnsInQueue < nUnits)
+        //         _initiativeQueue.CalculateNextInitiativeQueue();
+        //
+        //     return _initiativeQueue.GetTopNCurrentMapUnits(nUnits);
+        // }
+
+
+        private readonly List<Type> _visiblePriorityOrder = new()
+        {
+            typeof(DiscoverableLoot), typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate),
+            typeof(NonPlayerCharacter),
+            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
+            typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
+        };
+
         private bool _bPlayerHasChanged = true;
 
         private Queue<CombatItem> _currentCombatItemQueue;
 
-        public InitiativeQueue TheInitiativeQueue { get; private set; }
+        private EscapeType _escapeType = EscapeType.None;
 
         /// <summary>
         ///     All current player characters
@@ -47,17 +77,15 @@ namespace Ultima5Redux.Maps
         private IEnumerable<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers;
         private IEnumerable<CombatMapUnit> AllEnemiesGeneric => AllEnemies;
 
+        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
+            SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+
         /// <summary>
         ///     Current combat map units for current combat map
         /// </summary>
         //private MapUnits.MapUnits CurrentMapUnits { get; }
 
         public override bool IsRepeatingMap => false;
-
-        public override Maps TheMapType => Maps.Combat;
-
-        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
-            SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
 
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
         public override int NumOfYTiles => SingleCombatMapReference.YTILES;
@@ -72,6 +100,8 @@ namespace Ultima5Redux.Maps
                 // do nothing, not allowed
             }
         }
+
+        public override Maps TheMapType => Maps.Combat;
 
         public Enemy ActiveEnemy => TheInitiativeQueue.GetCurrentCombatUnitAndClean() is Enemy enemy ? enemy : null;
 
@@ -108,62 +138,18 @@ namespace Ultima5Redux.Maps
         public PlayerCharacterRecord CurrentPlayerCharacterRecord => CurrentCombatPlayer?.Record;
 
         public bool InEscapeMode { get; set; } = false;
+
+        public int NumberOfAlivePlayers =>
+            CurrentMapUnits.CombatPlayers.Count(combatPlayer =>
+                combatPlayer.IsActive && combatPlayer.Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead);
+
         public int NumberOfCombatItemInQueue => _currentCombatItemQueue.Count;
 
         public int NumberOfEnemies => CurrentMapUnits.Enemies.Count(enemy => enemy.IsActive);
 
 
-        public Enemy CreateEnemyOnCombatMap(Point2D xy, EnemyReference enemyReference, out int nIndex)
-        {
-            Debug.Assert(TheMapType == Maps.Combat);
-            nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
-            if (nIndex == -1) return null;
-
-            // Enemy enemy = new(importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
-            Enemy enemy = new(new MapUnitMovement(nIndex), enemyReference, MapLocation, null,
-                new MapUnitPosition(xy.X, xy.Y, 0));
-
-            nIndex = AddCombatMapUnit(enemy);
-
-            return enemy;
-        }
-
-        internal int AddCombatMapUnit(CombatMapUnit mapUnit)
-        {
-            int nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
-            if (nIndex < 0) return -1;
-
-            AddNewMapUnit(Maps.Combat, mapUnit);
-
-            return nIndex;
-        }
-
-        public NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)
-        {
-            Debug.Assert(TheMapType == Maps.Combat);
-            nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
-            if (nIndex == -1) return null;
-
-            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
-            NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite,
-                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, mapUnitPosition);
-
-            if (nonAttackingUnit == null)
-                throw new Ultima5ReduxException(
-                    $"Tried to create NonAttackingUnitFactory: {nSprite} but was given null");
-
-            nIndex = AddCombatMapUnit(nonAttackingUnit);
-
-            return nonAttackingUnit;
-        }
-
-
         public int NumberOfVisiblePlayers =>
             CurrentMapUnits.CombatPlayers.Count(combatPlayer => combatPlayer.IsActive);
-
-        public int NumberOfAlivePlayers =>
-            CurrentMapUnits.CombatPlayers.Count(combatPlayer =>
-                combatPlayer.IsActive && combatPlayer.Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead);
 
         public int Round => TheInitiativeQueue.Round;
 
@@ -171,16 +157,11 @@ namespace Ultima5Redux.Maps
 
         public SingleCombatMapReference TheCombatMapReference { get; }
 
+        public InitiativeQueue TheInitiativeQueue { get; private set; }
+
         public int Turn => TheInitiativeQueue.Turn;
 
         protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
-
-        /// <summary>
-        ///     For tracking which escape route was used
-        /// </summary>
-        public enum EscapeType { None, EscapeKey, KlimbDown, KlimbUp, North, South, East, West }
-
-        private EscapeType _escapeType = EscapeType.None;
 
         /// <summary>
         ///     Creates CombatMap.
@@ -213,11 +194,14 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        [IgnoreDataMember]
-        public override MapUnitPosition CurrentPosition
+        internal int AddCombatMapUnit(CombatMapUnit mapUnit)
         {
-            get => CurrentCombatPlayer?.MapUnitPosition;
-            set => CurrentCombatPlayer.MapUnitPosition = value;
+            int nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
+            if (nIndex < 0) return -1;
+
+            AddNewMapUnit(Maps.Combat, mapUnit);
+
+            return nIndex;
         }
 
 
@@ -309,15 +293,6 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public void InitializeCombatMapReferences()
-        {
-            CurrentMapUnits.Clear();
-            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
-            {
-                CurrentMapUnits.Add(new EmptyMapUnit());
-            }
-        }
-
 
         internal void InitializeInitiativeQueue()
         {
@@ -339,6 +314,32 @@ namespace Ultima5Redux.Maps
             tileReference.Index == GameReferences.Instance.SpriteTileReferences
                 .GetTileReferenceByName("RegularDoorView")
                 .Index;
+
+        private void AdvanceIfSafe(CombatPlayer theCombatPlayer, TurnResults turnResults)
+        {
+            if (_currentCombatItemQueue != null && _currentCombatItemQueue.Count != 0) return;
+
+            theCombatPlayer?.Record.ProcessPlayerTurn(turnResults);
+            AdvanceToNextCombatMapUnit();
+        }
+
+        private bool CanEnemyMoveToSpace(Point2D xy, Enemy enemy)
+        {
+            bool bIsTileWalkable = false;
+            // let's check to see if a map unit is blocking - but not all block, such as blood spatter
+            if (enemy.FleeingPath != null)
+                bIsTileWalkable |= !IsMapUnitBlockingSpace(xy); //enemy.FleeingPath.Peek().Position);
+
+            // Debug.Assert(tileReference != null);
+
+            WalkableType walkableType = GetWalkableTypeByEnemy(enemy);
+
+            // let's also check the current tile reference and see if we are allowed to walk
+            // on it - regardless if there is a map unit or not
+            bIsTileWalkable &= IsTileWalkable(enemy.MapUnitPosition.XY, walkableType);
+
+            return bIsTileWalkable;
+        }
 
         private void ClearCurrentCombatItemQueue()
         {
@@ -528,6 +529,94 @@ namespace Ultima5Redux.Maps
             return walkableType;
         }
 
+        private void HandleCombatPlayerAttackingNoOpponent(TurnResults turnResults, Point2D actionPosition,
+            string attackStr, CombatPlayer combatPlayer)
+        {
+            CombatItem weapon = null;
+            attackStr += "nothing with ";
+            if (_currentCombatItemQueue == null)
+            {
+                // bare hands
+                attackStr += " with bare hands!";
+            }
+            else
+            {
+                weapon = _currentCombatItemQueue.Dequeue();
+                attackStr += weapon.LongName + "!";
+            }
+
+            bool bIsRanged = (weapon?.TheCombatItemReference.Range ?? 1) > 1;
+            bool bIsBlocked = IsRangedPathBlocked(combatPlayer.MapUnitPosition.XY,
+                actionPosition, out Point2D firstBlockPoint);
+            CombatItemReference.MissileType missileType = weapon?.TheCombatItemReference.Missile ??
+                                                          CombatItemReference.MissileType.None;
+
+            // if there is a trigger on this tile - then let's trigger!
+            if (TheCombatMapReference.HasTriggers)
+            {
+                if (HandleTrigger(turnResults, actionPosition))
+                {
+                    // required to actually show an attack animation
+                    turnResults.PushTurnResult(new AttackerTurnResult(
+                        TurnResult.TurnResultType.Combat_CombatPlayerAttackedTrigger,
+                        combatPlayer, null, missileType,
+                        CombatMapUnit.HitState.HitTrigger, actionPosition));
+
+                    AdvanceToNextCombatMapUnit();
+                    return;
+                }
+            }
+
+            // it's not good enough just to not show any attack - the player needs to know that
+            // their input was accepted - it just happens that it doesn't do anything of value
+            // if ranged
+            // -- If it is not ranged, then it's impossible to be "blocked" right??
+            if (bIsRanged && bIsBlocked)
+            {
+                turnResults.PushTurnResult(new AttackerTurnResult(
+                    TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
+                    combatPlayer, null, missileType,
+                    CombatMapUnit.HitState.Blocked, firstBlockPoint));
+                AdvanceIfSafe(combatPlayer, turnResults);
+                return;
+            }
+
+            AdvanceIfSafe(combatPlayer, turnResults);
+
+            turnResults.PushOutputToConsole(attackStr);
+            turnResults.PushTurnResult(new AttackerTurnResult(
+                TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackNothing,
+                combatPlayer, null, missileType, CombatMapUnit.HitState.HitNothingOfNote, actionPosition));
+        }
+
+        private void HandleCombatPlayerBlockedAttackOnOpponent(TurnResults turnResults, CombatPlayer combatPlayer,
+            MapUnitDetails opponentMapUnit, CombatItem weapon, Point2D firstBlockPoint)
+        {
+            string blockedAttackStr = combatPlayer.FriendlyName +
+                                      GameReferences.Instance.DataOvlRef.StringReferences
+                                          .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N)
+                                          .TrimEnd().Replace("!", " ") + opponentMapUnit.FriendlyName +
+                                      " because it was blocked!";
+            turnResults.PushOutputToConsole(blockedAttackStr);
+            turnResults.PushTurnResult(new AttackerTurnResult(
+                TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
+                combatPlayer, null, weapon.TheCombatItemReference.Missile,
+                CombatMapUnit.HitState.Missed, firstBlockPoint));
+
+            AdvanceIfSafe(combatPlayer, turnResults);
+        }
+
+        private void HandleCombatPlayerTryingToAttackThemselves(TurnResults turnResults, string attackStr,
+            CombatPlayer combatPlayer)
+        {
+            attackStr = attackStr.TrimEnd() + "... yourself? ";
+            attackStr += "\nYou think better of it and skip your turn.";
+            turnResults.PushOutputToConsole(attackStr);
+            turnResults.PushTurnResult(new SinglePlayerCharacterAffected(
+                TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackSelf, combatPlayer.Stats));
+            AdvanceIfSafe(combatPlayer, turnResults);
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="turnResults"></param>
@@ -616,6 +705,26 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        private bool HandleTrigger(TurnResults turnResults, Point2D position)
+        {
+            if (!TheCombatMapReference.TheTriggerTiles.HasTriggerAtPosition(position))
+                return false;
+
+            List<TriggerTileData> triggerTiles =
+                TheCombatMapReference.TheTriggerTiles.GetTriggerTileDataByPosition(position);
+
+            foreach (TriggerTileData triggerTileData in triggerTiles.Where(t => !t.Triggered))
+            {
+                // walk through each of the tiles that we will now be changing
+                foreach (Point2D changeTilePosition in triggerTileData.TriggerChangePositions)
+                {
+                    TriggerTile(turnResults, triggerTileData, changeTilePosition);
+                }
+            }
+
+            return true;
+        }
+
         private bool IsCombatMapUnitInRange(CombatMapUnit attackingUnit, CombatMapUnit opponentCombatMapUnit,
             int nRange)
         {
@@ -631,6 +740,12 @@ namespace Ultima5Redux.Maps
                 return false;
 
             return true;
+        }
+
+        private bool IsMapUnitBlockingSpace(Point2D xy)
+        {
+            return AllVisibleCurrentMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList()
+                .Any(m => !m.CanStackMapUnitsOnTop);
         }
 
         private bool IsRangedPathBlocked(Point2D attackingPoint, Point2D opponentMapUnit, out Point2D firstBlockPoint)
@@ -848,6 +963,50 @@ namespace Ultima5Redux.Maps
             BuildCombatItemQueue(combatItems);
         }
 
+        private void TriggerTile(TurnResults turnResults, TriggerTileData triggerTileData, Point2D triggerPosition)
+        {
+            TileReference newTileReference = triggerTileData.TriggerSprite;
+
+            if (newTileReference.Index == (int)TileReference.SpriteIndex.Portcullis)
+            {
+                // this is for sound effects likely
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OpenPortcullis));
+            }
+
+            // this is to actually replace the tile
+            //GameStateReference.State.TheVirtualMap.CurrentMap.
+            SetOverridingTileReferece(newTileReference, triggerPosition);
+
+            // Not sure I need this - but maybe I will react visually 
+            turnResults.PushTurnResult(new TileOverrideOnCombatMap(triggerPosition,
+                newTileReference
+            ));
+        }
+
+        public static EscapeType DirectionToEscapeType(Point2D.Direction direction)
+        {
+            switch (direction)
+            {
+                case Point2D.Direction.Up: return EscapeType.North;
+                case Point2D.Direction.Down: return EscapeType.South;
+                case Point2D.Direction.Left: return EscapeType.West;
+                case Point2D.Direction.Right: return EscapeType.East;
+                case Point2D.Direction.None: return EscapeType.None;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+
+        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        {
+            return mapUnit switch
+            {
+                Enemy enemy => GetWalkableTypeByEnemy(enemy),
+                CombatPlayer _ => WalkableType.CombatLand,
+                _ => WalkableType.StandardWalking
+            };
+        }
+
         /// <summary>
         ///     Recalculates which tiles are visible based on position of players in map and the current map
         /// </summary>
@@ -892,6 +1051,41 @@ namespace Ultima5Redux.Maps
         public void BuildCombatItemQueue(List<CombatItem> combatItems)
         {
             _currentCombatItemQueue = new Queue<CombatItem>(combatItems);
+        }
+
+
+        public Enemy CreateEnemyOnCombatMap(Point2D xy, EnemyReference enemyReference, out int nIndex)
+        {
+            Debug.Assert(TheMapType == Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
+            if (nIndex == -1) return null;
+
+            // Enemy enemy = new(importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
+            Enemy enemy = new(new MapUnitMovement(nIndex), enemyReference, MapLocation, null,
+                new MapUnitPosition(xy.X, xy.Y, 0));
+
+            nIndex = AddCombatMapUnit(enemy);
+
+            return enemy;
+        }
+
+        public NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)
+        {
+            Debug.Assert(TheMapType == Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
+            if (nIndex == -1) return null;
+
+            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
+            NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite,
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, mapUnitPosition);
+
+            if (nonAttackingUnit == null)
+                throw new Ultima5ReduxException(
+                    $"Tried to create NonAttackingUnitFactory: {nSprite} but was given null");
+
+            nIndex = AddCombatMapUnit(nonAttackingUnit);
+
+            return nonAttackingUnit;
         }
 
         public CombatItem DequeueCurrentCombatItem() => _currentCombatItemQueue.Dequeue();
@@ -1061,25 +1255,6 @@ namespace Ultima5Redux.Maps
             return null;
         }
 
-        // public List<CombatMapUnit> GetTopNCurrentMapUnits(int nUnits)
-        // {
-        //     // if there aren't the minimum number of turns, then we force it to add additional turns to at least
-        //     // the stated number of units
-        //     if (_initiativeQueue.TotalTurnsInQueue < nUnits)
-        //         _initiativeQueue.CalculateNextInitiativeQueue();
-        //
-        //     return _initiativeQueue.GetTopNCurrentMapUnits(nUnits);
-        // }
-
-
-        private readonly List<Type> _visiblePriorityOrder = new()
-        {
-            typeof(DiscoverableLoot), typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate),
-            typeof(NonPlayerCharacter),
-            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
-            typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
-        };
-
         /// <summary>
         ///     Gets the top visible map unit - excluding the Avatar
         /// </summary>
@@ -1111,37 +1286,18 @@ namespace Ultima5Redux.Maps
             return null;
         }
 
-        public static EscapeType DirectionToEscapeType(Point2D.Direction direction)
+        public void InitializeCombatMapReferences()
         {
-            switch (direction)
+            CurrentMapUnits.Clear();
+            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
-                case Point2D.Direction.Up: return EscapeType.North;
-                case Point2D.Direction.Down: return EscapeType.South;
-                case Point2D.Direction.Left: return EscapeType.West;
-                case Point2D.Direction.Right: return EscapeType.East;
-                case Point2D.Direction.None: return EscapeType.None;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                CurrentMapUnits.Add(new EmptyMapUnit());
             }
         }
 
-        public bool TryToMakePlayerEscape(TurnResults turnResults, CombatPlayer combatPlayer, EscapeType escapeType)
-        {
-            turnResults.PushOutputToConsole("LEAVING", false);
-
-            if (_escapeType == EscapeType.None || _escapeType == escapeType)
-            {
-                // allowed to escape
-                MakePlayerEscape(combatPlayer);
-                _escapeType = escapeType;
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.Combat_CombatPlayerEscaped));
-                return true;
-            }
-
-            turnResults.PushOutputToConsole("All must use the same exit!", false);
-
-            return false;
-        }
+        public bool IsCombatMapUnitOccupiedTile(in Point2D xy) =>
+            IsMapUnitOccupiedFromList(xy, CurrentSingleMapReference.Floor,
+                CurrentMapUnits.AllCombatMapUnits);
 
         public void MakePlayerEscape(CombatPlayer combatPlayer)
         {
@@ -1347,160 +1503,6 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new InvalidEnumArgumentException(((int)selectedAction).ToString());
             }
-        }
-
-        private void HandleCombatPlayerBlockedAttackOnOpponent(TurnResults turnResults, CombatPlayer combatPlayer,
-            MapUnitDetails opponentMapUnit, CombatItem weapon, Point2D firstBlockPoint)
-        {
-            string blockedAttackStr = combatPlayer.FriendlyName +
-                                      GameReferences.Instance.DataOvlRef.StringReferences
-                                          .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N)
-                                          .TrimEnd().Replace("!", " ") + opponentMapUnit.FriendlyName +
-                                      " because it was blocked!";
-            turnResults.PushOutputToConsole(blockedAttackStr);
-            turnResults.PushTurnResult(new AttackerTurnResult(
-                TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
-                combatPlayer, null, weapon.TheCombatItemReference.Missile,
-                CombatMapUnit.HitState.Missed, firstBlockPoint));
-
-            AdvanceIfSafe(combatPlayer, turnResults);
-        }
-
-        private void HandleCombatPlayerTryingToAttackThemselves(TurnResults turnResults, string attackStr,
-            CombatPlayer combatPlayer)
-        {
-            attackStr = attackStr.TrimEnd() + "... yourself? ";
-            attackStr += "\nYou think better of it and skip your turn.";
-            turnResults.PushOutputToConsole(attackStr);
-            turnResults.PushTurnResult(new SinglePlayerCharacterAffected(
-                TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackSelf, combatPlayer.Stats));
-            AdvanceIfSafe(combatPlayer, turnResults);
-        }
-
-        private void AdvanceIfSafe(CombatPlayer theCombatPlayer, TurnResults turnResults)
-        {
-            if (_currentCombatItemQueue != null && _currentCombatItemQueue.Count != 0) return;
-
-            theCombatPlayer?.Record.ProcessPlayerTurn(turnResults);
-            AdvanceToNextCombatMapUnit();
-        }
-
-        private void TriggerTile(TurnResults turnResults, TriggerTileData triggerTileData, Point2D triggerPosition)
-        {
-            TileReference newTileReference = triggerTileData.TriggerSprite;
-
-            if (newTileReference.Index == (int)TileReference.SpriteIndex.Portcullis)
-            {
-                // this is for sound effects likely
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OpenPortcullis));
-            }
-
-            // this is to actually replace the tile
-            //GameStateReference.State.TheVirtualMap.CurrentMap.
-            SetOverridingTileReferece(newTileReference, triggerPosition);
-
-            // Not sure I need this - but maybe I will react visually 
-            turnResults.PushTurnResult(new TileOverrideOnCombatMap(triggerPosition,
-                newTileReference
-            ));
-        }
-
-        private bool HandleTrigger(TurnResults turnResults, Point2D position)
-        {
-            if (!TheCombatMapReference.TheTriggerTiles.HasTriggerAtPosition(position))
-                return false;
-
-            List<TriggerTileData> triggerTiles =
-                TheCombatMapReference.TheTriggerTiles.GetTriggerTileDataByPosition(position);
-
-            foreach (TriggerTileData triggerTileData in triggerTiles.Where(t => !t.Triggered))
-            {
-                // walk through each of the tiles that we will now be changing
-                foreach (Point2D changeTilePosition in triggerTileData.TriggerChangePositions)
-                {
-                    TriggerTile(turnResults, triggerTileData, changeTilePosition);
-                }
-            }
-
-            return true;
-        }
-
-        private void HandleCombatPlayerAttackingNoOpponent(TurnResults turnResults, Point2D actionPosition,
-            string attackStr, CombatPlayer combatPlayer)
-        {
-            CombatItem weapon = null;
-            attackStr += "nothing with ";
-            if (_currentCombatItemQueue == null)
-            {
-                // bare hands
-                attackStr += " with bare hands!";
-            }
-            else
-            {
-                weapon = _currentCombatItemQueue.Dequeue();
-                attackStr += weapon.LongName + "!";
-            }
-
-            bool bIsRanged = (weapon?.TheCombatItemReference.Range ?? 1) > 1;
-            bool bIsBlocked = IsRangedPathBlocked(combatPlayer.MapUnitPosition.XY,
-                actionPosition, out Point2D firstBlockPoint);
-            CombatItemReference.MissileType missileType = weapon?.TheCombatItemReference.Missile ??
-                                                          CombatItemReference.MissileType.None;
-
-            // if there is a trigger on this tile - then let's trigger!
-            if (TheCombatMapReference.HasTriggers)
-            {
-                if (HandleTrigger(turnResults, actionPosition))
-                {
-                    // required to actually show an attack animation
-                    turnResults.PushTurnResult(new AttackerTurnResult(
-                        TurnResult.TurnResultType.Combat_CombatPlayerAttackedTrigger,
-                        combatPlayer, null, missileType,
-                        CombatMapUnit.HitState.HitTrigger, actionPosition));
-
-                    AdvanceToNextCombatMapUnit();
-                    return;
-                }
-            }
-
-            // it's not good enough just to not show any attack - the player needs to know that
-            // their input was accepted - it just happens that it doesn't do anything of value
-            // if ranged
-            // -- If it is not ranged, then it's impossible to be "blocked" right??
-            if (bIsRanged && bIsBlocked)
-            {
-                turnResults.PushTurnResult(new AttackerTurnResult(
-                    TurnResult.TurnResultType.Combat_CombatPlayerRangedAttackBlocked,
-                    combatPlayer, null, missileType,
-                    CombatMapUnit.HitState.Blocked, firstBlockPoint));
-                AdvanceIfSafe(combatPlayer, turnResults);
-                return;
-            }
-
-            AdvanceIfSafe(combatPlayer, turnResults);
-
-            turnResults.PushOutputToConsole(attackStr);
-            turnResults.PushTurnResult(new AttackerTurnResult(
-                TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackNothing,
-                combatPlayer, null, missileType, CombatMapUnit.HitState.HitNothingOfNote, actionPosition));
-        }
-
-        private bool CanEnemyMoveToSpace(Point2D xy, Enemy enemy)
-        {
-            bool bIsTileWalkable = false;
-            // let's check to see if a map unit is blocking - but not all block, such as blood spatter
-            if (enemy.FleeingPath != null)
-                bIsTileWalkable |= !IsMapUnitBlockingSpace(xy); //enemy.FleeingPath.Peek().Position);
-
-            // Debug.Assert(tileReference != null);
-
-            WalkableType walkableType = GetWalkableTypeByEnemy(enemy);
-
-            // let's also check the current tile reference and see if we are allowed to walk
-            // on it - regardless if there is a map unit or not
-            bIsTileWalkable &= IsTileWalkable(enemy.MapUnitPosition.XY, walkableType);
-
-            return bIsTileWalkable;
         }
 
         /// <summary>
@@ -1716,23 +1718,36 @@ namespace Ultima5Redux.Maps
             RefreshCurrentCombatPlayer();
         }
 
-        private bool IsMapUnitBlockingSpace(Point2D xy)
+        public bool TryToMakePlayerEscape(TurnResults turnResults, CombatPlayer combatPlayer, EscapeType escapeType)
         {
-            return AllVisibleCurrentMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList()
-                .Any(m => !m.CanStackMapUnitsOnTop);
+            turnResults.PushOutputToConsole("LEAVING", false);
+
+            if (_escapeType == EscapeType.None || _escapeType == escapeType)
+            {
+                // allowed to escape
+                MakePlayerEscape(combatPlayer);
+                _escapeType = escapeType;
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.Combat_CombatPlayerEscaped));
+                return true;
+            }
+
+            turnResults.PushOutputToConsole("All must use the same exit!", false);
+
+            return false;
+        }
+
+        public void TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
+            out bool bPushedAThing, TurnResults turnResults)
+        {
+            bPushedAThing = false;
+            Point2D adjustedPos = avatarXy.GetAdjustedPosition(direction);
+
+            HandleTrigger(turnResults, adjustedPos);
+
+            AdvanceToNextCombatMapUnit();
         }
 
         protected override float GetAStarWeight(in Point2D xy) => 1.0f;
-
-        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
-        {
-            return mapUnit switch
-            {
-                Enemy enemy => GetWalkableTypeByEnemy(enemy),
-                CombatPlayer _ => WalkableType.CombatLand,
-                _ => WalkableType.StandardWalking
-            };
-        }
 
         protected override bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
@@ -1751,17 +1766,6 @@ namespace Ultima5Redux.Maps
                     throw new Ultima5ReduxException(
                         "Someone is trying to walk to determine they can walk on an unfamiliar WalkableType");
             }
-        }
-
-        public void TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
-            out bool bPushedAThing, TurnResults turnResults)
-        {
-            bPushedAThing = false;
-            Point2D adjustedPos = avatarXy.GetAdjustedPosition(direction);
-
-            HandleTrigger(turnResults, adjustedPos);
-
-            AdvanceToNextCombatMapUnit();
         }
     }
 }

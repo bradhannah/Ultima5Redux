@@ -17,52 +17,60 @@ namespace Ultima5Redux.Maps
         public const int X_TILES = 32;
         public const int Y_TILES = 32;
 
-        public override Maps TheMapType => Maps.Small;
+        [IgnoreDataMember] private SmallMaps _smallMaps;
 
         [IgnoreDataMember]
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             _currentSingleMapReference ??=
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
 
-        /// <summary>
-        ///     This is a lightweight LoadSmallMap. It is used specifically when re-populating the NPCStates after
-        ///     a deserialize.
-        /// </summary>
-        /// <param name="location"></param>
-        /// <exception cref="Ultima5ReduxException"></exception>
-        internal void ReloadNpcData(SmallMapReferences.SingleMapReference.Location location)
-        {
-            for (int i = 1; i < CurrentMapUnits.AllMapUnits.Count; i++)
-            {
-                MapUnit mapUnit = CurrentMapUnits.AllMapUnits[i];
-                if (mapUnit is not EmptyMapUnit and not DiscoverableLoot)
-                {
-                    if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
-                        mapUnit.NPCRef == null) continue;
-                    if (mapUnit.NPCRef == null)
-                        throw new Ultima5ReduxException($"Expected NPCRef for MapUnit {mapUnit.GetType()}");
-                    if (mapUnit.NPCRef.DialogIndex != -1)
-                    {
-                        // get the specific NPC reference 
-                        NonPlayerCharacterState npcState =
-                            GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location,
-                                mapUnit.NPCRef.DialogIndex);
+        [IgnoreDataMember] public override bool IsRepeatingMap => false;
 
-                        mapUnit.NPCState = npcState;
-                        // No need to refresh the SmallMapCharacterState because it is saved to the save file 
-                        //new SmallMapCharacterState(npcState.NPCRef, i);
-                    }
-                }
+        [IgnoreDataMember] public override int NumOfXTiles => CurrentSingleMapReference.XTiles;
+        [IgnoreDataMember] public override int NumOfYTiles => CurrentSingleMapReference.YTiles;
+
+        [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => true;
+
+        [IgnoreDataMember]
+        public bool IsBasement
+        {
+            get
+            {
+                if (CurrentSingleMapReference == null) return false;
+
+                return MapFloor == -1;
+                //return CurrentMap is not LargeMap && CurrentMap.CurrentSingleMapReference.Floor == -1;
             }
         }
 
+        [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
+        private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
-        public bool IsNPCInBed(NonPlayerCharacter npc) =>
-            GetTileReference(npc.MapUnitPosition.XY).Index ==
-            GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("LeftBed");
+        public override Maps TheMapType => Maps.Small;
 
-        public bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
+        [JsonConstructor] private SmallMap()
+        {
+        }
 
+
+        /// <summary>
+        ///     Creates a small map object using a pre-defined map reference
+        /// </summary>
+        /// <param name="singleSmallMapReference"></param>
+        public SmallMap(SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
+            singleSmallMapReference.MapLocation, singleSmallMapReference.Floor) =>
+            // load the map into memory
+            TheMap = CurrentSingleMapReference.GetDefaultMap();
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            TheMap = CurrentSingleMapReference.GetDefaultMap();
+        }
+
+        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
+        {
+            // TBD
+        }
 
 
         internal void ClearSmallMapFlags()
@@ -94,6 +102,105 @@ namespace Ultima5Redux.Maps
                 n => n.NPCState.HasExtortedAvatar = false);
         }
 
+        /// <summary>
+        ///     Gets the best possible stair or ladder location
+        ///     to go to the destinedPosition
+        ///     Ladder/Stair -> destinedPosition
+        /// </summary>
+        /// <param name="ladderOrStairDirection">go up or down a ladder/stair</param>
+        /// <param name="destinedPosition">the position to go to</param>
+        /// <returns></returns>
+        internal List<Point2D> GetBestStairsAndLadderLocation(VirtualMap.LadderOrStairDirection ladderOrStairDirection,
+            Point2D destinedPosition)
+        {
+            // get all ladder and stairs locations based (only up or down ladders/stairs)
+            List<Point2D> allLaddersAndStairList = GetListOfAllLaddersAndStairs(ladderOrStairDirection);
+
+            // get an ordered dictionary of the shortest straight line paths
+            SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
+
+            // ordered list of the best choice paths (only valid paths) 
+            List<Point2D> bestChoiceList = new(sortedPoints.Count);
+
+            // to make it more familiar, we will transfer to an ordered list
+            foreach (Point2D xy in sortedPoints.Values)
+            {
+                bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy, WalkableType.StandardWalking) > 0;
+                // we first make sure that the path even exists before we add it to the list
+                if (bPathBuilt) bestChoiceList.Add(xy);
+            }
+
+            return bestChoiceList;
+        }
+
+        /// <summary>
+        ///     Gets the best possible stair or ladder locations from the current position to the given ladder/stair direction
+        ///     currentPosition -> best ladder/stair
+        /// </summary>
+        /// <param name="ladderOrStairDirection">which direction will we try to get to</param>
+        /// <param name="destinedPosition">the position you are trying to get to</param>
+        /// <param name="currentPosition">the current position of the character</param>
+        /// <returns></returns>
+        internal List<Point2D> getBestStairsAndLadderLocationBasedOnCurrentPosition(
+            VirtualMap.LadderOrStairDirection ladderOrStairDirection, Point2D destinedPosition, Point2D currentPosition)
+        {
+            // get all ladder and stairs locations based (only up or down ladders/stairs)
+            List<Point2D> allLaddersAndStairList = GetListOfAllLaddersAndStairs(ladderOrStairDirection);
+
+            // get an ordered dictionary of the shortest straight line paths
+            SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
+
+            // ordered list of the best choice paths (only valid paths) 
+            List<Point2D> bestChoiceList = new(sortedPoints.Count);
+
+            // to make it more familiar, we will transfer to an ordered list
+            foreach (Point2D xy in sortedPoints.Values)
+            {
+                bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy, WalkableType.StandardWalking) > 0;
+                // we first make sure that the path even exists before we add it to the list
+                if (bPathBuilt) bestChoiceList.Add(xy);
+            }
+
+            return bestChoiceList;
+        }
+
+        /// <summary>
+        ///     Returns the total number of moves to the number of moves for the character to reach a point
+        /// </summary>
+        /// <param name="currentXy"></param>
+        /// <param name="targetXy">where the character would move</param>
+        /// <param name="walkableType"></param>
+        /// <returns>the number of moves to the targetXy</returns>
+        /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
+        internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, WalkableType walkableType)
+        {
+            Stack<Node> nodeStack = GetAStarMap(walkableType).FindPath(currentXy, targetXy);
+            return nodeStack?.Count ?? 0;
+        }
+
+        /// <summary>
+        ///     Some logic has to be processed afterwards and requires special conditions
+        /// </summary>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        internal void HandleSpecialCasesForSmallMapLoad()
+        {
+            if (CurrentSingleMapReference.MapLocation ==
+                SmallMapReferences.SingleMapReference.Location.Iolos_Hut
+                && GameStateReference.State.TheTimeOfDay.IsFirstDay())
+            {
+                // this is a bit redundant, but left in just in case
+                // it it is the first day then we don't include Smith or the Rats. Let's start the day off
+                // on a positive note!
+                NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
+                                               (TileReference.SpriteIndex)m.NPCRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
+                                               or TileReference.SpriteIndex.HorseRight) ??
+                                           throw new Ultima5ReduxException("Smith was not in Iolo's hut");
+
+                CurrentMapUnits.ClearMapUnit(smith);
+                CurrentMapUnits.AllMapUnits.RemoveAll(m => m is NonPlayerCharacter);
+            }
+        }
+
 
         // small map
         /// <summary>
@@ -105,7 +212,7 @@ namespace Ultima5Redux.Maps
         {
             // save this so we can check other floors for stairs and ladders
             _smallMaps = smallMaps;
-            
+
             if (location is SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
                 or SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
                 throw new Ultima5ReduxException("Tried to load " + location + " into a small map");
@@ -206,215 +313,36 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        [IgnoreDataMember] private SmallMaps _smallMaps;
-
-        [IgnoreDataMember] public override bool IsRepeatingMap => false;
-
-        [IgnoreDataMember] public override int NumOfXTiles => CurrentSingleMapReference.XTiles;
-        [IgnoreDataMember] public override int NumOfYTiles => CurrentSingleMapReference.YTiles;
-
-        [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => true;
-
-        [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
-        private SmallMapReferences.SingleMapReference _currentSingleMapReference;
-
-        [JsonConstructor] private SmallMap()
-        {
-        }
-
-
         /// <summary>
-        ///     Creates a small map object using a pre-defined map reference
+        ///     This is a lightweight LoadSmallMap. It is used specifically when re-populating the NPCStates after
+        ///     a deserialize.
         /// </summary>
-        /// <param name="singleSmallMapReference"></param>
-        public SmallMap(SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
-            singleSmallMapReference.MapLocation, singleSmallMapReference.Floor)
+        /// <param name="location"></param>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        internal void ReloadNpcData(SmallMapReferences.SingleMapReference.Location location)
         {
-            // load the map into memory
-            TheMap = CurrentSingleMapReference.GetDefaultMap();
-        }
-
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            TheMap = CurrentSingleMapReference.GetDefaultMap();
-        }
-
-        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
-        {
-            // TBD
-        }
-
-        /// <summary>
-        ///     Gets the appropriate out of bounds sprite based on the map
-        /// </summary>
-        /// <returns></returns>
-        public int GetOutOfBoundsSprite(in Point2D position)
-        {
-            byte currentSingleMapReferenceId = CurrentSingleMapReference.Id;
-            return currentSingleMapReferenceId switch
+            for (int i = 1; i < CurrentMapUnits.AllMapUnits.Count; i++)
             {
-                // sin vraal - desert
-                (int)SmallMapReferences.SingleMapReference.Location.SinVraals_Hut => (int)TileReference.SpriteIndex
-                    .Desert1,
-                // sutek or grendal
-                (int)SmallMapReferences.SingleMapReference.Location.Suteks_Hut
-                    or (int)SmallMapReferences.SingleMapReference.Location.Grendels_Hut => (int)TileReference.SpriteIndex.Swamp,
-                // stonegate
-                (int)SmallMapReferences.SingleMapReference.Location.Stonegate => 11,
-                _ => (int)TileReference.SpriteIndex.Grass
-            };
-        }
+                MapUnit mapUnit = CurrentMapUnits.AllMapUnits[i];
+                if (mapUnit is not EmptyMapUnit and not DiscoverableLoot)
+                {
+                    if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
+                        mapUnit.NPCRef == null) continue;
+                    if (mapUnit.NPCRef == null)
+                        throw new Ultima5ReduxException($"Expected NPCRef for MapUnit {mapUnit.GetType()}");
+                    if (mapUnit.NPCRef.DialogIndex != -1)
+                    {
+                        // get the specific NPC reference 
+                        NonPlayerCharacterState npcState =
+                            GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location,
+                                mapUnit.NPCRef.DialogIndex);
 
-        /// <summary>
-        ///     Checks if a tile is in bounds of the actual map and not a border tile
-        /// </summary>
-        /// <param name="position">position within the virtual map</param>
-        /// <returns></returns>
-        public bool IsInBounds(Point2D position)
-        {
-            // determine if the x or y coordinates are in bounds, if they are out of bounds and the map does not repeat
-            // then we are going to draw a default texture on the outside areas.
-            bool xInBounds = position.X is >= 0 and < X_TILES;
-            bool yInBounds = position.Y is >= 0 and < Y_TILES;
-
-            // fill outside of the bounds with a default tile
-            return xInBounds && yInBounds;
-        }
-
-        /// <summary>
-        ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        protected override float GetAStarWeight(in Point2D xy)
-        {
-            bool isPreferredIndex(int nSprite) =>
-                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
-                GameReferences.Instance.SpriteTileReferences.IsPath(nSprite);
-
-            const int fDefaultDeduction = 2;
-
-            float fCost = 10;
-
-            // we reduce the weight for the A* for each adjacent brick floor or path tile
-            if (xy.X - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X - 1][xy.Y]) ? fDefaultDeduction : 0;
-            if (xy.X + 1 < CurrentSingleMapReference.XTiles)
-                fCost -= isPreferredIndex(TheMap[xy.X + 1][xy.Y]) ? fDefaultDeduction : 0;
-            if (xy.Y - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y - 1]) ? fDefaultDeduction : 0;
-            if (xy.Y + 1 < CurrentSingleMapReference.YTiles)
-                fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
-
-            return fCost;
-        }
-
-        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
-        {
-            return mapUnit switch
-            {
-                Enemy enemy => enemy.EnemyReference.IsWaterEnemy
-                    ? WalkableType.CombatWater
-                    : WalkableType.StandardWalking,
-                CombatPlayer _ => WalkableType.StandardWalking,
-                _ => WalkableType.StandardWalking
-            };
-        }
-
-        /// <summary>
-        ///     Are the stairs at the given position going down?
-        ///     Be sure to check if they are stairs first
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <param name="stairTileReference"></param>
-        /// <returns></returns>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsStairGoingDown(in Point2D xy, out TileReference stairTileReference)
-        {
-            stairTileReference = null;
-            if (!TileReferences.IsStaircase(GetTileReference(xy).Index))
-                return false;
-            bool bStairGoUp = _smallMaps.DoStairsGoUp(MapLocation, MapFloor, xy,
-                out stairTileReference);
-            return !bStairGoUp;
-        }
-
-        /// <summary>
-        ///     Are the stairs at the given position going up?
-        ///     Be sure to check if they are stairs first
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <param name="stairTileReference"></param>
-        /// <returns></returns>
-        public bool IsStairGoingUp(in Point2D xy, out TileReference stairTileReference)
-        {
-            stairTileReference = null;
-            if (!TileReferences.IsStaircase(GetTileReference(xy).Index))
-                return false;
-
-            bool bStairGoUp = _smallMaps.DoStairsGoUp(MapLocation, MapFloor, xy,
-                out stairTileReference);
-            return bStairGoUp;
-        }
-
-        /// <summary>
-        ///     Gets the best possible stair or ladder location
-        ///     to go to the destinedPosition
-        ///     Ladder/Stair -> destinedPosition
-        /// </summary>
-        /// <param name="ladderOrStairDirection">go up or down a ladder/stair</param>
-        /// <param name="destinedPosition">the position to go to</param>
-        /// <returns></returns>
-        internal List<Point2D> GetBestStairsAndLadderLocation(VirtualMap.LadderOrStairDirection ladderOrStairDirection,
-            Point2D destinedPosition)
-        {
-            // get all ladder and stairs locations based (only up or down ladders/stairs)
-            List<Point2D> allLaddersAndStairList = GetListOfAllLaddersAndStairs(ladderOrStairDirection);
-
-            // get an ordered dictionary of the shortest straight line paths
-            SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
-
-            // ordered list of the best choice paths (only valid paths) 
-            List<Point2D> bestChoiceList = new(sortedPoints.Count);
-
-            // to make it more familiar, we will transfer to an ordered list
-            foreach (Point2D xy in sortedPoints.Values)
-            {
-                bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy, WalkableType.StandardWalking) > 0;
-                // we first make sure that the path even exists before we add it to the list
-                if (bPathBuilt) bestChoiceList.Add(xy);
+                        mapUnit.NPCState = npcState;
+                        // No need to refresh the SmallMapCharacterState because it is saved to the save file 
+                        //new SmallMapCharacterState(npcState.NPCRef, i);
+                    }
+                }
             }
-
-            return bestChoiceList;
-        }
-
-        /// <summary>
-        ///     Gets the best possible stair or ladder locations from the current position to the given ladder/stair direction
-        ///     currentPosition -> best ladder/stair
-        /// </summary>
-        /// <param name="ladderOrStairDirection">which direction will we try to get to</param>
-        /// <param name="destinedPosition">the position you are trying to get to</param>
-        /// <param name="currentPosition">the current position of the character</param>
-        /// <returns></returns>
-        internal List<Point2D> getBestStairsAndLadderLocationBasedOnCurrentPosition(
-            VirtualMap.LadderOrStairDirection ladderOrStairDirection, Point2D destinedPosition, Point2D currentPosition)
-        {
-            // get all ladder and stairs locations based (only up or down ladders/stairs)
-            List<Point2D> allLaddersAndStairList = GetListOfAllLaddersAndStairs(ladderOrStairDirection);
-
-            // get an ordered dictionary of the shortest straight line paths
-            SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
-
-            // ordered list of the best choice paths (only valid paths) 
-            List<Point2D> bestChoiceList = new(sortedPoints.Count);
-
-            // to make it more familiar, we will transfer to an ordered list
-            foreach (Point2D xy in sortedPoints.Values)
-            {
-                bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy, WalkableType.StandardWalking) > 0;
-                // we first make sure that the path even exists before we add it to the list
-                if (bPathBuilt) bestChoiceList.Add(xy);
-            }
-
-            return bestChoiceList;
         }
 
         /// <summary>
@@ -454,20 +382,6 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        ///     Returns the total number of moves to the number of moves for the character to reach a point
-        /// </summary>
-        /// <param name="currentXy"></param>
-        /// <param name="targetXy">where the character would move</param>
-        /// <param name="walkableType"></param>
-        /// <returns>the number of moves to the targetXy</returns>
-        /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
-        internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, WalkableType walkableType)
-        {
-            Stack<Node> nodeStack = GetAStarMap(walkableType).FindPath(currentXy, targetXy);
-            return nodeStack?.Count ?? 0;
-        }
-
-        /// <summary>
         ///     Gets the shortest path between a list of
         /// </summary>
         /// <param name="positionList">list of positions</param>
@@ -493,30 +407,16 @@ namespace Ultima5Redux.Maps
             return sortedPoints;
         }
 
-        /// <summary>
-        ///     Are the stairs at the player characters current position going up?
-        /// </summary>
-        /// <returns></returns>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsStairGoingUp(out TileReference stairTileReference) =>
-            IsStairGoingUp(CurrentPosition.XY, out stairTileReference);
-
-        /// <summary>
-        ///     Are the stairs at the player characters current position going down?
-        /// </summary>
-        /// <returns></returns>
-        public bool IsStairsGoingDown(out TileReference stairTileReference) =>
-            IsStairGoingDown(CurrentPosition.XY, out stairTileReference);
-
-        /// <summary>
-        ///     Given the orientation of the stairs, it returns the correct sprite to display
-        /// </summary>
-        /// <param name="xy">position of stairs</param>
-        /// <returns>stair sprite</returns>
-        public TileReference GetStairsSprite(in Point2D xy)
+        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
-            bool _ = IsStairGoingUp(xy, out TileReference stairTileReference);
-            return stairTileReference;
+            return mapUnit switch
+            {
+                Enemy enemy => enemy.EnemyReference.IsWaterEnemy
+                    ? WalkableType.CombatWater
+                    : WalkableType.StandardWalking,
+                CombatPlayer _ => WalkableType.StandardWalking,
+                _ => WalkableType.StandardWalking
+            };
         }
 
         /// <summary>
@@ -544,26 +444,135 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        ///     Some logic has to be processed afterwards and requires special conditions
+        ///     Gets the appropriate out of bounds sprite based on the map
         /// </summary>
-        /// <exception cref="Ultima5ReduxException"></exception>
-        internal void HandleSpecialCasesForSmallMapLoad()
+        /// <returns></returns>
+        public int GetOutOfBoundsSprite(in Point2D position)
         {
-            if (CurrentSingleMapReference.MapLocation ==
-                SmallMapReferences.SingleMapReference.Location.Iolos_Hut
-                && GameStateReference.State.TheTimeOfDay.IsFirstDay())
+            byte currentSingleMapReferenceId = CurrentSingleMapReference.Id;
+            return currentSingleMapReferenceId switch
             {
-                // this is a bit redundant, but left in just in case
-                // it it is the first day then we don't include Smith or the Rats. Let's start the day off
-                // on a positive note!
-                NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
-                                               (TileReference.SpriteIndex)m.NPCRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
-                                               or TileReference.SpriteIndex.HorseRight) ??
-                                           throw new Ultima5ReduxException("Smith was not in Iolo's hut");
+                // sin vraal - desert
+                (int)SmallMapReferences.SingleMapReference.Location.SinVraals_Hut => (int)TileReference.SpriteIndex
+                    .Desert1,
+                // sutek or grendal
+                (int)SmallMapReferences.SingleMapReference.Location.Suteks_Hut
+                    or (int)SmallMapReferences.SingleMapReference.Location.Grendels_Hut => (int)TileReference.SpriteIndex.Swamp,
+                // stonegate
+                (int)SmallMapReferences.SingleMapReference.Location.Stonegate => 11,
+                _ => (int)TileReference.SpriteIndex.Grass
+            };
+        }
 
-                CurrentMapUnits.ClearMapUnit(smith);
-                CurrentMapUnits.AllMapUnits.RemoveAll(m => m is NonPlayerCharacter);
-            }
+        /// <summary>
+        ///     Given the orientation of the stairs, it returns the correct sprite to display
+        /// </summary>
+        /// <param name="xy">position of stairs</param>
+        /// <returns>stair sprite</returns>
+        public TileReference GetStairsSprite(in Point2D xy)
+        {
+            bool _ = IsStairGoingUp(xy, out TileReference stairTileReference);
+            return stairTileReference;
+        }
+
+        public bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
+
+        /// <summary>
+        ///     Checks if a tile is in bounds of the actual map and not a border tile
+        /// </summary>
+        /// <param name="position">position within the virtual map</param>
+        /// <returns></returns>
+        public bool IsInBounds(Point2D position)
+        {
+            // determine if the x or y coordinates are in bounds, if they are out of bounds and the map does not repeat
+            // then we are going to draw a default texture on the outside areas.
+            bool xInBounds = position.X is >= 0 and < X_TILES;
+            bool yInBounds = position.Y is >= 0 and < Y_TILES;
+
+            // fill outside of the bounds with a default tile
+            return xInBounds && yInBounds;
+        }
+
+
+        public bool IsNPCInBed(NonPlayerCharacter npc) =>
+            GetTileReference(npc.MapUnitPosition.XY).Index ==
+            GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("LeftBed");
+
+        /// <summary>
+        ///     Are the stairs at the given position going down?
+        ///     Be sure to check if they are stairs first
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="stairTileReference"></param>
+        /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public bool IsStairGoingDown(in Point2D xy, out TileReference stairTileReference)
+        {
+            stairTileReference = null;
+            if (!TileReferences.IsStaircase(GetTileReference(xy).Index))
+                return false;
+            bool bStairGoUp = _smallMaps.DoStairsGoUp(MapLocation, MapFloor, xy,
+                out stairTileReference);
+            return !bStairGoUp;
+        }
+
+        /// <summary>
+        ///     Are the stairs at the given position going up?
+        ///     Be sure to check if they are stairs first
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="stairTileReference"></param>
+        /// <returns></returns>
+        public bool IsStairGoingUp(in Point2D xy, out TileReference stairTileReference)
+        {
+            stairTileReference = null;
+            if (!TileReferences.IsStaircase(GetTileReference(xy).Index))
+                return false;
+
+            bool bStairGoUp = _smallMaps.DoStairsGoUp(MapLocation, MapFloor, xy,
+                out stairTileReference);
+            return bStairGoUp;
+        }
+
+        /// <summary>
+        ///     Are the stairs at the player characters current position going up?
+        /// </summary>
+        /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public bool IsStairGoingUp(out TileReference stairTileReference) =>
+            IsStairGoingUp(CurrentPosition.XY, out stairTileReference);
+
+        /// <summary>
+        ///     Are the stairs at the player characters current position going down?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsStairsGoingDown(out TileReference stairTileReference) =>
+            IsStairGoingDown(CurrentPosition.XY, out stairTileReference);
+
+        /// <summary>
+        ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        protected override float GetAStarWeight(in Point2D xy)
+        {
+            bool isPreferredIndex(int nSprite) =>
+                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
+                GameReferences.Instance.SpriteTileReferences.IsPath(nSprite);
+
+            const int fDefaultDeduction = 2;
+
+            float fCost = 10;
+
+            // we reduce the weight for the A* for each adjacent brick floor or path tile
+            if (xy.X - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X - 1][xy.Y]) ? fDefaultDeduction : 0;
+            if (xy.X + 1 < CurrentSingleMapReference.XTiles)
+                fCost -= isPreferredIndex(TheMap[xy.X + 1][xy.Y]) ? fDefaultDeduction : 0;
+            if (xy.Y - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y - 1]) ? fDefaultDeduction : 0;
+            if (xy.Y + 1 < CurrentSingleMapReference.YTiles)
+                fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
+
+            return fCost;
         }
     }
 }

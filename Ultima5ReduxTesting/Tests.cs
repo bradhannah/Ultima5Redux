@@ -95,13 +95,13 @@ namespace Ultima5ReduxTesting
 
         private World CreateWorldFromLegacy(SaveFiles saveFiles, bool bUseExtendedSprites = true,
             bool bLoadInitGam = false) =>
-            new World(true, GetSaveDirectory(saveFiles), dataDirectory: DataDirectory,
-                bUseExtendedSprites: bUseExtendedSprites, bLoadedInitGam: bLoadInitGam);
+            new(true, GetSaveDirectory(saveFiles), DataDirectory,
+                bUseExtendedSprites, bLoadInitGam);
 
         private World CreateWorldFromNewSave(SaveFiles saveFiles, bool bUseExtendedSprites = true,
             bool bLoadInitGam = false) =>
-            new World(false, Path.Combine(NewSaveRootDirectory, saveFiles.ToString()), dataDirectory: DataDirectory,
-                bUseExtendedSprites: bUseExtendedSprites, bLoadedInitGam: bLoadInitGam);
+            new(false, Path.Combine(NewSaveRootDirectory, saveFiles.ToString()), DataDirectory,
+                bUseExtendedSprites, bLoadInitGam);
 
         [Test] [TestCase(SaveFiles.Britain)] public void AllSmallMapsLoadTest(SaveFiles saveFiles)
         {
@@ -158,7 +158,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
 
             smallMap.MoveAvatar(new Point2D(frigate2.MapUnitPosition.X, frigate2.MapUnitPosition.Y));
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToBoard(out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
 
@@ -195,7 +195,7 @@ namespace Ultima5ReduxTesting
                 throw new Ultima5ReduxException("Should be large map");
             largeMap.MoveAvatar(new Point2D(skiff.MapUnitPosition.X,
                 skiff.MapUnitPosition.Y)); //-V3095
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToBoard(out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
@@ -225,10 +225,10 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
-            int i = (24 * (60 / 2));
+            int i = 24 * (60 / 2);
             while (i > 0)
             {
-                TurnResults turnResults = new TurnResults();
+                var turnResults = new TurnResults();
                 world.AdvanceTime(2, turnResults);
                 i--;
             }
@@ -253,11 +253,11 @@ namespace Ultima5ReduxTesting
                 world.State.TheVirtualMap.LoadSmallMap(
                     GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
 
-                int i = (24 * (60 / 2));
+                int i = 24 * (60 / 2);
                 //i = 1;
                 while (i > 0)
                 {
-                    TurnResults turnResults = new TurnResults();
+                    var turnResults = new TurnResults();
                     world.AdvanceTime(2, turnResults);
                     i--;
                 }
@@ -273,22 +273,26 @@ namespace Ultima5ReduxTesting
             int i = 24 * (60 / 2) / 4;
             while (i > 0)
             {
-                TurnResults turnResults = new TurnResults();
+                var turnResults = new TurnResults();
                 world.TryToMoveNonCombatMap(Point2D.Direction.Down, false, false, turnResults,
                     true);
-                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                    .CurrentPosition
                     .XY);
                 world.TryToMoveNonCombatMap(Point2D.Direction.Left, false, false, turnResults,
                     true);
-                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                    .CurrentPosition
                     .XY);
                 world.TryToMoveNonCombatMap(Point2D.Direction.Up, false, false, turnResults,
                     true);
-                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                    .CurrentPosition
                     .XY);
                 world.TryToMoveNonCombatMap(Point2D.Direction.Up, false, false, turnResults,
                     true);
-                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                    .CurrentPosition
                     .XY);
                 i--;
             }
@@ -306,23 +310,27 @@ namespace Ultima5ReduxTesting
             int i = 24 * (60 / 2) / 4;
             while (i > 0)
             {
-                TurnResults turnResults = new TurnResults();
+                var turnResults = new TurnResults();
 
                 world.TryToMoveNonCombatMap(Point2D.Direction.Down, false, false, turnResults,
                     true);
-                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                    .CurrentPosition
                     .XY);
                 world.TryToMoveNonCombatMap(Point2D.Direction.Left, false, false, turnResults,
                     true);
-                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                    .CurrentPosition
                     .XY);
                 world.TryToMoveNonCombatMap(Point2D.Direction.Up, false, false, turnResults,
                     true);
-                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                    .CurrentPosition
                     .XY);
                 world.TryToMoveNonCombatMap(Point2D.Direction.Up, false, false, turnResults,
                     true);
-                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                    .CurrentPosition
                     .XY);
                 i--;
             }
@@ -332,7 +340,7 @@ namespace Ultima5ReduxTesting
 
         [Test] [TestCase(SaveFiles.Britain2)] public void Test_TileOverrides(SaveFiles saveFiles)
         {
-            TileOverrideReferences to = new TileOverrideReferences();
+            var to = new TileOverrideReferences();
 
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -342,7 +350,7 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lycaeum, 1));
 
-            world.State.TheVirtualMap.GuessTile(new Point2D(14, 7));
+            world.State.TheVirtualMap.CurrentMap.GuessTile(new Point2D(14, 7));
         }
 
         [Test] [TestCase(SaveFiles.Britain2)] public void Test_LoadOverworld(SaveFiles saveFiles)
@@ -362,12 +370,12 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
 
-            world.State.TheVirtualMap.GuessTile(new Point2D(81, 106));
+            world.State.TheVirtualMap.CurrentMap.GuessTile(new Point2D(81, 106));
         }
 
         [Test] public void Test_InventoryReferences()
         {
-            InventoryReferences invRefs = new InventoryReferences();
+            var invRefs = new InventoryReferences();
             List<InventoryReference> invList =
                 invRefs.GetInventoryReferenceList(InventoryReferences.InventoryReferenceType.Armament);
             foreach (InventoryReference invRef in invList)
@@ -384,7 +392,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Britain, 0));
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToPushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed, turnResults);
             Assert.False(bWasPushed);
 
@@ -402,16 +410,16 @@ namespace Ultima5ReduxTesting
             world.MonsterAi = false;
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
 
-            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
+            Point2D startLocation = world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY.Copy();
 
             for (int i = 0; i < 256; i++)
             {
-                TurnResults turnResults = new TurnResults();
+                var turnResults = new TurnResults();
 
                 world.TryToMoveNonCombatMap(Point2D.Direction.Up, false, true, turnResults);
             }
 
-            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
+            Point2D finalLocation = world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY.Copy();
 
             Assert.True(finalLocation == startLocation);
         }
@@ -422,7 +430,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
 
-            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
+            Point2D startLocation = world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY.Copy();
             for (int x = 0; x < 256; x++)
             {
                 for (int y = 0; y < 256; y++)
@@ -431,7 +439,7 @@ namespace Ultima5ReduxTesting
                 }
             }
 
-            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
+            Point2D finalLocation = world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY.Copy();
 
             Assert.True(finalLocation == startLocation);
         }
@@ -457,10 +465,10 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
             world.State.TheTimeOfDay.Hour = 12;
 
-            Point2D moongatePosition = new Point2D(166, 19);
-            world.State.TheVirtualMap.CurrentPosition.XY = moongatePosition;
+            var moongatePosition = new Point2D(166, 19);
+            world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY = moongatePosition;
             // first search should find moonstone
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToSearch(moongatePosition, out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
@@ -482,9 +490,9 @@ namespace Ultima5ReduxTesting
 
             world.State.TheTimeOfDay.Hour = 12;
 
-            Point2D moongatePosition = new Point2D(166, 19);
+            var moongatePosition = new Point2D(166, 19);
             // first search should find moonstone
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToSearch(moongatePosition, out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
@@ -498,7 +506,7 @@ namespace Ultima5ReduxTesting
                 world.State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(moongatePosition, true);
             Assert.True(moonstoneMapUnit is MoonstoneNonAttackingUnit);
 
-            int nSprite = world.State.TheVirtualMap.GuessTile(moongatePosition);
+            int nSprite = world.State.TheVirtualMap.CurrentMap.GuessTile(moongatePosition);
 
             // can't get it twice!
             world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, turnResults,
@@ -519,7 +527,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
 
-            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(167, 22);
+            world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY = new Point2D(167, 22);
             bool bOnMoongate = world.IsAvatarOnActiveMoongate();
             world.State.TheTimeOfDay.Hour = 23;
             world.State.TheTimeOfDay.Day = 1;
@@ -577,7 +585,7 @@ namespace Ultima5ReduxTesting
         [Test] [TestCase(SaveFiles.Britain2)] public void Test_TalkToSmith(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
-            SmallMapReferences.SingleMapReference.Location location =
+            var location =
                 SmallMapReferences.SingleMapReference.Location.Iolos_Hut;
             NonPlayerCharacterState npcState =
                 world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 4);
@@ -594,8 +602,8 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
-            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
-            TurnResults turnResults = new TurnResults();
+            world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY = new Point2D(166, 21);
+            var turnResults = new TurnResults();
             world.TryToKlimb(out World.KlimbResult klimbResult, turnResults);
             Assert.True(klimbResult == World.KlimbResult.RequiresDirection);
         }
@@ -605,8 +613,8 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
-            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
-            TurnResults turnResults = new TurnResults();
+            world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY = new Point2D(166, 21);
+            var turnResults = new TurnResults();
 
             world.TryToMoveNonCombatMap(Point2D.Direction.Up, false, false, turnResults);
         }
@@ -616,8 +624,8 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
-            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
-            TurnResults turnResults = new TurnResults();
+            world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY = new Point2D(166, 21);
+            var turnResults = new TurnResults();
 
             world.TryToMoveNonCombatMap(Point2D.Direction.Up, false, false, turnResults);
             world.TryToMoveNonCombatMap(Point2D.Direction.Left, false, false, turnResults);
@@ -631,7 +639,7 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            SmallMapReferences.SingleMapReference.Location location =
+            var location =
                 SmallMapReferences.SingleMapReference.Location.Minoc;
 
             NonPlayerCharacterState npcState =
@@ -837,7 +845,7 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
@@ -850,7 +858,7 @@ namespace Ultima5ReduxTesting
             _ = "";
 
             // yew
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToEnterBuilding(new Point2D(58, 43), out bool bWasSuccessful, turnResults);
 
             foreach (MapUnit mapUnit in world.State.TheVirtualMap.CurrentMap.CurrentMapUnits.AllMapUnits)
@@ -868,7 +876,7 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
             var innKeeper = (Innkeeper)GameReferences.Instance.ShoppeKeeperDialogueReference.GetShoppeKeeper(
@@ -903,7 +911,7 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
             var innKeeper = (Innkeeper)GameReferences.Instance.ShoppeKeeperDialogueReference.GetShoppeKeeper(
@@ -936,7 +944,7 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
@@ -955,7 +963,7 @@ namespace Ultima5ReduxTesting
                 throw new Ultima5ReduxException("Should be large map");
 
             Avatar avatar = largeMap.GetAvatarMapUnit();
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToMoveNonCombatMap(Point2D.Direction.Down, false, false, turnResults,
                 true);
@@ -979,7 +987,7 @@ namespace Ultima5ReduxTesting
 
             int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .Quantity;
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToXit(out bool bWasSuccessful, turnResults);
             Assert.True(nCarpets == world.State.PlayerInventory.SpecializedItems
                 .Items[SpecialItem.SpecificItemType.Carpet].Quantity);
@@ -990,7 +998,7 @@ namespace Ultima5ReduxTesting
 
             nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .Quantity;
-            Point2D curPos = world.State.TheVirtualMap.CurrentPosition.XY;
+            Point2D curPos = world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY;
             world.TryToMoveNonCombatMap(Point2D.Direction.Left, false, false, turnResults);
             world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet, turnResults,
                 Point2D.Direction.Down);
@@ -1008,7 +1016,7 @@ namespace Ultima5ReduxTesting
             world.TryToXit(out bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
             world.TryToMoveNonCombatMap(Point2D.Direction.Left, false, false, turnResults);
-            curPos = world.State.TheVirtualMap.CurrentPosition.XY;
+            curPos = world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY;
             world.TryToGetAThing(curPos, out bGotACarpet, out carpet, turnResults, Point2D.Direction.Down);
             Assert.True(bGotACarpet);
 
@@ -1021,7 +1029,7 @@ namespace Ultima5ReduxTesting
 
             int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .Quantity;
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToUseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet],
@@ -1043,7 +1051,7 @@ namespace Ultima5ReduxTesting
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToXit(out bool bWasSuccessful, turnResults);
 
             _ = "";
@@ -1059,7 +1067,7 @@ namespace Ultima5ReduxTesting
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToXit(out bool bWasSuccessful, turnResults);
 
             _ = "";
@@ -1074,7 +1082,7 @@ namespace Ultima5ReduxTesting
             Avatar avatar = largeMap.GetAvatarMapUnit();
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToMoveNonCombatMap(Point2D.Direction.Down, false, true, turnResults);
             //Assert.True(moveResult == World.TryToMoveResult.Blocked);
@@ -1091,7 +1099,7 @@ namespace Ultima5ReduxTesting
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToXit(out bool bWasSuccessful, turnResults);
 
@@ -1101,11 +1109,12 @@ namespace Ultima5ReduxTesting
         [Test] [TestCase(SaveFiles.BucDen1)] public void Test_ForceVisibleRecalculationInBucDen(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
-            Point2D startSpot = new Point2D(159, 20);
-            TurnResults turnResults = new TurnResults();
+            var startSpot = new Point2D(159, 20);
+            var turnResults = new TurnResults();
             world.TryToEnterBuilding(startSpot, out bool bWasSuccessful, turnResults);
 
-            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                .CurrentPosition.XY);
             _ = "";
         }
 
@@ -1115,7 +1124,8 @@ namespace Ultima5ReduxTesting
             if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
                 throw new Ultima5ReduxException("Should be large map");
             largeMap.MoveAvatar(new Point2D(128, 0));
-            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                .CurrentPosition.XY);
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)]
@@ -1162,7 +1172,7 @@ namespace Ultima5ReduxTesting
             CombatPlayer player = combatMap.CurrentCombatPlayer;
 
             Assert.True(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
             combatMap.AdvanceToNextCombatMapUnit();
             world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults, false);
@@ -1207,7 +1217,7 @@ namespace Ultima5ReduxTesting
             if (world.State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
                 throw new Ultima5ReduxException("Should be combat map");
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
             combatMap.AdvanceToNextCombatMapUnit();
             world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults, false);
@@ -1228,7 +1238,7 @@ namespace Ultima5ReduxTesting
             if (world.State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
                 throw new Ultima5ReduxException("Should be combat map");
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults, false);
             combatMap.AdvanceToNextCombatMapUnit();
@@ -1274,7 +1284,7 @@ namespace Ultima5ReduxTesting
             CombatPlayer player = combatMap.CurrentCombatPlayer;
             {
                 Assert.True(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
-                TurnResults turnResults = new TurnResults();
+                var turnResults = new TurnResults();
 
                 world.TryToMoveCombatMap(player, Point2D.Direction.Up, turnResults, false);
             }
@@ -1285,7 +1295,7 @@ namespace Ultima5ReduxTesting
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadCombatMapThenBack(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
@@ -1396,8 +1406,8 @@ namespace Ultima5ReduxTesting
 
         [Test] public void Test_ExtentCheck()
         {
-            Point2D point = new Point2D(15, 15);
-            var constrainedPoints = point.GetConstrainedSurroundingPoints(1, 15, 15);
+            var point = new Point2D(15, 15);
+            List<Point2D> constrainedPoints = point.GetConstrainedSurroundingPoints(1, 15, 15);
             Assert.True(constrainedPoints.Count == 2);
             _ = "";
         }
@@ -1449,7 +1459,7 @@ namespace Ultima5ReduxTesting
 
             Assert.AreEqual(loadedJson, newLoadedJson);
 
-            _ = world.State.TheVirtualMap.CurrentPosition;
+            _ = world.State.TheVirtualMap.CurrentMap.CurrentPosition;
         }
 
         [Test] [TestCase(SaveFiles.Britain2)] public void test_TestInventoryAfterReload(SaveFiles saveFiles)
@@ -1489,7 +1499,7 @@ namespace Ultima5ReduxTesting
             // spells
             // references
 
-            _ = world.State.TheVirtualMap.CurrentPosition;
+            _ = world.State.TheVirtualMap.CurrentMap.CurrentPosition;
         }
 
         [Test] [TestCase(SaveFiles.Britain2)] public void test_ReloadAndQuantityCheck(SaveFiles saveFiles)
@@ -1531,7 +1541,7 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles, true, false);
 
-            List<Reagent.SpecificReagentType> reagents = new List<Reagent.SpecificReagentType>
+            List<Reagent.SpecificReagentType> reagents = new()
             {
                 Reagent.SpecificReagentType.SulfurAsh
             };
@@ -1597,7 +1607,7 @@ namespace Ultima5ReduxTesting
 
             GameSummary gameSummary = world.State.CreateGameSummary(saveDirectory);
             string serializedGameSummary = gameSummary.SerializeGameSummary();
-            GameSummary reserializedGameSummary = GameSummary.DeserializeGameSummary(serializedGameSummary);
+            var reserializedGameSummary = GameSummary.DeserializeGameSummary(serializedGameSummary);
         }
 
         [Test] [TestCase(SaveFiles.quicksave)] public void test_CheckSpriteReferences(SaveFiles saveFiles)
@@ -1621,7 +1631,7 @@ namespace Ultima5ReduxTesting
 
             //GameReferences.Instance.Initialize(DataDirectory);
 
-            SpellCastingDetails details = new SpellCastingDetails();
+            var details = new SpellCastingDetails();
             Spell spell = world.State.PlayerInventory.MagicSpells.Items[MagicReference.SpellWords.In_Lor];
             SpellResult result = spell.CastSpell(world.State, details);
 
@@ -1670,7 +1680,7 @@ namespace Ultima5ReduxTesting
             world.ReLoadFromJson();
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
-            Point2D newAvatarPos = new Point2D(146, 254);
+            var newAvatarPos = new Point2D(146, 254);
             newAvatarPos = new Point2D(146, 255);
             largeMap.MoveAvatar(newAvatarPos);
             world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(newAvatarPos);
@@ -1692,7 +1702,8 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
 
-            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                .CurrentPosition.XY);
 
             //Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
         }
@@ -1718,9 +1729,9 @@ namespace Ultima5ReduxTesting
                 throw new Ultima5ReduxException("Should be large map");
             ////GameReferences.Instance.Initialize(DataDirectory);
 
-            Point2D minocCovetousDungeon = new Point2D(156, 27);
+            var minocCovetousDungeon = new Point2D(156, 27);
             largeMap.MoveAvatar(minocCovetousDungeon);
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             world.TryToEnterBuilding(minocCovetousDungeon, out bool bWasSuccessful, turnResults);
             Assert.IsNotNull(world);
         }
@@ -1781,7 +1792,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.OneInXOddsOfNewMonster = 2;
             Utils.Ran = new Random(1);
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToMoveNonCombatMap(Point2D.Direction.Left, false, false, turnResults,
                 true);
@@ -1814,7 +1825,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.OneInXOddsOfNewMonster = 2;
             Utils.Ran = new Random(1);
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             world.TryToMoveNonCombatMap(Point2D.Direction.Down, false, false, turnResults,
                 true);
@@ -1840,7 +1851,7 @@ namespace Ultima5ReduxTesting
 
         private static T GetEnumByName<T>(InventoryReference inventoryReference) where T : Enum
         {
-            T enumResult = (T)Enum.Parse(typeof(T), inventoryReference.ItemName);
+            var enumResult = (T)Enum.Parse(typeof(T), inventoryReference.ItemName);
             return enumResult;
         }
 
@@ -1848,7 +1859,7 @@ namespace Ultima5ReduxTesting
         {
             //GameReferences.Instance.Initialize(DataDirectory);
 
-            LordBritishArtifact.ArtifactType artifact = GetEnumByName<LordBritishArtifact.ArtifactType>(
+            var artifact = GetEnumByName<LordBritishArtifact.ArtifactType>(
                 GameReferences.Instance.InvRef.GetInventoryReference(
                     InventoryReferences.InventoryReferenceType.Item, "Crown"));
             Assert.AreEqual(artifact, LordBritishArtifact.ArtifactType.Crown);
@@ -1914,7 +1925,7 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn, 3));
 
-            Point2D thingPosition = new Point2D(15, 13);
+            var thingPosition = new Point2D(15, 13);
             bool bIsMapUnit = world.State.TheVirtualMap.CurrentMap.IsMapUnitOccupiedTile(thingPosition);
             Assert.IsTrue(bIsMapUnit);
             MapUnit mapUnit = world.State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(thingPosition, true);
@@ -1941,7 +1952,7 @@ namespace Ultima5ReduxTesting
                 {
                     for (int j = 0; j < 32; j++)
                     {
-                        Point2D thingPosition = new Point2D(i, j);
+                        var thingPosition = new Point2D(i, j);
 
                         bool bIsMapUnit = world.State.TheVirtualMap.CurrentMap.IsMapUnitOccupiedTile(thingPosition);
                         if (bIsMapUnit)
@@ -1977,8 +1988,8 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, -1));
 
-            Point2D avatarPos = new Point2D(15, 25);
-            TurnResults turnResults = new TurnResults();
+            var avatarPos = new Point2D(15, 25);
+            var turnResults = new TurnResults();
             List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = world.TryToJimmyDoor(avatarPos,
                 world.State.CharacterRecords.AvatarRecord, out bool bWasSuccessful,
                 turnResults);
@@ -1996,9 +2007,9 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, -1));
 
-            Point2D avatarPos = new Point2D(14, 23);
-            Point2D chestPos = new Point2D(13, 23);
-            TurnResults turnResults = new TurnResults();
+            var avatarPos = new Point2D(14, 23);
+            var chestPos = new Point2D(13, 23);
+            var turnResults = new TurnResults();
 
             List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
                 world.TryToSearch(chestPos, out bool bWasSuccessful, turnResults);
@@ -2041,7 +2052,7 @@ namespace Ultima5ReduxTesting
 
             CombatPlayer player = combatMap.CurrentCombatPlayer;
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             // locked door
             world.TryToOpenAThing(new Point2D(5, 4), out bool bWasSuccessful, turnResults);
             Assert.IsFalse(bWasSuccessful);
@@ -2075,7 +2086,7 @@ namespace Ultima5ReduxTesting
 
             CombatPlayer player = combatMap.CurrentCombatPlayer;
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             Assert.NotNull(combatMap);
             combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
@@ -2103,11 +2114,11 @@ namespace Ultima5ReduxTesting
             CombatPlayer player = combatMap.CurrentCombatPlayer;
             Assert.IsNotNull(player);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             Assert.NotNull(combatMap);
 
-            Point2D chestPosition = new Point2D(8, 9);
+            var chestPosition = new Point2D(8, 9);
             world.TryToOpenAThing(chestPosition, out bool bWasSuccessful, turnResults);
             Assert.IsTrue(bWasSuccessful);
 
@@ -2148,15 +2159,15 @@ namespace Ultima5ReduxTesting
             CombatPlayer player = combatMap.CurrentCombatPlayer;
             Assert.IsNotNull(player);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             Assert.NotNull(combatMap);
 
-            Point2D gemPosition = new Point2D(7, 2);
+            var gemPosition = new Point2D(7, 2);
             MapUnit gemMapUnit = world.State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(gemPosition, true);
             Assert.IsInstanceOf<DeadBody>(gemMapUnit);
 
-            Point2D itemStackPosition = new Point2D(8, 2);
+            var itemStackPosition = new Point2D(8, 2);
             MapUnit itemStackMapUnit =
                 world.State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(itemStackPosition, true);
             Assert.IsInstanceOf<ItemStack>(itemStackMapUnit);
@@ -2185,7 +2196,7 @@ namespace Ultima5ReduxTesting
 
             //Assert.AreEqual(player.MapUnitPosition.X, 3);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon2HasFields(SaveFiles saveFiles)
@@ -2209,7 +2220,7 @@ namespace Ultima5ReduxTesting
                 world.State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(new Point2D(5, 5), true);
             Assert.IsInstanceOf<CombatMapUnit>(shouldBeFieldMapUnit);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon38HasWhirlpools(SaveFiles saveFiles)
@@ -2233,7 +2244,7 @@ namespace Ultima5ReduxTesting
             //MapUnit shouldBeFieldMapUnit = world.State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(new Point2D(5, 5), true);
             //Assert.IsInstanceOf<CombatMapUnit>(shouldBeFieldMapUnit);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAllDungeonCombatMaps(SaveFiles saveFiles)
@@ -2252,7 +2263,7 @@ namespace Ultima5ReduxTesting
                     SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
             }
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadDungeon42CheckBatMovement(SaveFiles saveFiles)
@@ -2270,7 +2281,7 @@ namespace Ultima5ReduxTesting
             if (world.State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
                 throw new Ultima5ReduxException("Should be combat map");
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
 
             combatMap.ProcessEnemyTurn(turnResults,
                 out CombatMapUnit activeCombatMapUnit,
@@ -2304,7 +2315,7 @@ namespace Ultima5ReduxTesting
                     SingleCombatMapReference.Territory.Dungeon,
                     58), SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadDungeon110BasicAttack(SaveFiles saveFiles)
@@ -2318,7 +2329,7 @@ namespace Ultima5ReduxTesting
                     SingleCombatMapReference.Territory.Dungeon,
                     110), SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             if (world.State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
                 throw new Ultima5ReduxException("Should be combat map");
 
@@ -2328,7 +2339,7 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_SurroundingPoints()
         {
             // force avatar to go first
-            Point2D xy = new Point2D(8, 8);
+            var xy = new Point2D(8, 8);
             //xy.GetRandomSurroundingPointThatIsnt
             List<Point2D> surroundingCombatPlayerPoints =
                 xy.GetConstrainedSurroundingPoints(1, 16, 16);
@@ -2338,7 +2349,7 @@ namespace Ultima5ReduxTesting
                 Assert.AreNotEqual(xy, p);
             }
 
-            Point2D p1 = new Point2D(5, 5);
+            var p1 = new Point2D(5, 5);
             List<Point2D> points = p1.GetConstrainedSurroundingPoints(1, 10, 10);
             List<Point2D> points2 = p1.GetConstrainedSurroundingPoints(4, 6, 6);
         }
@@ -2354,7 +2365,7 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(5), new Point2D(0, 0), 16);
             Assert.AreEqual(nClosest, 255);
 
-            Point2D aroundBritain = new Point2D(82, 106);
+            var aroundBritain = new Point2D(82, 106);
             nClosest = largeMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(5), aroundBritain, 16);
             Assert.Less(nClosest, 255);
@@ -2367,7 +2378,7 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(6), aroundBritain, 8);
             Assert.Less(nClosest, 255);
 
-            Point2D minoc = new Point2D(157, 20);
+            var minoc = new Point2D(157, 20);
             nClosest = largeMap.ClosestTileReferenceAround(
                 minoc, 8, GameReferences.Instance.SpriteTileReferences.IsFrigate);
             Assert.Less(nClosest, 255);
@@ -2381,7 +2392,7 @@ namespace Ultima5ReduxTesting
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
 
             // fountain
-            Point2D courtYard = new Point2D(15, 19);
+            var courtYard = new Point2D(15, 19);
             nClosest = largeMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(216), courtYard, 8);
             Assert.Less(nClosest, 255);
@@ -2405,8 +2416,8 @@ namespace Ultima5ReduxTesting
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
             //world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
-            //world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
-            TurnResults turnResults = new TurnResults();
+            //world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY = new Point2D(166, 21);
+            var turnResults = new TurnResults();
             // // we don't test dungeon maps here
             // if (singleMap.MapType == Map.Maps.Dungeon) continue;
             // world.State.TheVirtualMap.LoadSmallMap(singleMap);
@@ -2415,7 +2426,7 @@ namespace Ultima5ReduxTesting
             world.TryToMoveNonCombatMap(Point2D.Direction.Up, false, false, turnResults);
             Assert.AreEqual(smallMap.CurrentPosition.XY,
                 smallMap.GetAvatarMapUnit().MapUnitPosition.XY,
-                $"CurrPos = {world.State.TheVirtualMap.CurrentPosition.X}, {world.State.TheVirtualMap.CurrentPosition.Y} but AvatarUnit = {smallMap.GetAvatarMapUnit().MapUnitPosition.XY.X}, {smallMap.GetAvatarMapUnit().MapUnitPosition.XY.Y}");
+                $"CurrPos = {world.State.TheVirtualMap.CurrentMap.CurrentPosition.X}, {world.State.TheVirtualMap.CurrentMap.CurrentPosition.Y} but AvatarUnit = {smallMap.GetAvatarMapUnit().MapUnitPosition.XY.X}, {smallMap.GetAvatarMapUnit().MapUnitPosition.XY.Y}");
         }
 
         [Test] [TestCase(SaveFiles.blackt)] public void Test_BlacktLargeMapCheck(SaveFiles saveFiles)
@@ -2446,15 +2457,15 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            Point2D foodSignPos = new Point2D(13, 8);
+            var foodSignPos = new Point2D(13, 8);
             TileReference tileReference = world.State.TheVirtualMap.CurrentMap.GetTileReference(foodSignPos);
             Assert.True(tileReference.Index == 240);
-            int nGuessIndex = world.State.TheVirtualMap.GuessTile(foodSignPos);
+            int nGuessIndex = world.State.TheVirtualMap.CurrentMap.GuessTile(foodSignPos);
             Assert.True(nGuessIndex == 49);
-            int nNextGuess = world.State.TheVirtualMap.GuessTile(new Point2D(17, 19));
+            int nNextGuess = world.State.TheVirtualMap.CurrentMap.GuessTile(new Point2D(17, 19));
             Assert.True(nNextGuess == 48);
 
-            nNextGuess = world.State.TheVirtualMap.GetAlternateFlatSprite(new Point2D(17, 19));
+            nNextGuess = world.State.TheVirtualMap.CurrentMap.GetAlternateFlatSprite(new Point2D(17, 19));
             Assert.True(nNextGuess == 48);
 
             world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(new Point2D(16, 9));
@@ -2472,7 +2483,7 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 3));
 
-            Point2D flagPolePos = new Point2D(13, 15);
+            var flagPolePos = new Point2D(13, 15);
             TileReference tileReference = world.State.TheVirtualMap.CurrentMap.GetTileReference(flagPolePos);
             Assert.True(tileReference.Index == 5);
 
@@ -2489,7 +2500,7 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Ararat, 1));
 
-            Point2D cornerPosition = new Point2D(6, 19);
+            var cornerPosition = new Point2D(6, 19);
             // TileReference tileReference = world.State.TheVirtualMap.CurrentMap.GetTileReference(flagPolePos);
             // Assert.True(tileReference.Index == 5);
 
@@ -2497,7 +2508,7 @@ namespace Ultima5ReduxTesting
             TileStack tileStack = world.State.TheVirtualMap.GetTileStack(cornerPosition, true);
             Assert.True(tileStack.TileReferencesDictionary.ContainsKey(5));
 
-            int nNextGuess = world.State.TheVirtualMap.GetAlternateFlatSprite(cornerPosition);
+            int nNextGuess = world.State.TheVirtualMap.CurrentMap.GetAlternateFlatSprite(cornerPosition);
             Assert.True(nNextGuess == 5);
             //int nGuessIndex = world.State.TheVirtualMap.GuessTile(foodSignPos);
             //Assert.True(nGuessIndex == 49);
@@ -2513,7 +2524,7 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lycaeum, 0));
 
-            Point2D cornerPosition = new Point2D(23, 15);
+            var cornerPosition = new Point2D(23, 15);
             // TileReference tileReference = world.State.TheVirtualMap.CurrentMap.GetTileReference(flagPolePos);
             // Assert.True(tileReference.Index == 5);
 
@@ -2521,7 +2532,7 @@ namespace Ultima5ReduxTesting
             TileStack tileStack = world.State.TheVirtualMap.GetTileStack(cornerPosition, true);
             Assert.True(tileStack.TileReferencesDictionary.ContainsKey(68));
 
-            int nNextGuess = world.State.TheVirtualMap.GetAlternateFlatSprite(cornerPosition);
+            int nNextGuess = world.State.TheVirtualMap.CurrentMap.GetAlternateFlatSprite(cornerPosition);
             Assert.True(nNextGuess == 68);
             //int nGuessIndex = world.State.TheVirtualMap.GuessTile(foodSignPos);
             //Assert.True(nGuessIndex == 49);
@@ -2542,10 +2553,10 @@ namespace Ultima5ReduxTesting
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
 
-            Point2D avatarPosition = new Point2D(10, 1);
+            var avatarPosition = new Point2D(10, 1);
             smallMap.MoveAvatar(avatarPosition);
             //world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(avatarPosition);
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
                 world.TryToAttackNonCombatMap(new Point2D(10, 10),
                     out MapUnit mapUnit, out SingleCombatMapReference singleCombatMapReference,
@@ -2603,7 +2614,7 @@ namespace Ultima5ReduxTesting
 
             Assert.NotNull(sinVraal);
 
-            TurnResults turnResults = new TurnResults();
+            var turnResults = new TurnResults();
             List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
                 world.TryToAttackNonCombatMap(sinVraal.MapUnitPosition.XY,
                     //new Point2D(10, 10),
@@ -2635,7 +2646,7 @@ namespace Ultima5ReduxTesting
             TurnResults turnResults = new();
             List<VirtualMap.AggressiveMapUnitInfo> thing = world.TryToPassTime(turnResults);
 
-            TimeOfDay tod = new TimeOfDay(0, 0, 0, 0, 0);
+            var tod = new TimeOfDay(0, 0, 0, 0, 0);
             foreach (Horse horse in smallMap.CurrentMapUnits.Horses)
             {
                 //horse.CompleteNextMove(world.State.TheVirtualMap, world.State.TheTimeOfDay, );
@@ -2661,7 +2672,7 @@ namespace Ultima5ReduxTesting
             TurnResults turnResults = new();
             List<VirtualMap.AggressiveMapUnitInfo> thing = world.TryToPassTime(turnResults);
 
-            TimeOfDay tod = new TimeOfDay(0, 0, 0, 0, 0);
+            var tod = new TimeOfDay(0, 0, 0, 0, 0);
 
             //ReturnToPreviousMapAfterCombat
 
@@ -2906,7 +2917,8 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Yew, 0));
 
-            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentMap
+                .CurrentPosition.XY);
 
             //Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
         }
@@ -2922,7 +2934,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
             if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
                 throw new Ultima5ReduxException("Should be large map");
-            
+
             var grendelsHutPosition = new Point2D(153, 91);
 
             largeMap.MoveAvatar(grendelsHutPosition);
@@ -3681,7 +3693,7 @@ namespace Ultima5ReduxTesting
                     SingleDungeonMapFloorReference singleFloor = dungeon.GetSingleDungeonMapFloorReferenceByFloor(i);
 
                     world.State.TheVirtualMap.LoadDungeonMap(singleFloor, Point2D.Zero);
-                    Assert.True(world.State.TheVirtualMap.CurrentPosition.Floor == i);
+                    Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentPosition.Floor == i);
 
                     for (int nCol = 0; nCol < 8; nCol++)
                     {

@@ -22,8 +22,6 @@ namespace Ultima5Redux
 {
     [DataContract] public class GameState
     {
-        public GameOverrides TheGameOverrides { get; set; } = new();
-        
         [DataMember(Name = "InitialMap")] private readonly Map.Maps _initialMap;
 
         /// <summary>
@@ -44,13 +42,6 @@ namespace Ultima5Redux
         [DataMember]
         public ushort Karma { get; private set; }
 
-        public void ChangeKarma(int nAdjustBy, TurnResults turnResults)
-        {
-            turnResults.PushTurnResult(new KarmaChanged(nAdjustBy, Karma));
-            Karma = (ushort)Math.Max(0, Karma + nAdjustBy);
-            if (Karma > 99) Karma = 99;
-        }
-       
 
         /// <summary>
         ///     Players current inventory
@@ -130,6 +121,8 @@ namespace Ultima5Redux
         [IgnoreDataMember]
         public bool IsTorchLit => TurnsToExtinguish > 0;
 
+        public GameOverrides TheGameOverrides { get; set; } = new();
+
         [JsonConstructor] private GameState()
         {
             GameStateReference.SetState(this);
@@ -166,7 +159,7 @@ namespace Ultima5Redux
             TheNonPlayerCharacterStates = ImportedGameState.TheNonPlayerCharacterStates;
 
             //TheSearchItems = ImportedGameState.TheSearchItems;
-            
+
             // import the players inventory
             PlayerInventory = new Inventory(ImportedGameState);
 
@@ -188,8 +181,8 @@ namespace Ultima5Redux
         /// <summary>
         ///     Initializes (one time) the virtual map component
         ///     Must be initialized pretty much after everything else has been loaded into memory
-        /// This is ONLY for loading from a legacy game state - all future JSON loads will
-        /// use deserialization and this method will not be called
+        ///     This is ONLY for loading from a legacy game state - all future JSON loads will
+        ///     use deserialization and this method will not be called
         /// </summary>
         /// <param name="bUseExtendedSprites"></param>
         /// <param name="location"></param>
@@ -210,12 +203,15 @@ namespace Ultima5Redux
                 _initialMap, mapRef,
                 bUseExtendedSprites, ImportedGameState, searchItems)
             {
-                CurrentPosition =
+                CurrentMap =
                 {
-                    // we have to set the initial xy, not the floor because that is part of the SingleMapReference
-                    // I should probably just add yet another thing to the constructor
-                    XY = new Point2D(nInitialX, nInitialY),
-                    Floor = nInitialFloor
+                    CurrentPosition =
+                    {
+                        // we have to set the initial xy, not the floor because that is part of the SingleMapReference
+                        // I should probably just add yet another thing to the constructor
+                        XY = new Point2D(nInitialX, nInitialY),
+                        Floor = nInitialFloor
+                    }
                 }
             };
         }
@@ -252,6 +248,13 @@ namespace Ultima5Redux
             return state;
         }
 
+        public void ChangeKarma(int nAdjustBy, TurnResults turnResults)
+        {
+            turnResults.PushTurnResult(new KarmaChanged(nAdjustBy, Karma));
+            Karma = (ushort)Math.Max(0, Karma + nAdjustBy);
+            if (Karma > 99) Karma = 99;
+        }
+
         public GameSummary CreateGameSummary(string saveGamePath)
         {
             GameSummary gameSummary = new()
@@ -260,7 +263,7 @@ namespace Ultima5Redux
                 TheTimeOfDay = TheTimeOfDay,
                 TheExtraSaveData = new GameSummary.ExtraSaveData
                 {
-                    CurrentMapPosition = TheVirtualMap.CurrentPosition,
+                    CurrentMapPosition = TheVirtualMap.CurrentMap.CurrentPosition,
                     FriendlyLocationName = FriendlyLocationName,
                     SavedDirectory = saveGamePath,
                     LastWrite = Directory.GetLastWriteTime(saveGamePath)
@@ -312,6 +315,5 @@ namespace Ultima5Redux
             string stateJson = JsonConvert.SerializeObject(this, Formatting.Indented);
             return stateJson;
         }
-
     }
 }

@@ -31,6 +31,8 @@ namespace Ultima5Redux
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public class World
     {
+        private enum SpecialSearchLocation { None, GlassSwords }
+
         public enum KlimbResult { Success, SuccessFell, CantKlimb, RequiresDirection }
 
         /// <summary>
@@ -163,6 +165,17 @@ namespace Ultima5Redux
             }
         }
 
+        private static SpecialSearchLocation GetSpecialSearchLocation(
+            SmallMapReferences.SingleMapReference.Location location,
+            int nFloor, Point2D position)
+        {
+            if (location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld && nFloor == 0
+                                                                             && position.X == 64 && position.Y == 80)
+                return SpecialSearchLocation.GlassSwords;
+
+            return SpecialSearchLocation.None;
+        }
+
         private static TurnResult.TurnResultType GetTurnResultMovedByAvatarState(Avatar avatar, bool bManualMovement)
         {
             switch (avatar.CurrentAvatarState)
@@ -236,7 +249,8 @@ namespace Ultima5Redux
             // small map
             // if a cannon is any of the four directions
             // 180 - 183
-            if (State.TheVirtualMap.CurrentMap.AreAnyTilesWithinFourDirections(State.TheVirtualMap.CurrentPosition.XY,
+            if (State.TheVirtualMap.CurrentMap.AreAnyTilesWithinFourDirections(
+                    State.TheVirtualMap.CurrentMap.CurrentPosition.XY,
                     cannonReferences)) return true;
 
             turnResults.PushOutputToConsole(
@@ -339,8 +353,8 @@ namespace Ultima5Redux
 
 
         private bool IsLeavingMap(Point2D xyProposedPosition) =>
-            xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
-                State.TheVirtualMap.NumberOfRowTiles - 1);
+            xyProposedPosition.IsOutOfRange(State.TheVirtualMap.CurrentMap.NumOfXTiles - 1,
+                State.TheVirtualMap.CurrentMap.NumOfYTiles - 1);
 
         private void MurderNpc(NonPlayerCharacter npc, TurnResults turnResults)
         {
@@ -421,6 +435,34 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        private List<VirtualMap.AggressiveMapUnitInfo> SearchAndFindGlassSword(Point2D xy, out bool bWasSuccessful,
+            TurnResults turnResults)
+        {
+            var newGlassSword =
+                new Weapon(
+                    GameReferences.Instance.CombatItemRefs.GetWeaponReferenceFromEquipment(DataOvlReference.Equipment
+                        .GlassSword), 1);
+            List<InventoryItem> invItems = new() { newGlassSword };
+            MapUnitPosition glassSwordMapUnitPosition = new()
+            {
+                Floor = State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.Floor,
+                XY = xy
+            };
+            DiscoverableLoot discoverableLoot = new(
+                State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation,
+                glassSwordMapUnitPosition, invItems);
+
+            // I plant it, only so it can be then found immediately again
+            State.TheVirtualMap.CurrentMap.CurrentMapUnits.AddMapUnit(discoverableLoot);
+
+            bool bFoundGlassSword = State.TheVirtualMap.CurrentMap.SearchNonAttackingMapUnit(xy, turnResults,
+                State.CharacterRecords.AvatarRecord, State.CharacterRecords);
+            if (!bFoundGlassSword)
+                throw new Ultima5ReduxException("I just created a glass sword and then couldn't find it!?");
+            bWasSuccessful = true;
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+        }
+
         /// <summary>
         ///     Use a magic carpet from your inventory
         /// </summary>
@@ -456,7 +498,7 @@ namespace Ultima5Redux
 
             State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet].Quantity--;
             MagicCarpet carpet = regularMap.CreateMagicCarpet(
-                State.TheVirtualMap.CurrentPosition.XY,
+                State.TheVirtualMap.CurrentMap.CurrentPosition.XY,
                 regularMap.GetAvatarMapUnit().Direction,
                 out int _);
             regularMap.BoardAndCleanFromWorld(carpet);
@@ -499,7 +541,7 @@ namespace Ultima5Redux
                 ProcessDamageOnAdvanceTimeNonCombat(turnResults);
 
                 aggressiveMapUnitInfos = regularMap.GetNonCombatMapAggressiveMapUnitInfo(turnResults);
-                State.TheVirtualMap.MoveNonCombatMapMapUnitsToNextMove(aggressiveMapUnitInfos);
+                regularMap.MoveNonCombatMapMapUnitsToNextMove(aggressiveMapUnitInfos);
                 VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo = null;
                 if (bNoAggression && State.TheVirtualMap.CurrentMap is LargeMap largeMap)
                 {
@@ -512,7 +554,7 @@ namespace Ultima5Redux
                     // and ignore all other work
                     if (MonsterAi)
                     {
-                        State.TheVirtualMap.ProcessNonCombatMapAggressiveMapUnitAttacks(State.CharacterRecords,
+                        regularMap.ProcessNonCombatMapAggressiveMapUnitAttacks(State.CharacterRecords,
                             aggressiveMapUnitInfos, out aggressiveMapUnitInfo, turnResults);
                     }
 
@@ -920,7 +962,7 @@ namespace Ultima5Redux
 
             State.TheVirtualMap.LoadSmallMap(singleMap);
             // set us to the front of the building
-            State.TheVirtualMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation();
+            State.TheVirtualMap.CurrentMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation();
 
             turnResults.PushOutputToConsole(
                 GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
@@ -1398,7 +1440,7 @@ namespace Ultima5Redux
             int nTopFloor = hasBasement ? nTotalFloors - 1 : nTotalFloors;
 
             TileReference tileReference =
-                State.TheVirtualMap.CurrentMap.GetTileReference(State.TheVirtualMap.CurrentPosition.XY);
+                State.TheVirtualMap.CurrentMap.GetTileReference(State.TheVirtualMap.CurrentMap.CurrentPosition.XY);
             if (TileReferences.IsLadderDown(tileReference.Index) ||
                 TileReferences.IsGrate(tileReference.Index))
             {
@@ -1406,7 +1448,7 @@ namespace Ultima5Redux
                 {
                     State.TheVirtualMap.LoadSmallMap(
                         GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1),
-                        State.TheVirtualMap.CurrentPosition.XY);
+                        State.TheVirtualMap.CurrentMap.CurrentPosition.XY);
                     klimbResult = KlimbResult.Success;
                     turnResults.PushOutputToConsole(getKlimbOutput(
                             GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
@@ -1422,7 +1464,7 @@ namespace Ultima5Redux
             {
                 State.TheVirtualMap.LoadSmallMap(
                     GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1),
-                    State.TheVirtualMap.CurrentPosition.XY);
+                    State.TheVirtualMap.CurrentMap.CurrentPosition.XY);
                 klimbResult = KlimbResult.Success;
                 turnResults.PushOutputToConsole(getKlimbOutput(
                         GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
@@ -1581,6 +1623,67 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        public void TryToMoveCombatMap(Point2D.Direction direction, TurnResults turnResults, bool bKlimb)
+        {
+            if (State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
+                throw new Ultima5ReduxException("Should be combat map");
+
+            TryToMoveCombatMap(combatMap.CurrentCombatPlayer, direction, turnResults,
+                bKlimb);
+        }
+
+        public void TryToMoveCombatMap(CombatPlayer combatPlayer, Point2D.Direction direction,
+            TurnResults turnResults, bool bKlimb)
+        {
+            if (combatPlayer == null)
+                throw new Ultima5ReduxException("Trying to move on combat map without a CombatPlayer");
+
+            if (State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
+                throw new Ultima5ReduxException("Called TryToMoveCombatMap on non CombatMap");
+
+            // CombatMap currentCombatMap = State.TheVirtualMap.CurrentCombatMap;
+            // Debug.Assert(currentCombatMap != null);
+
+            // if we were to move, which direction would we move
+            GetAdjustments(direction, out int xAdjust, out int yAdjust);
+            Point2D newPosition = new(combatPlayer.MapUnitPosition.X + xAdjust,
+                combatPlayer.MapUnitPosition.Y + yAdjust);
+
+            // if we are klimbing then we assume all the movement checks were done ahead of time
+            if (!bKlimb)
+            {
+                turnResults.PushOutputToConsole(
+                    GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction), true, false);
+
+                if (IsLeavingMap(newPosition))
+                {
+                    // can they escape in this particular direction?
+                    bool _ = combatMap.TryToMakePlayerEscape(turnResults, combatPlayer,
+                        CombatMap.DirectionToEscapeType(direction));
+
+                    return;
+                }
+
+                if (!combatMap.IsTileFreeToTravel(combatPlayer.MapUnitPosition.XY, newPosition,
+                        false,
+                        Avatar.AvatarState.Regular))
+                {
+                    turnResults.PushOutputToConsole(" - " +
+                                                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(
+                                                        DataOvlReference.TravelStrings.BLOCKED), false);
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveBlocked));
+                    return;
+                }
+            }
+
+            ProcessDamageOnAdvanceTimeInCombat(turnResults);
+            combatMap.MoveActiveCombatMapUnit(turnResults, newPosition);
+
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMovedCombatPlayerOnCombatMap));
+
+            combatMap.AdvanceToNextCombatMapUnit();
+        }
+
         /// <summary>
         ///     Tries to move the avatar in a given direction - if successful it will move him
         /// </summary>
@@ -1697,8 +1800,8 @@ namespace Ultima5Redux
             // this is insufficient in case I am in a boat
             if ((bKlimb && newTileReference.IsKlimable) || bPassable || bFreeMove)
             {
-                State.TheVirtualMap.CurrentPosition.X = newPosition.X;
-                State.TheVirtualMap.CurrentPosition.Y = newPosition.Y;
+                State.TheVirtualMap.CurrentMap.CurrentPosition.X = newPosition.X;
+                State.TheVirtualMap.CurrentMap.CurrentPosition.Y = newPosition.Y;
             }
             else // it is not passable
             {
@@ -1726,17 +1829,17 @@ namespace Ultima5Redux
 
             // the world is a circular - so when you get to the end, start over again
             // this will prevent a never ending growth or shrinking of character position in case the travel the world only moving right a bagillion times
-            State.TheVirtualMap.CurrentPosition.X %= nTilesPerMapCol;
-            State.TheVirtualMap.CurrentPosition.Y %= nTilesPerMapRow;
-            //State.TheVirtualMap.SavePreviousPosition(State.TheVirtualMap.CurrentPosition);
+            State.TheVirtualMap.CurrentMap.CurrentPosition.X %= nTilesPerMapCol;
+            State.TheVirtualMap.CurrentMap.CurrentPosition.Y %= nTilesPerMapRow;
+            //State.TheVirtualMap.SavePreviousPosition(State.TheVirtualMap.CurrentMap.CurrentPosition);
 
             // if you walk on top of a staircase then we will immediately jump to the next floor
             if (TileReferences.IsStaircase(newTileReference.Index) &&
                 State.TheVirtualMap.CurrentMap is SmallMap smallMap)
             {
-                State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition.XY);
+                State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentMap.CurrentPosition.XY);
                 turnResults.PushOutputToConsole(
-                    smallMap.IsStairGoingDown(State.TheVirtualMap.CurrentPosition.XY, out _)
+                    smallMap.IsStairGoingDown(State.TheVirtualMap.CurrentMap.CurrentPosition.XY, out _)
                         ? GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
                             .DOWN)
                         : GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
@@ -1841,67 +1944,6 @@ namespace Ultima5Redux
             return AdvanceTime(nMinutesToAdvance, turnResults);
         }
 
-        public void TryToMoveCombatMap(Point2D.Direction direction, TurnResults turnResults, bool bKlimb)
-        {
-            if (State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
-                throw new Ultima5ReduxException("Should be combat map");
-
-            TryToMoveCombatMap(combatMap.CurrentCombatPlayer, direction, turnResults,
-                bKlimb);
-        }
-
-        public void TryToMoveCombatMap(CombatPlayer combatPlayer, Point2D.Direction direction,
-            TurnResults turnResults, bool bKlimb)
-        {
-            if (combatPlayer == null)
-                throw new Ultima5ReduxException("Trying to move on combat map without a CombatPlayer");
-
-            if (State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
-                throw new Ultima5ReduxException("Called TryToMoveCombatMap on non CombatMap");
-
-            // CombatMap currentCombatMap = State.TheVirtualMap.CurrentCombatMap;
-            // Debug.Assert(currentCombatMap != null);
-
-            // if we were to move, which direction would we move
-            GetAdjustments(direction, out int xAdjust, out int yAdjust);
-            Point2D newPosition = new(combatPlayer.MapUnitPosition.X + xAdjust,
-                combatPlayer.MapUnitPosition.Y + yAdjust);
-
-            // if we are klimbing then we assume all the movement checks were done ahead of time
-            if (!bKlimb)
-            {
-                turnResults.PushOutputToConsole(
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction), true, false);
-
-                if (IsLeavingMap(newPosition))
-                {
-                    // can they escape in this particular direction?
-                    bool _ = combatMap.TryToMakePlayerEscape(turnResults, combatPlayer,
-                        CombatMap.DirectionToEscapeType(direction));
-
-                    return;
-                }
-
-                if (!combatMap.IsTileFreeToTravel(combatPlayer.MapUnitPosition.XY, newPosition,
-                        false,
-                        Avatar.AvatarState.Regular))
-                {
-                    turnResults.PushOutputToConsole(" - " +
-                                                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(
-                                                        DataOvlReference.TravelStrings.BLOCKED), false);
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveBlocked));
-                    return;
-                }
-            }
-
-            ProcessDamageOnAdvanceTimeInCombat(turnResults);
-            combatMap.MoveActiveCombatMapUnit(turnResults, newPosition);
-
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMovedCombatPlayerOnCombatMap));
-
-            combatMap.AdvanceToNextCombatMapUnit();
-        }
-
         /// <summary>
         ///     Opens a door at a specific position
         /// </summary>
@@ -1925,7 +1967,7 @@ namespace Ultima5Redux
             if (mapUnit is NonAttackingUnit { IsOpenable: true } nonAttackingUnit)
             {
                 bWasSuccessful =
-                    State.TheVirtualMap.ProcessSearchInnerItems(turnResults, nonAttackingUnit, false, true);
+                    State.TheVirtualMap.CurrentMap.ProcessSearchInnerItems(turnResults, nonAttackingUnit, false, true);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -2013,7 +2055,7 @@ namespace Ultima5Redux
                 State.TheVirtualMap.CurrentMap.SwapTiles(avatarXy, adjustedPos);
 
             // move the avatar to the new spot
-            State.TheVirtualMap.CurrentPosition.XY = adjustedPos.Copy();
+            State.TheVirtualMap.CurrentMap.CurrentPosition.XY = adjustedPos.Copy();
 
             turnResults.PushOutputToConsole(
                 GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
@@ -2022,20 +2064,6 @@ namespace Ultima5Redux
 
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionPush));
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-        }
-
-
-        private enum SpecialSearchLocation { None, GlassSwords }
-
-        private static SpecialSearchLocation GetSpecialSearchLocation(
-            SmallMapReferences.SingleMapReference.Location location,
-            int nFloor, Point2D position)
-        {
-            if (location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld && nFloor == 0
-                                                                             && position.X == 64 && position.Y == 80)
-                return SpecialSearchLocation.GlassSwords;
-
-            return SpecialSearchLocation.None;
         }
 
 
@@ -2091,7 +2119,7 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            bool bHasInnerNonAttackUnits = State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
+            bool bHasInnerNonAttackUnits = State.TheVirtualMap.CurrentMap.SearchNonAttackingMapUnit(xy, turnResults,
                 State.CharacterRecords.AvatarRecord, State.CharacterRecords);
 
             TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(xy);
@@ -2120,34 +2148,6 @@ namespace Ultima5Redux
                         .NOTHING_OF_NOTE_DOT_N)), false);
             }
 
-            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-        }
-
-        private List<VirtualMap.AggressiveMapUnitInfo> SearchAndFindGlassSword(Point2D xy, out bool bWasSuccessful,
-            TurnResults turnResults)
-        {
-            var newGlassSword =
-                new Weapon(
-                    GameReferences.Instance.CombatItemRefs.GetWeaponReferenceFromEquipment(DataOvlReference.Equipment
-                        .GlassSword), 1);
-            List<InventoryItem> invItems = new() { newGlassSword };
-            MapUnitPosition glassSwordMapUnitPosition = new()
-            {
-                Floor = State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.Floor,
-                XY = xy
-            };
-            DiscoverableLoot discoverableLoot = new(
-                State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation,
-                glassSwordMapUnitPosition, invItems);
-
-            // I plant it, only so it can be then found immediately again
-            State.TheVirtualMap.CurrentMap.CurrentMapUnits.AddMapUnit(discoverableLoot);
-
-            bool bFoundGlassSword = State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
-                State.CharacterRecords.AvatarRecord, State.CharacterRecords);
-            if (!bFoundGlassSword)
-                throw new Ultima5ReduxException("I just created a glass sword and then couldn't find it!?");
-            bWasSuccessful = true;
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 

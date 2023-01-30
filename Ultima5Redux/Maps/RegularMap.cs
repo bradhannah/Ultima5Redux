@@ -10,6 +10,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
+using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
@@ -20,6 +21,53 @@ namespace Ultima5Redux.Maps
 {
     public abstract class RegularMap : Map
     {
+        [DataMember] public bool DeclinedExtortion { get; set; }
+
+        /// <summary>
+        ///     Are you wanted by the guards? For example - did you murder someone?
+        /// </summary>
+        [DataMember]
+        public bool IsWantedManByThePoPo { get; set; }
+
+        /// <summary>
+        ///     The single source of truth for the Avatar's current position within the current map
+        /// </summary>
+        [IgnoreDataMember]
+        internal MapUnitPosition CurrentAvatarPosition
+        {
+            get => GetAvatarMapUnit().MapUnitPosition;
+            set => GetAvatarMapUnit().MapUnitPosition = value;
+        }
+
+        [IgnoreDataMember]
+        public bool IsAvatarInFrigate =>
+            GetAvatarMapUnit()?.CurrentBoardedMapUnit is Frigate;
+
+        [IgnoreDataMember]
+        public bool IsAvatarInSkiff =>
+            GetAvatarMapUnit().CurrentBoardedMapUnit is Skiff;
+
+        [IgnoreDataMember]
+        public bool IsAvatarRidingCarpet =>
+            GetAvatarMapUnit().CurrentBoardedMapUnit is MagicCarpet;
+
+        [IgnoreDataMember]
+        public bool IsAvatarRidingHorse =>
+            GetAvatarMapUnit().CurrentBoardedMapUnit is Horse;
+
+
+        [IgnoreDataMember] public bool IsAvatarRidingSomething => GetAvatarMapUnit().IsAvatarOnBoardedThing;
+
+
+        [IgnoreDataMember]
+        public int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
+
+        [IgnoreDataMember]
+        public override MapUnitPosition CurrentPosition
+        {
+            get => CurrentAvatarPosition;
+            set => CurrentAvatarPosition = value;
+        }
         //[DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; private set; }
 
 
@@ -29,10 +77,15 @@ namespace Ultima5Redux.Maps
 
         private Dictionary<Point2D, TileOverrideReference> _xyOverrides;
 
-        public void MoveAvatar(Point2D newPosition)
+        [JsonConstructor] protected RegularMap()
         {
-            CurrentAvatarPosition =
-                new MapUnitPosition(newPosition.X, newPosition.Y, CurrentAvatarPosition.Floor);
+        }
+
+        protected RegularMap(SmallMapReferences.SingleMapReference.Location location, int mapFloor) : base(location,
+            mapFloor)
+        {
+            MapLocation = location;
+            MapFloor = mapFloor;
         }
 
         /// <summary>
@@ -45,379 +98,6 @@ namespace Ultima5Redux.Maps
             GetAvatarMapUnit().BoardMapUnit(mapUnit);
             // clean it from the world so it no longer appears
             ClearAndSetEmptyMapUnits(mapUnit);
-        }
-
-        /// <summary>
-        ///     Create a list of the free spaces surrounding around the Avatar suitable for something to be generated onto
-        ///     Uses all 8 directions
-        /// </summary>
-        /// <returns></returns>
-        private List<Point2D> GetFreeSpacesSurroundingAvatar()
-        {
-            List<Point2D> freeSpacesAroundAvatar = new();
-
-            for (int x = -1; x <= 1; x++)
-            {
-                for (int y = -1; y <= 1; y++)
-                {
-                    Point2D pointToCheck = new(Math.Max(CurrentPosition.X + x, 0),
-                        Math.Max(CurrentPosition.Y + y, 0));
-                    if (!IsMapUnitOccupiedTile(pointToCheck) && GetTileReference(pointToCheck).IsWalking_Passable)
-                        freeSpacesAroundAvatar.Add(pointToCheck);
-                }
-            }
-
-            return freeSpacesAroundAvatar;
-        }
-
-        [IgnoreDataMember]
-        public override MapUnitPosition CurrentPosition
-        {
-            get => CurrentAvatarPosition;
-            set => CurrentAvatarPosition = value;
-        }
-
-
-        /// <summary>
-        ///     Gets a map unit if it's on the current tile
-        /// </summary>
-        /// <returns>true if there is a map unit of on the tile</returns>
-        public bool IsMapUnitOccupiedTile() => IsMapUnitOccupiedTile(CurrentPosition.XY);
-
-        internal bool IsTileFreeToTravelForAvatar(in Point2D xy, bool bNoStaircases = false) =>
-            IsTileFreeToTravel(xy, bNoStaircases, GetAvatarMapUnit().CurrentAvatarState);
-
-        public bool IsLandNearbyForAvatar() =>
-            IsLandNearby(CurrentPosition.XY, false, GetAvatarMapUnit().CurrentAvatarState);
-
-        /// <summary>
-        ///     Creates a horse MapUnit in the surrounding tiles of the Avatar - if one exists
-        /// </summary>
-        /// <returns>the new horse or null if there was no where to put it</returns>
-        public Horse CreateHorseAroundAvatar(TurnResults turnResults)
-        {
-            List<Point2D> freeSpacesAroundAvatar = GetFreeSpacesSurroundingAvatar();
-            if (freeSpacesAroundAvatar.Count <= 0) return null;
-
-            Random ran = new();
-            Point2D chosenLocation = freeSpacesAroundAvatar[ran.Next() % freeSpacesAroundAvatar.Count];
-            Horse horse = CreateHorse(
-                new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor), TheMapType,
-                out int nIndex);
-
-            if (nIndex == -1 || horse == null) return null;
-
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.PoofHorse));
-
-            return horse;
-        }
-
-        public Avatar GetAvatarMapUnit()
-        {
-            if (CurrentMapUnits == null)
-                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits is null");
-            if (CurrentMapUnits.TheAvatar == null)
-                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits.TheAvatar is null");
-
-            return CurrentMapUnits.TheAvatar;
-        }
-
-        /// <summary>
-        ///     Generates a new map unit
-        /// </summary>
-        /// <param name="mapUnitMovement"></param>
-        /// <param name="bInitialLoad"></param>
-        /// <param name="location"></param>
-        /// <param name="npcState"></param>
-        /// <param name="tileReference"></param>
-        /// <param name="smallMapCharacterState"></param>
-        /// <param name="mapUnitPosition"></param>
-        /// <returns></returns>
-        protected MapUnit CreateNewMapUnit(MapUnitMovement mapUnitMovement, bool bInitialLoad,
-            SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState,
-            MapUnitPosition mapUnitPosition, TileReference tileReference,
-            SmallMapCharacterState smallMapCharacterState = null)
-        {
-            MapUnit newUnit;
-
-            if (tileReference == null || tileReference.Index == 256)
-            {
-                Debug.WriteLine("An empty map unit was created with no tile reference");
-                newUnit = new EmptyMapUnit();
-            }
-            else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active &&
-                     npcState.NPCRef.NormalNPC)
-            {
-                newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
-                    mapUnitPosition, npcState);
-                // special condition where people who were previously freed are not dead, but also do not appear 
-                if (newUnit.OverrideAiType && !GameStateReference.State.TheGameOverrides.PreferenceFreedPeopleDontDie)
-                {
-                    NonPlayerCharacterSchedule.AiType aiType =
-                        newUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
-                    if (aiType == NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain)
-                        newUnit = new EmptyMapUnit();
-                }
-            }
-            else if (GameReferences.Instance.SpriteTileReferences.IsFrigate(tileReference.Index))
-            {
-                newUnit = new Frigate(mapUnitMovement, location, tileReference.GetDirection(), npcState,
-                    mapUnitPosition);
-            }
-            else if (GameReferences.Instance.SpriteTileReferences.IsSkiff(tileReference.Index))
-            {
-                newUnit = new Skiff(mapUnitMovement, location, tileReference.GetDirection(), npcState, mapUnitPosition);
-            }
-            else if (TileReferences.IsMagicCarpet(tileReference.Index))
-            {
-                newUnit = new MagicCarpet(location, tileReference.GetDirection(), npcState, mapUnitPosition);
-            }
-            else if (TileReferences.IsUnmountedHorse(tileReference.Index))
-            {
-                newUnit = new Horse(mapUnitMovement, location, tileReference.GetDirection(), npcState, mapUnitPosition);
-            }
-            else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active)
-            {
-                // This is where we will do custom stuff for special NPS
-                // guard or daemon or stone gargoyle or fighter or bard or townesperson or rat or bat or shadowlord
-                if ((TileReference.SpriteIndex)npcState.NPCRef.NPCKeySprite is
-                    TileReference.SpriteIndex.Guard_KeyIndex
-                    or TileReference.SpriteIndex.Daemon1_KeyIndex
-                    or TileReference.SpriteIndex.StoneGargoyle_KeyIndex
-                    or TileReference.SpriteIndex.Fighter_KeyIndex
-                    or TileReference.SpriteIndex.Bard_KeyIndex
-                    or TileReference.SpriteIndex.TownsPerson_KeyIndex
-                    or TileReference.SpriteIndex.Rat_KeyIndex
-                    or TileReference.SpriteIndex.Bat_KeyIndex
-                    or TileReference.SpriteIndex.ShadowLord_KeyIndex)
-                {
-                    newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
-                        mapUnitPosition, npcState);
-                }
-                else
-                {
-                    newUnit = NonAttackingUnitFactory.Create(npcState.NPCRef.NPCKeySprite, location, mapUnitPosition);
-                    newUnit.MapLocation = location;
-                }
-            }
-            else if (GameReferences.Instance.SpriteTileReferences.IsMonster(tileReference.Index))
-            {
-                Debug.Assert(GameReferences.Instance.EnemyRefs != null);
-                newUnit = new Enemy(mapUnitMovement, GameReferences.Instance.EnemyRefs.GetEnemyReference(tileReference),
-                    location, npcState, mapUnitPosition);
-            }
-            // this is where we will create monsters too
-            else
-            {
-                Debug.WriteLine("An empty map unit was created with " + tileReference.Name);
-                newUnit = new EmptyMapUnit();
-            }
-
-            // force to use extended sprites if they exist
-            newUnit.UseFourDirections = UseExtendedSprites;
-
-            return newUnit;
-        }
-
-        public Skiff MakeAndBoardSkiff()
-        {
-            Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().Direction,
-                out int _);
-            GetAvatarMapUnit().BoardMapUnit(skiff);
-            ClearAndSetEmptyMapUnits(skiff);
-            return skiff;
-        }
-
-
-        /// <summary>
-        ///     Gets a tile reference from the tile the avatar currently resides on
-        /// </summary>
-        /// <returns></returns>
-        public TileReference GetTileReferenceOnCurrentTile() => GetTileReference(CurrentPosition.XY);
-
-        /// <summary>
-        ///     Makes the Avatar exit the current MapUnit they are occupying
-        /// </summary>
-        /// <returns>The MapUnit object they were occupying - you need to re-add it the map after</returns>
-        public MapUnit XitCurrentMapUnit(out string retStr)
-        {
-            retStr = GameReferences.Instance.DataOvlRef.StringReferences
-                .GetString(DataOvlReference.KeypressCommandsStrings.XIT)
-                .TrimEnd();
-
-            if (!GetAvatarMapUnit().IsAvatarOnBoardedThing)
-            {
-                retStr += " " + GameReferences.Instance.DataOvlRef.StringReferences
-                    .GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
-                return null;
-            }
-
-            if (!GetAvatarMapUnit().CurrentBoardedMapUnit.CanBeExited(this))
-            {
-                retStr += "\n" + GameReferences.Instance.DataOvlRef.StringReferences
-                    .GetString(DataOvlReference.SleepTransportStrings.N_NO_LAND_NEARBY_BANG_N).Trim();
-                return null;
-            }
-
-            MapUnit unboardedMapUnit = GetAvatarMapUnit().UnboardedAvatar();
-            Debug.Assert(unboardedMapUnit != null);
-
-            // set the current positions to the equal the Avatar's as he exits the vehicle 
-            unboardedMapUnit.MapLocation = MapLocation;
-            unboardedMapUnit.MapUnitPosition = CurrentAvatarPosition;
-            unboardedMapUnit.Direction = GetAvatarMapUnit().Direction;
-            unboardedMapUnit.KeyTileReference = unboardedMapUnit.GetNonBoardedTileReference();
-
-            AddNewMapUnit(TheMapType, unboardedMapUnit);
-            retStr += " " + unboardedMapUnit.BoardXitName;
-
-            // if the Avatar is on a frigate then we will check for Skiffs and exit on a skiff instead
-            if (unboardedMapUnit is not Frigate avatarFrigate) return unboardedMapUnit;
-
-            Debug.Assert(avatarFrigate != null, nameof(avatarFrigate) + " != null");
-
-            // if we have skiffs, AND do not have land close by then we deploy a skiff
-            if (avatarFrigate.SkiffsAboard <= 0 || IsLandNearby(GetAvatarMapUnit().CurrentAvatarState))
-                return unboardedMapUnit;
-
-            MakeAndBoardSkiff();
-            avatarFrigate.SkiffsAboard--;
-
-            return unboardedMapUnit;
-        }
-
-        /// <summary>
-        ///     Gets a suitable random position when wandering
-        /// </summary>
-        /// <param name="characterPosition">position of character</param>
-        /// <param name="scheduledPosition">scheduled position of the character</param>
-        /// <param name="nMaxDistance">max number of tiles the wander can be from the scheduled position</param>
-        /// <param name="direction">OUT - the direction that the character should travel</param>
-        /// <returns></returns>
-        internal Point2D GetWanderCharacterPosition(Point2D characterPosition, Point2D scheduledPosition,
-            int nMaxDistance, out MapUnitMovement.MovementCommandDirection direction)
-        {
-            Random ran = new();
-            List<MapUnitMovement.MovementCommandDirection> possibleDirections =
-                GetPossibleDirectionsList(characterPosition, scheduledPosition, nMaxDistance, true);
-
-            // if no directions are returned then we tell them not to move
-            if (possibleDirections.Count == 0)
-            {
-                direction = MapUnitMovement.MovementCommandDirection.None;
-
-                return characterPosition.Copy();
-            }
-
-            direction = possibleDirections[ran.Next() % possibleDirections.Count];
-
-            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
-
-            return adjustedPosition;
-        }
-
-        /// <summary>
-        ///     Gets possible directions that are accessible from a particular point
-        /// </summary>
-        /// <param name="characterPosition">the current position of the character</param>
-        /// <param name="scheduledPosition">the place they are supposed to be</param>
-        /// <param name="nMaxDistance">max distance they can travel from that position</param>
-        /// <param name="bNoStaircases"></param>
-        /// <returns></returns>
-        private List<MapUnitMovement.MovementCommandDirection> GetPossibleDirectionsList(in Point2D characterPosition,
-            in Point2D scheduledPosition, int nMaxDistance, bool bNoStaircases)
-        {
-            List<MapUnitMovement.MovementCommandDirection> directionList = new();
-
-            // gets an adjusted position OR returns null if the position is not valid
-
-            foreach (MapUnitMovement.MovementCommandDirection direction in Enum.GetValues(
-                         typeof(MapUnitMovement.MovementCommandDirection)))
-            {
-                // we may be asked to avoid including .None in the list
-                if (direction == MapUnitMovement.MovementCommandDirection.None) continue;
-
-                Point2D adjustedPos = GetPositionIfUserCanMove(direction, characterPosition, bNoStaircases,
-                    scheduledPosition, nMaxDistance);
-                // if adjustedPos == null then the particular direction was not allowed for one reason or another
-                if (adjustedPos != null) directionList.Add(direction);
-            }
-
-            return directionList;
-        }
-
-        private Point2D GetPositionIfUserCanMove(MapUnitMovement.MovementCommandDirection direction,
-            Point2D characterPosition, bool bNoStaircases, Point2D scheduledPosition, int nMaxDistance)
-        {
-            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
-
-            // always include none
-            if (direction == MapUnitMovement.MovementCommandDirection.None) return adjustedPosition;
-
-            if (adjustedPosition.X < 0 || adjustedPosition.X >= TheMap.Length || adjustedPosition.Y < 0 ||
-                adjustedPosition.Y >= TheMap[0].Length) return null;
-
-            // is the tile free to travel to? even if it is, is it within N tiles of the scheduled tile?
-            if (IsTileFreeToTravelForAvatar(adjustedPosition, bNoStaircases) &&
-                scheduledPosition.IsWithinN(adjustedPosition, nMaxDistance)) return adjustedPosition;
-
-            return null;
-        }
-
-        public MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
-            SmallMapReferences.SingleMapReference singleMapReference)
-        {
-            int nIndex = FindNextFreeMapUnitIndex(TheMapType);
-            if (nIndex == -1) return null;
-
-            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, singleMapReference.Floor);
-            var moonstoneNonAttackingUnit =
-                new MoonstoneNonAttackingUnit(moonstone, mapUnitPosition);
-
-            // set position of frigate in the world
-            CurrentMapUnits.AddMapUnit(moonstoneNonAttackingUnit);
-            return moonstoneNonAttackingUnit;
-        }
-
-        public Horse CreateHorse(MapUnitPosition mapUnitPosition, Maps map, out int nIndex)
-        {
-            nIndex = FindNextFreeMapUnitIndex(TheMapType);
-            if (nIndex == -1) return null;
-
-            Horse horse = new(
-                new MapUnitMovement(nIndex),
-                //importedMovements.GetMovement(nIndex), 
-                MapLocation, Point2D.Direction.Right,
-                null, mapUnitPosition)
-            {
-                MapUnitPosition = mapUnitPosition
-            };
-
-            // set position of frigate in the world
-            AddNewMapUnit(map, horse, nIndex);
-            return horse;
-        }
-
-        /// <summary>
-        ///     Creates a skiff and places it on the map
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <param name="direction"></param>
-        /// <param name="nIndex"></param>
-        /// <returns></returns>
-        internal Skiff CreateSkiff(Point2D xy, Point2D.Direction direction, out int nIndex)
-        {
-            nIndex = FindNextFreeMapUnitIndex(TheMapType);
-            if (nIndex == -1) return null;
-
-            Skiff skiff = new(
-                new MapUnitMovement(nIndex),
-                //importedMovements.GetMovement(nIndex),
-                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
-                new MapUnitPosition(xy.X, xy.Y, 0));
-
-            AddNewMapUnit(Maps.Overworld, skiff, nIndex);
-            return skiff;
         }
 
 
@@ -441,9 +121,27 @@ namespace Ultima5Redux.Maps
             return magicCarpet;
         }
 
+        /// <summary>
+        ///     Creates a skiff and places it on the map
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="direction"></param>
+        /// <param name="nIndex"></param>
+        /// <returns></returns>
+        internal Skiff CreateSkiff(Point2D xy, Point2D.Direction direction, out int nIndex)
+        {
+            nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            if (nIndex == -1) return null;
 
-        [IgnoreDataMember]
-        public int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
+            Skiff skiff = new(
+                new MapUnitMovement(nIndex),
+                //importedMovements.GetMovement(nIndex),
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
+                new MapUnitPosition(xy.X, xy.Y, 0));
+
+            AddNewMapUnit(Maps.Overworld, skiff, nIndex);
+            return skiff;
+        }
 
         //[IgnoreDataMember] protected Avatar MasterAvatarMapUnit { get; set; }
         //[IgnoreDataMember] protected readonly ImportedGameState importedGameState;
@@ -497,24 +195,268 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        ///     The single source of truth for the Avatar's current position within the current map
+        ///     Gathers the details of what if any aggressive action the mapunits would do this turn
         /// </summary>
-        [IgnoreDataMember]
-        internal MapUnitPosition CurrentAvatarPosition
+        /// <returns></returns>
+        internal Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> GetNonCombatMapAggressiveMapUnitInfo(
+            TurnResults turnResults)
         {
-            get => GetAvatarMapUnit().MapUnitPosition;
-            set => GetAvatarMapUnit().MapUnitPosition = value;
+            Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
+
+            SmallMapReferences.SingleMapReference singleMapReference = CurrentSingleMapReference;
+            if (singleMapReference == null)
+                throw new Ultima5ReduxException(
+                    "Tried to GetAggressiveMapUnitInfo but CurrentMap.CurrentSingleMapReference was null");
+
+            // if (CurrentMap is not RegularMap regularMap)
+            //     throw new Ultima5ReduxException("Tried to call GetNonCombatMapAggressiveMapUnitInfo on combat map");
+            //
+            foreach (MapUnit mapUnit in CurrentMapUnits.AllActiveMapUnits)
+            {
+                // we don't calculate any special movement or events for map units on different floors
+                if (mapUnit.MapUnitPosition.Floor != CurrentSingleMapReference.Floor)
+                    continue;
+
+                // we don't want to add anything that can never attack, so we keep only enemies and NPCs 
+                // in the list of aggressors
+                switch (mapUnit)
+                {
+                    case Horse:
+                    case Enemy:
+                    case NonPlayerCharacter:
+                        break;
+                    default:
+                        // it's not an aggressive Npc or Enemy so skip on past - nothing to see here
+                        continue;
+                }
+
+                VirtualMap.AggressiveMapUnitInfo mapUnitInfo =
+                    GetNonCombatMapAggressiveMapUnitInfo(mapUnit.MapUnitPosition.XY,
+                        CurrentAvatarPosition.XY,
+                        SingleCombatMapReference.Territory.Britannia, mapUnit);
+
+                if (mapUnitInfo.CombatMapReference != null)
+                    turnResults.PushOutputToConsole(mapUnitInfo.AttackingMapUnit.FriendlyName + " fight me in " +
+                                                    mapUnitInfo.CombatMapReference.Description);
+                aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
+            }
+
+            return aggressiveMapUnitInfos;
         }
 
-        [JsonConstructor] protected RegularMap()
+        /// <summary>
+        ///     Gets a suitable random position when wandering
+        /// </summary>
+        /// <param name="characterPosition">position of character</param>
+        /// <param name="scheduledPosition">scheduled position of the character</param>
+        /// <param name="nMaxDistance">max number of tiles the wander can be from the scheduled position</param>
+        /// <param name="direction">OUT - the direction that the character should travel</param>
+        /// <returns></returns>
+        internal Point2D GetWanderCharacterPosition(Point2D characterPosition, Point2D scheduledPosition,
+            int nMaxDistance, out MapUnitMovement.MovementCommandDirection direction)
         {
+            Random ran = new();
+            List<MapUnitMovement.MovementCommandDirection> possibleDirections =
+                GetPossibleDirectionsList(characterPosition, scheduledPosition, nMaxDistance, true);
+
+            // if no directions are returned then we tell them not to move
+            if (possibleDirections.Count == 0)
+            {
+                direction = MapUnitMovement.MovementCommandDirection.None;
+
+                return characterPosition.Copy();
+            }
+
+            direction = possibleDirections[ran.Next() % possibleDirections.Count];
+
+            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
+
+            return adjustedPosition;
         }
 
-        protected RegularMap(SmallMapReferences.SingleMapReference.Location location, int mapFloor) : base(location,
-            mapFloor)
+        internal bool IsTileFreeToTravelForAvatar(in Point2D xy, bool bNoStaircases = false) =>
+            IsTileFreeToTravel(xy, bNoStaircases, GetAvatarMapUnit().CurrentAvatarState);
+
+        /// <summary>
+        ///     Advances each of the NPCs by one movement each
+        /// </summary>
+        internal void MoveNonCombatMapMapUnitsToNextMove(
+            Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos)
         {
-            MapLocation = location;
-            MapFloor = mapFloor;
+            // go through each of the NPCs on the map
+            foreach (MapUnit mapUnit in CurrentMapUnits.AllActiveMapUnits)
+            {
+                VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo =
+                    aggressiveMapUnitInfos.ContainsKey(mapUnit) ? aggressiveMapUnitInfos[mapUnit] : null;
+                // if we don't match the aggressive map unit then it means the map unit is not mobile
+                if (aggressiveMapUnitInfo == null) continue;
+
+                // if the map unit doesn't haven't a particular aggression then it moves 
+                if (aggressiveMapUnitInfo.GetDecidedAction() == VirtualMap.AggressiveMapUnitInfo.DecidedAction.MoveUnit)
+                    mapUnit.CompleteNextNonCombatMove(this, GameStateReference.State.TheTimeOfDay); //,
+            }
+        }
+
+        // Performs all of the aggressive actions and stores results
+        internal void ProcessNonCombatMapAggressiveMapUnitAttacks(PlayerCharacterRecords records,
+            Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos,
+            out VirtualMap.AggressiveMapUnitInfo combatMapAggressor, TurnResults turnResults)
+        {
+            combatMapAggressor = null;
+
+            // if there are monsters with combat maps attached to them - then we look at them first
+            // if you are going to a combat map then we will never process overworld ranged and melee attacks
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfosWithCombatMaps =
+                aggressiveMapUnitInfos.Values.Where(ag => ag.CombatMapReference != null).ToList();
+
+            if (aggressiveMapUnitInfosWithCombatMaps.Count > 0)
+            {
+                // there is at least one combat map reference
+                int nCombatMapEnemies = aggressiveMapUnitInfosWithCombatMaps.Count;
+
+                int nChoice = Utils.GetNumberFromAndTo(0, nCombatMapEnemies - 1);
+
+                combatMapAggressor = aggressiveMapUnitInfosWithCombatMaps[nChoice];
+                aggressiveMapUnitInfos.Clear();
+                aggressiveMapUnitInfos[combatMapAggressor.AttackingMapUnit] = combatMapAggressor;
+                return;
+            }
+
+            // we are certain at this point that there is no combat map, so it's all ranged if anything at all
+            foreach (KeyValuePair<MapUnit, VirtualMap.AggressiveMapUnitInfo> kvp in aggressiveMapUnitInfos)
+            {
+                VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo = kvp.Value;
+                MapUnit mapUnit = kvp.Key;
+
+                Debug.Assert(aggressiveMapUnitInfo.CombatMapReference == null);
+
+                // bajh: I know all the conditions look identical now - but I suspect they have different attack
+                // powers I will tweak later
+
+                VirtualMap.AggressiveMapUnitInfo.DecidedAction decidedAction = aggressiveMapUnitInfo.GetDecidedAction();
+                switch (decidedAction)
+                {
+                    case VirtualMap.AggressiveMapUnitInfo.DecidedAction.AttemptToArrest:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried to arrest me. They are a {mapUnit.GetType()}");
+                        turnResults.PushTurnResult(
+                            new AttemptToArrest(TurnResult.TurnResultType.NPCAttemptingToArrest, npc));
+                        continue;
+                    }
+                    case VirtualMap.AggressiveMapUnitInfo.DecidedAction.WantsToChat:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried to arrest me. They are a {mapUnit.GetType()}");
+                        turnResults.PushTurnResult(new NpcTalkInteraction(npc));
+                        // if they want to chat, then we start a pissed off counter
+                        // it only really matters for guards though 
+                        if (npc.NPCRef.IsGuard && npc.NPCState.PissedOffCountDown <= 0)
+                            npc.NPCState.PissedOffCountDown = OddsAndLogic.TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU;
+                        continue;
+                    }
+                    case VirtualMap.AggressiveMapUnitInfo.DecidedAction.Begging:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried beg. They are a {mapUnit.GetType()}");
+                        turnResults.PushTurnResult(new NpcTalkInteraction(npc));
+                        continue;
+                    }
+                    case VirtualMap.AggressiveMapUnitInfo.DecidedAction.BlackthornGuardPasswordCheck:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
+                        if (npc.NPCState.HasExtortedAvatar) continue;
+                        npc.NPCState.HasExtortedAvatar = true;
+                        turnResults.PushTurnResult(new GuardExtortion(npc,
+                            GuardExtortion.ExtortionType.BlackthornPassword, 0));
+                        continue;
+                    }
+                    case VirtualMap.AggressiveMapUnitInfo.DecidedAction.StraightToBlackthornDungeon:
+                        if (mapUnit is not NonPlayerCharacter blackthornGuard)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
+
+                        turnResults.PushTurnResult(new GoToBlackthornDungeon(blackthornGuard));
+                        break;
+                    case VirtualMap.AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion:
+                    {
+                        // we only extort once per load of a map, we aren't monsters after all!
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
+                        if (npc.NPCState.HasExtortedAvatar) continue;
+                        npc.NPCState.HasExtortedAvatar = true;
+                        turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold, 0));
+                        continue;
+                    }
+                    case VirtualMap.AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion:
+                    {
+                        // we only extort once per load of a map, we aren't monsters after all!
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried generic extortion. They are a {mapUnit.GetType()}");
+                        if (npc.NPCState.HasExtortedAvatar) continue;
+                        npc.NPCState.HasExtortedAvatar = true;
+                        turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic,
+                            OddsAndLogic.GetGuardExtortionAmount(
+                                OddsAndLogic.GetEraByTurn(GameStateReference.State.TurnsSinceStart))));
+                        continue;
+                    }
+                }
+
+                // it's possible that the aggressor may not actually be attacking even if they can
+                if (decidedAction != VirtualMap.AggressiveMapUnitInfo.DecidedAction.RangedAttack) continue;
+
+                switch (aggressiveMapUnitInfo.AttackingMissileType)
+                {
+                    case CombatItemReference.MissileType.None:
+                        break;
+
+                    case CombatItemReference.MissileType.Arrow:
+                        // do they have any melee attacks? Melee attacks are noted with .Arrow for now
+                        // if on skiff then party takes damage
+                        // if on frigate then frigate takes damage
+                        if (IsAvatarInFrigate)
+                            // frigate takes damage instead
+                            DamageShip(Point2D.Direction.None, turnResults);
+                        else
+                            records.DamageEachCharacter(turnResults, 1, 9);
+
+                        turnResults.PushOutputToConsole(
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (melee)", false);
+                        continue;
+                    case CombatItemReference.MissileType.CannonBall:
+                        if (IsAvatarInFrigate)
+                            DamageShip(Point2D.Direction.None, turnResults);
+                        else
+                            records.DamageEachCharacter(turnResults, 1, 9);
+
+                        turnResults.PushOutputToConsole(
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (cannonball)",
+                            false);
+
+                        continue;
+                    case CombatItemReference.MissileType.Red:
+                        // if on a frigate then only the frigate takes damage, like a shield!
+                        if (IsAvatarInFrigate)
+                            DamageShip(Point2D.Direction.None, turnResults);
+                        else
+                            records.DamageEachCharacter(turnResults, 1, 9);
+
+                        turnResults.PushOutputToConsole(
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (ranged)", false);
+
+                        continue;
+                    default:
+                        throw new Ultima5ReduxException(
+                            "Only \"Red\" and CannonBall ranged attacks have been configured");
+                }
+            }
         }
 
 
@@ -529,14 +471,28 @@ namespace Ultima5Redux.Maps
             mapUnitInfo.CombatMapReference = singleCombatMapReference;
         }
 
-
-        [DataMember] public bool DeclinedExtortion { get; set; }
-
         /// <summary>
-        ///     Are you wanted by the guards? For example - did you murder someone?
+        ///     Create a list of the free spaces surrounding around the Avatar suitable for something to be generated onto
+        ///     Uses all 8 directions
         /// </summary>
-        [DataMember]
-        public bool IsWantedManByThePoPo { get; set; }
+        /// <returns></returns>
+        private List<Point2D> GetFreeSpacesSurroundingAvatar()
+        {
+            List<Point2D> freeSpacesAroundAvatar = new();
+
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    Point2D pointToCheck = new(Math.Max(CurrentPosition.X + x, 0),
+                        Math.Max(CurrentPosition.Y + y, 0));
+                    if (!IsMapUnitOccupiedTile(pointToCheck) && GetTileReference(pointToCheck).IsWalking_Passable)
+                        freeSpacesAroundAvatar.Add(pointToCheck);
+                }
+            }
+
+            return freeSpacesAroundAvatar;
+        }
 
         /// <summary>
         ///     Gets the appropriate (if any) SingleCombatMapReference based on the map and mapunits attempting to engage in
@@ -784,77 +740,122 @@ namespace Ultima5Redux.Maps
             return mapUnitInfo;
         }
 
-        /// <summary>
-        ///     Gathers the details of what if any aggressive action the mapunits would do this turn
-        /// </summary>
-        /// <returns></returns>
-        internal Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> GetNonCombatMapAggressiveMapUnitInfo(
-            TurnResults turnResults)
+        private Point2D GetPositionIfUserCanMove(MapUnitMovement.MovementCommandDirection direction,
+            Point2D characterPosition, bool bNoStaircases, Point2D scheduledPosition, int nMaxDistance)
         {
-            Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
+            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
 
-            SmallMapReferences.SingleMapReference singleMapReference = CurrentSingleMapReference;
-            if (singleMapReference == null)
-                throw new Ultima5ReduxException(
-                    "Tried to GetAggressiveMapUnitInfo but CurrentMap.CurrentSingleMapReference was null");
+            // always include none
+            if (direction == MapUnitMovement.MovementCommandDirection.None) return adjustedPosition;
 
-            // if (CurrentMap is not RegularMap regularMap)
-            //     throw new Ultima5ReduxException("Tried to call GetNonCombatMapAggressiveMapUnitInfo on combat map");
-            //
-            foreach (MapUnit mapUnit in CurrentMapUnits.AllActiveMapUnits)
-            {
-                // we don't calculate any special movement or events for map units on different floors
-                if (mapUnit.MapUnitPosition.Floor != CurrentSingleMapReference.Floor)
-                    continue;
+            if (adjustedPosition.X < 0 || adjustedPosition.X >= TheMap.Length || adjustedPosition.Y < 0 ||
+                adjustedPosition.Y >= TheMap[0].Length) return null;
 
-                // we don't want to add anything that can never attack, so we keep only enemies and NPCs 
-                // in the list of aggressors
-                switch (mapUnit)
-                {
-                    case Horse:
-                    case Enemy:
-                    case NonPlayerCharacter:
-                        break;
-                    default:
-                        // it's not an aggressive Npc or Enemy so skip on past - nothing to see here
-                        continue;
-                }
+            // is the tile free to travel to? even if it is, is it within N tiles of the scheduled tile?
+            if (IsTileFreeToTravelForAvatar(adjustedPosition, bNoStaircases) &&
+                scheduledPosition.IsWithinN(adjustedPosition, nMaxDistance)) return adjustedPosition;
 
-                VirtualMap.AggressiveMapUnitInfo mapUnitInfo =
-                    GetNonCombatMapAggressiveMapUnitInfo(mapUnit.MapUnitPosition.XY,
-                        CurrentAvatarPosition.XY,
-                        SingleCombatMapReference.Territory.Britannia, mapUnit);
-
-                if (mapUnitInfo.CombatMapReference != null)
-                    turnResults.PushOutputToConsole(mapUnitInfo.AttackingMapUnit.FriendlyName + " fight me in " +
-                                                    mapUnitInfo.CombatMapReference.Description);
-                aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
-            }
-
-            return aggressiveMapUnitInfos;
+            return null;
         }
 
-        [IgnoreDataMember]
-        public bool IsAvatarInFrigate =>
-            GetAvatarMapUnit()?.CurrentBoardedMapUnit is Frigate;
+        /// <summary>
+        ///     Gets possible directions that are accessible from a particular point
+        /// </summary>
+        /// <param name="characterPosition">the current position of the character</param>
+        /// <param name="scheduledPosition">the place they are supposed to be</param>
+        /// <param name="nMaxDistance">max distance they can travel from that position</param>
+        /// <param name="bNoStaircases"></param>
+        /// <returns></returns>
+        private List<MapUnitMovement.MovementCommandDirection> GetPossibleDirectionsList(in Point2D characterPosition,
+            in Point2D scheduledPosition, int nMaxDistance, bool bNoStaircases)
+        {
+            List<MapUnitMovement.MovementCommandDirection> directionList = new();
 
-        [IgnoreDataMember]
-        public bool IsAvatarInSkiff =>
-            GetAvatarMapUnit().CurrentBoardedMapUnit is Skiff;
+            // gets an adjusted position OR returns null if the position is not valid
 
-        [IgnoreDataMember]
-        public bool IsAvatarRidingCarpet =>
-            GetAvatarMapUnit().CurrentBoardedMapUnit is MagicCarpet;
+            foreach (MapUnitMovement.MovementCommandDirection direction in Enum.GetValues(
+                         typeof(MapUnitMovement.MovementCommandDirection)))
+            {
+                // we may be asked to avoid including .None in the list
+                if (direction == MapUnitMovement.MovementCommandDirection.None) continue;
 
-        [IgnoreDataMember]
-        public bool IsAvatarRidingHorse =>
-            GetAvatarMapUnit().CurrentBoardedMapUnit is Horse;
+                Point2D adjustedPos = GetPositionIfUserCanMove(direction, characterPosition, bNoStaircases,
+                    scheduledPosition, nMaxDistance);
+                // if adjustedPos == null then the particular direction was not allowed for one reason or another
+                if (adjustedPos != null) directionList.Add(direction);
+            }
+
+            return directionList;
+        }
 
         public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
             ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
 
+        public Horse CreateHorse(MapUnitPosition mapUnitPosition, Maps map, out int nIndex)
+        {
+            nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            if (nIndex == -1) return null;
 
-        [IgnoreDataMember] public bool IsAvatarRidingSomething => GetAvatarMapUnit().IsAvatarOnBoardedThing;
+            Horse horse = new(
+                new MapUnitMovement(nIndex),
+                //importedMovements.GetMovement(nIndex), 
+                MapLocation, Point2D.Direction.Right,
+                null, mapUnitPosition)
+            {
+                MapUnitPosition = mapUnitPosition
+            };
+
+            // set position of frigate in the world
+            AddNewMapUnit(map, horse, nIndex);
+            return horse;
+        }
+
+        /// <summary>
+        ///     Creates a horse MapUnit in the surrounding tiles of the Avatar - if one exists
+        /// </summary>
+        /// <returns>the new horse or null if there was no where to put it</returns>
+        public Horse CreateHorseAroundAvatar(TurnResults turnResults)
+        {
+            List<Point2D> freeSpacesAroundAvatar = GetFreeSpacesSurroundingAvatar();
+            if (freeSpacesAroundAvatar.Count <= 0) return null;
+
+            Random ran = new();
+            Point2D chosenLocation = freeSpacesAroundAvatar[ran.Next() % freeSpacesAroundAvatar.Count];
+            Horse horse = CreateHorse(
+                new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor), TheMapType,
+                out int nIndex);
+
+            if (nIndex == -1 || horse == null) return null;
+
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.PoofHorse));
+
+            return horse;
+        }
+
+        public MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
+            SmallMapReferences.SingleMapReference singleMapReference)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            if (nIndex == -1) return null;
+
+            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, singleMapReference.Floor);
+            var moonstoneNonAttackingUnit =
+                new MoonstoneNonAttackingUnit(moonstone, mapUnitPosition);
+
+            // set position of frigate in the world
+            CurrentMapUnits.AddMapUnit(moonstoneNonAttackingUnit);
+            return moonstoneNonAttackingUnit;
+        }
+
+        public Avatar GetAvatarMapUnit()
+        {
+            if (CurrentMapUnits == null)
+                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits is null");
+            if (CurrentMapUnits.TheAvatar == null)
+                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits.TheAvatar is null");
+
+            return CurrentMapUnits.TheAvatar;
+        }
 
         public SingleCombatMapReference GetCombatMapReferenceForAvatarAttacking(Point2D attackFromPosition,
             Point2D attackToPosition, SingleCombatMapReference.Territory territory)
@@ -954,5 +955,185 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <returns>MapUnit or null if none exist</returns>
         public MapUnit GetMapUnitOnCurrentTile() => GetTopVisibleMapUnit(CurrentPosition.XY, true);
+
+
+        /// <summary>
+        ///     Gets a tile reference from the tile the avatar currently resides on
+        /// </summary>
+        /// <returns></returns>
+        public TileReference GetTileReferenceOnCurrentTile() => GetTileReference(CurrentPosition.XY);
+
+        public bool IsLandNearbyForAvatar() =>
+            IsLandNearby(CurrentPosition.XY, false, GetAvatarMapUnit().CurrentAvatarState);
+
+
+        /// <summary>
+        ///     Gets a map unit if it's on the current tile
+        /// </summary>
+        /// <returns>true if there is a map unit of on the tile</returns>
+        public bool IsMapUnitOccupiedTile() => IsMapUnitOccupiedTile(CurrentPosition.XY);
+
+        public Skiff MakeAndBoardSkiff()
+        {
+            Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().Direction,
+                out int _);
+            GetAvatarMapUnit().BoardMapUnit(skiff);
+            ClearAndSetEmptyMapUnits(skiff);
+            return skiff;
+        }
+
+        public void MoveAvatar(Point2D newPosition)
+        {
+            CurrentAvatarPosition =
+                new MapUnitPosition(newPosition.X, newPosition.Y, CurrentAvatarPosition.Floor);
+        }
+
+        /// <summary>
+        ///     Makes the Avatar exit the current MapUnit they are occupying
+        /// </summary>
+        /// <returns>The MapUnit object they were occupying - you need to re-add it the map after</returns>
+        public MapUnit XitCurrentMapUnit(out string retStr)
+        {
+            retStr = GameReferences.Instance.DataOvlRef.StringReferences
+                .GetString(DataOvlReference.KeypressCommandsStrings.XIT)
+                .TrimEnd();
+
+            if (!GetAvatarMapUnit().IsAvatarOnBoardedThing)
+            {
+                retStr += " " + GameReferences.Instance.DataOvlRef.StringReferences
+                    .GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
+                return null;
+            }
+
+            if (!GetAvatarMapUnit().CurrentBoardedMapUnit.CanBeExited(this))
+            {
+                retStr += "\n" + GameReferences.Instance.DataOvlRef.StringReferences
+                    .GetString(DataOvlReference.SleepTransportStrings.N_NO_LAND_NEARBY_BANG_N).Trim();
+                return null;
+            }
+
+            MapUnit unboardedMapUnit = GetAvatarMapUnit().UnboardedAvatar();
+            Debug.Assert(unboardedMapUnit != null);
+
+            // set the current positions to the equal the Avatar's as he exits the vehicle 
+            unboardedMapUnit.MapLocation = MapLocation;
+            unboardedMapUnit.MapUnitPosition = CurrentAvatarPosition;
+            unboardedMapUnit.Direction = GetAvatarMapUnit().Direction;
+            unboardedMapUnit.KeyTileReference = unboardedMapUnit.GetNonBoardedTileReference();
+
+            AddNewMapUnit(TheMapType, unboardedMapUnit);
+            retStr += " " + unboardedMapUnit.BoardXitName;
+
+            // if the Avatar is on a frigate then we will check for Skiffs and exit on a skiff instead
+            if (unboardedMapUnit is not Frigate avatarFrigate) return unboardedMapUnit;
+
+            Debug.Assert(avatarFrigate != null, nameof(avatarFrigate) + " != null");
+
+            // if we have skiffs, AND do not have land close by then we deploy a skiff
+            if (avatarFrigate.SkiffsAboard <= 0 || IsLandNearby(GetAvatarMapUnit().CurrentAvatarState))
+                return unboardedMapUnit;
+
+            MakeAndBoardSkiff();
+            avatarFrigate.SkiffsAboard--;
+
+            return unboardedMapUnit;
+        }
+
+        /// <summary>
+        ///     Generates a new map unit
+        /// </summary>
+        /// <param name="mapUnitMovement"></param>
+        /// <param name="bInitialLoad"></param>
+        /// <param name="location"></param>
+        /// <param name="npcState"></param>
+        /// <param name="tileReference"></param>
+        /// <param name="smallMapCharacterState"></param>
+        /// <param name="mapUnitPosition"></param>
+        /// <returns></returns>
+        protected MapUnit CreateNewMapUnit(MapUnitMovement mapUnitMovement, bool bInitialLoad,
+            SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState,
+            MapUnitPosition mapUnitPosition, TileReference tileReference,
+            SmallMapCharacterState smallMapCharacterState = null)
+        {
+            MapUnit newUnit;
+
+            if (tileReference == null || tileReference.Index == 256)
+            {
+                Debug.WriteLine("An empty map unit was created with no tile reference");
+                newUnit = new EmptyMapUnit();
+            }
+            else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active &&
+                     npcState.NPCRef.NormalNPC)
+            {
+                newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
+                    mapUnitPosition, npcState);
+                // special condition where people who were previously freed are not dead, but also do not appear 
+                if (newUnit.OverrideAiType && !GameStateReference.State.TheGameOverrides.PreferenceFreedPeopleDontDie)
+                {
+                    NonPlayerCharacterSchedule.AiType aiType =
+                        newUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
+                    if (aiType == NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain)
+                        newUnit = new EmptyMapUnit();
+                }
+            }
+            else if (GameReferences.Instance.SpriteTileReferences.IsFrigate(tileReference.Index))
+            {
+                newUnit = new Frigate(mapUnitMovement, location, tileReference.GetDirection(), npcState,
+                    mapUnitPosition);
+            }
+            else if (GameReferences.Instance.SpriteTileReferences.IsSkiff(tileReference.Index))
+            {
+                newUnit = new Skiff(mapUnitMovement, location, tileReference.GetDirection(), npcState, mapUnitPosition);
+            }
+            else if (TileReferences.IsMagicCarpet(tileReference.Index))
+            {
+                newUnit = new MagicCarpet(location, tileReference.GetDirection(), npcState, mapUnitPosition);
+            }
+            else if (TileReferences.IsUnmountedHorse(tileReference.Index))
+            {
+                newUnit = new Horse(mapUnitMovement, location, tileReference.GetDirection(), npcState, mapUnitPosition);
+            }
+            else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active)
+            {
+                // This is where we will do custom stuff for special NPS
+                // guard or daemon or stone gargoyle or fighter or bard or townesperson or rat or bat or shadowlord
+                if ((TileReference.SpriteIndex)npcState.NPCRef.NPCKeySprite is
+                    TileReference.SpriteIndex.Guard_KeyIndex
+                    or TileReference.SpriteIndex.Daemon1_KeyIndex
+                    or TileReference.SpriteIndex.StoneGargoyle_KeyIndex
+                    or TileReference.SpriteIndex.Fighter_KeyIndex
+                    or TileReference.SpriteIndex.Bard_KeyIndex
+                    or TileReference.SpriteIndex.TownsPerson_KeyIndex
+                    or TileReference.SpriteIndex.Rat_KeyIndex
+                    or TileReference.SpriteIndex.Bat_KeyIndex
+                    or TileReference.SpriteIndex.ShadowLord_KeyIndex)
+                {
+                    newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
+                        mapUnitPosition, npcState);
+                }
+                else
+                {
+                    newUnit = NonAttackingUnitFactory.Create(npcState.NPCRef.NPCKeySprite, location, mapUnitPosition);
+                    newUnit.MapLocation = location;
+                }
+            }
+            else if (GameReferences.Instance.SpriteTileReferences.IsMonster(tileReference.Index))
+            {
+                Debug.Assert(GameReferences.Instance.EnemyRefs != null);
+                newUnit = new Enemy(mapUnitMovement, GameReferences.Instance.EnemyRefs.GetEnemyReference(tileReference),
+                    location, npcState, mapUnitPosition);
+            }
+            // this is where we will create monsters too
+            else
+            {
+                Debug.WriteLine("An empty map unit was created with " + tileReference.Name);
+                newUnit = new EmptyMapUnit();
+            }
+
+            // force to use extended sprites if they exist
+            newUnit.UseFourDirections = UseExtendedSprites;
+
+            return newUnit;
+        }
     }
 }
