@@ -14,6 +14,7 @@ using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.Maps
 {
@@ -21,7 +22,6 @@ namespace Ultima5Redux.Maps
     {
         //[DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; private set; }
 
-        
 
         [IgnoreDataMember]
         protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides =>
@@ -516,5 +516,443 @@ namespace Ultima5Redux.Maps
             MapLocation = location;
             MapFloor = mapFloor;
         }
+
+
+        private void ForceAttack(VirtualMap.AggressiveMapUnitInfo mapUnitInfo, TileReference attackFromTileReference)
+        {
+            mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction.EnemyAttackCombatMap);
+            SingleCombatMapReference singleCombatMapReference =
+                GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                    attackFromTileReference.CombatMapIndex,
+                    SingleCombatMapReference.Territory.Britannia);
+
+            mapUnitInfo.CombatMapReference = singleCombatMapReference;
+        }
+
+
+        [DataMember] public bool DeclinedExtortion { get; set; }
+
+        /// <summary>
+        ///     Are you wanted by the guards? For example - did you murder someone?
+        /// </summary>
+        [DataMember]
+        public bool IsWantedManByThePoPo { get; set; }
+
+        /// <summary>
+        ///     Gets the appropriate (if any) SingleCombatMapReference based on the map and mapunits attempting to engage in
+        ///     combat
+        /// </summary>
+        /// <param name="attackFromPosition">where are they attacking from</param>
+        /// <param name="attackToPosition">where are they attack to</param>
+        /// <param name="territory"></param>
+        /// <param name="aggressorMapUnit">who is the one attacking?</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <returns></returns>
+        private VirtualMap.AggressiveMapUnitInfo GetNonCombatMapAggressiveMapUnitInfo(Point2D attackFromPosition,
+            Point2D attackToPosition, SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit)
+        {
+            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map) =>
+                GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
+
+            TileReference attackToTileReference = GetTileReference(attackToPosition);
+            TileReference attackFromTileReference = GetTileReference(attackFromPosition);
+
+            List<MapUnit> mapUnits = GetMapUnitsByPosition(attackToPosition,
+                CurrentSingleMapReference.Floor);
+
+            switch (mapUnits.Count)
+            {
+                case 0:
+                    break;
+                case > 1:
+                    // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
+                    if (mapUnits.Any(m => m is Avatar))
+                    {
+                    }
+                    else
+                    {
+                        throw new Ultima5ReduxException($"Did not expect {mapUnits.Count} mapunits on targeted tile");
+                    }
+
+                    break;
+            }
+
+            VirtualMap.AggressiveMapUnitInfo mapUnitInfo = new(aggressorMapUnit);
+
+            // if they are not Enemy type (probably NPC) then we are certain they don't have a range attack
+            // UNLESS you are a wanted man - then the guards will try to attack you!
+            //bool isWantedManByThePoPo = IsWantedManByThePoPo;
+            //bool declinedExtortion = CurrentMap is SmallMap { DeclinedExtortion: true };
+            bool bIsMadGuard = false;
+            if (aggressorMapUnit is NonPlayerCharacter npc) bIsMadGuard = IsWantedManByThePoPo && npc.NPCRef.IsGuard;
+
+            // if the guard is next to you, then they will ask you to come quietly
+            bool bNextToEachOther = attackFromPosition.IsWithinNFourDirections(attackToPosition);
+            if (bIsMadGuard && bNextToEachOther && !TileReferences.IsHeadOfBed(
+                    GetTileReference(aggressorMapUnit.MapUnitPosition.XY).Index))
+            {
+                // if they are at the head of the bed then we don't try to arrest, this keeps guards who are "injured" 
+                // at the healers from trying to arrest
+                // if avatar is being attacked..
+                // we get to assume that the avatar is not necessarily next to the enemy
+                mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
+            }
+
+            // IF NPC is next to Avatar then we check for any AI behaviours such as arrests or extortion
+            if (bNextToEachOther && aggressorMapUnit is NonPlayerCharacter nextToEachOtherNpc)
+            {
+                NonPlayerCharacterSchedule.AiType aiType =
+                    aggressorMapUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
+
+                // because this overrides a LOT of AI behaviours, I just let all guards try to attack
+                // you if you turned down the extortion
+                if (nextToEachOtherNpc.NPCRef.IsGuard && IsWantedManByThePoPo && DeclinedExtortion)
+                {
+                    ForceAttack(mapUnitInfo, attackFromTileReference);
+                }
+                else
+                {
+                    switch (aiType)
+                    {
+                        case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
+                        case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
+                            // let's add some randomness and only check them half the time
+                            if (Utils.OneInXOdds(2))
+                            {
+                                // are you wearing the black badge? 
+                                // temporary - if you have the badge then that's good enough
+                                if (GameStateReference.State.CharacterRecords.WearingBlackBadge)
+                                {
+                                    // if the guard has already harassed the Avatar, then they won't bug him
+                                    // again until he re-enters the castle
+                                    mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                        .BlackthornGuardPasswordCheck);
+                                }
+                                else
+                                {
+                                    mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                        .StraightToBlackthornDungeon);
+                                }
+                            }
+
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.Begging:
+                            mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction.Begging);
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
+                        case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
+                        case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
+                            // even if they are extortionists, if you did some super bad, they will try to arrest 
+                            if (IsWantedManByThePoPo && DeclinedExtortion)
+                            {
+                                // attack them
+                                goto case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing;
+                            }
+
+                            if (IsWantedManByThePoPo)
+                            {
+                                mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                    .AttemptToArrest);
+                                break;
+                            }
+
+                            mapUnitInfo.ForceDecidedAction(
+                                aiType == NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard
+                                    ? VirtualMap.AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion
+                                    : VirtualMap.AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion);
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
+                            // if they wanted to chat and they are a guard they can get pissed off and arrest you
+                            if (IsWantedManByThePoPo || (nextToEachOtherNpc.NPCState.PissedOffCountDown == 0 &&
+                                                         nextToEachOtherNpc.NPCRef.IsGuard))
+                            {
+                                mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                    .AttemptToArrest);
+                            }
+                            else
+                            {
+                                // some times non guard NPCs are just keen to chat
+                                mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                    .WantsToChat);
+                            }
+
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
+                            // wow - I just leaned how to do this goto
+                            // they only attack when you are wanted by the popo
+                            if (IsWantedManByThePoPo) ForceAttack(mapUnitInfo, attackFromTileReference);
+
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
+                            ForceAttack(mapUnitInfo, attackFromTileReference);
+                            break;
+                    }
+                }
+            }
+            // if a guard wants to chat, they lose patience after a while and want to arrest you
+            // so we count down like a stern parent
+            else if (aggressorMapUnit is NonPlayerCharacter pissedOffNonPlayerCharacter
+                     && pissedOffNonPlayerCharacter.NPCState.PissedOffCountDown > 0
+                     && pissedOffNonPlayerCharacter.NPCRef.IsGuard
+                     && pissedOffNonPlayerCharacter.NPCState.OverridenAiType ==
+                     NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat)
+            {
+                pissedOffNonPlayerCharacter.NPCState.PissedOffCountDown--;
+            }
+
+            if (aggressorMapUnit is not Enemy enemy) return mapUnitInfo;
+
+            if (!bNextToEachOther)
+            {
+                switch (enemy.EnemyReference.LargeMapMissileType)
+                {
+                    case CombatItemReference.MissileType.None:
+                        return mapUnitInfo;
+                    // pirates = cannonball, snakes = poison, serpents = red, squid =
+                    // the aggressor is an enemy so let's check to see if they have LargeMap projectiles
+                    case CombatItemReference.MissileType.CannonBall:
+                        // if it's a cannon ball, and they are on the same X or Y then it can fire!
+                        if ((attackFromPosition.X == attackToPosition.X ||
+                             attackFromPosition.Y == attackToPosition.Y) &&
+                            attackFromPosition.IsWithinN(attackToPosition, 3))
+                            mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.CannonBall;
+                        break;
+                    default:
+                        // it's not a cannon ball but it is a missile
+                        if (attackFromPosition.IsWithinN(attackToPosition, 3))
+                            mapUnitInfo.AttackingMissileType = enemy.EnemyReference.LargeMapMissileType;
+                        break;
+                }
+
+                return mapUnitInfo;
+            }
+
+            bool bIsPirate = enemy.EnemyReference.LargeMapMissileType == CombatItemReference.MissileType.CannonBall;
+            // if avatar on skiff or carpet and avatar is on water then it's immediate ouch, no map
+            if ((IsAvatarInSkiff || IsAvatarRidingCarpet) &&
+                attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
+            {
+                // we will use Arrow to denote the enemy attacking on the overworld, but no combat map
+                mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.Arrow;
+            }
+            // avatar not on a boat
+            // return avatar's current tile combat map
+            else if (!IsAvatarInFrigate)
+            {
+                // when the avatar is not in boat and a water enemy attacks - they will always fight in the bay
+                if (enemy.EnemyReference.IsWaterEnemy)
+                {
+                    mapUnitInfo.CombatMapReference = getSingleCombatMapReference(bIsPirate
+                        ? SingleCombatMapReference.BritanniaCombatMaps.BoatNorth
+                        : SingleCombatMapReference.BritanniaCombatMaps.Bay);
+                }
+                else
+                {
+                    // if you end up on a bay tile, but the monster is not a water monster, then we need to either
+                    // substitute another map, or have them attack them in the overworld
+                    if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.Bay)
+                    {
+                        mapUnitInfo.CombatMapReference = null;
+                        mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.Arrow;
+                    }
+                    else
+                    {
+                        mapUnitInfo.CombatMapReference =
+                            getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+                    }
+                }
+            }
+            // if the enemy is a water enemy and we know the avatar is on a frigate, then we fight on the ocean
+            else if (enemy.EnemyReference.IsWaterEnemy)
+            {
+                // we are on a frigate AND we are fighting a pirate ship
+                mapUnitInfo.CombatMapReference = getSingleCombatMapReference(bIsPirate
+                    ? SingleCombatMapReference.BritanniaCombatMaps.BoatBoat
+                    : SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+            }
+            else
+            {
+                if (!enemy.EnemyReference.IsWaterEnemy)
+                    mapUnitInfo.CombatMapReference =
+                        getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
+                else
+                    mapUnitInfo.CombatMapReference = GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                        territory,
+                        (int)attackToTileReference.CombatMapIndex);
+            }
+
+            return mapUnitInfo;
+        }
+
+        /// <summary>
+        ///     Gathers the details of what if any aggressive action the mapunits would do this turn
+        /// </summary>
+        /// <returns></returns>
+        internal Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> GetNonCombatMapAggressiveMapUnitInfo(
+            TurnResults turnResults)
+        {
+            Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
+
+            SmallMapReferences.SingleMapReference singleMapReference = CurrentSingleMapReference;
+            if (singleMapReference == null)
+                throw new Ultima5ReduxException(
+                    "Tried to GetAggressiveMapUnitInfo but CurrentMap.CurrentSingleMapReference was null");
+
+            // if (CurrentMap is not RegularMap regularMap)
+            //     throw new Ultima5ReduxException("Tried to call GetNonCombatMapAggressiveMapUnitInfo on combat map");
+            //
+            foreach (MapUnit mapUnit in CurrentMapUnits.AllActiveMapUnits)
+            {
+                // we don't calculate any special movement or events for map units on different floors
+                if (mapUnit.MapUnitPosition.Floor != CurrentSingleMapReference.Floor)
+                    continue;
+
+                // we don't want to add anything that can never attack, so we keep only enemies and NPCs 
+                // in the list of aggressors
+                switch (mapUnit)
+                {
+                    case Horse:
+                    case Enemy:
+                    case NonPlayerCharacter:
+                        break;
+                    default:
+                        // it's not an aggressive Npc or Enemy so skip on past - nothing to see here
+                        continue;
+                }
+
+                VirtualMap.AggressiveMapUnitInfo mapUnitInfo =
+                    GetNonCombatMapAggressiveMapUnitInfo(mapUnit.MapUnitPosition.XY,
+                        CurrentAvatarPosition.XY,
+                        SingleCombatMapReference.Territory.Britannia, mapUnit);
+
+                if (mapUnitInfo.CombatMapReference != null)
+                    turnResults.PushOutputToConsole(mapUnitInfo.AttackingMapUnit.FriendlyName + " fight me in " +
+                                                    mapUnitInfo.CombatMapReference.Description);
+                aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
+            }
+
+            return aggressiveMapUnitInfos;
+        }
+
+        [IgnoreDataMember]
+        public bool IsAvatarInFrigate =>
+            GetAvatarMapUnit()?.CurrentBoardedMapUnit is Frigate;
+
+        [IgnoreDataMember]
+        public bool IsAvatarInSkiff =>
+            GetAvatarMapUnit().CurrentBoardedMapUnit is Skiff;
+
+        [IgnoreDataMember]
+        public bool IsAvatarRidingCarpet =>
+            GetAvatarMapUnit().CurrentBoardedMapUnit is MagicCarpet;
+
+        [IgnoreDataMember]
+        public bool IsAvatarRidingHorse =>
+            GetAvatarMapUnit().CurrentBoardedMapUnit is Horse;
+
+        public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
+            ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
+
+
+        [IgnoreDataMember] public bool IsAvatarRidingSomething => GetAvatarMapUnit().IsAvatarOnBoardedThing;
+
+        public SingleCombatMapReference GetCombatMapReferenceForAvatarAttacking(Point2D attackFromPosition,
+            Point2D attackToPosition, SingleCombatMapReference.Territory territory)
+        {
+            // note - attacking from a skiff OR carpet is NOT permitted unless touching a piece of land 
+            // otherwise is twill say Attack-On foot!
+            // note - cannot exit a skiff unless land is nearby
+
+            // let's use this method to also determine if an enemy CAN attack the avatar from afar
+
+            TileReference attackToTileReference = GetTileReference(attackToPosition);
+            if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.None) return null;
+
+            TileReference attackFromTileReference = GetTileReference(attackFromPosition);
+
+            List<MapUnit> mapUnits = GetMapUnitsByPosition(attackToPosition,
+                CurrentSingleMapReference.Floor);
+
+            MapUnit targetedMapUnit = null;
+            TileReference targetedMapUniTileReference = null;
+
+            switch (mapUnits.Count)
+            {
+                case 0:
+                    // the avatar is attacking, but actually doesn't have anyone directly in their sights
+                    // nothing to do
+                    return null;
+                case >= 1:
+                    // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
+                    if (mapUnits.Any(m => m is Avatar))
+                        throw new Ultima5ReduxException(
+                            "Did not expect Avatar mapunit on targeted tile when Avatar is attacking");
+
+                    // a little lazy for now
+                    targetedMapUnit = mapUnits[0];
+                    targetedMapUniTileReference = targetedMapUnit.KeyTileReference;
+                    break;
+            }
+
+            // if the avatar is in a skiff of on a carpet, but is in the ocean then they aren't allowed to attack
+            if (IsAvatarInSkiff || IsAvatarRidingCarpet)
+            {
+                bool bAvatarOnWaterTile = attackFromTileReference.IsWaterTile;
+
+                if (bAvatarOnWaterTile &&
+                    attackToTileReference.CombatMapIndex is
+                        SingleCombatMapReference.BritanniaCombatMaps
+                            .BoatCalc) // if no surrounding tiles are water tile then we skip the attack
+                    return null;
+            }
+
+            // there is someone to target
+            if (!IsAvatarInFrigate)
+            {
+                // last second check for water enemy - they can occasionally appear on a "land" tile like bridges
+                // so we take the chance to force a Bay map just in case
+                if (targetedMapUnit is Enemy waterCheckEnemy)
+                {
+                    if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
+                        return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                            SingleCombatMapReference.BritanniaCombatMaps.Bay, territory);
+                    // if the enemy is on bay but is not a water creature then we cannot attack them
+                    if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
+                        return null;
+                }
+
+                return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                    attackToTileReference.CombatMapIndex, territory);
+            }
+
+            // BoatCalc indicates it is a water tile and requires special consideration
+            if (attackToTileReference.CombatMapIndex != SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
+            {
+                if (attackToTileReference.IsWaterEnemyPassable)
+                    return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                        SingleCombatMapReference.BritanniaCombatMaps.BoatOcean,
+                        territory);
+
+                // BoatSouth indicates the avatar is on the frigate, and the enemy on land
+                return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                    SingleCombatMapReference.BritanniaCombatMaps.BoatSouth, territory);
+            }
+
+            // if attacking another frigate, then it's boat to boat
+            if (GameReferences.Instance.SpriteTileReferences.IsFrigate(targetedMapUniTileReference.Index))
+                return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                    SingleCombatMapReference.BritanniaCombatMaps.BoatBoat, territory);
+
+            // otherwise it's boat (ours) to ocean
+            return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                SingleCombatMapReference.BritanniaCombatMaps.BoatOcean, territory);
+            // it is not boat calc, but there is an enemy, so refer to our default combat map
+        }
+
+        /// <summary>
+        ///     Gets a map unit on the current tile (that ISN'T the Avatar)
+        /// </summary>
+        /// <returns>MapUnit or null if none exist</returns>
+        public MapUnit GetMapUnitOnCurrentTile() => GetTopVisibleMapUnit(CurrentPosition.XY, true);
     }
 }

@@ -91,6 +91,11 @@ namespace Ultima5Redux.References.Maps
             return _singleCombatMapReferences[territory][nIndex];
         }
 
+        public SingleCombatMapReference GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map,
+            SingleCombatMapReference.Territory territory) =>
+            GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
+
+
         public sealed class CombatMapData
         {
             [DataMember] public string Description { get; set; }

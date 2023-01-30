@@ -63,13 +63,7 @@ namespace Ultima5Redux.Maps
 
         public bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
 
-        /// <summary>
-        ///     Are you wanted by the guards? For example - did you murder someone?
-        /// </summary>
-        [DataMember]
-        public bool IsWantedManByThePoPo { get; set; }
 
-        [DataMember] public bool DeclinedExtortion { get; set; }
 
         internal void ClearSmallMapFlags()
         {
@@ -523,6 +517,53 @@ namespace Ultima5Redux.Maps
         {
             bool _ = IsStairGoingUp(xy, out TileReference stairTileReference);
             return stairTileReference;
+        }
+
+        /// <summary>
+        ///     Gets the NPC you want to talk to in the given direction
+        ///     If you are in front of a table then you can talk over top of it too
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns>the NPC or null if non are found</returns>
+        public NonPlayerCharacter GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection direction)
+        {
+            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction);
+
+            var npc = GetSpecificMapUnitByLocation<NonPlayerCharacter>(adjustedPosition,
+                CurrentSingleMapReference.Floor);
+
+            if (npc != null) return npc;
+
+            if (!GetTileReference(adjustedPosition).IsTalkOverable)
+                return null;
+
+            Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction, 2);
+
+            return GetSpecificMapUnitByLocation<NonPlayerCharacter>(adjustedPosition2Away,
+                CurrentSingleMapReference.Floor);
+        }
+
+        /// <summary>
+        ///     Some logic has to be processed afterwards and requires special conditions
+        /// </summary>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        internal void HandleSpecialCasesForSmallMapLoad()
+        {
+            if (CurrentSingleMapReference.MapLocation ==
+                SmallMapReferences.SingleMapReference.Location.Iolos_Hut
+                && GameStateReference.State.TheTimeOfDay.IsFirstDay())
+            {
+                // this is a bit redundant, but left in just in case
+                // it it is the first day then we don't include Smith or the Rats. Let's start the day off
+                // on a positive note!
+                NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
+                                               (TileReference.SpriteIndex)m.NPCRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
+                                               or TileReference.SpriteIndex.HorseRight) ??
+                                           throw new Ultima5ReduxException("Smith was not in Iolo's hut");
+
+                CurrentMapUnits.ClearMapUnit(smith);
+                CurrentMapUnits.AllMapUnits.RemoveAll(m => m is NonPlayerCharacter);
+            }
         }
     }
 }

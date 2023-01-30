@@ -369,18 +369,15 @@ namespace Ultima5Redux.MapUnits
         }
 
         private void RunAwayFromAvatar(RegularMap regularMap,
-            //VirtualMap virtualMap,
             MapUnitPosition npcDestinationPosition)
         {
             IEnumerable<Point2D> possiblePositions = npcDestinationPosition.XY
                 .GetConstrainedFourDirectionSurroundingPointsFurtherAway(
                     regularMap.CurrentAvatarPosition.XY,
-                    regularMap.NumOfXTiles, regularMap.NumOfYTiles);
-            AStar aStar = CreateAStar(regularMap); //, //regularMap.CurrentMapUnits,
-            //virtualMap.CurrentMap.TheMapOverrides);
+                    regularMap.NumOfXTiles - 1, regularMap.NumOfYTiles - 1);
+            AStar aStar = CreateAStar(regularMap); 
             foreach (Point2D point in possiblePositions)
             {
-                //if (virtualMap.IsTileFreeToTravel(point, true))
                 // this will return ASAP if the end point is not travelable by the mapunit
                 BuildPath(this, point, aStar, true);
             }

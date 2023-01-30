@@ -146,7 +146,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.CreateFrigateAtDock(
                 SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
-                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
+                LargeMapLocationReferences.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
             List<MapUnit> mapUnits = world.State.TheVirtualMap.CurrentMap.GetMapUnitsByPosition(dockLocation, 0);
 
             var frigate2 = world.State.TheVirtualMap.CurrentMap.GetSpecificMapUnitByLocation<Frigate>(dockLocation, 0);
@@ -182,7 +182,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.CreateSkiffAtDock(
                 SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
-                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
+                LargeMapLocationReferences.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
             List<MapUnit> mapUnits = world.State.TheVirtualMap.CurrentMap.GetMapUnitsByPosition(dockLocation, 0);
 
             var skiff = world.State.TheVirtualMap.CurrentMap.GetSpecificMapUnitByLocation<Skiff>(dockLocation, 0);
@@ -1402,20 +1402,23 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_TalkToNoOne(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_TalkToNoOne(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
-
+            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+                throw new Ultima5ReduxException("Expected SmallMap");
             NonPlayerCharacter npc =
-                world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
+                smallMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadInitialSaveGame(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles, true, true);
 
+            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+                throw new Ultima5ReduxException("Expected SmallMap");
             NonPlayerCharacter npc =
-                world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
+                smallMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAndReloadInitialSave(SaveFiles saveFiles)
@@ -1755,7 +1758,7 @@ namespace Ultima5ReduxTesting
             //     new Point2D(146, 238), SingleCombatMapReference.Territory.Britannia,
             //     world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit());
             SingleCombatMapReference singleCombatMapReference =
-                world.State.TheVirtualMap.GetCombatMapReferenceForAvatarAttacking(
+                largeMap.GetCombatMapReferenceForAvatarAttacking(
                     largeMap.GetAvatarMapUnit().MapUnitPosition.XY,
                     new Point2D(146, 238), SingleCombatMapReference.Territory.Britannia);
 
@@ -2344,29 +2347,32 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            int nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+            if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
+                throw new Ultima5ReduxException("Expected LargeMap");
+
+            int nClosest = largeMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(5), new Point2D(0, 0), 16);
             Assert.AreEqual(nClosest, 255);
 
             Point2D aroundBritain = new Point2D(82, 106);
-            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+            nClosest = largeMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(5), aroundBritain, 16);
             Assert.Less(nClosest, 255);
 
-            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+            nClosest = largeMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(6), aroundBritain, 2);
             Assert.AreEqual(nClosest, 255);
 
-            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+            nClosest = largeMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(6), aroundBritain, 8);
             Assert.Less(nClosest, 255);
 
             Point2D minoc = new Point2D(157, 20);
-            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+            nClosest = largeMap.ClosestTileReferenceAround(
                 minoc, 8, GameReferences.Instance.SpriteTileReferences.IsFrigate);
             Assert.Less(nClosest, 255);
 
-            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+            nClosest = largeMap.ClosestTileReferenceAround(
                 minoc, 2, GameReferences.Instance.SpriteTileReferences.IsFrigate);
             Assert.AreEqual(nClosest, 255);
 
@@ -2376,16 +2382,16 @@ namespace Ultima5ReduxTesting
 
             // fountain
             Point2D courtYard = new Point2D(15, 19);
-            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+            nClosest = largeMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(216), courtYard, 8);
             Assert.Less(nClosest, 255);
 
-            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+            nClosest = largeMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(216), courtYard, 2);
             Assert.AreEqual(nClosest, 255);
 
             // brick in the corner
-            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+            nClosest = largeMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(68), Point2D.Zero, 8);
             Assert.Less(nClosest, 255);
         }
@@ -2563,7 +2569,7 @@ namespace Ultima5ReduxTesting
                     58),
                 SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords, enemyReference);
 
-            bool bIsHoriz = world.State.TheVirtualMap.IsHorizTombstone(new Point2D(5, 3));
+            bool bIsHoriz = world.State.TheVirtualMap.CurrentMap.IsHorizTombstone(new Point2D(5, 3));
             Assert.True(bIsHoriz);
 
             world.State.TheVirtualMap.LoadCombatMap(
@@ -2572,7 +2578,7 @@ namespace Ultima5ReduxTesting
                     53),
                 SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords, enemyReference);
 
-            bIsHoriz = world.State.TheVirtualMap.IsHorizTombstone(new Point2D(4, 5));
+            bIsHoriz = world.State.TheVirtualMap.CurrentMap.IsHorizTombstone(new Point2D(4, 5));
             Assert.False(bIsHoriz);
         }
 
@@ -2767,7 +2773,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.CreateFrigateAtDock(
                 SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
-                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
+                LargeMapLocationReferences.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
             List<MapUnit> mapUnits = overworldMap.GetMapUnitsByPosition(dockLocation, 0);
 
             var frigate2 = overworldMap.GetSpecificMapUnitByLocation<Frigate>(dockLocation, 0);
@@ -2916,6 +2922,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
             if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
                 throw new Ultima5ReduxException("Should be large map");
+            
             var grendelsHutPosition = new Point2D(153, 91);
 
             largeMap.MoveAvatar(grendelsHutPosition);
@@ -2925,17 +2932,17 @@ namespace Ultima5ReduxTesting
             Assert.True(nCarpets == world.State.PlayerInventory.SpecializedItems
                 .Items[SpecialItem.SpecificItemType.Carpet].Quantity);
 
-            Assert.IsFalse(world.State.TheVirtualMap.IsAvatarRidingCarpet);
+            Assert.IsFalse(largeMap.IsAvatarRidingCarpet);
 
             world.TryToUseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet],
                 out bool bAbleToUseItem, turnResults);
             Assert.True(bAbleToUseItem);
-            Assert.IsTrue(world.State.TheVirtualMap.IsAvatarRidingCarpet);
+            Assert.IsTrue(largeMap.IsAvatarRidingCarpet);
 
             world.TryToEnterBuilding(grendelsHutPosition, out bool bWasSuccessful, turnResults);
 
-            Assert.IsTrue(world.State.TheVirtualMap.IsAvatarRidingCarpet);
+            Assert.IsTrue(largeMap.IsAvatarRidingCarpet);
         }
 
         private void OnUpdateOfEnqueuedScriptItemHandleJeremy(Conversation conversation)
@@ -3608,7 +3615,7 @@ namespace Ultima5ReduxTesting
 
             var doorPos = new Point2D(8, 18);
 
-            Assert.False(world.State.TheVirtualMap.IsHorizDoor(doorPos));
+            Assert.False(world.State.TheVirtualMap.CurrentMap.IsHorizDoor(doorPos));
         }
 
         [Test] [TestCase(SaveFiles.Britain2)] public void test_DungeonReferences(SaveFiles saveFiles)

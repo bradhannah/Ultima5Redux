@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.References.Maps
 {
@@ -133,22 +132,20 @@ namespace Ultima5Redux.References.Maps
         public SmallMapReferences.SingleMapReference.Location GetLocationByMapXY(Point2D mapXY) =>
             LocationXYLocations[mapXY];
 
-        public byte[][] GetMap(Map.Maps map)
+        public byte[][] GetMap(LargeMapType largeMapType)
         {
-            switch (map)
+            switch (largeMapType)
             {
-                case Map.Maps.Overworld:
+                case LargeMapType.Overworld:
                     return BuildGenericMap(
                         Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.BRIT_DAT),
                         Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.DATA_OVL), false);
-                case Map.Maps.Underworld:
+                case LargeMapType.Underworld:
                     return BuildGenericMap(
                         Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "",
                         true);
-                case Map.Maps.Small:
-                case Map.Maps.Combat:
                 default:
-                    throw new Ultima5ReduxException($"Tried to get a large map with: {map}");
+                    throw new Ultima5ReduxException($"Tried to get a large map with: {largeMapType}");
             }
         }
 
@@ -158,5 +155,40 @@ namespace Ultima5Redux.References.Maps
         /// <param name="mapXY"></param>
         /// <returns>true if it's enterable</returns>
         public bool IsMapXYEnterable(Point2D mapXY) => LocationXYLocations.ContainsKey(mapXY);
+
+        public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location)
+        {
+            List<byte> xDockCoords = GameReferences.Instance.DataOvlRef
+                .GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS)
+                .GetAsByteList();
+            List<byte> yDockCoords = GameReferences.Instance.DataOvlRef
+                .GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS)
+                .GetAsByteList();
+            Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
+                new()
+                {
+                    {
+                        SmallMapReferences.SingleMapReference.Location.Jhelom,
+                        new Point2D(xDockCoords[0], yDockCoords[0])
+                    },
+                    {
+                        SmallMapReferences.SingleMapReference.Location.Minoc,
+                        new Point2D(xDockCoords[1], yDockCoords[1])
+                    },
+                    {
+                        SmallMapReferences.SingleMapReference.Location.East_Britanny,
+                        new Point2D(xDockCoords[2], yDockCoords[2])
+                    },
+                    {
+                        SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
+                        new Point2D(xDockCoords[3], yDockCoords[3])
+                    }
+                };
+
+            if (!docks.ContainsKey(location))
+                throw new Ultima5ReduxException("Asked for a dock  in " + location + " but there isn't one there");
+
+            return docks[location];
+        }
     }
 }

@@ -192,7 +192,6 @@ namespace Ultima5Redux
         }
 
 
-
         /// <summary>
         ///     Checks if you can fire
         /// </summary>
@@ -200,9 +199,9 @@ namespace Ultima5Redux
         private bool CanFireInPlace(TurnResults turnResults)
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
-            if (State.TheVirtualMap.CurrentMap is LargeMap)
+            if (State.TheVirtualMap.CurrentMap is LargeMap largeMap)
             {
-                if (State.TheVirtualMap.IsAvatarInFrigate)
+                if (largeMap.IsAvatarInFrigate)
                 {
                     return true;
                 }
@@ -338,7 +337,6 @@ namespace Ultima5Redux
             }
         }
 
-      
 
         private bool IsLeavingMap(Point2D xyProposedPosition) =>
             xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
@@ -348,7 +346,7 @@ namespace Ultima5Redux
         {
             if (State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
-            
+
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackMurder));
             npc.NPCState.IsDead = true;
             State.ChangeKarma(-10, turnResults);
@@ -442,7 +440,7 @@ namespace Ultima5Redux
 
             if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
                 throw new Ultima5ReduxException("UseMagicCarpet called not on regular map");
-            
+
             bWasUsed = true;
             Debug.Assert(State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .HasOneOrMore);
@@ -497,17 +495,18 @@ namespace Ultima5Redux
             {
                 if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
                     throw new Ultima5ReduxException("Tried to advance time on non RegularMap");
-                
+
                 ProcessDamageOnAdvanceTimeNonCombat(turnResults);
 
-                aggressiveMapUnitInfos = State.TheVirtualMap.GetNonCombatMapAggressiveMapUnitInfo(turnResults);
+                aggressiveMapUnitInfos = regularMap.GetNonCombatMapAggressiveMapUnitInfo(turnResults);
                 State.TheVirtualMap.MoveNonCombatMapMapUnitsToNextMove(aggressiveMapUnitInfos);
                 VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo = null;
-                if (bNoAggression)
+                if (bNoAggression && State.TheVirtualMap.CurrentMap is LargeMap largeMap)
                 {
-                    State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);
+                    largeMap.GenerateAndCleanupEnemies(State.TheVirtualMap.OneInXOddsOfNewMonster,
+                        State.TheTimeOfDay.MinutesSinceBeginning);
                 }
-                else
+                else if (State.TheVirtualMap.CurrentMap is RegularMap theRegularMap)
                 {
                     // this routine will check to see if a combat map load occured - if so then we only focus on it
                     // and ignore all other work
@@ -527,7 +526,7 @@ namespace Ultima5Redux
                         TileReference currentTile = State.TheVirtualMap.CurrentMap
                             .GetOriginalTileReference(avatarPosition.XY);
 
-                        if (!State.TheVirtualMap.IsAvatarRidingSomething &&
+                        if (!theRegularMap.IsAvatarRidingSomething &&
                             aggressiveMapUnitInfo.AttackingMapUnit is Enemy enemy &&
                             enemy.EnemyReference.IsWaterEnemy && !currentTile.IsWalking_Passable &&
                             currentTile.IsWaterTile)
@@ -548,9 +547,10 @@ namespace Ultima5Redux
                             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.CombatMapLoaded));
                         }
                     }
-                    else
+                    else if (State.TheVirtualMap.CurrentMap is LargeMap theLargeMap)
                     {
-                        State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);
+                        theLargeMap.GenerateAndCleanupEnemies(State.TheVirtualMap.OneInXOddsOfNewMonster,
+                            State.TheTimeOfDay.MinutesSinceBeginning);
                     }
                 }
             }
@@ -656,7 +656,7 @@ namespace Ultima5Redux
         {
             if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
                 throw new Ultima5ReduxException("Called TryToAttackNonCombatMap on non RegularMap");
-            
+
             singleCombatMapReference = null;
             mapUnit = null;
 
@@ -700,7 +700,7 @@ namespace Ultima5Redux
             // we get the combat map reference, if any - it also tells us if there should be a ranged attack in the overworld
             // instead of a combat map
             singleCombatMapReference =
-                State.TheVirtualMap.GetCombatMapReferenceForAvatarAttacking(avatar.MapUnitPosition.XY,
+                regularMap.GetCombatMapReferenceForAvatarAttacking(avatar.MapUnitPosition.XY,
                     attackTargetPosition, SingleCombatMapReference.Territory.Britannia);
 
             bool bIsMurderable = TileReferences.IsHeadOfBed(tileReference.Index) ||
@@ -775,11 +775,12 @@ namespace Ultima5Redux
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
 
-            
-            MapUnit currentAvatarTileRef = State.TheVirtualMap.GetMapUnitOnCurrentTile();
+            //MapUnit currentAvatarTileRef = State.TheVirtualMap.GetMapUnitOnCurrentTile();
             bWasSuccessful = true;
 
-            if (currentAvatarTileRef is null || !currentAvatarTileRef.KeyTileReference.IsBoardable)
+            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap
+                //currentAvatarTileRef is null 
+                || !regularMap.GetMapUnitOnCurrentTile().KeyTileReference.IsBoardable)
             {
                 bWasSuccessful = false;
                 // can't board it
@@ -792,11 +793,8 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
-                throw new Ultima5ReduxException("Tried to board on non regular map");
-            
-            bool bAvatarIsBoarded = State.TheVirtualMap.IsAvatarRidingSomething;
-            MapUnit boardableMapUnit = State.TheVirtualMap.GetMapUnitOnCurrentTile();
+            bool bAvatarIsBoarded = regularMap.IsAvatarRidingSomething;
+            MapUnit boardableMapUnit = regularMap.GetMapUnitOnCurrentTile();
             if (boardableMapUnit is null)
                 throw new Ultima5ReduxException(
                     "Tried to board something but the tile appears to be boardable without a MapUnit");
@@ -838,7 +836,7 @@ namespace Ultima5Redux
                 {
                     if (bAvatarIsBoarded)
                     {
-                        if (State.TheVirtualMap.IsAvatarRidingHorse)
+                        if (regularMap.IsAvatarRidingHorse)
                         {
                             bWasSuccessful = false;
                             turnResults.PushOutputToConsole(getOnFootResponse());
@@ -846,12 +844,12 @@ namespace Ultima5Redux
                             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                         }
 
-                        if (State.TheVirtualMap.IsAvatarRidingCarpet)
+                        if (regularMap.IsAvatarRidingCarpet)
                             // we tuck the carpet away
                             State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                                 .Quantity++;
                         // add a skiff the the frigate
-                        if (State.TheVirtualMap.IsAvatarInSkiff) boardableFrigate.SkiffsAboard++;
+                        if (regularMap.IsAvatarInSkiff) boardableFrigate.SkiffsAboard++;
                     }
 
                     if (boardableFrigate.SkiffsAboard == 0)
@@ -964,10 +962,10 @@ namespace Ultima5Redux
             // TODO: need small map code for cannons like in LBs castle
 
             // if overworld
-            if (State.TheVirtualMap.CurrentMap is not LargeMap) return null;
+            if (State.TheVirtualMap.CurrentMap is not LargeMap largeMap) return null;
 
             // we assume they are in a frigate
-            if (!State.TheVirtualMap.IsAvatarInFrigate)
+            if (!largeMap.IsAvatarInFrigate)
                 throw new Ultima5ReduxException("can't fire on large map unless you're on a frigate");
 
             // make sure the boat is facing the correct direction given the direction of the cannon
@@ -1378,7 +1376,7 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
             TileReference curTileRef = smallMap.GetTileReferenceOnCurrentTile();
-            
+
             // we can't klimb on the current tile, so we need to pick a direction
             if (!GameReferences.Instance.SpriteTileReferences.IsLadder(curTileRef.Index) &&
                 !TileReferences.IsGrate(curTileRef.Index))
@@ -1597,7 +1595,7 @@ namespace Ultima5Redux
         {
             if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
                 throw new Ultima5ReduxException("TryToMoveNonCombatMap called on non RegularMap");
-            
+
             int nTimeAdvanceFactor =
                 regularMap is SmallMap ? 1 : N_DEFAULT_ADVANCE_TIME;
             int nTilesPerMapRow = regularMap.NumOfXTiles;
@@ -1675,7 +1673,7 @@ namespace Ultima5Redux
 
             if (newTileReference.Index ==
                 GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("BrickFloorHole") &&
-                !State.TheVirtualMap.IsAvatarRidingCarpet)
+                !regularMap.IsAvatarRidingCarpet)
             {
                 State.TheVirtualMap.UseStairs(newPosition, true);
                 // we need to evaluate in the game and let the game know that they should continue to fall
@@ -1730,7 +1728,7 @@ namespace Ultima5Redux
             // this will prevent a never ending growth or shrinking of character position in case the travel the world only moving right a bagillion times
             State.TheVirtualMap.CurrentPosition.X %= nTilesPerMapCol;
             State.TheVirtualMap.CurrentPosition.Y %= nTilesPerMapRow;
-            State.TheVirtualMap.SavePreviousPosition(State.TheVirtualMap.CurrentPosition);
+            //State.TheVirtualMap.SavePreviousPosition(State.TheVirtualMap.CurrentPosition);
 
             // if you walk on top of a staircase then we will immediately jump to the next floor
             if (TileReferences.IsStaircase(newTileReference.Index) &&
@@ -1751,7 +1749,7 @@ namespace Ultima5Redux
                 regularMap.GetAvatarMapUnit().CurrentAvatarState;
 
             bool bIsOnHorseOrCarpet =
-                State.TheVirtualMap.IsAvatarRidingCarpet || State.TheVirtualMap.IsAvatarRidingHorse;
+                regularMap.IsAvatarRidingCarpet || regularMap.IsAvatarRidingHorse;
             int nTimeToPass = bIsOnHorseOrCarpet ? 1 : nTimeAdvanceFactor;
 
             // We are on a small map which means all movements use the time passing minutes
@@ -1775,7 +1773,7 @@ namespace Ultima5Redux
 
             // WE are DEFINITELY on a large map at this time
             bool bIsSailingWithSailsHoisted = false;
-            if (State.TheVirtualMap.IsAvatarInFrigate)
+            if (regularMap.IsAvatarInFrigate)
             {
                 if (regularMap.GetAvatarMapUnit().CurrentBoardedMapUnit is not Frigate
                     avatarsFrigate)
@@ -1880,7 +1878,7 @@ namespace Ultima5Redux
                     // can they escape in this particular direction?
                     bool _ = combatMap.TryToMakePlayerEscape(turnResults, combatPlayer,
                         CombatMap.DirectionToEscapeType(direction));
-                    
+
                     return;
                 }
 
@@ -2009,10 +2007,10 @@ namespace Ultima5Redux
 
             // is the next tile walkable and is there NOT an NPC on it
             if (oneMoreTileReference.IsWalking_Passable && !bIsNpcOneMoreTile)
-                State.TheVirtualMap.SwapTiles(adjustedPos, oneMoreTileAdjusted);
+                State.TheVirtualMap.CurrentMap.SwapTiles(adjustedPos, oneMoreTileAdjusted);
             else // the next tile isn't walkable so we just swap the avatar and the push tile
                 // we will pull (swap) the thing
-                State.TheVirtualMap.SwapTiles(avatarXy, adjustedPos);
+                State.TheVirtualMap.CurrentMap.SwapTiles(avatarXy, adjustedPos);
 
             // move the avatar to the new spot
             State.TheVirtualMap.CurrentPosition.XY = adjustedPos.Copy();
@@ -2095,7 +2093,7 @@ namespace Ultima5Redux
 
             bool bHasInnerNonAttackUnits = State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
                 State.CharacterRecords.AvatarRecord, State.CharacterRecords);
-            
+
             TileReference tileReference = State.TheVirtualMap.CurrentMap.GetTileReference(xy);
 
             if (bHasInnerNonAttackUnits)
@@ -2156,10 +2154,11 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToTalk(MapUnitMovement.MovementCommandDirection direction,
             TurnResults turnResults)
         {
-            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
-                throw new Ultima5ReduxException("TryToTalk on a non RegularMap");
-            
-            NonPlayerCharacter npc = State.TheVirtualMap.GetNpcToTalkTo(direction);
+            NonPlayerCharacter npc = null;
+            if (State.TheVirtualMap.CurrentMap is SmallMap npcSmallMap)
+            {
+                npc = npcSmallMap.GetNpcToTalkTo(direction);
+            }
 
             if (npc == null)
             {
@@ -2174,7 +2173,7 @@ namespace Ultima5Redux
             bool bHasNpcRef = npc.NPCRef != null;
             // bool bIsShoppeKeeper = bHasNpcRef && npc.NPCRef.IsShoppeKeeper;
 
-            if (regularMap is SmallMap smallMap)
+            if (State.TheVirtualMap.CurrentMap is SmallMap smallMap)
             {
                 if (smallMap.IsNPCInBed(npc))
                 {
@@ -2563,7 +2562,7 @@ namespace Ultima5Redux
         {
             if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
                 throw new Ultima5ReduxException("TryToXit on non-regular map");
-            
+
             bWasSuccessful = true;
 
             MapUnit unboardedMapUnit =

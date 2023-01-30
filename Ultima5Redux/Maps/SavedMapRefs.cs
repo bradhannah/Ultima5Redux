@@ -1,0 +1,92 @@
+using System.Runtime.Serialization;
+using Ultima5Redux.MapUnits;
+using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
+
+namespace Ultima5Redux.Maps
+{
+    [DataContract] public class SavedMapRefs
+    {
+        [DataMember] public SmallMapReferences.SingleMapReference.Location Location { get; private set; }
+        [DataMember] public int Floor { get; private set; }
+        [DataMember] public Map.Maps MapType { get; private set; }
+
+        // this is loaded, and only re-set before a save
+        [DataMember] public MapUnitPosition MapUnitPosition { get; private set; } = new();
+
+        private void SetMapUnitPosition(Point2D playerPosition)
+        {
+            if (playerPosition == null)
+            {
+                MapUnitPosition.X = 0;
+                MapUnitPosition.Y = 0;
+            }
+            else
+            {
+                MapUnitPosition.X = playerPosition.X;
+                MapUnitPosition.Y = playerPosition.Y;
+            }
+
+            MapUnitPosition.Floor = Floor;
+        }
+
+        public void SetByLargeMapType(LargeMapLocationReferences.LargeMapType largeMapType, Point2D playerPosition)
+        {
+            Location = SmallMapReferences.SingleMapReference.Location.Britannia_Underworld;
+            Floor = largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1;
+            MapType = largeMapType == LargeMapLocationReferences.LargeMapType.Overworld
+                ? Map.Maps.Overworld
+                : Map.Maps.Underworld;
+            SetMapUnitPosition(playerPosition);
+        }
+
+        public void SetBySingleDungeonMapFloorReference(SingleDungeonMapFloorReference singleDungeonMapFloorReference,
+            Point2D playerPosition)
+        {
+            Location = singleDungeonMapFloorReference.DungeonLocation;
+            Floor = singleDungeonMapFloorReference.DungeonFloor;
+            MapType = Map.Maps.Dungeon;
+            SetMapUnitPosition(playerPosition);
+        }
+
+        public void SetBySingleCombatMapReference(SingleCombatMapReference singleCombatMapReference)
+        {
+            // not entirely sure we need to actually save much here since we never actually save games
+            // while in combat
+            Location = SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine;
+            Floor = 0;
+            MapType = Map.Maps.Combat;
+        }
+
+        public void SetBySingleMapReference(SmallMapReferences.SingleMapReference singleMapReference,
+            Point2D playerPosition)
+        {
+            Location = singleMapReference.MapLocation;
+            Floor = singleMapReference.Floor;
+            MapType = singleMapReference.MapType;
+            SetMapUnitPosition(playerPosition);
+        }
+
+        public SmallMapReferences.SingleMapReference GetSingleMapReference()
+        {
+            if (Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                return SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(Floor == 0
+                    ? LargeMapLocationReferences.LargeMapType.Overworld
+                    : LargeMapLocationReferences.LargeMapType.Underworld);
+            if (Location == SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
+            {
+                return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+            }
+
+            return GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor);
+        }
+
+        internal SavedMapRefs Copy() =>
+            new()
+            {
+                Location = Location,
+                Floor = Floor,
+                MapType = MapType
+            };
+    }
+}

@@ -33,7 +33,7 @@ namespace Ultima5Redux.Maps
 
         private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
-        public override Maps TheMapType => TheLargeMapType == LargeMapLocationReferences.LargeMapType.Overworld
+        public override Maps TheMapType => TheLargeLheLargeMapType == LargeMapLocationReferences.LargeMapType.Overworld
             ? Maps.Overworld
             : Maps.Underworld;
 
@@ -43,7 +43,7 @@ namespace Ultima5Redux.Maps
             // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
             if (!bIgnoreMoongate &&
                 GameStateReference.State.TheMoongates.IsMoonstoneBuried(new Point3D(xy.X, xy.Y,
-                    TheLargeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : 0xFF)))
+                    TheLargeLheLargeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : 0xFF)))
                 return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
                        throw new Ultima5ReduxException("Supposed to get a moongate override: " + xy);
 
@@ -53,7 +53,7 @@ namespace Ultima5Redux.Maps
 
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             _currentSingleMapReference ??=
-                SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(TheLargeMapType);
+                SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(TheLargeLheLargeMapType);
 
         //public Maps MapType => GetLargeMapTypeToMapType(_mapChoice);
 
@@ -74,7 +74,7 @@ namespace Ultima5Redux.Maps
             };
 
 
-        [DataMember] public LargeMapLocationReferences.LargeMapType TheLargeMapType { get; private set; }
+        [DataMember] public LargeMapLocationReferences.LargeMapType TheLargeLheLargeMapType { get; private set; }
 
 
         [JsonConstructor] private LargeMap()
@@ -85,24 +85,19 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
         /// </summary>
-        /// <param name="mapChoice"></param>
-        public LargeMap(LargeMapLocationReferences.LargeMapType mapChoice) : base(
-            SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
-            (int)mapChoice) //mapChoice == Maps.Overworld ? 0 : -1)
+        /// <param name="lheLargeMapType"></param>
+        public LargeMap(LargeMapLocationReferences.LargeMapType lheLargeMapType) : base(
+            SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, (int)lheLargeMapType) 
         {
-            // if (mapChoice != Maps.Overworld && mapChoice != Maps.Underworld)
-            //     throw new Ultima5ReduxException("Tried to create a large map with " + mapChoice);
-
-            //_mapChoice = mapChoice;
-            TheLargeMapType = mapChoice;
+            TheLargeLheLargeMapType = lheLargeMapType;
             // for now combat maps don't have overrides
 
-            BuildMap(TheMapType);
+            BuildMap(lheLargeMapType);
         }
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            BuildMap(TheMapType);
+            BuildMap(TheLargeLheLargeMapType);
         }
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
@@ -289,19 +284,9 @@ namespace Ultima5Redux.Maps
         }
 
 
-        private void BuildMap(Maps mapChoice)
+        private void BuildMap(LargeMapLocationReferences.LargeMapType largeMapType)
         {
-            switch (mapChoice)
-            {
-                case Maps.Overworld:
-                case Maps.Underworld:
-                    TheMap = GameReferences.Instance.LargeMapRef.GetMap(mapChoice);
-                    break;
-                case Maps.Small:
-                    throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mapChoice), mapChoice, null);
-            }
+            TheMap = GameReferences.Instance.LargeMapRef.GetMap(largeMapType);
         }
 
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
@@ -398,7 +383,22 @@ namespace Ultima5Redux.Maps
 
         public void InitializeFromLegacy(SearchItems searchItems, ImportedGameState importedGameState)
         {
-            GenerateMapUnitsForLargeMapForLegacyImport(TheLargeMapType, true, searchItems, importedGameState);
+            GenerateMapUnitsForLargeMapForLegacyImport(TheLargeLheLargeMapType, true, searchItems, importedGameState);
         }
+
+        /// <summary>
+        ///     Decides if any enemies needed to be spawned or despawned
+        /// </summary>
+        internal void GenerateAndCleanupEnemies(int oneInXOddsOfNewMonster, int nTurn)
+        {
+            ClearEnemiesIfFarAway();
+
+            if (TotalMapUnitsOnMap >= MAX_MAP_CHARACTERS) return;
+            if (oneInXOddsOfNewMonster > 0 && Utils.OneInXOdds(oneInXOddsOfNewMonster))
+                // make a random monster
+                CreateRandomMonster(nTurn);
+        }
+        
+        
     }
 }

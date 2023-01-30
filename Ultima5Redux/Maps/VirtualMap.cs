@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -23,216 +22,14 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] public class MapHolder
-    {
-        public SmallMaps SmallMaps => _smallMaps;
-        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
-        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
-
-        public LargeMap GetLargeMapByLargeMapType(LargeMapLocationReferences.LargeMapType largeMapType) =>
-            largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? OverworldMap : UnderworldMap;
-
-        public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference singleMapReference) =>
-            _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
-
-        /// <summary>
-        ///     Both underworld and overworld maps
-        /// </summary>
-        [DataMember(Name = "LargeMaps")] private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new(2)
-        {
-            { Map.Maps.Overworld, new LargeMap(LargeMapLocationReferences.LargeMapType.Overworld) },
-            { Map.Maps.Underworld, new LargeMap(LargeMapLocationReferences.LargeMapType.Underworld) }
-        };
-
-        /// <summary>
-        ///     All the small maps
-        /// </summary>
-        [DataMember(Name = "SmallMaps")] private readonly SmallMaps _smallMaps = new();
-
-
-        /// <summary>
-        ///     The current small map (null if on large map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        // [DataMember]
-        // public SmallMap CurrentSmallMap { get; private set; }
-
-        [DataMember]
-        public DungeonMap TheDungeonMap { get; internal set; }
-
-        [IgnoreDataMember] public CombatMap TheCombatMap { get; internal set; }
-
-
-        /// <summary>
-        ///     Which map was the avatar on before this one?
-        /// </summary>
-        // [IgnoreDataMember]
-        // private RegularMap PreCombatMap { get; set; }
-
-        /// <summary>
-        ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
-        /// </summary>
-        // [DataMember]
-        // private MapUnitPosition PreMapUnitPosition { get; set; } = new();
-    }
-
-    [DataContract] public class SavedMapRefs
-    {
-        [DataMember] public SmallMapReferences.SingleMapReference.Location Location { get; private set; }
-        [DataMember] public int Floor { get; private set; }
-        [DataMember] public Map.Maps MapType { get; private set; }
-
-        // this is loaded, and only re-set before a save
-        [DataMember] public MapUnitPosition MapUnitPosition { get; private set; } = new();
-
-        private void SetMapUnitPosition(Point2D playerPosition)
-        {
-            if (playerPosition == null)
-            {
-                MapUnitPosition.X = 0;
-                MapUnitPosition.Y = 0;
-            }
-            else
-            {
-                MapUnitPosition.X = playerPosition.X;
-                MapUnitPosition.Y = playerPosition.Y;
-            }
-
-            MapUnitPosition.Floor = Floor;
-        }
-
-        public void SetByLargeMapType(LargeMapLocationReferences.LargeMapType largeMapType, Point2D playerPosition)
-        {
-            Location = SmallMapReferences.SingleMapReference.Location.Britannia_Underworld;
-            Floor = largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1;
-            MapType = largeMapType == LargeMapLocationReferences.LargeMapType.Overworld
-                ? Map.Maps.Overworld
-                : Map.Maps.Underworld;
-            SetMapUnitPosition(playerPosition);
-        }
-
-        public void SetBySingleDungeonMapFloorReference(SingleDungeonMapFloorReference singleDungeonMapFloorReference,
-            Point2D playerPosition)
-        {
-            Location = singleDungeonMapFloorReference.DungeonLocation;
-            Floor = singleDungeonMapFloorReference.DungeonFloor;
-            MapType = Map.Maps.Dungeon;
-            SetMapUnitPosition(playerPosition);
-        }
-
-        public void SetBySingleCombatMapReference(SingleCombatMapReference singleCombatMapReference)
-        {
-            // not entirely sure we need to actually save much here since we never actually save games
-            // while in combat
-            Location = SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine;
-            Floor = 0;
-            MapType = Map.Maps.Combat;
-        }
-
-        public void SetBySingleMapReference(SmallMapReferences.SingleMapReference singleMapReference,
-            Point2D playerPosition)
-        {
-            Location = singleMapReference.MapLocation;
-            Floor = singleMapReference.Floor;
-            MapType = singleMapReference.MapType;
-            SetMapUnitPosition(playerPosition);
-        }
-
-        public SmallMapReferences.SingleMapReference GetSingleMapReference()
-        {
-            if (Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
-                return SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(Floor == 0
-                    ? LargeMapLocationReferences.LargeMapType.Overworld
-                    : LargeMapLocationReferences.LargeMapType.Underworld);
-            if (Location == SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
-            {
-                return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
-            }
-
-            return GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor);
-        }
-
-        internal SavedMapRefs Copy() =>
-            new SavedMapRefs
-            {
-                Location = Location,
-                Floor = Floor,
-                MapType = MapType
-            };
-    }
-
     [DataContract] public partial class VirtualMap
     {
         [DataMember] public MapHolder TheMapHolder { get; private set; }
         [DataMember] public SavedMapRefs SavedMapRefs { get; private set; }
-        public SavedMapRefs PreCombatMapSavedMapRefs { get; private set; }
+        [IgnoreDataMember] private SavedMapRefs PreCombatMapSavedMapRefs { get; set; }
 
-        // private SmallMapReferences.SingleMapReference _currentSingleMapReference;
+        [DataMember] public int OneInXOddsOfNewMonster { get; set; } = 16;
 
-
-        // public void test()
-        // {
-        //     _currentSingleMapReference.MapLocation;
-        //     _currentSingleMapReference.Floor;
-        //     _currentSingleMapReference.MapType;
-        // }
-
-        /// <summary>
-        ///     Both underworld and overworld maps
-        /// </summary>
-        // [DataMember(Name = "LargeMaps")] private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new(2)
-        // {
-        //     { Map.Maps.Overworld, new LargeMap(LargeMapLocationReferences.LargeMapType.Overworld) },
-        //     { Map.Maps.Underworld, new LargeMap(LargeMapLocationReferences.LargeMapType.Underworld) }
-        // };
-
-        /// <summary>
-        ///     All the small maps
-        /// </summary>
-        // [DataMember(Name = "SmallMaps")]
-        // private readonly SmallMaps _smallMaps = new();
-
-        /// <summary>
-        ///     Which map was the avatar on before this one?
-        /// </summary>
-        // [DataMember]
-        // private RegularMap PreCombatMap { get; set; }
-
-        /// <summary>
-        ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
-        /// </summary>
-        // [DataMember]
-        // private MapUnitPosition PreMapUnitPosition { get; set; } = new();
-
-
-        /// <summary>
-        ///     The current small map (null if on large map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        // [DataMember]
-        // public SmallMap CurrentSmallMap { get; private set; }
-        //
-        // [DataMember] public DungeonMap CurrentDungeonMap { get; private set; }
-
-
-        /// <summary>
-        ///     If we are on a large map - then are we on overworld or underworld
-        /// </summary>
-        // [DataMember]
-        // public Map.Maps TheCurrentMapType { get; private set; } = (Map.Maps)(-1);
-
-        [DataMember]
-        public int OneInXOddsOfNewMonster { get; set; } = 16;
-
-        //[DataMember] public MapUnits.MapUnits CurrentMap { get; private set; }
-
-
-        /// <summary>
-        ///     Current large map (null if on small map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        // [IgnoreDataMember]
-        // public LargeMap CurrentLargeMap => _largeMaps[TheCurrentMapType];
 
         /// <summary>
         ///     The abstracted Map object for the current map
@@ -244,7 +41,6 @@ namespace Ultima5Redux.Maps
             get
             {
                 SmallMapReferences.SingleMapReference singleMapReference = SavedMapRefs.GetSingleMapReference();
-                //SmallMapReferences.SingleMapReference CurrentMap.CurrentSingleMapReference = CurrentMap.CurrentSingleMapReference;
                 if (singleMapReference == null)
                     throw new Ultima5ReduxException("Tried to get CurrentMap but it was false");
 
@@ -265,29 +61,6 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        [IgnoreDataMember]
-        public bool IsAvatarInFrigate =>
-            CurrentMap is RegularMap regularMap &&
-            regularMap.GetAvatarMapUnit()?.CurrentBoardedMapUnit is Frigate;
-
-        [IgnoreDataMember]
-        public bool IsAvatarInSkiff =>
-            CurrentMap is RegularMap regularMap &&
-            regularMap.GetAvatarMapUnit().CurrentBoardedMapUnit is Skiff;
-
-        [IgnoreDataMember]
-        public bool IsAvatarRidingCarpet =>
-            CurrentMap is RegularMap regularMap &&
-            regularMap.GetAvatarMapUnit().CurrentBoardedMapUnit is MagicCarpet;
-
-        [IgnoreDataMember]
-        public bool IsAvatarRidingHorse =>
-            CurrentMap is RegularMap regularMap &&
-            regularMap.GetAvatarMapUnit().CurrentBoardedMapUnit is Horse;
-
-        [IgnoreDataMember]
-        public bool IsAvatarRidingSomething => CurrentMap is RegularMap regularMap &&
-                                               regularMap.GetAvatarMapUnit().IsAvatarOnBoardedThing;
 
         [IgnoreDataMember]
         public bool IsBasement
@@ -299,12 +72,6 @@ namespace Ultima5Redux.Maps
                 return CurrentMap is not LargeMap && CurrentMap.CurrentSingleMapReference.Floor == -1;
             }
         }
-
-        // [IgnoreDataMember] public bool IsCombatMap => CurrentMap is CombatMap;
-        // [IgnoreDataMember] public bool IsDungeonMap => CurrentMap is DungeonMap;
-
-        // [IgnoreDataMember]
-        // public bool IsLargeMap => TheCurrentMapType is Map.Maps.Overworld or Map.Maps.Underworld;
 
         /// <summary>
         ///     Number of total columns for current map
@@ -318,22 +85,7 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember]
         public int NumberOfRowTiles => CurrentMap.NumOfYTiles;
 
-        /// <summary>
-        ///     The persistant overworld map
-        /// </summary>
-        // [IgnoreDataMember]
-        // public LargeMap OverworldMap => TheMapHolder.OverworldMap;//_largeMaps[Map.Maps.Overworld];
-
-        /// <summary>
-        ///     The persistant underworld map
-        /// </summary>
-        // [IgnoreDataMember]
-        // public LargeMap UnderworldMap => TheMapHolder.UnderworldMap;//_largeMaps[Map.Maps.Underworld];
-
-        //[IgnoreDataMember] public CombatMap CurrentCombatMap { get; private set; }
-
-        [IgnoreDataMember]
-        public MapUnitPosition CurrentPosition => CurrentMap.CurrentPosition;
+        [IgnoreDataMember] public MapUnitPosition CurrentPosition => CurrentMap.CurrentPosition;
 
         public IEnumerable<MapUnit> AllVisibleActiveMapUnits
         {
@@ -348,7 +100,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public MapUnitPosition PreviousPosition { get; } = new();
+        // public MapUnitPosition PreviousPosition { get; } = new();
 
         [DataMember] public SearchItems TheSearchItems { get; private set; }
 
@@ -358,7 +110,8 @@ namespace Ultima5Redux.Maps
         /// <param name="location"></param>
         // ReSharper disable once UnusedMethodReturnValue.Global
         public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location) =>
-            TheMapHolder.OverworldMap.CreateFrigate(GetLocationOfDock(location), Point2D.Direction.Right, out _, 1);
+            TheMapHolder.OverworldMap.CreateFrigate(LargeMapLocationReferences.GetLocationOfDock(location),
+                Point2D.Direction.Right, out _, 1);
 
 
         /// <summary>
@@ -368,7 +121,8 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         // ReSharper disable once UnusedMethodReturnValue.Global
         public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location) =>
-            TheMapHolder.OverworldMap.CreateSkiff(GetLocationOfDock(location), Point2D.Direction.Right, out _);
+            TheMapHolder.OverworldMap.CreateSkiff(LargeMapLocationReferences.GetLocationOfDock(location),
+                Point2D.Direction.Right, out _);
 
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
@@ -388,17 +142,6 @@ namespace Ultima5Redux.Maps
             TheSearchItems = theSearchItems;
             TheMapHolder = new MapHolder();
 
-            // SavedMapRefs = new();
-            // PreCombatMapSavedMapRefs = new();
-            // SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation ??
-            //                                                              SmallMapReferences.SingleMapReference.Location
-            //                                                                  .Britannia_Underworld;
-
-            // load the characters for the very first time from disk
-            // subsequent loads may not have all the data stored on disk and will need to recalculate
-            // CurrentMap = new MapUnits.MapUnits(initialMap, bUseExtendedSprites, importedGameState, TheSearchItems,
-            //     mapLocation);
-
             TheMapHolder.OverworldMap.InitializeFromLegacy(theSearchItems, importedGameState);
             TheMapHolder.UnderworldMap.InitializeFromLegacy(theSearchItems, importedGameState);
 
@@ -409,9 +152,6 @@ namespace Ultima5Redux.Maps
                         importedGameState);
                     if (CurrentMap is not SmallMap smallMap)
                         throw new Ultima5ReduxException("Tried to load Small Map initially but wasn't set correctly");
-                    // smallMap.InitializeFromLegacy(TheMapHolder.SmallMaps, currentSmallMapReference.MapLocation,
-                    //     importedGameState, true,
-                    //     TheSearchItems);
                     break;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
@@ -430,95 +170,12 @@ namespace Ultima5Redux.Maps
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            // TheMapOverrides.TheMap = CurrentMap;
-            // this is so we don't break old save games
-            if (TheSearchItems == null)
-            {
-                TheSearchItems = new SearchItems();
-                TheSearchItems.Initialize();
-            }
-        }
-
-
-        /// <summary>
-        ///     Decides if any enemies needed to be spawned or despawned
-        /// </summary>
-        internal void GenerateAndCleanupEnemies(int nTurn)
-        {
-            if (CurrentMap.CurrentSingleMapReference == null)
-                throw new Ultima5ReduxException(
-                    "Tried to GenerateAndCleanupEnemies but CurrentMap.CurrentSingleMapReference was null");
-
-            switch (CurrentMap)
-            {
-                case LargeMap largeMap:
-                    //case Map.Maps.Underworld:
-                    // let's do this!
-                    largeMap.ClearEnemiesIfFarAway();
-
-                    if (largeMap.TotalMapUnitsOnMap >= Map.MAX_MAP_CHARACTERS) break;
-                    if (OneInXOddsOfNewMonster > 0 && Utils.OneInXOdds(OneInXOddsOfNewMonster))
-                        // make a random monster
-                        largeMap.CreateRandomMonster(nTurn);
-
-                    break;
-                case CombatMap:
-                case SmallMap:
-                case DungeonMap:
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
-        }
-
-        /// <summary>
-        ///     Gathers the details of what if any aggressive action the mapunits would do this turn
-        /// </summary>
-        /// <returns></returns>
-        internal Dictionary<MapUnit, AggressiveMapUnitInfo> GetNonCombatMapAggressiveMapUnitInfo(
-            TurnResults turnResults)
-        {
-            Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
-
-            SmallMapReferences.SingleMapReference singleMapReference = CurrentMap.CurrentSingleMapReference;
-            if (singleMapReference == null)
-                throw new Ultima5ReduxException(
-                    "Tried to GetAggressiveMapUnitInfo but CurrentMap.CurrentSingleMapReference was null");
-
-            if (CurrentMap is not RegularMap regularMap)
-                throw new Ultima5ReduxException("Tried to call GetNonCombatMapAggressiveMapUnitInfo on combat map");
-
-            foreach (MapUnit mapUnit in CurrentMap.CurrentMapUnits.AllActiveMapUnits)
-            {
-                // we don't calculate any special movement or events for map units on different floors
-                if (mapUnit.MapUnitPosition.Floor != CurrentMap.CurrentSingleMapReference.Floor)
-                    continue;
-
-                // we don't want to add anything that can never attack, so we keep only enemies and NPCs 
-                // in the list of aggressors
-                switch (mapUnit)
-                {
-                    case Horse:
-                    case Enemy:
-                    case NonPlayerCharacter:
-                        break;
-                    default:
-                        // it's not an aggressive Npc or Enemy so skip on past - nothing to see here
-                        continue;
-                }
-
-                AggressiveMapUnitInfo mapUnitInfo =
-                    GetNonCombatMapAggressiveMapUnitInfo(mapUnit.MapUnitPosition.XY,
-                        regularMap.CurrentAvatarPosition.XY,
-                        SingleCombatMapReference.Territory.Britannia, mapUnit);
-
-                if (mapUnitInfo.CombatMapReference != null)
-                    turnResults.PushOutputToConsole(mapUnitInfo.AttackingMapUnit.FriendlyName + " fight me in " +
-                                                    mapUnitInfo.CombatMapReference.Description);
-                aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
-            }
-
-            return aggressiveMapUnitInfos;
+            // // this is so we don't break old save games
+            // if (TheSearchItems == null)
+            // {
+            TheSearchItems = new SearchItems();
+            TheSearchItems.Initialize();
+            // }
         }
 
 
@@ -675,7 +332,7 @@ namespace Ultima5Redux.Maps
                         // do they have any melee attacks? Melee attacks are noted with .Arrow for now
                         // if on skiff then party takes damage
                         // if on frigate then frigate takes damage
-                        if (IsAvatarInFrigate)
+                        if (regularMap.IsAvatarInFrigate)
                             // frigate takes damage instead
                             regularMap.DamageShip(Point2D.Direction.None, turnResults);
                         else
@@ -685,7 +342,7 @@ namespace Ultima5Redux.Maps
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (melee)", false);
                         continue;
                     case CombatItemReference.MissileType.CannonBall:
-                        if (IsAvatarInFrigate)
+                        if (regularMap.IsAvatarInFrigate)
                             regularMap.DamageShip(Point2D.Direction.None, turnResults);
                         else
                             records.DamageEachCharacter(turnResults, 1, 9);
@@ -697,7 +354,7 @@ namespace Ultima5Redux.Maps
                         continue;
                     case CombatItemReference.MissileType.Red:
                         // if on a frigate then only the frigate takes damage, like a shield!
-                        if (IsAvatarInFrigate)
+                        if (regularMap.IsAvatarInFrigate)
                             regularMap.DamageShip(Point2D.Direction.None, turnResults);
                         else
                             records.DamageEachCharacter(turnResults, 1, 9);
@@ -713,12 +370,12 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        internal void SavePreviousPosition(MapUnitPosition mapUnitPosition)
-        {
-            PreviousPosition.X = mapUnitPosition.X;
-            PreviousPosition.Y = mapUnitPosition.Y;
-            PreviousPosition.Floor = mapUnitPosition.Floor;
-        }
+        // internal void SavePreviousPosition(MapUnitPosition mapUnitPosition)
+        // {
+        //     PreviousPosition.X = mapUnitPosition.X;
+        //     PreviousPosition.Y = mapUnitPosition.Y;
+        //     PreviousPosition.Floor = mapUnitPosition.Floor;
+        // }
 
 
         internal bool SearchNonAttackingMapUnit(in Point2D xy, TurnResults turnResults,
@@ -811,260 +468,6 @@ namespace Ultima5Redux.Maps
         }
 
 
-        /// <summary>
-        ///     Gets the appropriate (if any) SingleCombatMapReference based on the map and mapunits attempting to engage in
-        ///     combat
-        /// </summary>
-        /// <param name="attackFromPosition">where are they attacking from</param>
-        /// <param name="attackToPosition">where are they attack to</param>
-        /// <param name="territory"></param>
-        /// <param name="aggressorMapUnit">who is the one attacking?</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <returns></returns>
-        private AggressiveMapUnitInfo GetNonCombatMapAggressiveMapUnitInfo(Point2D attackFromPosition,
-            Point2D attackToPosition, SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit)
-        {
-            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map) =>
-                GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
-
-            TileReference attackToTileReference = CurrentMap.GetTileReference(attackToPosition);
-            TileReference attackFromTileReference = CurrentMap.GetTileReference(attackFromPosition);
-
-            List<MapUnit> mapUnits = CurrentMap.GetMapUnitsByPosition(attackToPosition,
-                CurrentMap.CurrentSingleMapReference.Floor);
-
-            switch (mapUnits.Count)
-            {
-                case 0:
-                    break;
-                case > 1:
-                    // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
-                    if (mapUnits.Any(m => m is Avatar))
-                    {
-                    }
-                    else
-                    {
-                        throw new Ultima5ReduxException($"Did not expect {mapUnits.Count} mapunits on targeted tile");
-                    }
-
-                    break;
-            }
-
-            AggressiveMapUnitInfo mapUnitInfo = new(aggressorMapUnit);
-
-            // if they are not Enemy type (probably NPC) then we are certain they don't have a range attack
-            // UNLESS you are a wanted man - then the guards will try to attack you!
-            bool isWantedManByThePoPo = CurrentMap is SmallMap { IsWantedManByThePoPo: true };
-            bool declinedExtortion = CurrentMap is SmallMap { DeclinedExtortion: true };
-            bool bIsMadGuard = false;
-            if (aggressorMapUnit is NonPlayerCharacter npc) bIsMadGuard = isWantedManByThePoPo && npc.NPCRef.IsGuard;
-
-            // if the guard is next to you, then they will ask you to come quietly
-            bool bNextToEachOther = attackFromPosition.IsWithinNFourDirections(attackToPosition);
-            if (bIsMadGuard && bNextToEachOther && !TileReferences.IsHeadOfBed(
-                    CurrentMap.GetTileReference(aggressorMapUnit.MapUnitPosition.XY).Index))
-            {
-                // if they are at the head of the bed then we don't try to arrest, this keeps guards who are "injured" 
-                // at the healers from trying to arrest
-                // if avatar is being attacked..
-                // we get to assume that the avatar is not necessarily next to the enemy
-                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
-            }
-
-            // IF NPC is next to Avatar then we check for any AI behaviours such as arrests or extortion
-            if (bNextToEachOther && aggressorMapUnit is NonPlayerCharacter nextToEachOtherNpc)
-            {
-                NonPlayerCharacterSchedule.AiType aiType =
-                    aggressorMapUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
-
-                // because this overrides a LOT of AI behaviours, I just let all guards try to attack
-                // you if you turned down the extortion
-                if (nextToEachOtherNpc.NPCRef.IsGuard && isWantedManByThePoPo && declinedExtortion)
-                {
-                    ForceAttack(mapUnitInfo, attackFromTileReference);
-                }
-                else
-                {
-                    switch (aiType)
-                    {
-                        case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
-                        case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
-                            // let's add some randomness and only check them half the time
-                            if (Utils.OneInXOdds(2))
-                            {
-                                // are you wearing the black badge? 
-                                // temporary - if you have the badge then that's good enough
-                                if (GameStateReference.State.CharacterRecords.WearingBlackBadge)
-                                {
-                                    // if the guard has already harassed the Avatar, then they won't bug him
-                                    // again until he re-enters the castle
-                                    mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction
-                                        .BlackthornGuardPasswordCheck);
-                                }
-                                else
-                                {
-                                    mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction
-                                        .StraightToBlackthornDungeon);
-                                }
-                            }
-
-                            break;
-                        case NonPlayerCharacterSchedule.AiType.Begging:
-                            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.Begging);
-                            break;
-                        case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
-                        case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
-                        case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
-                            // even if they are extortionists, if you did some super bad, they will try to arrest 
-                            if (isWantedManByThePoPo && declinedExtortion)
-                            {
-                                // attack them
-                                goto case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing;
-                            }
-
-                            if (isWantedManByThePoPo)
-                            {
-                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
-                                break;
-                            }
-
-                            mapUnitInfo.ForceDecidedAction(
-                                aiType == NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard
-                                    ? AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion
-                                    : AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion);
-                            break;
-                        case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
-                            // if they wanted to chat and they are a guard they can get pissed off and arrest you
-                            if (isWantedManByThePoPo || (nextToEachOtherNpc.NPCState.PissedOffCountDown == 0 &&
-                                                         nextToEachOtherNpc.NPCRef.IsGuard))
-                            {
-                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
-                            }
-                            else
-                            {
-                                // some times non guard NPCs are just keen to chat
-                                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.WantsToChat);
-                            }
-
-                            break;
-                        case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
-                            // wow - I just leaned how to do this goto
-                            // they only attack when you are wanted by the popo
-                            if (isWantedManByThePoPo) ForceAttack(mapUnitInfo, attackFromTileReference);
-
-                            break;
-                        case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
-                            ForceAttack(mapUnitInfo, attackFromTileReference);
-                            break;
-                    }
-                }
-            }
-            // if a guard wants to chat, they lose patience after a while and want to arrest you
-            // so we count down like a stern parent
-            else if (aggressorMapUnit is NonPlayerCharacter pissedOffNonPlayerCharacter
-                     && pissedOffNonPlayerCharacter.NPCState.PissedOffCountDown > 0
-                     && pissedOffNonPlayerCharacter.NPCRef.IsGuard
-                     && pissedOffNonPlayerCharacter.NPCState.OverridenAiType ==
-                     NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat)
-            {
-                pissedOffNonPlayerCharacter.NPCState.PissedOffCountDown--;
-            }
-
-            if (aggressorMapUnit is not Enemy enemy) return mapUnitInfo;
-
-            if (!bNextToEachOther)
-            {
-                switch (enemy.EnemyReference.LargeMapMissileType)
-                {
-                    case CombatItemReference.MissileType.None:
-                        return mapUnitInfo;
-                    // pirates = cannonball, snakes = poison, serpents = red, squid =
-                    // the aggressor is an enemy so let's check to see if they have LargeMap projectiles
-                    case CombatItemReference.MissileType.CannonBall:
-                        // if it's a cannon ball, and they are on the same X or Y then it can fire!
-                        if ((attackFromPosition.X == attackToPosition.X ||
-                             attackFromPosition.Y == attackToPosition.Y) &&
-                            attackFromPosition.IsWithinN(attackToPosition, 3))
-                            mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.CannonBall;
-                        break;
-                    default:
-                        // it's not a cannon ball but it is a missile
-                        if (attackFromPosition.IsWithinN(attackToPosition, 3))
-                            mapUnitInfo.AttackingMissileType = enemy.EnemyReference.LargeMapMissileType;
-                        break;
-                }
-
-                return mapUnitInfo;
-            }
-
-            bool bIsPirate = enemy.EnemyReference.LargeMapMissileType == CombatItemReference.MissileType.CannonBall;
-            // if avatar on skiff or carpet and avatar is on water then it's immediate ouch, no map
-            if ((IsAvatarInSkiff || IsAvatarRidingCarpet) &&
-                attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
-            {
-                // we will use Arrow to denote the enemy attacking on the overworld, but no combat map
-                mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.Arrow;
-            }
-            // avatar not on a boat
-            // return avatar's current tile combat map
-            else if (!IsAvatarInFrigate)
-            {
-                // when the avatar is not in boat and a water enemy attacks - they will always fight in the bay
-                if (enemy.EnemyReference.IsWaterEnemy)
-                {
-                    mapUnitInfo.CombatMapReference = getSingleCombatMapReference(bIsPirate
-                        ? SingleCombatMapReference.BritanniaCombatMaps.BoatNorth
-                        : SingleCombatMapReference.BritanniaCombatMaps.Bay);
-                }
-                else
-                {
-                    // if you end up on a bay tile, but the monster is not a water monster, then we need to either
-                    // substitute another map, or have them attack them in the overworld
-                    if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.Bay)
-                    {
-                        mapUnitInfo.CombatMapReference = null;
-                        mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.Arrow;
-                    }
-                    else
-                    {
-                        mapUnitInfo.CombatMapReference =
-                            getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
-                    }
-                }
-            }
-            // if the enemy is a water enemy and we know the avatar is on a frigate, then we fight on the ocean
-            else if (enemy.EnemyReference.IsWaterEnemy)
-            {
-                // we are on a frigate AND we are fighting a pirate ship
-                mapUnitInfo.CombatMapReference = getSingleCombatMapReference(bIsPirate
-                    ? SingleCombatMapReference.BritanniaCombatMaps.BoatBoat
-                    : SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
-            }
-            else
-            {
-                if (!enemy.EnemyReference.IsWaterEnemy)
-                    mapUnitInfo.CombatMapReference =
-                        getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
-                else
-                    mapUnitInfo.CombatMapReference = GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
-                        territory,
-                        (int)attackToTileReference.CombatMapIndex);
-            }
-
-            return mapUnitInfo;
-        }
-
-        private void ForceAttack(AggressiveMapUnitInfo mapUnitInfo, TileReference attackFromTileReference)
-        {
-            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.EnemyAttackCombatMap);
-            SingleCombatMapReference singleCombatMapReference = GetSingleCombatMapReference(
-                attackFromTileReference.CombatMapIndex,
-                SingleCombatMapReference.Territory.Britannia);
-
-            mapUnitInfo.CombatMapReference = singleCombatMapReference;
-        }
-
-
         private bool IsInsideBounds(in Point2D xy)
         {
             Map currentMap = CurrentMap;
@@ -1147,102 +550,6 @@ namespace Ultima5Redux.Maps
             combatMap.InitializeInitiativeQueue();
         }
 
-        public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location)
-        {
-            List<byte> xDockCoords = GameReferences.Instance.DataOvlRef
-                .GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS)
-                .GetAsByteList();
-            List<byte> yDockCoords = GameReferences.Instance.DataOvlRef
-                .GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS)
-                .GetAsByteList();
-            Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
-                new()
-                {
-                    {
-                        SmallMapReferences.SingleMapReference.Location.Jhelom,
-                        new Point2D(xDockCoords[0], yDockCoords[0])
-                    },
-                    {
-                        SmallMapReferences.SingleMapReference.Location.Minoc,
-                        new Point2D(xDockCoords[1], yDockCoords[1])
-                    },
-                    {
-                        SmallMapReferences.SingleMapReference.Location.East_Britanny,
-                        new Point2D(xDockCoords[2], yDockCoords[2])
-                    },
-                    {
-                        SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                        new Point2D(xDockCoords[3], yDockCoords[3])
-                    }
-                };
-
-            if (!docks.ContainsKey(location))
-                throw new Ultima5ReduxException("Asked for a dock  in " + location + " but there isn't one there");
-
-            return docks[location];
-        }
-
-
-        public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
-            ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
-
-        public int ClosestTileReferenceAround(Point2D midPosition, int nRadius, Func<int, bool> checkTile)
-        {
-            double nShortestRadius = 255;
-            Map currentMap = CurrentMap;
-            bool bIsRepeatingMap = CurrentMap.IsRepeatingMap;
-            CurrentMap.CurrentMapUnits.RefreshActiveDictionaryCache();
-            // an optimization to speed up checking of map units
-            Dictionary<Point2D, List<MapUnit>> cachedActive = CurrentMap.CurrentMapUnits.CachedActiveDictionary;
-
-            for (int nRow = midPosition.X - nRadius; nRow < midPosition.X + nRadius; nRow++)
-            {
-                for (int nCol = midPosition.Y - nRadius; nCol < midPosition.Y + nRadius; nCol++)
-                {
-                    Point2D adjustedPos;
-                    if (bIsRepeatingMap)
-                    {
-                        adjustedPos = new Point2D(Point2D.AdjustToMax(nRow, currentMap.NumOfXTiles),
-                            Point2D.AdjustToMax(nCol, currentMap.NumOfYTiles));
-                    }
-                    else
-                    {
-                        if (nRow < 0 || nRow >= currentMap.NumOfXTiles || nCol < 0 || nCol >= currentMap.NumOfYTiles)
-                            continue;
-
-                        adjustedPos = new Point2D(nRow, nCol);
-                    }
-
-                    int nTileIndex = CurrentMap.GetTileReference(adjustedPos.X, adjustedPos.Y).Index;
-                    bool bHasMapUnits = cachedActive.ContainsKey(adjustedPos);
-                    MapUnit mapUnit = bHasMapUnits ? CurrentMap.GetTopVisibleMapUnit(adjustedPos, true) : null;
-
-                    //if (mapUnit != null) _ = "";
-                    bool bMapUnitMatches = mapUnit != null && checkTile(mapUnit.KeyTileReference.Index);
-
-                    if (!checkTile(nTileIndex) && !bMapUnitMatches) continue;
-                    double fDistance = Point2D.DistanceBetween(midPosition.X, midPosition.Y, nRow, nCol);
-                    if (nShortestRadius < fDistance) continue;
-
-                    // shortcut in case we hit it
-                    if (nRadius == 1) return 1;
-                    nShortestRadius = fDistance;
-                }
-            }
-
-            if (Math.Abs(nShortestRadius - 255) < 0.05f) return 255;
-            return (int)Math.Round(nShortestRadius);
-        }
-
-        public int ClosestTileReferenceAround(TileReference tileReference, Point2D midPosition, int nRadius)
-        {
-            return ClosestTileReferenceAround(midPosition, nRadius, i => tileReference.Index == i);
-        }
-
-        public int ClosestTileReferenceAround(TileReference tileReference, int nRadius)
-        {
-            return ClosestTileReferenceAround(CurrentPosition.XY, nRadius, i => tileReference.Index == i);
-        }
 
         public bool ContainsSearchableMapUnits(in Point2D xy)
         {
@@ -1256,44 +563,6 @@ namespace Ultima5Redux.Maps
                 GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, CurrentMap.TheMapType);
 
             return (CurrentMap is not LargeMap && bIsMoonstoneBuried) || bIsSearchableMapUnit;
-        }
-
-
-        public Dictionary<Point2D, bool> GetAllMapOccupiedTiles()
-        {
-            Dictionary<Point2D, bool> occupiedDictionary = new();
-
-            IEnumerable<MapUnit> mapUnits = CurrentMap.CurrentMapUnits.AllActiveMapUnits;
-            int nFloor = CurrentPosition.Floor;
-
-            foreach (MapUnit mapUnit in mapUnits)
-            {
-                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
-                if (!occupiedDictionary.ContainsKey(mapUnit.MapUnitPosition.XY))
-                    occupiedDictionary.Add(mapUnit.MapUnitPosition.XY, true);
-            }
-
-            return occupiedDictionary;
-        }
-
-        public Dictionary<int, Dictionary<int, bool>> GetAllMapOccupiedTilesFast()
-        {
-            Dictionary<int, Dictionary<int, bool>> occupiedTiles = new();
-
-            IEnumerable<MapUnit> mapUnits = CurrentMap.CurrentMapUnits.AllActiveMapUnits;
-            int nFloor = CurrentPosition.Floor;
-
-            foreach (MapUnit mapUnit in mapUnits)
-            {
-                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
-
-                int x = mapUnit.MapUnitPosition.XY.X;
-                int y = mapUnit.MapUnitPosition.XY.Y;
-                if (!occupiedTiles.ContainsKey(x)) occupiedTiles.Add(x, new Dictionary<int, bool>());
-                if (!occupiedTiles[x].ContainsKey(y)) occupiedTiles[x].Add(y, true);
-            }
-
-            return occupiedTiles;
         }
 
 
@@ -1334,7 +603,7 @@ namespace Ultima5Redux.Maps
             bool bIsManacles = TileReferences.IsManacles(nSprite); // is it shackles/manacles
 
             // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this
-            bool bIsFoodNearby = TileReferences.IsChair(nSprite) && IsFoodNearby(tilePosInMap);
+            bool bIsFoodNearby = TileReferences.IsChair(nSprite) && CurrentMap.IsFoodNearby(tilePosInMap);
 
             bool bIsStaircase = TileReferences.IsStaircase(nSprite); // is it a staircase
 
@@ -1366,103 +635,11 @@ namespace Ultima5Redux.Maps
             return nNewSpriteIndex;
         }
 
-        public Point2D GetCameraCenter()
-        {
-            if (CurrentMap is CombatMap) return new Point2D(CurrentMap.NumOfXTiles / 2, CurrentMap.NumOfYTiles / 2);
+        public Point2D GetCameraCenter() =>
+            CurrentMap is CombatMap
+                ? new Point2D(CurrentMap.NumOfXTiles / 2, CurrentMap.NumOfYTiles / 2)
+                : CurrentPosition.XY;
 
-            return CurrentPosition.XY;
-        }
-
-        public SingleCombatMapReference GetCombatMapReferenceForAvatarAttacking(Point2D attackFromPosition,
-            Point2D attackToPosition, SingleCombatMapReference.Territory territory)
-        {
-            // note - attacking from a skiff OR carpet is NOT permitted unless touching a piece of land 
-            // otherwise is twill say Attack-On foot!
-            // note - cannot exit a skiff unless land is nearby
-
-            // let's use this method to also determine if an enemy CAN attack the avatar from afar
-
-            TileReference attackToTileReference = CurrentMap.GetTileReference(attackToPosition);
-            if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.None) return null;
-
-            TileReference attackFromTileReference = CurrentMap.GetTileReference(attackFromPosition);
-
-            List<MapUnit> mapUnits = CurrentMap.GetMapUnitsByPosition(attackToPosition,
-                CurrentMap.CurrentSingleMapReference.Floor);
-
-            MapUnit targettedMapUnit = null;
-            TileReference targettedMapUniTileReference = null;
-
-            switch (mapUnits.Count)
-            {
-                case 0:
-                    // the avatar is attacking, but actually doesn't have anyone directly in their sights
-                    // nothing to do
-                    return null;
-                case >= 1:
-                    // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
-                    if (mapUnits.Any(m => m is Avatar))
-                        throw new Ultima5ReduxException(
-                            "Did not expect Avatar mapunit on targeted tile when Avatar is attacking");
-
-                    // a little lazy for now
-                    targettedMapUnit = mapUnits[0];
-                    targettedMapUniTileReference = targettedMapUnit.KeyTileReference;
-                    break;
-            }
-
-            // if the avatar is in a skiff of on a carpet, but is in the ocean then they aren't allowed to attack
-            if (IsAvatarInSkiff || IsAvatarRidingCarpet)
-            {
-                bool bAvatarOnWaterTile = attackFromTileReference.IsWaterTile;
-
-                if (bAvatarOnWaterTile &&
-                    attackToTileReference.CombatMapIndex is
-                        SingleCombatMapReference.BritanniaCombatMaps
-                            .BoatCalc) // if no surrounding tiles are water tile then we skip the attack
-                    return null;
-            }
-
-            // there is someone to target
-            if (!IsAvatarInFrigate)
-            {
-                // last second check for water enemy - they can occasionally appear on a "land" tile like bridges
-                // so we take the chance to force a Bay map just in case
-                if (targettedMapUnit is Enemy waterCheckEnemy)
-                {
-                    if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
-                        return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay, territory);
-                    // if the enemy is on bay but is not a water creature then we cannot attack them
-                    if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
-                        return null;
-                }
-
-                return GetSingleCombatMapReference(attackToTileReference.CombatMapIndex, territory);
-            }
-
-            // BoatCalc indicates it is a water tile and requires special consideration
-            if (attackToTileReference.CombatMapIndex != SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
-            {
-                if (attackToTileReference.IsWaterEnemyPassable)
-                    return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean,
-                        territory);
-
-                // BoatSouth indicates the avatar is on the frigate, and the enemy on land
-                return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth, territory);
-            }
-
-            // if attacking another frigate, then it's boat to boat
-            if (GameReferences.Instance.SpriteTileReferences.IsFrigate(targettedMapUniTileReference.Index))
-                return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatBoat, territory);
-
-            // otherwise it's boat (ours) to ocean
-            return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean, territory);
-            // it is not boat calc, but there is an enemy, so refer to our default combat map
-        }
-
-        private SingleCombatMapReference GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map,
-            SingleCombatMapReference.Territory territory) =>
-            GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
 
         /// <summary>
         ///     Gets the Avatar's current position in 3D spaces
@@ -1476,12 +653,6 @@ namespace Ultima5Redux.Maps
             return new Point3D(CurrentPosition.X, CurrentPosition.Y,
                 CurrentMap.TheMapType == Map.Maps.Overworld ? 0 : 0xFF);
         }
-
-        /// <summary>
-        ///     Gets a map unit on the current tile (that ISN'T the Avatar)
-        /// </summary>
-        /// <returns>MapUnit or null if none exist</returns>
-        public MapUnit GetMapUnitOnCurrentTile() => CurrentMap.GetTopVisibleMapUnit(CurrentPosition.XY, true);
 
 
         private readonly List<Type> _searchOrderPriority = new()
@@ -1515,35 +686,7 @@ namespace Ultima5Redux.Maps
             //return mapUnits;
         }
 
-        /// <summary>
-        ///     Gets the NPC you want to talk to in the given direction
-        ///     If you are in front of a table then you can talk over top of it too
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <returns>the NPC or null if non are found</returns>
-        public NonPlayerCharacter GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection direction)
-        {
-            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction);
 
-            if (CurrentMap.CurrentSingleMapReference == null)
-                throw new Ultima5ReduxException("No single map is set in virtual map");
-
-            var npc = CurrentMap.GetSpecificMapUnitByLocation<NonPlayerCharacter>(adjustedPosition,
-                CurrentMap.CurrentSingleMapReference.Floor);
-
-            if (npc != null) return npc;
-
-            if (!CurrentMap.GetTileReference(adjustedPosition).IsTalkOverable)
-                return null;
-
-            Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction, 2);
-
-            if (CurrentMap.CurrentSingleMapReference == null)
-                throw new Ultima5ReduxException("No single map is set in virtual map");
-
-            return CurrentMap.GetSpecificMapUnitByLocation<NonPlayerCharacter>(adjustedPosition2Away,
-                CurrentMap.CurrentSingleMapReference.Floor);
-        }
 
         // ReSharper disable once MemberCanBePrivate.Global
         public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location)
@@ -1554,28 +697,11 @@ namespace Ultima5Redux.Maps
             // 3 = Buccaneer's Den
 
             var seaFaringVessel =
-                TheMapHolder.OverworldMap.GetSpecificMapUnitByLocation<SeaFaringVessel>(GetLocationOfDock(location), 0,
+                TheMapHolder.OverworldMap.GetSpecificMapUnitByLocation<SeaFaringVessel>(
+                    LargeMapLocationReferences.GetLocationOfDock(location), 0,
                     true);
             return seaFaringVessel;
         }
-
-        /// <summary>
-        ///     When orienting the stairs, which direction should they be drawn
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public Point2D.Direction GetStairsDirection(in Point2D xy)
-        {
-            // we are making a BIG assumption at this time that a stair case ONLY ever has a single
-            // entrance point, and solid walls on all other sides... hopefully this is true
-            if (!CurrentMap.GetTileReference(xy.X - 1, xy.Y).IsSolidSprite) return Point2D.Direction.Left;
-            if (!CurrentMap.GetTileReference(xy.X + 1, xy.Y).IsSolidSprite) return Point2D.Direction.Right;
-            if (!CurrentMap.GetTileReference(xy.X, xy.Y - 1).IsSolidSprite) return Point2D.Direction.Up;
-            if (!CurrentMap.GetTileReference(xy.X, xy.Y + 1).IsSolidSprite) return Point2D.Direction.Down;
-            throw new Ultima5ReduxException("Can't get stair direction - something is amiss....");
-        }
-
 
         public TileStack GetTileStack(Point2D xy, bool bSkipMapUnit)
         {
@@ -1733,52 +859,6 @@ namespace Ultima5Redux.Maps
             Map.IsMapUnitOccupiedFromList(xy, CurrentMap.CurrentSingleMapReference.Floor,
                 CurrentMap.CurrentMapUnits.AllCombatMapUnits);
 
-        /// <summary>
-        ///     Is there food on a table within 1 (4 way) tile
-        ///     Used for determining if eating animation should be used
-        /// </summary>
-        /// <param name="characterPos"></param>
-        /// <returns>true if food is within a tile</returns>
-        public bool IsFoodNearby(in Point2D characterPos)
-        {
-            bool isFoodTable(int nSprite) =>
-                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index ||
-                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom")
-                    .Index ||
-                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
-
-            // yuck, but if the food is up one tile or down one tile, then food is nearby
-            bool bIsFoodNearby = isFoodTable(CurrentMap.GetTileReference(characterPos.X, characterPos.Y - 1).Index) ||
-                                 isFoodTable(CurrentMap.GetTileReference(characterPos.X, characterPos.Y + 1).Index);
-            return bIsFoodNearby;
-        }
-
-        /// <summary>
-        ///     Is the door at the specified coordinate horizontal?
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        public bool IsHorizDoor(in Point2D xy)
-        {
-            if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
-            if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
-
-            int nOpenSpacesHorizOnX = (CurrentMap.GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1)
-                                      + (CurrentMap.GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1);
-
-            return nOpenSpacesHorizOnX == 0;
-        }
-
-        public bool IsHorizTombstone(in Point2D xy)
-        {
-            if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
-            if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
-
-            int nOpenSpacesHorizOnX = (CurrentMap.GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1)
-                                      + (CurrentMap.GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1);
-            return nOpenSpacesHorizOnX == 0;
-        }
-
 
         /// <summary>
         ///     Determines if a specific Dock is occupied by a Sea Faring Vessel
@@ -1861,44 +941,14 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="largeMapType"></param>
         /// <param name="playerPosition"></param>
-        public void LoadLargeMap(LargeMapLocationReferences.LargeMapType largeMapType,
-            Point2D playerPosition = null) //Map.Maps map)
+        public void LoadLargeMap(LargeMapLocationReferences.LargeMapType largeMapType, Point2D playerPosition = null)
         {
             // if you are somehow transported between two different small map locations, then the guards
             // forget about your transgressions
             ClearAllFlagsBeforeMapLoad();
 
-            //TheCurrentMapType = LargeMap.GetLargeMapTypeToMapType(largeMapType);
             SavedMapRefs ??= new SavedMapRefs();
             SavedMapRefs.SetByLargeMapType(largeMapType, playerPosition);
-
-            // if (CurrentMap is not LargeMap largeMap)
-            //     throw new Ultima5ReduxException("Loaded large map, but CurrentMap not set correctly");
-            //
-            LargeMap largeMap = TheMapHolder.GetLargeMapByLargeMapType(largeMapType);
-            // largeMap.CurrentPosition.Floor =
-            //     largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1;
-            //largeMap.LoadLargeMap(TheSearchItems, importedGameState);
-
-            // switch (largeMapType)
-            // {
-            //     case LargeMapLocationReferences.LargeMapType.Overworld:
-            //     case LargeMapLocationReferences.LargeMapType.Underworld:
-            //         CurrentMap.CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
-            //         break;
-            //     default:
-            //         throw new ArgumentOutOfRangeException(nameof(largeMapType), largeMapType, null);
-            // }
-
-            // this will probably fail, which means creating a new map was a good idea
-            // bajh: maybe we store each map override indefinitely so we never lose anything 
-            //TheMapOverrides = new MapOverrides(CurrentLargeMap);
-
-            // CurrentMap.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(largeMapType),
-            //     map, null);
-
-            // // you got out, and the guards have short memories
-            // IsWantedManByThePoPo = false;
         }
 
 
@@ -1909,48 +959,14 @@ namespace Ultima5Redux.Maps
             // forget about your transgressions
             ClearAllFlagsBeforeMapLoad();
 
-            // CurrentMap.CurrentSingleMapReference = ...
             SavedMapRefs ??= new SavedMapRefs();
             SavedMapRefs.SetBySingleDungeonMapFloorReference(singleDungeonMapFloorReference, startingPosition);
 
             TheMapHolder.TheDungeonMap = new DungeonMap(singleDungeonMapFloorReference);
-            //CurrentMap.CurrentSingleMapReference = singleDungeonMapFloorReference.SingleMapReference;
-
-            // SingleDungeonMapFloorReference thing = GameReferences.Instance.DungeonReferences.GetDungeon(CurrentMap.CurrentSingleMapReference.MapLocation)
-            //     .GetSingleDungeonMapFloorReferenceByFloor(singleDungeonMapFloorReference.DungeonFloor);
-            //CurrentDungeonMap = new DungeonMap(singleDungeonMapFloorReference);
-            //Dungeons.GetDungeonMap();
-
-            //TheCurrentMapType = Map.Maps.Dungeon;
-            //TheMapOverrides = new();
-
-            //CurrentMap.SetCurrentMapType(singleDungeonMapFloorReference.SingleMapReference, Map.Maps.Dungeon, null);
 
             if (startingPosition != null) CurrentPosition.XY = startingPosition;
         }
 
-        /// <summary>
-        ///     Some logic has to be processed afterwards and requires special conditions
-        /// </summary>
-        /// <exception cref="Ultima5ReduxException"></exception>
-        private void HandleSpecialCasesForSmallMapLoad()
-        {
-            if (CurrentMap.CurrentSingleMapReference.MapLocation ==
-                SmallMapReferences.SingleMapReference.Location.Iolos_Hut
-                && GameStateReference.State.TheTimeOfDay.IsFirstDay())
-            {
-                // this is a bit redundant, but left in just in case
-                // it it is the first day then we don't include Smith or the Rats. Let's start the day off
-                // on a positive note!
-                NonPlayerCharacter smith = CurrentMap.CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
-                                               (TileReference.SpriteIndex)m.NPCRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
-                                               or TileReference.SpriteIndex.HorseRight) ??
-                                           throw new Ultima5ReduxException("Smith was not in Iolo's hut");
-
-                CurrentMap.CurrentMapUnits.ClearMapUnit(smith);
-                CurrentMap.CurrentMapUnits.AllMapUnits.RemoveAll(m => m is NonPlayerCharacter);
-            }
-        }
 
         private void ClearAllFlagsBeforeMapLoad()
         {
@@ -1973,6 +989,7 @@ namespace Ultima5Redux.Maps
         /// <param name="singleMapReference"></param>
         /// <param name="xy"></param>
         /// <param name="bLoadFromDisk"></param>
+        /// <param name="importedGameState"></param>
         /// <exception cref="Ultima5ReduxException"></exception>
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null,
             bool bLoadFromDisk = false, ImportedGameState importedGameState = null)
@@ -1993,30 +1010,8 @@ namespace Ultima5Redux.Maps
             smallMap.InitializeFromLegacy(TheMapHolder.SmallMaps, singleMapReference.MapLocation,
                 importedGameState, bLoadFromDisk,
                 TheSearchItems);
-            
-            HandleSpecialCasesForSmallMapLoad();
 
-            // NOTE: took this from the MapUnits LoadSmallMap
-            // wipe all existing characters since they cannot exist beyond the load
-            // CurrentMapUnits.Clear();
-            // CombatMapUnit.Clear();
-            // DungeonMapUnitCollection.Clear();
-
-            // CurrentMap.CurrentSingleMapReference = singleMapReference ??
-            //                                        throw new Ultima5ReduxException(
-            //                                            "Tried to load a small map, but null map reference was given");
-            // we get the small maps from our small map collection..
-
-            // setting these two will result in CurrentMap  
-            // CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
-            // TheCurrentMapType = Map.Maps.Small;
-
-            //smallMap.CurrentMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, TheSearchItems, bLoadFromDisk);
-
-            // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
-            //smallMap.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;
-
-            //if (xy != null) CurrentPosition.XY = xy;
+            smallMap.HandleSpecialCasesForSmallMapLoad();
         }
 
 
@@ -2092,40 +1087,8 @@ namespace Ultima5Redux.Maps
                         "Attempting to return to previous map after combat with an unsupported map type: " +
                         PreCombatMapSavedMapRefs.MapType);
             }
-
-            // switch (TheMapHolder.PreCombatMap)
-            // {
-            //     case LargeMap _:
-            //     case SmallMap _:
-            //         // restore our old map overrides
-            //         //TheMapOverrides = PreTheMapOverrides;
-            //
-            //         TheCurrentMapType = PreCombatMap.CurrentSingleMapReference.MapType;
-            //         CurrentMap.CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
-            //
-            //         // this ensure the old small map is not reloaded entirely
-            //         // it is a dirty function, but any "cleared" units before the combat will stay cleared
-            //         PreCombatMap.SetCurrentMapTypeNoLoad(PreCombatMap.CurrentSingleMapReference, TheCurrentMapType);
-            //
-            //         PreCombatMap.GetAvatarMapUnit().MapUnitPosition = PreMapUnitPosition;
-            //         PreCombatMap = null;
-            //         break;
-            //     default:
-            //         throw new Ultima5ReduxException(
-            //             "Attempting to return to previous map after combat with an unsupported map type: " +
-            //             PreCombatMap?.GetType());
-            // }
         }
 
-
-        public void SwapTiles(Point2D tile1Pos, Point2D tile2Pos)
-        {
-            TileReference tileRef1 = CurrentMap.GetTileReference(tile1Pos);
-            TileReference tileRef2 = CurrentMap.GetTileReference(tile2Pos);
-
-            CurrentMap.SetOverridingTileReferece(tileRef1, tile2Pos);
-            CurrentMap.SetOverridingTileReferece(tileRef2, tile1Pos);
-        }
 
         /// <summary>
         ///     Use the stairs and change floors, loading a new map

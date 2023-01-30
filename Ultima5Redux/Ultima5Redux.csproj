@@ -94,8 +94,10 @@
         <Compile Include="Maps\CombatMap.cs" />
         <Compile Include="Maps\DungeonMap.cs" />
         <Compile Include="Maps\InitiativeQueue.cs" />
+        <Compile Include="Maps\MapHolder.cs" />
         <Compile Include="Maps\MapOverrides.cs" />
         <Compile Include="Maps\RegularMap.cs" />
+        <Compile Include="Maps\SavedMapRefs.cs" />
         <Compile Include="Maps\SearchItems.cs" />
         <Compile Include="Maps\Sign.cs" />
         <Compile Include="Maps\SingleDungeonMapFloorReference.cs" />

@@ -43,38 +43,65 @@ namespace Ultima5Redux.Maps
         // TODO: this will cause a problem in deserialization that i will need to solve
         [DataMember] public abstract Maps TheMapType { get; }
 
-        //[IgnoreDataMember] public abstract SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
-        // public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, //Map.Maps mapType,
-        //     SearchItems searchItems, bool bLoadFromDisk = false)
-        // {
-        // }
+        /// <summary>
+        ///     Is there food on a table within 1 (4 way) tile
+        ///     Used for determining if eating animation should be used
+        /// </summary>
+        /// <param name="characterPos"></param>
+        /// <returns>true if food is within a tile</returns>
+        public bool IsFoodNearby(in Point2D characterPos)
+        {
+            bool isFoodTable(int nSprite) =>
+                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index ||
+                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom")
+                    .Index ||
+                nSprite == GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
+
+            // yuck, but if the food is up one tile or down one tile, then food is nearby
+            bool bIsFoodNearby = isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index) ||
+                                 isFoodTable(GetTileReference(characterPos.X, characterPos.Y + 1).Index);
+            return bIsFoodNearby;
+        }
+
+        /// <summary>
+        ///     Is the door at the specified coordinate horizontal?
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsHorizDoor(in Point2D xy)
+        {
+            if (xy.X - 1 < 0 || xy.X + 1 >= NumOfXTiles) return false;
+            if (xy.Y - 1 < 0 || xy.Y + 1 >= NumOfYTiles) return true;
+
+            int nOpenSpacesHorizOnX = (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1)
+                                      + (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1);
+
+            return nOpenSpacesHorizOnX == 0;
+        }
+
+        public bool IsHorizTombstone(in Point2D xy)
+        {
+            if (xy.X - 1 < 0 || xy.X + 1 >= NumOfXTiles) return false;
+            if (xy.Y - 1 < 0 || xy.Y + 1 >= NumOfYTiles) return true;
+
+            int nOpenSpacesHorizOnX = (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1)
+                                      + (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotNPC ? 0 : 1);
+            return nOpenSpacesHorizOnX == 0;
+        }
+
 
         /// <summary>
         ///     Detailed reference of current small map
         /// </summary>
         [IgnoreDataMember]
         public abstract SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
-        // public virtual SmallMapReferences.SingleMapReference CurrentSingleMapReference
-        // {
-        //     get
-        //     {
-        //         if (_currentSingleMapReference == null)
-        //             return null;
-        //         if (_currentSingleMapReference.MapLocation ==
-        //             SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
-        //             return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
-        //         return _currentSingleMapReference;
-        //     }
-        //     private set => _currentSingleMapReference = value;
-        // }
+
 
         public Map(SmallMapReferences.SingleMapReference.Location mapLocation, int mapFloor) : this()
         {
             MapLocation = mapLocation;
             MapFloor = mapFloor;
         }
-
-        //[IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
         internal void ClearMapUnit(MapUnit mapUnit)
         {
@@ -90,8 +117,6 @@ namespace Ultima5Redux.Maps
         [DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; protected set; }
         [DataMember] public int MapFloor { get; protected set; }
 
-        //[DataMember] protected Maps CurrentMapType { get; set; }
-
         [DataMember] public MapUnitCollection CurrentMapUnits { get; protected set; } = new();
 
         public abstract int NumOfXTiles { get; }
@@ -103,6 +128,117 @@ namespace Ultima5Redux.Maps
             return tileReferences.Any(tileReference => IsTileWithinFourDirections(position, tileReference));
         }
 
+        public int ClosestTileReferenceAround(Point2D midPosition, int nRadius, Func<int, bool> checkTile)
+        {
+            double nShortestRadius = 255;
+            bool bIsRepeatingMap = IsRepeatingMap;
+            CurrentMapUnits.RefreshActiveDictionaryCache();
+            // an optimization to speed up checking of map units
+            Dictionary<Point2D, List<MapUnit>> cachedActive = CurrentMapUnits.CachedActiveDictionary;
+
+            for (int nRow = midPosition.X - nRadius; nRow < midPosition.X + nRadius; nRow++)
+            {
+                for (int nCol = midPosition.Y - nRadius; nCol < midPosition.Y + nRadius; nCol++)
+                {
+                    Point2D adjustedPos;
+                    if (bIsRepeatingMap)
+                    {
+                        adjustedPos = new Point2D(Point2D.AdjustToMax(nRow, NumOfXTiles),
+                            Point2D.AdjustToMax(nCol, NumOfYTiles));
+                    }
+                    else
+                    {
+                        if (nRow < 0 || nRow >= NumOfXTiles || nCol < 0 || nCol >= NumOfYTiles)
+                            continue;
+
+                        adjustedPos = new Point2D(nRow, nCol);
+                    }
+
+                    int nTileIndex = GetTileReference(adjustedPos.X, adjustedPos.Y).Index;
+                    bool bHasMapUnits = cachedActive.ContainsKey(adjustedPos);
+                    MapUnit mapUnit = bHasMapUnits ? GetTopVisibleMapUnit(adjustedPos, true) : null;
+
+                    //if (mapUnit != null) _ = "";
+                    bool bMapUnitMatches = mapUnit != null && checkTile(mapUnit.KeyTileReference.Index);
+
+                    if (!checkTile(nTileIndex) && !bMapUnitMatches) continue;
+                    double fDistance = Point2D.DistanceBetween(midPosition.X, midPosition.Y, nRow, nCol);
+                    if (nShortestRadius < fDistance) continue;
+
+                    // shortcut in case we hit it
+                    if (nRadius == 1) return 1;
+                    nShortestRadius = fDistance;
+                }
+            }
+
+            if (Math.Abs(nShortestRadius - 255) < 0.05f) return 255;
+            return (int)Math.Round(nShortestRadius);
+        }
+
+        public int ClosestTileReferenceAround(TileReference tileReference, Point2D midPosition, int nRadius)
+        {
+            return ClosestTileReferenceAround(midPosition, nRadius, i => tileReference.Index == i);
+        }
+
+        public int ClosestTileReferenceAround(TileReference tileReference, int nRadius)
+        {
+            return ClosestTileReferenceAround(CurrentPosition.XY, nRadius, i => tileReference.Index == i);
+        }
+
+        /// <summary>
+        ///     When orienting the stairs, which direction should they be drawn
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public Point2D.Direction GetStairsDirection(in Point2D xy)
+        {
+            // we are making a BIG assumption at this time that a stair case ONLY ever has a single
+            // entrance point, and solid walls on all other sides... hopefully this is true
+            if (!GetTileReference(xy.X - 1, xy.Y).IsSolidSprite) return Point2D.Direction.Left;
+            if (!GetTileReference(xy.X + 1, xy.Y).IsSolidSprite) return Point2D.Direction.Right;
+            if (!GetTileReference(xy.X, xy.Y - 1).IsSolidSprite) return Point2D.Direction.Up;
+            if (!GetTileReference(xy.X, xy.Y + 1).IsSolidSprite) return Point2D.Direction.Down;
+            throw new Ultima5ReduxException("Can't get stair direction - something is amiss....");
+        }
+
+        public Dictionary<Point2D, bool> GetAllMapOccupiedTiles()
+        {
+            Dictionary<Point2D, bool> occupiedDictionary = new();
+
+            IEnumerable<MapUnit> mapUnits = CurrentMapUnits.AllActiveMapUnits;
+            int nFloor = CurrentPosition.Floor;
+
+            foreach (MapUnit mapUnit in mapUnits)
+            {
+                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
+                if (!occupiedDictionary.ContainsKey(mapUnit.MapUnitPosition.XY))
+                    occupiedDictionary.Add(mapUnit.MapUnitPosition.XY, true);
+            }
+
+            return occupiedDictionary;
+        }
+
+        public Dictionary<int, Dictionary<int, bool>> GetAllMapOccupiedTilesFast()
+        {
+            Dictionary<int, Dictionary<int, bool>> occupiedTiles = new();
+
+            IEnumerable<MapUnit> mapUnits = CurrentMapUnits.AllActiveMapUnits;
+            int nFloor = CurrentPosition.Floor;
+
+            foreach (MapUnit mapUnit in mapUnits)
+            {
+                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
+
+                int x = mapUnit.MapUnitPosition.XY.X;
+                int y = mapUnit.MapUnitPosition.XY.Y;
+                if (!occupiedTiles.ContainsKey(x)) occupiedTiles.Add(x, new Dictionary<int, bool>());
+                if (!occupiedTiles[x].ContainsKey(y)) occupiedTiles[x].Add(y, true);
+            }
+
+            return occupiedTiles;
+        }
+        
         public bool IsTileWithinFourDirections(Point2D position, TileReference tileReference) =>
             IsTileWithinFourDirections(position, tileReference.Index);
 
@@ -166,6 +302,16 @@ namespace Ultima5Redux.Maps
 
             return mapUnits;
         }
+
+        public void SwapTiles(Point2D tile1Pos, Point2D tile2Pos)
+        {
+            TileReference tileRef1 = GetTileReference(tile1Pos);
+            TileReference tileRef2 = GetTileReference(tile2Pos);
+
+            SetOverridingTileReferece(tileRef1, tile2Pos);
+            SetOverridingTileReferece(tileRef2, tile1Pos);
+        }
+
 
         [IgnoreDataMember] protected readonly List<Type> VisiblePriorityOrder = new()
         {
