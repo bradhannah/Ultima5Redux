@@ -260,12 +260,13 @@ namespace Ultima5Redux
             return adjustedPos;
         }
 
-        // public Point2D GetAdjustXAndYToMax(int nMax)
-        // {
-        //     Point2D position = this;
-        //     position.AdjustXAndYToMax(nMax);
-        //     return position;
-        // }
+        // ReSharper disable once UnusedMember.Global
+        public Point2D GetAdjustXAndYToMax(int nMax)
+        {
+            Point2D position = this;
+            position.AdjustXAndYToMax(nMax);
+            return position;
+        }
 
         /// <summary>
         ///     Gets the north, south, east and west points within the zero (only positive) based extents provided
