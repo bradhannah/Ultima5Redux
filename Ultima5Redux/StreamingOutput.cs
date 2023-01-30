@@ -2,6 +2,7 @@
 
 namespace Ultima5Redux
 {
+    // ReSharper disable once UnusedType.Global
     public class StreamingOutput
     {
         private static StreamingOutput _instance;

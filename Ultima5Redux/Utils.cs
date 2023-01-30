@@ -29,24 +29,24 @@ namespace Ultima5Redux
         /// <param name="offset">byte position to start in list</param>
         /// <param name="length">number of bytes to copy from list to 2d array</param>
         /// <returns></returns>
-        public static byte[][] ByteListTo2DArray(List<byte> byteList, short splitEveryN, int offset, int length)
-        {
-            int listCount = byteList.Count;
-
-            _ = Math.DivRem(listCount, splitEveryN, out int remainder);
-
-            if (remainder != 0)
-                throw new ArgumentOutOfRangeException($"The Remainder: {remainder} should be zero when loading a map");
-
-            byte[][] byteArray = Init2DArray<byte>(length / splitEveryN, length / splitEveryN);
-
-            for (int listPos = offset, arrayPos = 0; listPos < offset + length; listPos++, arrayPos++)
-            {
-                byteArray[arrayPos / splitEveryN][arrayPos % splitEveryN] = byteList[listPos];
-            }
-
-            return byteArray;
-        }
+        // public static byte[][] ByteListTo2DArray(List<byte> byteList, short splitEveryN, int offset, int length)
+        // {
+        //     int listCount = byteList.Count;
+        //
+        //     _ = Math.DivRem(listCount, splitEveryN, out int remainder);
+        //
+        //     if (remainder != 0)
+        //         throw new ArgumentOutOfRangeException($"The Remainder: {remainder} should be zero when loading a map");
+        //
+        //     byte[][] byteArray = Init2DArray<byte>(length / splitEveryN, length / splitEveryN);
+        //
+        //     for (int listPos = offset, arrayPos = 0; listPos < offset + length; listPos++, arrayPos++)
+        //     {
+        //         byteArray[arrayPos / splitEveryN][arrayPos % splitEveryN] = byteList[listPos];
+        //     }
+        //
+        //     return byteArray;
+        // }
 
         public static string BytesToStringFixedWidth(List<byte> byteArray, int offset, int length)
         {
@@ -84,28 +84,28 @@ namespace Ultima5Redux
             return str;
         }
 
-        /// <summary>
-        ///     Creates an offset list when uint16 offsets are described in a data file
-        /// </summary>
-        /// <remarks>this is only midly useful due to it not passing back the byte array</remarks>
-        /// <param name="filename">data fileNameAndPath and path</param>
-        /// <param name="offset">initial offset (typically 0)</param>
-        /// <param name="length">number of bytes to read</param>
-        /// <returns>a list of offsets</returns>
-        public static List<int> CreateOffsetList(string filename, int offset, int length)
-        {
-            List<byte> byteArray = GetFileAsByteList(filename);
-
-            List<int> offsetArray = new();
-
-            // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
-            for (int i = 0; i < length; i += 2)
-            {
-                offsetArray.Add((int)(byteArray[i] | ((uint)byteArray[i + 1] << 8)));
-            }
-
-            return offsetArray;
-        }
+        // /// <summary>
+        // ///     Creates an offset list when uint16 offsets are described in a data file
+        // /// </summary>
+        // /// <remarks>this is only mildly useful due to it not passing back the byte array</remarks>
+        // /// <param name="filename">data fileNameAndPath and path</param>
+        // /// <param name="offset">initial offset (typically 0)</param>
+        // /// <param name="length">number of bytes to read</param>
+        // /// <returns>a list of offsets</returns>
+        // public static List<int> CreateOffsetList(string filename, int offset, int length)
+        // {
+        //     List<byte> byteArray = GetFileAsByteList(filename);
+        //
+        //     List<int> offsetArray = new();
+        //
+        //     // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
+        //     for (int i = 0; i < length; i += 2)
+        //     {
+        //         offsetArray.Add((int)(byteArray[i] | ((uint)byteArray[i + 1] << 8)));
+        //     }
+        //
+        //     return offsetArray;
+        // }
 
         public static List<ushort> CreateOffsetList(byte[] byteArray, int offset, int length)
         {
@@ -129,7 +129,7 @@ namespace Ultima5Redux
             }
 
             Random rng = new();
-            Queue<int> randomizedQueue = new(intList.OrderBy(o => rng.Next()));
+            Queue<int> randomizedQueue = new(intList.OrderBy(_ => rng.Next()));
             return randomizedQueue;
         }
 
@@ -201,7 +201,7 @@ namespace Ultima5Redux
             return Ran.Next() % nDiff + nMin;
         }
 
-        public static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
+        private static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
         {
             T[][] theArray = new T[numberOfRows][];
             for (int i = 0; i < numberOfRows; i++)
@@ -212,7 +212,7 @@ namespace Ultima5Redux
             return theArray;
         }
 
-        public static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols, T defaultValue)
+        private static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols, T defaultValue)
         {
             T[][] theArray = new T[numberOfRows][];
             for (int i = 0; i < numberOfRows; i++)
@@ -302,21 +302,21 @@ namespace Ultima5Redux
 
         public static bool RandomOdds(float fLikelihoodOfTrue) => Ran.NextDouble() <= fLikelihoodOfTrue;
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>Borrowed from: https://www.developerfusion.com/article/84519/mastering-structs-in-c </remarks>
-        /// <param name="fs"></param>
-        /// <param name="t"></param>
-        /// <returns></returns>
-        public static object ReadStruct(FileStream fs, Type t)
-        {
-            byte[] buffer = new byte[Marshal.SizeOf(t)];
-            fs.Read(buffer, 0, Marshal.SizeOf(t));
-            GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            object temp = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), t);
-            handle.Free();
-            return temp;
-        }
+        // /// <summary>
+        // /// </summary>
+        // /// <remarks>Borrowed from: https://www.developerfusion.com/article/84519/mastering-structs-in-c </remarks>
+        // /// <param name="fs"></param>
+        // /// <param name="t"></param>
+        // /// <returns></returns>
+        // public static object ReadStruct(FileStream fs, Type t)
+        // {
+        //     byte[] buffer = new byte[Marshal.SizeOf(t)];
+        //     fs.Read(buffer, 0, Marshal.SizeOf(t));
+        //     GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+        //     object temp = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), t);
+        //     handle.Free();
+        //     return temp;
+        // }
 
         /// <summary>
         /// </summary>

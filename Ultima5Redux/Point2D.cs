@@ -24,12 +24,7 @@ namespace Ultima5Redux
             Y = y;
         }
 
-        public static bool operator ==(Point2DFloat point1, Point2DFloat point2)
-        {
-            if (ReferenceEquals(point1, null)) return ReferenceEquals(point2, null);
-
-            return point1.Equals(point2);
-        }
+        public static bool operator ==(Point2DFloat point1, Point2DFloat point2) => ReferenceEquals(point1, null) ? ReferenceEquals(point2, null) : point1.Equals(point2);
 
         public static bool operator !=(Point2DFloat point1, Point2DFloat point2) => !(point1 == point2);
 
@@ -136,7 +131,7 @@ namespace Ultima5Redux
         /// <param name="endPoint">end point</param>
         /// <returns>A list of intersecting points</returns>
         /// <remarks>stolen from http://playtechs.blogspot.com/2007/03/raytracing-on-grid.html and reworked</remarks>
-        public static List<Point2D> Raytrace(Point2D startPoint, Point2D endPoint)
+        private static List<Point2D> Raytrace(Point2D startPoint, Point2D endPoint)
         {
             // if the points are adjacent then we simplify it and just return the first and last point
             // if we don't do this then it will pollute the attack path with another tile which can
@@ -235,7 +230,7 @@ namespace Ultima5Redux
             return adjustedPos.IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : adjustedPos;
         }
 
-        public Point2D GetAdjustedPosition(int nXDiff, int nYDiff) => new(X + nXDiff, Y + nYDiff);
+        //public Point2D GetAdjustedPosition(int nXDiff, int nYDiff) => new(X + nXDiff, Y + nYDiff);
 
         public Point2D GetAdjustedPosition(Direction direction, int nSpaces = 1)
         {
@@ -265,12 +260,12 @@ namespace Ultima5Redux
             return adjustedPos;
         }
 
-        public Point2D GetAdjustXAndYToMax(int nMax)
-        {
-            Point2D position = this;
-            position.AdjustXAndYToMax(nMax);
-            return position;
-        }
+        // public Point2D GetAdjustXAndYToMax(int nMax)
+        // {
+        //     Point2D position = this;
+        //     position.AdjustXAndYToMax(nMax);
+        //     return position;
+        // }
 
         /// <summary>
         ///     Gets the north, south, east and west points within the zero (only positive) based extents provided
@@ -384,8 +379,8 @@ namespace Ultima5Redux
 
         public string GetFriendlyString() => "X=" + X + ",Y=" + Y;
 
-        public Point2D GetPoint2DOrNullOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0) =>
-            IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : this;
+        // public Point2D GetPoint2DOrNullOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0) =>
+        //     IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : this;
 
         /// <summary>
         ///     Determines if the current point is out of the range provided

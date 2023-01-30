@@ -12,27 +12,18 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] private SingleDungeonMapFloorReference _singleDungeonMapFloorReference;
 
         [IgnoreDataMember]
-        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference
-        {
-            get
-            {
-                if (_currentSingleMapReference == null)
-                    _currentSingleMapReference =
-                        GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
-                return _currentSingleMapReference;
-            }
-        } //protected override Dictionary<Point2D, TileOverrideReference> XYOverrides => new();
+        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
+            _currentSingleMapReference ??=
+                GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
 
         [IgnoreDataMember]
+        // ReSharper disable once MemberCanBePrivate.Global
         public SingleDungeonMapFloorReference SingleDungeonMapFloorReference
         {
-            get
-            {
-                if (_singleDungeonMapFloorReference == null)
-                    _singleDungeonMapFloorReference = GameReferences.Instance.DungeonReferences.GetDungeon(MapLocation)
-                        .GetSingleDungeonMapFloorReferenceByFloor(MapFloor);
-                return _singleDungeonMapFloorReference;
-            }
+            get =>
+                _singleDungeonMapFloorReference ??= GameReferences.Instance
+                    .DungeonReferences.GetDungeon(MapLocation)
+                    .GetSingleDungeonMapFloorReferenceByFloor(MapFloor);
             set => _singleDungeonMapFloorReference = value;
         }
 
@@ -43,12 +34,7 @@ namespace Ultima5Redux.Maps
         public override int NumOfYTiles => SingleDungeonMapFloorReference.N_DUNGEON_ROWS_PER_MAP;
         public override bool ShowOuterSmallMapTiles => false;
 
-        public override byte[][] TheMap
-        {
-            get;
-            protected set;
-            //throw new NotImplementedException();
-        }
+        public override byte[][] TheMap { get; protected set; }
 
         public override Maps TheMapType => Maps.Dungeon;
 

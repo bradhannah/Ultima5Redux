@@ -137,6 +137,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="enemyReference"></param>
         /// <param name="dropType"></param>
+        /// <param name="location"></param>
         /// <param name="mapUnitPosition"></param>
         /// <returns></returns>
         public static NonAttackingUnit GenerateDropForDeadEnemy(EnemyReference enemyReference,
@@ -154,9 +155,12 @@ namespace Ultima5Redux
 
         public static int GetGuardExtortionAmount(int nEra)
         {
-            if (nEra == 0) return 30;
-            if (nEra == 1) return 60;
-            return 90;
+            return nEra switch
+            {
+                0 => 30,
+                1 => 60,
+                _ => 90
+            };
         }
 
         /// <summary>

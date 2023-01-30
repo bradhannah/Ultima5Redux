@@ -216,7 +216,7 @@ namespace Ultima5Redux
             };
         }
 
-        private void MoveFileAsBackup(string currentSaveGamePathAndFile)
+        private static void MoveFileAsBackup(string currentSaveGamePathAndFile)
         {
             string currentSaveGamePathAndFileBackup = currentSaveGamePathAndFile + ".bak";
 
