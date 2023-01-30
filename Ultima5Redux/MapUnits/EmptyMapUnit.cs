@@ -21,14 +21,13 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public override TileReference KeyTileReference { get; set; } = null;
 
         [IgnoreDataMember]
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName => null;
-
-        [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => null;
 
         [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             null;
+
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName => null;
 
         internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay)
         {

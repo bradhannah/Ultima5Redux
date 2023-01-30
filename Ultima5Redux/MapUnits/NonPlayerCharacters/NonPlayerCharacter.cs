@@ -44,12 +44,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
-        public bool IsMinstrel => NPCRef.NPCKeySprite == (int)TileReference.SpriteIndex.BardPlaying_KeyIndex;
+        [IgnoreDataMember] public override bool IsAttackable => true;
 
-        public TileReference AlternateSittingTileReference => IsMinstrel
-            ? GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-                .BardPlaying_KeyIndex)
-            : KeyTileReference;
+        [IgnoreDataMember]
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+            new();
+
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
 
         public override TileReference KeyTileReference
         {
@@ -67,14 +69,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             set => base.KeyTileReference = value;
         }
 
-        [IgnoreDataMember] public override bool IsAttackable => true;
+        public TileReference AlternateSittingTileReference => IsMinstrel
+            ? GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                .BardPlaying_KeyIndex)
+            : KeyTileReference;
 
-        [IgnoreDataMember]
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
-
-        [IgnoreDataMember]
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
-            new();
+        public bool IsMinstrel => NPCRef.NPCKeySprite == (int)TileReference.SpriteIndex.BardPlaying_KeyIndex;
 
         [JsonConstructor] public NonPlayerCharacter()
         {

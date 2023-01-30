@@ -15,11 +15,23 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public enum TrapType { NONE, ACID, SLEEP, POISON, BOMB, SLEEP_ALL, ELECTRIC_ALL, POISON_ALL }
 
+        [DataMember] public bool IsTrapped => Trap != TrapType.NONE;
+
+        [DataMember] public virtual bool IsLocked { get; set; }
+
+        [DataMember] public virtual TrapType Trap { get; set; }
+
+        [DataMember] public TrapComplexity CurrentTrapComplexity { get; protected set; } = TrapComplexity.Simple;
+
+        [DataMember] public bool HasBeenOpened { get; set; }
+
+        [DataMember] public bool HasBeenSearched { get; set; }
+
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         [IgnoreDataMember] public override string BoardXitName => "Non Attacking Units don't not like to be boarded!";
 
-        public virtual bool NonAttackUnitTypeCanBeTrapped => false;
-        
+        [IgnoreDataMember] public virtual ItemStack InnerItemStack { get; protected set; }
+
         public override int ClosestAttackRange => 0;
         public override int Defense => 0;
         public override int Dexterity => 0;
@@ -38,25 +50,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public abstract bool IsSearchable { get; }
         public virtual bool HasInnerItemStack => InnerItemStack is { HasStackableItems: true };
 
-        [IgnoreDataMember] public virtual ItemStack InnerItemStack { get; protected set; }
-
-        [DataMember]
-        public virtual bool IsLocked { get; set; }
-
-        [DataMember]
-        public virtual TrapType Trap { get; set; }
-
-        [DataMember]
-        public TrapComplexity CurrentTrapComplexity { get; protected set; } = TrapComplexity.Simple;
-
-        [DataMember] public bool HasBeenOpened { get; set; }
-
-        [DataMember] public bool HasBeenSearched { get; set; }
-
-        [DataMember]
-        public bool IsTrapped => Trap != TrapType.NONE;
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
+        public virtual bool NonAttackUnitTypeCanBeTrapped => false;
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = new();
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
 
         internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay)
         {

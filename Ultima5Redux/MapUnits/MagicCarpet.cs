@@ -26,17 +26,6 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public override bool IsAttackable => false;
 
         [IgnoreDataMember]
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new()
-            {
-                { Point2D.Direction.None, REGULAR_CARPET_STR },
-                { Point2D.Direction.Left, REGULAR_CARPET_STR },
-                { Point2D.Direction.Down, REGULAR_CARPET_STR },
-                { Point2D.Direction.Right, REGULAR_CARPET_STR },
-                { Point2D.Direction.Up, REGULAR_CARPET_STR }
-            };
-
-        [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new()
             {
@@ -56,6 +45,17 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Down, "RidingMagicCarpetDown" },
                 { Point2D.Direction.Right, "RidingMagicCarpetRight" },
                 { Point2D.Direction.Up, "RidingMagicCarpetUp" }
+            };
+
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new()
+            {
+                { Point2D.Direction.None, REGULAR_CARPET_STR },
+                { Point2D.Direction.Left, REGULAR_CARPET_STR },
+                { Point2D.Direction.Down, REGULAR_CARPET_STR },
+                { Point2D.Direction.Right, REGULAR_CARPET_STR },
+                { Point2D.Direction.Up, REGULAR_CARPET_STR }
             };
 
         [JsonConstructor] private MagicCarpet()

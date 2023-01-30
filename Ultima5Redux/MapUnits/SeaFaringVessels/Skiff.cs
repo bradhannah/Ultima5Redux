@@ -29,7 +29,10 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public override bool IsAttackable => false;
 
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
+            DirectionToTileName;
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new()
             {
                 { Point2D.Direction.None, "SkiffLeft" },
@@ -38,9 +41,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 { Point2D.Direction.Right, "SkiffRight" },
                 { Point2D.Direction.Up, "SkiffUp" }
             };
-
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
-            DirectionToTileName;
 
         [JsonConstructor] private Skiff()
         {

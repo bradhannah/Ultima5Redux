@@ -54,11 +54,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember] public bool IsFleeing { get; set; }
 
         [IgnoreDataMember]
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
-
-        [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new();
+
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
 
         [JsonConstructor] private Enemy()
         {
@@ -84,7 +84,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Stats.CurrentMp = 0;
         }
 
-        internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay) 
+        internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay)
         {
             if (EnemyReference.DoesNotMove) return;
             // are we water, sand or land?

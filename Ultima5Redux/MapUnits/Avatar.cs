@@ -101,10 +101,6 @@ namespace Ultima5Redux.MapUnits
         public MapUnit CurrentBoardedMapUnit { get; private set; }
 
         [IgnoreDataMember]
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName =>
-            DirectionToTileNameBasicAvatar;
-
-        [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded
         {
             get
@@ -115,6 +111,10 @@ namespace Ultima5Redux.MapUnits
                     : CurrentBoardedMapUnit.DirectionToTileNameBoarded;
             }
         }
+
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName =>
+            DirectionToTileNameBasicAvatar;
 
         private Point2D.Direction _currentDirection;
 
@@ -161,7 +161,7 @@ namespace Ultima5Redux.MapUnits
             BoardMapUnitFromAvatarState(CurrentAvatarState);
         }
 
-        internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay) 
+        internal override void CompleteNextNonCombatMove(RegularMap regularMap, TimeOfDay timeOfDay)
         {
             // by default the thing doesn't move on it's own
         }

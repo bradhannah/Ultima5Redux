@@ -65,9 +65,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
 
         public PlayerCharacterRecord Record { get; }
-
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName => default;
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => default;
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => default;
 
         public CombatPlayer(PlayerCharacterRecord record, Point2D xy)
         {

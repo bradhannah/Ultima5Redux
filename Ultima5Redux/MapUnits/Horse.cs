@@ -33,17 +33,6 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public override bool IsAttackable => false;
 
         [IgnoreDataMember]
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new()
-            {
-                { Point2D.Direction.None, "HorseLeft" },
-                { Point2D.Direction.Left, "HorseLeft" },
-                { Point2D.Direction.Down, "HorseLeft" },
-                { Point2D.Direction.Right, "HorseRight" },
-                { Point2D.Direction.Up, "HorseRight" }
-            };
-
-        [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new()
             {
@@ -63,6 +52,17 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Down, "RidingHorseDown" },
                 { Point2D.Direction.Right, "RidingHorseRight" },
                 { Point2D.Direction.Up, "RidingHorseUp" }
+            };
+
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new()
+            {
+                { Point2D.Direction.None, "HorseLeft" },
+                { Point2D.Direction.Left, "HorseLeft" },
+                { Point2D.Direction.Down, "HorseLeft" },
+                { Point2D.Direction.Right, "HorseRight" },
+                { Point2D.Direction.Up, "HorseRight" }
             };
 
         protected internal override bool OverrideAiType => true;
