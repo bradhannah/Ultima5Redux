@@ -48,8 +48,6 @@ namespace Ultima5Redux
 
         internal PlayerCharacterRecords CharacterRecords { get; private set; }
 
-        internal SearchItems TheSearchItems { get; private set; }
-
         /// <summary>
         ///     Current floor
         /// </summary>
@@ -109,6 +107,8 @@ namespace Ultima5Redux
             GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
 
         internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
+
+        internal SearchItems TheSearchItems { get; private set; }
 
         internal TimeOfDay TheTimeOfDay => new(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
             DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH), DataChunks.GetDataChunk(DataChunkName.CURRENT_DAY),

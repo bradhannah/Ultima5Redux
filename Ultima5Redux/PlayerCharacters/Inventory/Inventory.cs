@@ -263,7 +263,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
 
-        
         // public bool SpendGold(int nGold)
         // {
         //     if (TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity < nGold) return false;

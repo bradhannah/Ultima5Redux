@@ -448,6 +448,64 @@ namespace Ultima5Redux.References
             SULFUR_ASH, GINSENG, GARLIC, SPIDER_SILK, BLOOD_MOSS, BLACK_PEARL, NIGHTSHADE, MANDRAKE_ROOT
         }
 
+
+        public enum ResponseToKeystroke
+        {
+            N_A_, _STOLE_SOME_FOOD_BANG_N, _ESCAPES_BANG_N, CANT_BANG_N, COMMA_, COMMA_ARMED_WITH_, BARE_HANDS, COLON,
+            ARGH_BANG_N, ZZZZZ_DOT_DOT_DOT_N, BUFFER_0, FF_N, N_N, SOUNDS_, OFF_N, ON_N, CAST_DOT_DOT_DOT_N,
+            ABSORBED_BANG_N, CANT_BANG_N2, GET_DASH, JIMMY_DASH, OPEN_DASH, PUSH_DASH, READY_DOT_DOT_DOT_N_N,
+            SEARCH_DASH, USE_ITEM_N_N, YELL_, Z_DASH_STATS_DOT_DOT_DOT_N, PASS_N, SET_ACTIVE_PLR_COLON_N_NONE_BANG_N,
+            BOARD, D_DASH_WHAT_Q_N, ENTER, FIRE, HOLE_UP, IGNITE_TORCH, LOOK, MIX, NEW_ORDER, QUIT, TALK, VIEW,
+            W_DASH_WHAT_Q_N, X_DASH_IT, WHAT_Q_N
+
+
+            // [0] = {string} "\nA "
+            // [1] = {string} " stole some food!\n"
+            // [2] = {string} " escapes!\n"
+            // [3] = {string} "Can't!\n"
+            // [4] = {string} ", "
+            // [5] = {string} ", armed with "
+            // [6] = {string} "bare hands"
+            // [7] = {string} ":"
+            // [8] = {string} "ARGH!\n"
+            // [9] = {string} "Zzzzz...\n"
+            // [10] = {string} "Buffer O"
+            // [11] = {string} "ff\n"
+            // [12] = {string} "n\n"
+            // [13] = {string} "Sound "
+            // [14] = {string} "Off\n"
+            // [15] = {string} "On\n"
+            // [16] = {string} "Cast...\n"
+            // [17] = {string} "Absorbed!\n"
+            // [18] = {string} "Can't!\n"
+            // [19] = {string} "Get-"
+            // [20] = {string} "Jimmy-"
+            // [21] = {string} "Open-"
+            // [22] = {string} "Push-"
+            // [23] = {string} "Ready...\n\n"
+            // [24] = {string} "Search-"
+            // [25] = {string} "Use item\n\n"
+            // [26] = {string} "Yell "
+            // [27] = {string} "Z-stats...\n"
+            // [28] = {string} "Pass\n"
+            // [29] = {string} "Set active plr:\nNone!\n"
+            // [30] = {string} "Board"
+            // [31] = {string} "D-What?\n"
+            // [32] = {string} "Enter"
+            // [33] = {string} "Fire"
+            // [34] = {string} "Hole up"
+            // [35] = {string} "Ignite torch"
+            // [36] = {string} "Look"
+            // [37] = {string} "Mix"
+            // [38] = {string} "New order"
+            // [39] = {string} "Quit"
+            // [40] = {string} "Talk"
+            // [41] = {string} "View"
+            // [42] = {string} "W-What?\n"
+            // [43] = {string} "X-it"
+            // [44] = {string} "What?\n"
+        }
+
         public enum ShadowlordStrings
         {
             GEM_SHARD_THOU_HOLD_EVIL_SHARD, FALSEHOOD_DOT, HATRED_DOT, COWARDICE_DOT, N_N_NO_EFFECT,
@@ -1008,64 +1066,6 @@ namespace Ultima5Redux.References
             //[31]	"Armaments"	string
             //[32]	"Done\n"	string
             //[33]	"\n\n"	string
-        }
-
-
-        public enum ResponseToKeystroke
-        {
-            N_A_, _STOLE_SOME_FOOD_BANG_N, _ESCAPES_BANG_N, CANT_BANG_N, COMMA_, COMMA_ARMED_WITH_, BARE_HANDS, COLON,
-            ARGH_BANG_N, ZZZZZ_DOT_DOT_DOT_N, BUFFER_0, FF_N, N_N, SOUNDS_, OFF_N, ON_N, CAST_DOT_DOT_DOT_N,
-            ABSORBED_BANG_N, CANT_BANG_N2, GET_DASH, JIMMY_DASH, OPEN_DASH, PUSH_DASH, READY_DOT_DOT_DOT_N_N,
-            SEARCH_DASH, USE_ITEM_N_N, YELL_, Z_DASH_STATS_DOT_DOT_DOT_N, PASS_N, SET_ACTIVE_PLR_COLON_N_NONE_BANG_N,
-            BOARD, D_DASH_WHAT_Q_N, ENTER, FIRE, HOLE_UP, IGNITE_TORCH, LOOK, MIX, NEW_ORDER, QUIT, TALK, VIEW,
-            W_DASH_WHAT_Q_N, X_DASH_IT, WHAT_Q_N
-
-
-            // [0] = {string} "\nA "
-            // [1] = {string} " stole some food!\n"
-            // [2] = {string} " escapes!\n"
-            // [3] = {string} "Can't!\n"
-            // [4] = {string} ", "
-            // [5] = {string} ", armed with "
-            // [6] = {string} "bare hands"
-            // [7] = {string} ":"
-            // [8] = {string} "ARGH!\n"
-            // [9] = {string} "Zzzzz...\n"
-            // [10] = {string} "Buffer O"
-            // [11] = {string} "ff\n"
-            // [12] = {string} "n\n"
-            // [13] = {string} "Sound "
-            // [14] = {string} "Off\n"
-            // [15] = {string} "On\n"
-            // [16] = {string} "Cast...\n"
-            // [17] = {string} "Absorbed!\n"
-            // [18] = {string} "Can't!\n"
-            // [19] = {string} "Get-"
-            // [20] = {string} "Jimmy-"
-            // [21] = {string} "Open-"
-            // [22] = {string} "Push-"
-            // [23] = {string} "Ready...\n\n"
-            // [24] = {string} "Search-"
-            // [25] = {string} "Use item\n\n"
-            // [26] = {string} "Yell "
-            // [27] = {string} "Z-stats...\n"
-            // [28] = {string} "Pass\n"
-            // [29] = {string} "Set active plr:\nNone!\n"
-            // [30] = {string} "Board"
-            // [31] = {string} "D-What?\n"
-            // [32] = {string} "Enter"
-            // [33] = {string} "Fire"
-            // [34] = {string} "Hole up"
-            // [35] = {string} "Ignite torch"
-            // [36] = {string} "Look"
-            // [37] = {string} "Mix"
-            // [38] = {string} "New order"
-            // [39] = {string} "Quit"
-            // [40] = {string} "Talk"
-            // [41] = {string} "View"
-            // [42] = {string} "W-What?\n"
-            // [43] = {string} "X-it"
-            // [44] = {string} "What?\n"
         }
 
         /// <summary>

@@ -4,8 +4,6 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
     public class ProvisionQuantityChanged : TurnResult, IQuantityChanged
     {
-        public int AdjustedBy { get; }
-        public int PreviousQuantity { get; }
         public ProvisionReferences.SpecificProvisionType TheProvision { get; }
 
         public ProvisionQuantityChanged(int adjustedBy, int previousQuantity,
@@ -16,5 +14,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             PreviousQuantity = previousQuantity;
             TheProvision = theProvision;
         }
+
+        public int AdjustedBy { get; }
+        public int PreviousQuantity { get; }
     }
 }

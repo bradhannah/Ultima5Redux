@@ -7,6 +7,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ExtendedNpc
 {
     public class WishingWell : NonPlayerCharacter
     {
+        private WishingWell(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
+            MapUnitPosition mapUnitPosition, NonPlayerCharacterState npcState) :
+            base(null, mapUnitMovement, false, location, mapUnitPosition, npcState)
+        {
+        }
+
         public static WishingWell Create(SmallMapReferences.SingleMapReference.Location location, Point2D xy,
             int nFloor)
         {
@@ -27,12 +33,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ExtendedNpc
                 npcState
             );
             return theWell;
-        }
-
-        private WishingWell(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
-            MapUnitPosition mapUnitPosition, NonPlayerCharacterState npcState) :
-            base(null, mapUnitMovement, false, location, mapUnitPosition, npcState)
-        {
         }
     }
 }

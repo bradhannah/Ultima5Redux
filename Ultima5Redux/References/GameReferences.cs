@@ -14,18 +14,9 @@ namespace Ultima5Redux.References
         private const string RELATIVE_INSTALLED = @"Ultima5ReduxTestDependancies/DataFiles";
         private const string RELATIVE_TEST = @"../Ultima5ReduxTestDependancies/DataFiles";
 
-        public CombatItemReferences CombatItemRefs { get; private set; }
+        private static GameReferences _gameReferences;
 
-        public CombatMapReferences CombatMapRefs { get; private set; }
-
-        /// <summary>
-        ///     A collection of data.ovl references
-        /// </summary>
-        public DataOvlReference DataOvlRef { get; private set; }
-
-        public EnemyReferences EnemyRefs { get; private set; }
-
-        public DungeonReferences DungeonReferences { get; private set; }
+        private static string legacyDataDirectory = "";
 
         public static GameReferences Instance
         {
@@ -42,7 +33,18 @@ namespace Ultima5Redux.References
             }
         }
 
-        private static GameReferences _gameReferences;
+        public CombatItemReferences CombatItemRefs { get; private set; }
+
+        public CombatMapReferences CombatMapRefs { get; private set; }
+
+        /// <summary>
+        ///     A collection of data.ovl references
+        /// </summary>
+        public DataOvlReference DataOvlRef { get; private set; }
+
+        public DungeonReferences DungeonReferences { get; private set; }
+
+        public EnemyReferences EnemyRefs { get; private set; }
         //get; set; }
 
         /// <summary>
@@ -77,6 +79,8 @@ namespace Ultima5Redux.References
 
         public ReagentReferences ReagentReferences { get; private set; }
 
+        public SearchLocationReferences SearchLocationReferences { get; private set; }
+
         public ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference { get; private set; }
         public ShoppeKeeperReferences ShoppeKeeperRefs { get; private set; }
 
@@ -103,7 +107,19 @@ namespace Ultima5Redux.References
 
         public TileOverrideReferences TileOverrideRefs { get; private set; }
 
-        public SearchLocationReferences SearchLocationReferences { get; private set; }
+
+        private GameReferences(string dataDirectory) => legacyDataDirectory = dataDirectory;
+
+        private static string GetU5Directory()
+        {
+            if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
+            if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
+            if (Directory.Exists(GOLD_DIR)) return GOLD_DIR; //-V3039
+
+            throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
+                                            Directory.GetCurrentDirectory() + "\nDirs: " +
+                                            Directory.GetDirectories(Directory.GetCurrentDirectory()));
+        }
 
         private void Build()
         {
@@ -132,23 +148,7 @@ namespace Ultima5Redux.References
             SearchLocationReferences = new SearchLocationReferences(DataOvlRef, SpriteTileReferences);
             DungeonReferences = new DungeonReferences(legacyDataDirectory);
         }
-        
-        
-        private GameReferences(string dataDirectory) => legacyDataDirectory = dataDirectory;
 
-        private static string GetU5Directory()
-        {
-            if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
-            if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
-            if (Directory.Exists(GOLD_DIR)) return GOLD_DIR; //-V3039
-
-            throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
-                                            Directory.GetCurrentDirectory() + "\nDirs: " +
-                                            Directory.GetDirectories(Directory.GetCurrentDirectory()));
-        }
-
-        private static string legacyDataDirectory = "";
-        
         public static void Initialize(string dataDirectory = "")
         {
             if (dataDirectory == "")

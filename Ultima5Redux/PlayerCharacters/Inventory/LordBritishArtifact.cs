@@ -17,9 +17,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public string EquipMessage =>
             Artifact switch
             {
-                ArtifactType.Amulet => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WEARING_AMULET),
-                ArtifactType.Crown => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.DON_THE_CROWN),
-                ArtifactType.Sceptre => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WIELD_SCEPTRE),
+                ArtifactType.Amulet => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                    .WearUseItemStrings.WEARING_AMULET),
+                ArtifactType.Crown => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                    .WearUseItemStrings.DON_THE_CROWN),
+                ArtifactType.Sceptre => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                    .WearUseItemStrings.WIELD_SCEPTRE),
                 _ => throw new InvalidEnumArgumentException(((int)Artifact).ToString())
             };
 
@@ -29,6 +32,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override bool HideQuantity => true;
 
         [IgnoreDataMember] public override string InventoryReferenceString => Artifact.ToString();
+
+        [JsonConstructor] private LordBritishArtifact()
+        {
+        }
+
+        public LordBritishArtifact(ArtifactType artifact, int quantity) : base(quantity, (int)artifact,
+            InventoryReferences.InventoryReferenceType.Item) =>
+            Artifact = artifact;
 
         public static int GetLegacySaveQuantityIndex(ArtifactType artifactType)
         {
@@ -44,14 +55,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-        [JsonConstructor] private LordBritishArtifact()
-        {
-        }
-
-        public LordBritishArtifact(ArtifactType artifact, int quantity) : base(quantity, (int)artifact,
-            InventoryReferences.InventoryReferenceType.Item) =>
-            Artifact = artifact;
 
         public bool HasItem() => Quantity != 0;
     }

@@ -74,25 +74,6 @@ namespace Ultima5Redux.References.Maps
 
         public Dungeon DungeonLocation => Dungeon.Covetous;
 
-        public DungeonMapReference GetDungeonMapReference()
-        {
-            if (MapTerritory == Territory.Britannia) return null;
-            int nLocation = CombatMapNum / CombatMapReferences.N_ROOMS_PER_DUNGEON +
-                            (int)SmallMapReferences.SingleMapReference.Location.Deceit;
-
-            if (nLocation > (int)SmallMapReferences.SingleMapReference.Location.Deceit)
-            {
-                // we skip the second item - Despise - because it doesn't have rooms
-                nLocation++;
-            }
-
-            var location =
-                (SmallMapReferences.SingleMapReference.Location)nLocation;
-
-            //CombatMapNum
-            return GameReferences.Instance.DungeonReferences.GetDungeon(location);
-        }
-
         public bool HasMagicDoor =>
             DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoor")) ||
             DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoorWithView"));
@@ -321,6 +302,25 @@ namespace Ultima5Redux.References.Maps
             $"{Index}, {Name}, {DungeonLocation}, {IsValidDirection(EntryDirection.East)}, " +
             $"{IsValidDirection(EntryDirection.West)}, {IsValidDirection(EntryDirection.North)}, " +
             $"{IsValidDirection(EntryDirection.South)}, {LaddersUp}, {LaddersDown}, {HasTriggers}, {Notes}";
+
+        public DungeonMapReference GetDungeonMapReference()
+        {
+            if (MapTerritory == Territory.Britannia) return null;
+            int nLocation = CombatMapNum / CombatMapReferences.N_ROOMS_PER_DUNGEON +
+                            (int)SmallMapReferences.SingleMapReference.Location.Deceit;
+
+            if (nLocation > (int)SmallMapReferences.SingleMapReference.Location.Deceit)
+            {
+                // we skip the second item - Despise - because it doesn't have rooms
+                nLocation++;
+            }
+
+            var location =
+                (SmallMapReferences.SingleMapReference.Location)nLocation;
+
+            //CombatMapNum
+            return GameReferences.Instance.DungeonReferences.GetDungeon(location);
+        }
 
         public Point2D GetEnemyPosition(int nIndex)
         {

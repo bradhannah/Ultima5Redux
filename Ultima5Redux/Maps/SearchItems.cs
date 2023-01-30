@@ -9,8 +9,8 @@ namespace Ultima5Redux.Maps
     [DataContract] public class SearchItem
     {
         [DataMember] public bool IsDiscovered { get; set; }
-        [IgnoreDataMember] public SearchItemReference TheSearchItemReference { get; private set; }
         [DataMember] public int SearchItemIndex { get; private set; }
+        [IgnoreDataMember] public SearchItemReference TheSearchItemReference { get; private set; }
 
         public SearchItem(int nSearchItemIndex, bool bIsDiscovered, SearchItemReference theSearchItemReference)
         {
@@ -28,25 +28,11 @@ namespace Ultima5Redux.Maps
 
     [DataContract] public class SearchItems
     {
-        [DataMember] private readonly List<SearchItem> _searchItems = new();
-
         public const int MAX_TOTAL_SEARCH_ITEMS = 0x72;
+        [DataMember] private readonly List<SearchItem> _searchItems = new();
 
         public SearchItems()
         {
-        }
-
-        public void Initialize()
-        {
-            for (int i = 0; i < GameReferences.Instance.SearchLocationReferences.TotalReferences; i++)
-            {
-                SearchItemReference searchItemReference =
-                    GameReferences.Instance.SearchLocationReferences.GetSearchItemReferenceByIndex(i);
-
-                var item = new SearchItem(i, false, searchItemReference);
-
-                _searchItems.Add(item);
-            }
         }
 
         public SearchItems(List<bool> searchItems)
@@ -64,20 +50,6 @@ namespace Ultima5Redux.Maps
 
                 _searchItems.Add(item);
             }
-        }
-
-        public bool IsAvailableSearchItemByLocation(SmallMapReferences.SingleMapReference.Location location, int nFloor,
-            Point2D position)
-        {
-            if (!GameReferences.Instance.SearchLocationReferences.IsSearchItemAtLocation(location, nFloor, position))
-            {
-                return false;
-            }
-
-            return GameReferences.Instance.SearchLocationReferences
-                .GetListOfSearchItemReferences
-                    (location, nFloor, position).Any(searchItemReference =>
-                    !_searchItems[searchItemReference.Index].IsDiscovered);
         }
 
         public Dictionary<Point2D, List<SearchItem>> GetUnDiscoveredSearchItemsByLocation(
@@ -147,6 +119,33 @@ namespace Ultima5Redux.Maps
             }
 
             return searchItems;
+        }
+
+        public void Initialize()
+        {
+            for (int i = 0; i < GameReferences.Instance.SearchLocationReferences.TotalReferences; i++)
+            {
+                SearchItemReference searchItemReference =
+                    GameReferences.Instance.SearchLocationReferences.GetSearchItemReferenceByIndex(i);
+
+                var item = new SearchItem(i, false, searchItemReference);
+
+                _searchItems.Add(item);
+            }
+        }
+
+        public bool IsAvailableSearchItemByLocation(SmallMapReferences.SingleMapReference.Location location, int nFloor,
+            Point2D position)
+        {
+            if (!GameReferences.Instance.SearchLocationReferences.IsSearchItemAtLocation(location, nFloor, position))
+            {
+                return false;
+            }
+
+            return GameReferences.Instance.SearchLocationReferences
+                .GetListOfSearchItemReferences
+                    (location, nFloor, position).Any(searchItemReference =>
+                    !_searchItems[searchItemReference.Index].IsDiscovered);
         }
     }
 }

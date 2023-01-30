@@ -9,26 +9,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     [DataContract] public sealed class NonPlayerCharacterState
     {
-        [DataMember] internal int PissedOffCountDown { get; set; } = -1;
-        [DataMember] internal bool OverrideAiType { get; private set; }
-
         [DataMember] internal bool HasExtortedAvatar { get; set; }
+        [DataMember] internal bool OverrideAiType { get; private set; }
+        [DataMember] internal int PissedOffCountDown { get; set; } = -1;
 
-        [DataMember]
-        public NonPlayerCharacterSchedule.AiType OverridenAiType { get; private set; } =
-            NonPlayerCharacterSchedule.AiType.Fixed;
-
-        public void OverrideAi(NonPlayerCharacterSchedule.AiType aiType)
-        {
-            OverrideAiType = true;
-            OverridenAiType = aiType;
-        }
-
-        public void UnsetOverridenAi()
-        {
-            OverrideAiType = false;
-        }
-        
         [DataMember]
         public bool HasMetAvatar
         {
@@ -56,6 +40,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         [DataMember] public SmallMapReferences.SingleMapReference.Location NPCLocation { get; private set; }
         [DataMember] public int NPCRefIndex { get; private set; }
 
+        [DataMember]
+        public NonPlayerCharacterSchedule.AiType OverridenAiType { get; private set; } =
+            NonPlayerCharacterSchedule.AiType.Fixed;
+
         [IgnoreDataMember] private bool _bHasMetAvatar;
 
         [IgnoreDataMember]
@@ -74,7 +62,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         }
 
         private readonly NonPlayerCharacterReference _npcRefOverride;
-        
+
         [JsonConstructor] private NonPlayerCharacterState()
         {
         }
@@ -92,6 +80,17 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             {
                 NPCRef = npcRef;
             }
+        }
+
+        public void OverrideAi(NonPlayerCharacterSchedule.AiType aiType)
+        {
+            OverrideAiType = true;
+            OverridenAiType = aiType;
+        }
+
+        public void UnsetOverridenAi()
+        {
+            OverrideAiType = false;
         }
     }
 }

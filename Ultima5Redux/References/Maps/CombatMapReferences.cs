@@ -13,10 +13,10 @@ namespace Ultima5Redux.References.Maps
         public enum DataChunkName { Unused = -1 }
 
         private const int TOTAL_DUNGEON_MAPS = 112;
-        public const int N_ROOMS_PER_DUNGEON = 112 / 7;
 
         // the master copy of the map references
         private const int TOTAL_OVERWORLD_MAPS = 16;
+        public const int N_ROOMS_PER_DUNGEON = 112 / 7;
 
         private readonly Dictionary<SingleCombatMapReference.Territory, List<SingleCombatMapReference>>
             _singleCombatMapReferences =

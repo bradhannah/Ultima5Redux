@@ -8,24 +8,13 @@ namespace Ultima5Redux.References
 {
     public class DungeonReferences
     {
-        private readonly DungeonMapReference[] _dungeons =
-            new DungeonMapReference[DungeonMapReference.N_DUNGEONS];
-
         private const int N_FIRST_DUNGEON_LOCATION_INT = (int)SmallMapReferences.SingleMapReference.Location.Deceit;
         private const int N_LAST_DUNGEON_LOCATION_INT = (int)SmallMapReferences.SingleMapReference.Location.Doom;
 
-        public DungeonMapReference GetDungeon(SmallMapReferences.SingleMapReference.Location location)
-        {
-            if ((int)location < N_FIRST_DUNGEON_LOCATION_INT || (int)location > N_LAST_DUNGEON_LOCATION_INT)
-            {
-                throw new Ultima5ReduxException(
-                    $"Requested dungeon with location {location}, which is out of range and not a dungeon");
-            }
+        private readonly DungeonMapReference[] _dungeons =
+            new DungeonMapReference[DungeonMapReference.N_DUNGEONS];
 
-            return _dungeons[(int)location - N_FIRST_DUNGEON_LOCATION_INT];
-        }
-
-        public IReadOnlyList<DungeonMapReference> DungeonMapReferences => _dungeons;  
+        public IReadOnlyList<DungeonMapReference> DungeonMapReferences => _dungeons;
 
         public DungeonReferences(string legacyDataDatFilePath)
         {
@@ -52,6 +41,17 @@ namespace Ultima5Redux.References
                     rawDungeon);
                 _dungeons[nDungeon] = singleDungeonMapReference;
             }
+        }
+
+        public DungeonMapReference GetDungeon(SmallMapReferences.SingleMapReference.Location location)
+        {
+            if ((int)location < N_FIRST_DUNGEON_LOCATION_INT || (int)location > N_LAST_DUNGEON_LOCATION_INT)
+            {
+                throw new Ultima5ReduxException(
+                    $"Requested dungeon with location {location}, which is out of range and not a dungeon");
+            }
+
+            return _dungeons[(int)location - N_FIRST_DUNGEON_LOCATION_INT];
         }
     }
 }

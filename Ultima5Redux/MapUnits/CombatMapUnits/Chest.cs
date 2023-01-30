@@ -5,10 +5,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    [DataContract]
-    public sealed class Chest : NonAttackingUnit
+    [DataContract] public sealed class Chest : NonAttackingUnit
     {
-        public override bool NonAttackUnitTypeCanBeTrapped => true;
         public override bool ExposeInnerItemsOnOpen => true;
         public override bool ExposeInnerItemsOnSearch => false;
 
@@ -22,15 +20,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("Chest");
 
         public override string Name => FriendlyName;
+        public override bool NonAttackUnitTypeCanBeTrapped => true;
 
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            GenerateItemStack(MapUnitPosition);
-        }
-        
         private Chest()
         {
         }
@@ -63,6 +57,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             if (bRandomLocked) IsLocked = OddsAndLogic.GetIsNewChestLocked();
             if (bRandomTrapType) Trap = OddsAndLogic.GetNewChestTrapType();
             GenerateItemStack(mapUnitPosition);
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            GenerateItemStack(MapUnitPosition);
         }
 
         private void GenerateItemStack(MapUnitPosition mapUnitPosition)

@@ -6,29 +6,28 @@ namespace Ultima5Redux.References
 {
     public class DungeonTile
     {
+        public enum ChestType { Normal = 0, Trapped_1 = 1, Trapped_2 = 2, Poisoned = 4 }
+
+        //char fountStr[3][7] = { "Heal", "Poison", "Hurt" };
+        public enum FountainType { CurePoison = 0, Heal = 1, PoisonFountain = 2, BadTasteDamage = 3 }
+
+        public enum LadderTrap { NoTrap = 0, IsTrapped = 8 }
+
+        //char fieldStr[4][10] = { "Sleep", "Poison", "Fire", "Lightning" };
+        public enum MagicFieldType { Poison = 0, Sleep = 1, Fire = 2, Energy = 3 }
+
         public enum TileType
         {
             Nothing = 0, LadderUp = 1, LadderDown = 2, LadderUpDown = 3, Chest = 4, Fountain = 5, Trap = 6,
             OpenChest = 7, MagicField = 8, RoomsBroke = 0xA, Wall = 0xB,
 
             // secondary wall is the kind with skeletons on
-            SecondaryWall = 0xC, SecretDoor = 0xD,
-            NormalDoor = 0xE, Room = 0xF
+            SecondaryWall = 0xC, SecretDoor = 0xD, NormalDoor = 0xE, Room = 0xF
         }
-
-        public enum LadderTrap { NoTrap = 0, IsTrapped = 8 }
-
-        public enum ChestType { Normal = 0, Trapped_1 = 1, Trapped_2 = 2, Poisoned = 4 }
-
-        //char fountStr[3][7] = { "Heal", "Poison", "Hurt" };
-        public enum FountainType { CurePoison = 0, Heal = 1, PoisonFountain = 2, BadTasteDamage = 3 }
 
         public enum TrapType { LowerTrapVisible, BombTrap, InvisibleTrap, UpperTrapVisible }
 
-        //char fieldStr[4][10] = { "Sleep", "Poison", "Fire", "Lightning" };
-        public enum MagicFieldType { Poison = 0, Sleep = 1, Fire = 2, Energy = 3 }
-
-        private readonly int[] messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
+        private readonly byte _subTileType;
 
         private readonly List<string> messages = new()
         {
@@ -37,6 +36,18 @@ namespace Ultima5Redux.References
             "THE PRISON WRONG", "THE CRYPT", "UPPER CRYPTS", "LOWER CRYPTS",
             "DEBTORS ALLY", "DEEP", "DEEPER", "DEEPEST", "MOTHER LODE MAZE"
         };
+
+        private readonly int[] messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
+
+        public int RoomNumber { get; }
+        public ChestType TheChestType { get; }
+        public FountainType TheFountainType { get; }
+        public LadderTrap TheLadderTrap { get; }
+        public MagicFieldType TheMagicFieldType { get; }
+        public TileType TheTileType { get; }
+        public TrapType TheTrapType { get; }
+
+        public Point2D TilePosition { get; }
 
 
         public string WallText
@@ -54,18 +65,6 @@ namespace Ultima5Redux.References
             }
         }
 
-        public Point2D TilePosition { get; }
-        public TileType TheTileType { get; }
-        public LadderTrap TheLadderTrap { get; }
-        public ChestType TheChestType { get; }
-        public FountainType TheFountainType { get; }
-        public TrapType TheTrapType { get; }
-        public MagicFieldType TheMagicFieldType { get; }
-
-        public int RoomNumber { get; }
-
-        private byte _subTileType;
-
         public DungeonTile(Point2D tilePosition, byte typeByte, byte subTypeByte)
         {
             TilePosition = tilePosition;
@@ -77,7 +76,7 @@ namespace Ultima5Redux.References
                 case TileType.Nothing:
                     // we cool
                     if (subTypeByte == 0x8) TheTileType = TileType.LadderUp;
-                        
+
                     break;
                 case TileType.LadderUp:
                 case TileType.LadderDown:

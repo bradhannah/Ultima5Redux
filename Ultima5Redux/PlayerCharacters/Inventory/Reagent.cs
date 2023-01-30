@@ -45,7 +45,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override string InventoryReferenceString => ReagentType.ToString();
         [IgnoreDataMember] public override bool IsSellable => false;
-        public static int GetLegacySaveQuantityIndex(SpecificReagentType reagentType) => (int)reagentType;
 
         /// <summary>
         ///     Standard index/order of reagents in data files
@@ -62,11 +61,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         /// <param name="specificReagentTypepe of reagent
         /// 
+        /// 
         /// </param>
         /// <param name="quantity">how many the party has</param>
         public Reagent(SpecificReagentType specificReagentType, int quantity) : base(quantity, REAGENT_SPRITE,
             InventoryReferences.InventoryReferenceType.Reagent) =>
             ReagentType = specificReagentType;
+
+        public static int GetLegacySaveQuantityIndex(SpecificReagentType reagentType) => (int)reagentType;
 
         /// <summary>
         ///     Get the correct price adjust for the specific location and
@@ -86,7 +88,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // price = Base Price * (1 + (100 - Karma) / 100)
             int nAdjustedPrice =
                 GameReferences.Instance.ReagentReferences.GetPriceAndQuantity(location, ReagentType).Price *
-                                 (1 + (100 - GameStateReference.State.Karma) / 100);
+                (1 + (100 - GameStateReference.State.Karma) / 100);
             return nAdjustedPrice;
         }
 

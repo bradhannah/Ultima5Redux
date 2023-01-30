@@ -145,7 +145,7 @@ namespace Ultima5Redux
             {
                 return new List<Point2D> { startPoint, endPoint };
             }
-            
+
             int dx = Math.Abs(endPoint.X - startPoint.X);
             int dy = Math.Abs(endPoint.Y - startPoint.Y);
             int x = startPoint.X;
@@ -291,6 +291,25 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        ///     This will get all the points that are closer to the given point - good for "dumbly" tracking
+        ///     another character - such as Drudgeworth in jail, since the A* breaks down when a locked door
+        ///     is in the way
+        /// </summary>
+        /// <param name="closerToPosition"></param>
+        /// <param name="nXExtent"></param>
+        /// <param name="nYExtent"></param>
+        /// <returns></returns>
+        public IEnumerable<Point2D> GetConstrainedFourDirectionSurroundingPointsCloserTo(
+            Point2D closerToPosition, int nXExtent, int nYExtent)
+        {
+            List<Point2D> fourPointList = GetConstrainedFourDirectionSurroundingPoints(nXExtent, nYExtent);
+            double dCurrentDistanceBetween = DistanceBetween(closerToPosition);
+
+            return fourPointList.Where(
+                point => point.DistanceBetween(closerToPosition) < dCurrentDistanceBetween);
+        }
+
+        /// <summary>
         ///     This will get any point surrounding a single point that is further away from a destination point
         ///     For example - if you had a character who was trying to get further away from another character
         ///     this would give you the potential points that are technically further away
@@ -308,25 +327,6 @@ namespace Ultima5Redux
 
             return fourPointList.Where(
                 point => point.DistanceBetween(furtherAwayFromPosition) > dCurrentDistanceBetween);
-        }
-
-        /// <summary>
-        ///     This will get all the points that are closer to the given point - good for "dumbly" tracking
-        ///     another character - such as Drudgeworth in jail, since the A* breaks down when a locked door
-        ///     is in the way
-        /// </summary>
-        /// <param name="closerToPosition"></param>
-        /// <param name="nXExtent"></param>
-        /// <param name="nYExtent"></param>
-        /// <returns></returns>
-        public IEnumerable<Point2D> GetConstrainedFourDirectionSurroundingPointsCloserTo(
-            Point2D closerToPosition, int nXExtent, int nYExtent)
-        {
-            List<Point2D> fourPointList = GetConstrainedFourDirectionSurroundingPoints(nXExtent, nYExtent);
-            double dCurrentDistanceBetween = DistanceBetween(closerToPosition);
-
-            return fourPointList.Where(
-                point => point.DistanceBetween(closerToPosition) < dCurrentDistanceBetween);
         }
 
         public List<Point2D> GetConstrainedFourDirectionSurroundingPointsWrapAround(int nXExtent, int nYExtent)

@@ -5,7 +5,6 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     public sealed class NpcTalkInteraction : TurnResult, INonPlayerCharacterInteraction
     {
         public readonly string CustomDialogueId = "";
-        public NonPlayerCharacter NPC { get; }
 
         public NpcTalkInteraction(NonPlayerCharacter npc) : base(TurnResultType.NpcTalkInteraction) => NPC = npc;
 
@@ -15,5 +14,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             CustomDialogueId = customDialogueId;
             NPC = npc;
         }
+
+        public NonPlayerCharacter NPC { get; }
     }
 }

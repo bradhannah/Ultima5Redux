@@ -12,10 +12,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public enum ShardType { Falsehood = 0x210, Hatred = 0x211, Cowardice = 0x212 }
-        // private enum Offsets { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 }
 
-        public static int GetLegacySaveQuantityIndex(ShardType shardType) => (int)shardType;
-        
         private const int SHARD_SPRITE = 436;
 
         [DataMember]
@@ -51,5 +48,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
                 .GEM_SHARD_THOU_HOLD_EVIL_SHARD) +
             GameReferences.Instance.DataOvlRef.StringReferences.GetString(shadowlordShard);
+        // private enum Offsets { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 }
+
+        public static int GetLegacySaveQuantityIndex(ShardType shardType) => (int)shardType;
     }
 }

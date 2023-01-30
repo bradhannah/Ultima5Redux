@@ -7,6 +7,8 @@ namespace Ultima5Redux.References.Maps
 {
     public class LargeMapLocationReferences
     {
+        public enum LargeMapType { Underworld = -1, Overworld }
+
         private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
         private const int N_TOTAL_LOCATIONS = 0x28;
 
@@ -22,8 +24,6 @@ namespace Ultima5Redux.References.Maps
 
         public const int
             YTiles = TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
-
-        public enum LargeMapType { Underworld = -1, Overworld }
 
         /// <summary>
         ///     Maps the xy based on the location
@@ -124,38 +124,6 @@ namespace Ultima5Redux.References.Maps
             return theMap;
         }
 
-        /// <summary>
-        ///     Gets the location at a particular xy
-        /// </summary>
-        /// <param name="mapXY"></param>
-        /// <returns></returns>
-        public SmallMapReferences.SingleMapReference.Location GetLocationByMapXY(Point2D mapXY) =>
-            LocationXYLocations[mapXY];
-
-        public byte[][] GetMap(LargeMapType largeMapType)
-        {
-            switch (largeMapType)
-            {
-                case LargeMapType.Overworld:
-                    return BuildGenericMap(
-                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.BRIT_DAT),
-                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.DATA_OVL), false);
-                case LargeMapType.Underworld:
-                    return BuildGenericMap(
-                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "",
-                        true);
-                default:
-                    throw new Ultima5ReduxException($"Tried to get a large map with: {largeMapType}");
-            }
-        }
-
-        /// <summary>
-        ///     Tells you if an xy is enterable (command key E)
-        /// </summary>
-        /// <param name="mapXY"></param>
-        /// <returns>true if it's enterable</returns>
-        public bool IsMapXYEnterable(Point2D mapXY) => LocationXYLocations.ContainsKey(mapXY);
-
         public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location)
         {
             List<byte> xDockCoords = GameReferences.Instance.DataOvlRef
@@ -190,5 +158,37 @@ namespace Ultima5Redux.References.Maps
 
             return docks[location];
         }
+
+        /// <summary>
+        ///     Gets the location at a particular xy
+        /// </summary>
+        /// <param name="mapXY"></param>
+        /// <returns></returns>
+        public SmallMapReferences.SingleMapReference.Location GetLocationByMapXY(Point2D mapXY) =>
+            LocationXYLocations[mapXY];
+
+        public byte[][] GetMap(LargeMapType largeMapType)
+        {
+            switch (largeMapType)
+            {
+                case LargeMapType.Overworld:
+                    return BuildGenericMap(
+                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.BRIT_DAT),
+                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.DATA_OVL), false);
+                case LargeMapType.Underworld:
+                    return BuildGenericMap(
+                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "",
+                        true);
+                default:
+                    throw new Ultima5ReduxException($"Tried to get a large map with: {largeMapType}");
+            }
+        }
+
+        /// <summary>
+        ///     Tells you if an xy is enterable (command key E)
+        /// </summary>
+        /// <param name="mapXY"></param>
+        /// <returns>true if it's enterable</returns>
+        public bool IsMapXYEnterable(Point2D mapXY) => LocationXYLocations.ContainsKey(mapXY);
     }
 }

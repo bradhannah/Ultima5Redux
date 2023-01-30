@@ -6,6 +6,9 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     {
         public enum ExtortionType { Generic, HalfGold, BlackthornPassword }
 
+        public int ExtortionAmount { get; }
+        public ExtortionType TheExtortionType { get; }
+
         public GuardExtortion(NonPlayerCharacter npc, ExtortionType theExtortionType, int extortionAmount) :
             base(TurnResultType.GuardExtortion)
         {
@@ -15,8 +18,5 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         }
 
         public NonPlayerCharacter NPC { get; }
-        public ExtortionType TheExtortionType { get; }
-
-        public int ExtortionAmount { get; }
     }
 }

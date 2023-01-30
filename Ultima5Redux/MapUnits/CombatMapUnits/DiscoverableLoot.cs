@@ -14,16 +14,28 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     /// </summary>
     [DataContract] public sealed class DiscoverableLoot : NonAttackingUnit
     {
-        public override string FriendlyName => "Loot";
-        public override string PluralName => "Loot";
-        public override string SingularName => "Loot";
-        public override string Name => "Loot";
+        private enum LootType { SearchItems, InventoryItems }
+
+        [DataMember] private List<InventoryItem> _inventoryItems;
+
+        [DataMember] private List<SearchItem> _listOfSearchItems;
+        [DataMember] private LootType _lootType;
+
+        /// <summary>
+        ///     This needs to give us a stack of all the goods!
+        /// </summary>
+        [DataMember]
+        public override ItemStack InnerItemStack { get; protected set; }
+
+        /// <summary>
+        ///     This represents what this will become if searched - such as a dead body
+        /// </summary>
+        [IgnoreDataMember]
+        public NonAttackingUnit AlternateNonAttackingUnit { get; private set; }
+
         public override bool ExposeInnerItemsOnOpen => false;
         public override bool ExposeInnerItemsOnSearch => true;
-        public override bool IsOpenable => false;
-        public override bool IsSearchable => true;
-        public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;
-        public override bool IsInvisible => true;
+        public override string FriendlyName => "Loot";
 
         public override bool IsActive
         {
@@ -35,28 +47,19 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
 
-        [DataMember] private List<SearchItem> _listOfSearchItems;
-        [DataMember] private List<InventoryItem> _inventoryItems;
-        [DataMember] private LootType _lootType;
-
-        private enum LootType { SearchItems, InventoryItems }
-        /// <summary>
-        ///     This needs to give us a stack of all the goods!
-        /// </summary>
-        [DataMember]
-        public override ItemStack InnerItemStack { get; protected set; }
-
-        public bool IsDeadBody => AlternateNonAttackingUnit is DeadBody;
-        public bool IsBloodSpatter => AlternateNonAttackingUnit is BloodSpatter;
-
-        /// <summary>
-        ///     This represents what this will become if searched - such as a dead body
-        /// </summary>
-        [IgnoreDataMember]
-        public NonAttackingUnit AlternateNonAttackingUnit { get; private set; }
+        public override bool IsInvisible => true;
+        public override bool IsOpenable => false;
+        public override bool IsSearchable => true;
 
         public override TileReference KeyTileReference { get; set; } =
             GameReferences.Instance.SpriteTileReferences.GetTileReference(0);
+
+        public override string Name => "Loot";
+        public override string PluralName => "Loot";
+        public override string SingularName => "Loot";
+        public bool IsBloodSpatter => AlternateNonAttackingUnit is BloodSpatter;
+
+        public bool IsDeadBody => AlternateNonAttackingUnit is DeadBody;
 
         public DiscoverableLoot()
         {
@@ -74,7 +77,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
             InitializeInventoryItems();
         }
-        
+
         public DiscoverableLoot(SmallMapReferences.SingleMapReference.Location location,
             MapUnitPosition mapUnitPosition, List<SearchItem> searchItems)
         {
@@ -83,7 +86,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                                      "Cannot create DiscoverableLoot with null searchItems");
 
             _lootType = LootType.SearchItems;
-            
+
             MapUnitPosition = mapUnitPosition;
             MapLocation = location;
             InitializeSearchItems();
@@ -132,5 +135,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 }
             }
         }
+
+        public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;
     }
 }

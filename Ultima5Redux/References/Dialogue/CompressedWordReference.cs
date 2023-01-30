@@ -43,22 +43,6 @@ namespace Ultima5Redux.References.Dialogue
         }
 
         /// <summary>
-        ///     Adds a byte offset lookup.
-        ///     This is hard to follow - but basically it describes what should be added or subtracted from an index based on the
-        ///     range it lies in.
-        /// </summary>
-        /// <param name="indexStart">the first index to apply the offset</param>
-        /// <param name="indexStop">the last index to apply the offset to</param>
-        /// <param name="offset">the offset to add or subtract (positive or negative)</param>
-        private void AddByteLookupMapping(byte indexStart, byte indexStop, int offset)
-        {
-            for (int i = indexStart; i <= indexStop; i++)
-            {
-                _compressWordLookupMap.Add((byte)i, (byte)(i + offset));
-            }
-        }
-
-        /// <summary>
         ///     Is this an expected letter or digit in the string
         /// </summary>
         /// <param name="character"></param>
@@ -83,6 +67,22 @@ namespace Ultima5Redux.References.Dialogue
             // * location of thing
             // ^ quantity of thing (ie. reagent)
             character is '%' or '&' or '$' or '#' or '@' or '*' or '^';
+
+        /// <summary>
+        ///     Adds a byte offset lookup.
+        ///     This is hard to follow - but basically it describes what should be added or subtracted from an index based on the
+        ///     range it lies in.
+        /// </summary>
+        /// <param name="indexStart">the first index to apply the offset</param>
+        /// <param name="indexStop">the last index to apply the offset to</param>
+        /// <param name="offset">the offset to add or subtract (positive or negative)</param>
+        private void AddByteLookupMapping(byte indexStart, byte indexStop, int offset)
+        {
+            for (int i = indexStart; i <= indexStop; i++)
+            {
+                _compressWordLookupMap.Add((byte)i, (byte)(i + offset));
+            }
+        }
 
         /// <summary>
         ///     Get a compressed word with an index

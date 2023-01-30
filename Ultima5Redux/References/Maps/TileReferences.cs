@@ -208,6 +208,34 @@ namespace Ultima5Redux.References.Maps
             or TileReference.SpriteIndex.MirrorAvatar or TileReference.SpriteIndex.MirrorBroken;
 
         /// <summary>
+        ///     Is the sprite a staircase sprite
+        /// </summary>
+        /// <param name="nSprite"></param>
+        /// <returns></returns>
+        public static bool IsStaircase(int nSprite)
+        {
+            bool bIsLadder = nSprite is >= 196 and <= 199;
+            // nSprite == GetTileNumberByName("StairsWest") ||
+            //              nSprite == GetTileNumberByName("StairsEast") ||
+            //              nSprite == GetTileNumberByName("StairsNorth") ||
+            //              nSprite == GetTileNumberByName("StairsSouth"); // is it a ladder
+            return bIsLadder;
+        }
+
+        /// <summary>
+        ///     is the sprite a stock
+        /// </summary>
+        /// <param name="nSprite"></param>
+        /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static bool IsStocks(int nSprite)
+        {
+            bool bIsStocks = nSprite == 132;
+            //GetTileNumberByName("Stocks"); // is it the stocks
+            return bIsStocks;
+        }
+
+        /// <summary>
         ///     Is it an unbroken mirror - reflected or regular
         /// </summary>
         /// <param name="nSprite"></param>
@@ -435,33 +463,5 @@ namespace Ultima5Redux.References.Maps
             GetTileNumberByName("SignWarning") == nSprite;
 
         public bool IsSkiff(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Skiff");
-
-        /// <summary>
-        ///     Is the sprite a staircase sprite
-        /// </summary>
-        /// <param name="nSprite"></param>
-        /// <returns></returns>
-        public static bool IsStaircase(int nSprite)
-        {
-            bool bIsLadder = nSprite is >= 196 and <= 199;
-            // nSprite == GetTileNumberByName("StairsWest") ||
-            //              nSprite == GetTileNumberByName("StairsEast") ||
-            //              nSprite == GetTileNumberByName("StairsNorth") ||
-            //              nSprite == GetTileNumberByName("StairsSouth"); // is it a ladder
-            return bIsLadder;
-        }
-
-        /// <summary>
-        ///     is the sprite a stock
-        /// </summary>
-        /// <param name="nSprite"></param>
-        /// <returns></returns>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static bool IsStocks(int nSprite)
-        {
-            bool bIsStocks = nSprite == 132;
-            //GetTileNumberByName("Stocks"); // is it the stocks
-            return bIsStocks;
-        }
     }
 }

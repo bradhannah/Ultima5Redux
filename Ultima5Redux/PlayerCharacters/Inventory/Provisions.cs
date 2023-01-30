@@ -96,6 +96,34 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Items[ProvisionReferences.SpecificProvisionType.SkullKeys].Quantity = importedGameState.SkullKeys;
         }
 
+        public void AddOrRemoveProvisionQuantity(ProvisionReferences.SpecificProvisionType specificProvisionType,
+            int nAdjustBy, TurnResults turnResults)
+        {
+            switch (specificProvisionType)
+            {
+                case ProvisionReferences.SpecificProvisionType.Torches:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Torches, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Gems:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Gems, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Keys:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Keys, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.SkullKeys:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + SkullKeys, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Food:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Food, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Gold:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Gold, turnResults);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(specificProvisionType), specificProvisionType, null);
+            }
+        }
+
         public void FoodStolen(TurnResults turnResults, EnemyReference enemyReference, int nAmountStolen)
         {
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.FoodStolenByEnemy));
@@ -141,34 +169,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             turnResults.PushTurnResult(new ProvisionQuantityChanged(nNewQuantity - nPreviousQuantity, nNewQuantity,
                 specificProvisionType));
-        }
-
-        public void AddOrRemoveProvisionQuantity(ProvisionReferences.SpecificProvisionType specificProvisionType,
-            int nAdjustBy, TurnResults turnResults)
-        {
-            switch (specificProvisionType)
-            {
-                case ProvisionReferences.SpecificProvisionType.Torches:
-                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Torches, turnResults);
-                    break;
-                case ProvisionReferences.SpecificProvisionType.Gems:
-                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Gems, turnResults);
-                    break;
-                case ProvisionReferences.SpecificProvisionType.Keys:
-                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Keys, turnResults);
-                    break;
-                case ProvisionReferences.SpecificProvisionType.SkullKeys:
-                    SetProvisionQuantity(specificProvisionType, nAdjustBy + SkullKeys, turnResults);
-                    break;
-                case ProvisionReferences.SpecificProvisionType.Food:
-                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Food, turnResults);
-                    break;
-                case ProvisionReferences.SpecificProvisionType.Gold:
-                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Gold, turnResults);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(specificProvisionType), specificProvisionType, null);
-            }
         }
     }
 }

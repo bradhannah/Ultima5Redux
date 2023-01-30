@@ -160,6 +160,9 @@ namespace Ultima5Redux.References.Maps
             return nNewTileIndex;
         }
 
+
+        public bool Is(SpriteIndex spriteIndex) => Index == (int)spriteIndex;
+
         public bool IsIndexWithinAnimationFrames(int nIndex)
         {
             if (TotalAnimationFrames <= 1) return nIndex == Index;
@@ -167,9 +170,6 @@ namespace Ultima5Redux.References.Maps
             return nOffset >= 0 && nOffset < TotalAnimationFrames;
         }
 
-
-        public bool Is(SpriteIndex spriteIndex) => Index == (int)spriteIndex;
-        
         public bool IsPassable(Avatar.AvatarState avatarState)
         {
             switch (avatarState)

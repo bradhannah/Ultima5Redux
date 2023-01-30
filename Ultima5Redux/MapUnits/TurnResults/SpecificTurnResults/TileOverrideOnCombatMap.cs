@@ -4,14 +4,14 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
     public class TileOverrideOnCombatMap : TurnResult
     {
+        public Point2D Position { get; }
+        public TileReference ReplacementTile { get; }
+
         public TileOverrideOnCombatMap(Point2D position, TileReference replacementTile) : base(TurnResultType
             .OverrideCombatMapTile)
         {
             Position = position;
             ReplacementTile = replacementTile;
         }
-
-        public Point2D Position { get; }
-        public TileReference ReplacementTile { get; }
     }
 }

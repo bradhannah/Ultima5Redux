@@ -16,14 +16,6 @@ namespace Ultima5Redux.References.Dialogue
     /// </summary>
     [DataContract] public class TalkScripts
     {
-        public string Serialize()
-        {
-            string scripts = JsonConvert.SerializeObject(this, Formatting.Indented);
-            return scripts;
-        }
-
-        [DataMember] private Dictionary<string, TalkScript> _customTalkScripts;
-
         /// <summary>
         ///     a null byte signifies the end of the script line
         /// </summary>
@@ -34,13 +26,17 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         private const int TALK_OFFSET_ADJUST = 0x80;
 
-        /// <summary>
-        ///     do I print Debug output to the Console
-        /// </summary>
-        private readonly bool _bIsDebug = false;
-
         // all of the compressed words that are referenced in the .tlk files
         [DataMember] private readonly CompressedWordReference _compressedWordRef;
+
+        /// <summary>
+        ///     Dictionary that refers to the fully interpreted TalkScripts for each NPC based on Master map file and NPC index
+        /// </summary>
+        [DataMember] private readonly
+            Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>
+            _talkScriptRefs = new();
+
+        [DataMember] private Dictionary<string, TalkScript> _customTalkScripts;
 
         /// <summary>
         ///     Dictionary that refers to the raw bytes for each NPC based on Map master file and NPC index
@@ -52,11 +48,9 @@ namespace Ultima5Redux.References.Dialogue
                     sizeof(SmallMapReferences.SingleMapReference.SmallMapMasterFiles));
 
         /// <summary>
-        ///     Dictionary that refers to the fully interpreted TalkScripts for each NPC based on Master map file and NPC index
+        ///     do I print Debug output to the Console
         /// </summary>
-        [DataMember] private readonly
-            Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>
-            _talkScriptRefs = new();
+        private readonly bool _bIsDebug = false;
 
         /// <summary>
         ///     Build the talk scripts
@@ -332,6 +326,12 @@ namespace Ultima5Redux.References.Dialogue
                     (NonPlayerCharacterReference.SpecificNpcDialogType)nNPC))
                 return null;
             return _talkScriptRefs[smallMapRef][nNPC];
+        }
+
+        public string Serialize()
+        {
+            string scripts = JsonConvert.SerializeObject(this, Formatting.Indented);
+            return scripts;
         }
 
         /// <summary>

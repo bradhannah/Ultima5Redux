@@ -11,6 +11,28 @@ namespace Ultima5Redux
 {
     public static class OddsAndLogic
     {
+        private static readonly Dictionary<NonAttackingUnit.TrapType, int> ChestTrapsWeighted = new()
+        {
+            { NonAttackingUnit.TrapType.ACID, WEIGHT_CHEST_TRAP_ACID },
+            { NonAttackingUnit.TrapType.BOMB, WEIGHT_CHEST_TRAP_BOMB },
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_CHEST_TRAP_POISON },
+            { NonAttackingUnit.TrapType.SLEEP, WEIGHT_CHEST_TRAP_SLEEP },
+            { NonAttackingUnit.TrapType.NONE, WEIGHT_CHEST_TRAP_NONE }
+        };
+
+        private static readonly Dictionary<NonAttackingUnit.TrapType, int> DeadBodyTrapsWeighted = new()
+        {
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_DEADBODY_TRAP_POISON + AGGRESSIVE_TRAP_MODIFIER },
+            { NonAttackingUnit.TrapType.NONE, WEIGHT_DEADBODY_TRAP_NONE }
+        };
+
+        private static readonly Dictionary<NonAttackingUnit.TrapType, int> BloodSpatterTrapsWeighted = new()
+        {
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_BLOODSPATTER_TRAP_POISON + AGGRESSIVE_TRAP_MODIFIER },
+            { NonAttackingUnit.TrapType.NONE, WEIGHT_BLOODSPATTER_TRAP_NONE }
+        };
+
+        internal static readonly int[] BeginningOfEras = { 0, 10000, 30000 };
         private const float ODDS_BASE_COMPLEX_TRAP_EXPLODE_ON_SEARCH = 0.4f;
         private const float ODDS_BASE_SIMPLE_TRAP_EXPLODE_ON_SEARCH = 0.2f;
 
@@ -42,26 +64,6 @@ namespace Ultima5Redux
 
         private const int WEIGHT_DEADBODY_TRAP_POISON = 1;
 
-        private static readonly Dictionary<NonAttackingUnit.TrapType, int> ChestTrapsWeighted = new()
-        {
-            { NonAttackingUnit.TrapType.ACID, WEIGHT_CHEST_TRAP_ACID },
-            { NonAttackingUnit.TrapType.BOMB, WEIGHT_CHEST_TRAP_BOMB },
-            { NonAttackingUnit.TrapType.POISON, WEIGHT_CHEST_TRAP_POISON },
-            { NonAttackingUnit.TrapType.SLEEP, WEIGHT_CHEST_TRAP_SLEEP },
-            { NonAttackingUnit.TrapType.NONE, WEIGHT_CHEST_TRAP_NONE }
-        };
-
-        private static readonly Dictionary<NonAttackingUnit.TrapType, int> DeadBodyTrapsWeighted = new()
-        {
-            { NonAttackingUnit.TrapType.POISON, WEIGHT_DEADBODY_TRAP_POISON + AGGRESSIVE_TRAP_MODIFIER },
-            { NonAttackingUnit.TrapType.NONE, WEIGHT_DEADBODY_TRAP_NONE }
-        };
-
-        private static readonly Dictionary<NonAttackingUnit.TrapType, int> BloodSpatterTrapsWeighted = new()
-        {
-            { NonAttackingUnit.TrapType.POISON, WEIGHT_BLOODSPATTER_TRAP_POISON + AGGRESSIVE_TRAP_MODIFIER },
-            { NonAttackingUnit.TrapType.NONE, WEIGHT_BLOODSPATTER_TRAP_NONE }
-        };
 
         private static readonly List<NonAttackingUnit.TrapType> BloodSpatterTrapsWeightedList =
             Utils.MakeWeightedList(BloodSpatterTrapsWeighted).ToList();
@@ -94,21 +96,19 @@ namespace Ultima5Redux
         public const int BOMB_DAMAGE_MAX = 10;
 
         public const int BOMB_DAMAGE_MIN = 3;
+        public const int DEFAULT_FOOD_STOLEN = 5;
         public const int ELECTRIC_DAMAGE_MAX = 10;
 
         public const int ELECTRIC_DAMAGE_MIN = 3;
+        public const int ODDS_OF_STEALING_FOOD = 4;
+
+        public const int ONE_IN_OF_BROKEN_KEY = 5;
         public const int POISON_DAMAGE_MAX = 1;
 
         public const int POISON_DAMAGE_MIN = 1;
-
-        public const int ONE_IN_OF_BROKEN_KEY = 5;
         public const int TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU = 5;
-        public const int ODDS_OF_STEALING_FOOD = 4;
-        public const int DEFAULT_FOOD_STOLEN = 5;
 
         public static bool DidEnemyStealFood() => Utils.OneInXOdds(ODDS_OF_STEALING_FOOD);
-        
-        public static bool IsJimmySuccessful(int nDexterity) => !Utils.OneInXOdds(ONE_IN_OF_BROKEN_KEY);
 
         /// <summary>
         ///     When the given user tries to open the chest - does it explode?
@@ -144,6 +144,20 @@ namespace Ultima5Redux
             MapUnitPosition mapUnitPosition) =>
             // todo: need to tailor what is in the drop based on the enemy reference
             NonAttackingUnitFactory.Create((int)dropType, location, mapUnitPosition);
+
+        public static int GetEraByTurn(int nTurn)
+        {
+            if (nTurn >= BeginningOfEras[2]) return 2;
+            if (nTurn >= BeginningOfEras[1]) return 1;
+            return 0;
+        }
+
+        public static int GetGuardExtortionAmount(int nEra)
+        {
+            if (nEra == 0) return 30;
+            if (nEra == 1) return 60;
+            return 90;
+        }
 
         /// <summary>
         ///     After killing an enemy, do you get a drop?
@@ -213,21 +227,7 @@ namespace Ultima5Redux
         public static NonAttackingUnit.TrapType GetNewDeadBodyTrapType() =>
             DeadBodyTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count];
 
-        internal static readonly int[] BeginningOfEras = { 0, 10000, 30000 };
-
-        public static int GetEraByTurn(int nTurn)
-        {
-            if (nTurn >= BeginningOfEras[2]) return 2;
-            if (nTurn >= BeginningOfEras[1]) return 1;
-            return 0;
-        }
-
-        public static int GetGuardExtortionAmount(int nEra)
-        {
-            if (nEra == 0) return 30;
-            if (nEra == 1) return 60;
-            return 90;
-        }
+        public static bool IsJimmySuccessful(int nDexterity) => !Utils.OneInXOdds(ONE_IN_OF_BROKEN_KEY);
     }
 }
 

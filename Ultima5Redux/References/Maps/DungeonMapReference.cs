@@ -9,22 +9,19 @@ namespace Ultima5Redux.References
 
     public class DungeonMapReference
     {
-        public const int N_DUNGEONS = 8;
-        public const int N_DUNGEON_FLOORS_PER_MAP = 8;
-
         public const int N_BYTES_PER_DUNGEON = SingleDungeonMapFloorReference.N_BYTES_PER_FLOOR *
                                                N_DUNGEON_FLOORS_PER_MAP;
 
         public const int N_BYTES_PER_DUNGEON_FLOOR = SingleDungeonMapFloorReference.N_DUNGEON_ROWS_PER_MAP *
                                                      SingleDungeonMapFloorReference.N_DUNGEON_COLS_PER_ROW;
 
+        public const int N_DUNGEON_FLOORS_PER_MAP = 8;
+        public const int N_DUNGEONS = 8;
+
         private readonly SingleDungeonMapFloorReference[] _singleDungeonMapFloorReferences = new
             SingleDungeonMapFloorReference[N_DUNGEON_FLOORS_PER_MAP];
 
         public SmallMapReferences.SingleMapReference.Location DungeonLocation { get; }
-
-        public SingleDungeonMapFloorReference GetSingleDungeonMapFloorReferenceByFloor(int nFloor) =>
-            _singleDungeonMapFloorReferences[nFloor];
 
         public DungeonMapReference(SmallMapReferences.SingleMapReference.Location dungeonLocation,
             IReadOnlyList<byte> rawData)
@@ -39,5 +36,8 @@ namespace Ultima5Redux.References
                 _singleDungeonMapFloorReferences[nDungeonFloor] = singleDungeonMapFloorReference;
             }
         }
+
+        public SingleDungeonMapFloorReference GetSingleDungeonMapFloorReferenceByFloor(int nFloor) =>
+            _singleDungeonMapFloorReferences[nFloor];
     }
 }

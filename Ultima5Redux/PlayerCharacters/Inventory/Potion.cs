@@ -23,7 +23,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override bool HideQuantity => false;
 
         [IgnoreDataMember] public override string InventoryReferenceString => Color.ToString();
-        public static int GetLegacySaveQuantityIndex(PotionColor color) => (int)color;
 
         [JsonConstructor] private Potion()
         {
@@ -32,5 +31,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public Potion(PotionColor color, int quantity) : base(quantity, POTION_SPRITE,
             InventoryReferences.InventoryReferenceType.Item) =>
             Color = color;
+
+        public static int GetLegacySaveQuantityIndex(PotionColor color) => (int)color;
     }
 }

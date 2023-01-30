@@ -43,8 +43,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public bool HasStackableItems => TotalItems > 0;
 
-        public int TotalItems => _stackableItems.Count;
-
         public string ThouFindStr
         {
             get
@@ -59,13 +57,15 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
 
+        public int TotalItems => _stackableItems.Count;
+
         //public enum StackableType { DeadBody, BloodSpatter, }
 
         [JsonConstructor] public ItemStack()
         {
         }
-        
-        
+
+
         public ItemStack(MapUnitPosition mapUnitPosition) => MapUnitPosition = mapUnitPosition;
 
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;

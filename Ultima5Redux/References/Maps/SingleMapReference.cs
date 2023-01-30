@@ -31,8 +31,6 @@ namespace Ultima5Redux.References.Maps
                 Combat_resting_shrine = 41
             }
 
-            public bool IsDungeon => (int)MapLocation >= (int)Location.Deceit && (int)MapLocation <= (int)Location.Doom;
-
             /// <summary>
             ///     Map master files. These represent .DAT, .NPC and .TLK files
             /// </summary>
@@ -152,6 +150,8 @@ namespace Ultima5Redux.References.Maps
 
             private readonly string _dataDirectory;
 
+            public bool IsDungeon => (int)MapLocation >= (int)Location.Deceit && (int)MapLocation <= (int)Location.Doom;
+
             /// <summary>
             ///     Construct a single map reference
             /// </summary>
@@ -206,18 +206,17 @@ namespace Ultima5Redux.References.Maps
 
             public static SingleMapReference GetLargeMapSingleInstance(
                 LargeMapLocationReferences.LargeMapType largeMapType) //Map.Maps map)
-            {
-                // if (map == Map.Maps.Small)
-                //     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
-                //
-                return new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory,
-                    Location.Britannia_Underworld,
-                    largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1, 0);
-                // return new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory,
-                //     Location.Britannia_Underworld,
-                //     map == Map.Maps.Overworld ? 0 : -1, 0);
-            }
+                =>
+                    // if (map == Map.Maps.Small)
+                    //     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
+                    //
+                    new(GameReferences.Instance.DataOvlRef.DataDirectory,
+                        Location.Britannia_Underworld,
+                        largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1, 0);
 
+            // return new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory,
+            //     Location.Britannia_Underworld,
+            //     map == Map.Maps.Overworld ? 0 : -1, 0);
             /// <summary>
             ///     Gets the master file type based on the location
             /// </summary>

@@ -71,6 +71,8 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         private bool _runeMode;
 
+        public bool CallForGuardsAfterConversation { get; private set; }
+
         /// <summary>
         ///     Has the conversation ended?
         /// </summary>
@@ -83,7 +85,7 @@ namespace Ultima5Redux.Dialogue
 
         public NonPlayerCharacterState TheNonPlayerCharacterState { get; }
 
-        public bool CallForGuardsAfterConversation { get; private set; }
+        public TurnResults TheTurnResults { get; } = new();
 
         /// <summary>
         ///     Construction a conversation
@@ -245,7 +247,7 @@ namespace Ultima5Redux.Dialogue
                         return;
                     case TalkScript.TalkCommand.MakeAHorse:
                         EnqueueToOutputBuffer(item);
-                        break;                        
+                        break;
                     case TalkScript.TalkCommand.EndConversation:
                         EnqueueToOutputBuffer(item);
                         ConversationEnded = true;
@@ -426,6 +428,56 @@ namespace Ultima5Redux.Dialogue
                                                     " to the TextProcessItem method");
             }
         }
+
+        public static string GetNameForChangeGiveItem(TalkScript.ScriptItem scriptItem)
+        {
+            return scriptItem.ItemAdditionalData switch
+            {
+                65 => // food
+                    "food",
+                67 => //keys
+                    "key",
+                75 => // skull key (serpents hold/Kristi) "skul"
+                    "skull key",
+                70 => // grapple (empath abbey/Lord Michael) "grap"
+                    "grappling hook",
+                72 => //sextant (Lighthouse of Greyhaven/David) "sext"
+                    "sextant",
+                73 => // spyglasses (Minor Keep/Seggallion) "spy" (virtue)
+                    "telescope",
+                74 => // badge (Windmere/Elistaria) "oppr", "impera" 
+                    "black badge",
+                8 => // jewelled sword (Minor Keep/Thrud) "jewe"
+                    "jewelled sword",
+                28 => // jeweled shield (Minor Keep/Thrud) "jewe"
+                    "jewelled shield",
+                _ => "nothing"
+            };
+        }
+
+        public static TileReference.SpriteIndex GetSpriteForChangeGiveItem(TalkScript.ScriptItem scriptItem) =>
+            scriptItem.ItemAdditionalData switch
+            {
+                65 => // food
+                    TileReference.SpriteIndex.ItemFood,
+                67 => //keys
+                    TileReference.SpriteIndex.ItemKey,
+                75 => // skull key (serpents hold/Kristi) "skul"
+                    TileReference.SpriteIndex.ItemKey,
+                70 => // grapple (empath abbey/Lord Michael) "grap"
+                    TileReference.SpriteIndex.Nothing,
+                72 => //sextant (Lighthouse of Greyhaven/David) "sext"
+                    TileReference.SpriteIndex.Nothing,
+                73 => // spyglasses (Minor Keep/Seggallion) "spy" (virtue)
+                    TileReference.SpriteIndex.Telescope,
+                74 => // badge (Windmere/Elistaria) "oppr", "impera" 
+                    TileReference.SpriteIndex.Nothing,
+                8 => // jewelled sword (Minor Keep/Thrud) "jewe"
+                    TileReference.SpriteIndex.ItemWeapon,
+                28 => // jeweled shield (Minor Keep/Thrud) "jewe"
+                    TileReference.SpriteIndex.ItemShield,
+                _ => TileReference.SpriteIndex.Nothing
+            };
 
         /// <summary>
         ///     Add a user response to the queue
@@ -661,64 +713,12 @@ namespace Ultima5Redux.Dialogue
             return convStr;
         }
 
-        public TurnResults TheTurnResults { get; } = new();
-
-        public static TileReference.SpriteIndex GetSpriteForChangeGiveItem(TalkScript.ScriptItem scriptItem) =>
-            scriptItem.ItemAdditionalData switch
-            {
-                65 => // food
-                    TileReference.SpriteIndex.ItemFood,
-                67 => //keys
-                    TileReference.SpriteIndex.ItemKey,
-                75 => // skull key (serpents hold/Kristi) "skul"
-                    TileReference.SpriteIndex.ItemKey,
-                70 => // grapple (empath abbey/Lord Michael) "grap"
-                    TileReference.SpriteIndex.Nothing,
-                72 => //sextant (Lighthouse of Greyhaven/David) "sext"
-                    TileReference.SpriteIndex.Nothing,
-                73 => // spyglasses (Minor Keep/Seggallion) "spy" (virtue)
-                    TileReference.SpriteIndex.Telescope,
-                74 => // badge (Windmere/Elistaria) "oppr", "impera" 
-                    TileReference.SpriteIndex.Nothing,
-                8 => // jewelled sword (Minor Keep/Thrud) "jewe"
-                    TileReference.SpriteIndex.ItemWeapon,
-                28 => // jeweled shield (Minor Keep/Thrud) "jewe"
-                    TileReference.SpriteIndex.ItemShield,
-                _ => TileReference.SpriteIndex.Nothing
-            };
-
-        public static string GetNameForChangeGiveItem(TalkScript.ScriptItem scriptItem)
-        {
-            return scriptItem.ItemAdditionalData switch
-            {
-                65 => // food
-                    "food",
-                67 => //keys
-                    "key",
-                75 => // skull key (serpents hold/Kristi) "skul"
-                    "skull key",
-                70 => // grapple (empath abbey/Lord Michael) "grap"
-                    "grappling hook",
-                72 => //sextant (Lighthouse of Greyhaven/David) "sext"
-                    "sextant",
-                73 => // spyglasses (Minor Keep/Seggallion) "spy" (virtue)
-                    "telescope",
-                74 => // badge (Windmere/Elistaria) "oppr", "impera" 
-                    "black badge",
-                8 => // jewelled sword (Minor Keep/Thrud) "jewe"
-                    "jewelled sword",
-                28 => // jeweled shield (Minor Keep/Thrud) "jewe"
-                    "jewelled shield",
-                _ => "nothing"
-            };
-        }
-
 
         public void ProcessScriptItem(TalkScript.ScriptItem scriptItem)
         {
             if (_gameState.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
-            
+
             switch (scriptItem.Command)
             {
                 case TalkScript.TalkCommand.MakeAHorse:

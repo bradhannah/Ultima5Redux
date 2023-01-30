@@ -6,8 +6,7 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    [DataContract]
-    public sealed class BloodSpatter : NonAttackingUnit
+    [DataContract] public sealed class BloodSpatter : NonAttackingUnit
     {
         public override bool CanStackMapUnitsOnTop => true;
 
@@ -28,15 +27,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("Splat");
 
         public override string Name => FriendlyName;
+        public override bool NonAttackUnitTypeCanBeTrapped => true;
 
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
-        public override bool NonAttackUnitTypeCanBeTrapped => true;
-        
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            GenerateItemStack(MapUnitPosition);
-        }
 
 
         [JsonConstructor] public BloodSpatter()
@@ -52,6 +46,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
 
             MapUnitPosition = mapUnitPosition;
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            GenerateItemStack(MapUnitPosition);
         }
 
         private void GenerateItemStack(MapUnitPosition mapUnitPosition)

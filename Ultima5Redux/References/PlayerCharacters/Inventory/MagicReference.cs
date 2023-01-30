@@ -92,8 +92,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             Vas_Rel_Por, An_Tym, Nox
         }
 
-        public static int GetLegacySaveQuantityIndex(SpellWords spellWords) => (int)spellWords;
-
         [DataMember]
         private bool BlackPearl
         {
@@ -202,6 +200,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 _reagentsDictionary[specificReagentType] = bSpellRequirement;
             else _reagentsDictionary.Add(specificReagentType, bSpellRequirement);
         }
+
+        public static int GetLegacySaveQuantityIndex(SpellWords spellWords) => (int)spellWords;
 
         public bool IsCastablePresently(GameState state) => CreateSpellCasting().IsCastablePresently(state);
 

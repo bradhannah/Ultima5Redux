@@ -67,17 +67,6 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         [IgnoreDataMember] private readonly ScriptTalkLabels _scriptTalkLabels = new();
 
-        /// <summary>
-        ///     We only capture the bare minimum when deserializing scripts and process them after
-        ///     Just like when we load from the raw file
-        /// </summary>
-        /// <param name="context"></param>
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            //_currentScriptLine = _scriptLines[0];
-            InitScript();
-        }
-
         // tracking the current script line
         [IgnoreDataMember] private ScriptLine _currentScriptLine; //= new();
 
@@ -129,6 +118,17 @@ namespace Ultima5Redux.References.Dialogue
             NextLine();
             addToCurrent(byeResponse);
             NextLine();
+        }
+
+        /// <summary>
+        ///     We only capture the bare minimum when deserializing scripts and process them after
+        ///     Just like when we load from the raw file
+        /// </summary>
+        /// <param name="context"></param>
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            //_currentScriptLine = _scriptLines[0];
+            InitScript();
         }
 
         /// <summary>

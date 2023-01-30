@@ -19,13 +19,13 @@ namespace Ultima5Redux.Maps
 
         private readonly CombatMap _combatMap;
 
-        // private readonly MapUnits.MapUnits _combatMapUnits;
-        private readonly MapUnitCollection _mapUnitCollection;
-
         /// <summary>
         ///     Queue that provides order attack for all players and enemies
         /// </summary>
         private readonly Queue<Queue<CombatMapUnit>> _initiativeQueue = new();
+
+        // private readonly MapUnits.MapUnits _combatMapUnits;
+        private readonly MapUnitCollection _mapUnitCollection;
 
         private readonly PlayerCharacterRecords _playerCharacterRecords;
 
@@ -78,16 +78,6 @@ namespace Ultima5Redux.Maps
 
             Debug.Assert(_initiativeQueue.Count > 0);
             return GetCurrentCombatUnitAndClean();
-        }
-
-        public void RefreshFutureRounds()
-        {
-            if (_initiativeQueue.Count > 1)
-            {
-                Queue<CombatMapUnit> currentRound = _initiativeQueue.Dequeue();
-                _initiativeQueue.Clear();
-                _initiativeQueue.Enqueue(currentRound);
-            }
         }
 
         /// <summary>
@@ -187,6 +177,9 @@ namespace Ultima5Redux.Maps
             return true;
         }
 
+        internal bool CombatPlayerIsActive(CombatPlayer player) =>
+            ActivePlayerCharacterRecord == null || player.Record == ActivePlayerCharacterRecord;
+
         /// <summary>
         ///     Gets the active combat unit - either CombatPlayer or Enemy.
         /// </summary>
@@ -225,37 +218,6 @@ namespace Ultima5Redux.Maps
             return combatMapUnit;
         }
 
-        public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
-        {
-            int nTally = 0;
-            List<CombatMapUnit> combatMapUnits = new(nUnits);
-
-            while (!IsAtLeastNTurnsInQueue(nUnits))
-            {
-                // if we can't calculate any further initiatives then we break out
-                if (!CalculateNextInitiativeQueue())
-                    break;
-            }
-
-            foreach (CombatMapUnit combatMapUnit in _initiativeQueue.SelectMany(mapUnits => mapUnits))
-            {
-                if (!IsCombatMapUnitVisible(combatMapUnit)) continue;
-                
-                if (CombatMapUnitIsPresentAndActive(combatMapUnit))
-                {
-                    if (combatMapUnit is CombatPlayer player && !CombatPlayerIsActive(player)) continue;
-
-                    combatMapUnits.Add(combatMapUnit);
-                    nTally++;
-                }
-
-                if (nTally == nUnits) return combatMapUnits;
-            }
-
-            // we will return what we have which is likely zero
-            return combatMapUnits;
-        }
-
         /// <summary>
         ///     Clears all queues and tallies, and populates with new data
         /// </summary>
@@ -289,25 +251,6 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        private bool CombatMapUnitIsPresentOnMap(CombatMapUnit combatMapUnit, bool bFilterNotVisible = true)
-        {
-            // if the combat unit is not visible then we skip them and don't ruin the surprise that they are on the map
-            if (bFilterNotVisible && !IsCombatMapUnitVisible(combatMapUnit)) return false;
-
-            // if we have enemies piled on top of each other (like dungeon 60)
-            bool bIsOnTop = _combatMap.GetTopVisibleMapUnit(combatMapUnit.MapUnitPosition.XY, false) == combatMapUnit;
-
-            return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0 && bIsOnTop;
-        }
-
-        private bool IsCombatMapUnitVisible(CombatMapUnit combatMapUnit)
-        {
-            if (_combatMap.VisibleOnMap != null &&
-                !_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
-                return false;
-            return true;
-        }
-
         private bool CombatMapUnitIsPresentAndActive(CombatMapUnit combatMapUnit)
         {
             if (combatMapUnit is CombatPlayer player)
@@ -318,8 +261,16 @@ namespace Ultima5Redux.Maps
             return CombatMapUnitIsPresentOnMap(combatMapUnit);
         }
 
-        internal bool CombatPlayerIsActive(CombatPlayer player) =>
-            ActivePlayerCharacterRecord == null || player.Record == ActivePlayerCharacterRecord;
+        private bool CombatMapUnitIsPresentOnMap(CombatMapUnit combatMapUnit, bool bFilterNotVisible = true)
+        {
+            // if the combat unit is not visible then we skip them and don't ruin the surprise that they are on the map
+            if (bFilterNotVisible && !IsCombatMapUnitVisible(combatMapUnit)) return false;
+
+            // if we have enemies piled on top of each other (like dungeon 60)
+            bool bIsOnTop = _combatMap.GetTopVisibleMapUnit(combatMapUnit.MapUnitPosition.XY, false) == combatMapUnit;
+
+            return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0 && bIsOnTop;
+        }
 
         private int GetNumberOfTurnsInQueue()
         {
@@ -366,9 +317,58 @@ namespace Ultima5Redux.Maps
             return false;
         }
 
+        private bool IsCombatMapUnitVisible(CombatMapUnit combatMapUnit)
+        {
+            if (_combatMap.VisibleOnMap != null &&
+                !_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
+                return false;
+            return true;
+        }
+
         public void AddCombatMapUnitToQueue(CombatMapUnit combatMapUnit)
         {
             _combatInitiativeTally.Add(combatMapUnit, 0);
+        }
+
+        public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
+        {
+            int nTally = 0;
+            List<CombatMapUnit> combatMapUnits = new(nUnits);
+
+            while (!IsAtLeastNTurnsInQueue(nUnits))
+            {
+                // if we can't calculate any further initiatives then we break out
+                if (!CalculateNextInitiativeQueue())
+                    break;
+            }
+
+            foreach (CombatMapUnit combatMapUnit in _initiativeQueue.SelectMany(mapUnits => mapUnits))
+            {
+                if (!IsCombatMapUnitVisible(combatMapUnit)) continue;
+
+                if (CombatMapUnitIsPresentAndActive(combatMapUnit))
+                {
+                    if (combatMapUnit is CombatPlayer player && !CombatPlayerIsActive(player)) continue;
+
+                    combatMapUnits.Add(combatMapUnit);
+                    nTally++;
+                }
+
+                if (nTally == nUnits) return combatMapUnits;
+            }
+
+            // we will return what we have which is likely zero
+            return combatMapUnits;
+        }
+
+        public void RefreshFutureRounds()
+        {
+            if (_initiativeQueue.Count > 1)
+            {
+                Queue<CombatMapUnit> currentRound = _initiativeQueue.Dequeue();
+                _initiativeQueue.Clear();
+                _initiativeQueue.Enqueue(currentRound);
+            }
         }
 
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)

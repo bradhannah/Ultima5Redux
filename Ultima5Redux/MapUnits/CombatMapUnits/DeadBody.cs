@@ -8,8 +8,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     [DataContract] public sealed class DeadBody : NonAttackingUnit
     {
-        public override bool NonAttackUnitTypeCanBeTrapped => true;
-        public override bool IsActive => true;
+        [DataMember] public override ItemStack InnerItemStack { get; protected set; }
 
         public override bool ExposeInnerItemsOnOpen => false;
 
@@ -19,8 +18,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string FriendlyName => GameReferences.Instance.DataOvlRef.StringReferences
             .GetString(DataOvlReference.ThingsIFindStrings.A_BLOOD_PULP_BANG_N).TrimEnd();
 
-        [DataMember]
-        public override ItemStack InnerItemStack { get; protected set; }
+        public override bool IsActive => true;
 
         public override bool IsOpenable => false;
         public override bool IsSearchable => true;
@@ -29,6 +27,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex.DeadBody);
 
         public override string Name => FriendlyName;
+        public override bool NonAttackUnitTypeCanBeTrapped => true;
 
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
@@ -53,7 +52,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             //GenerateItemStack(MapUnitPosition);
         }
-        
+
         private void GenerateItemStack(MapUnitPosition mapUnitPosition)
         {
             InnerItemStack = new ItemStack(mapUnitPosition);

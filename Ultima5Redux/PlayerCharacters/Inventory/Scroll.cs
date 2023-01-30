@@ -27,8 +27,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override string InventoryReferenceString => ScrollSpell.ToString();
         [IgnoreDataMember] public override bool IsSellable => false;
 
-        public static int GetLegacySaveQuantityIndex(ScrollSpells scrollSpells) => (int)scrollSpells;
-        
         [IgnoreDataMember]
         public MagicReference ScrollMagicReference
         {
@@ -46,5 +44,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             ScrollSpell = spell;
             ScrollMagicReference = scrollMagicReference;
         }
+
+        public static int GetLegacySaveQuantityIndex(ScrollSpells scrollSpells) => (int)scrollSpells;
     }
 }

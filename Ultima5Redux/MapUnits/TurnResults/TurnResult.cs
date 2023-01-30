@@ -25,8 +25,7 @@
             ActionJimmyKeyBroke, ActionSearchRemoveComplex, ActionSearchRemoveSimple, ActionSearchTriggerComplexTrap,
             ActionSearchTriggerSimpleTrap, ActionSearchNoTrap, ActionSearchThingDisappears, PlayerCharacterPoisoned,
             Combat_EnemyEscaped, Combat_CombatPlayerEscaped, OutputToConsole, Combat_EnemyToAttackRequiresInput,
-            Combat_EnemyIsSleeping,
-            Combat_EnemyIsFleeing, Combat_EnemyWantsToFleeButNoPath, Combat_EnemyMissedTarget,
+            Combat_EnemyIsSleeping, Combat_EnemyIsFleeing, Combat_EnemyWantsToFleeButNoPath, Combat_EnemyMissedTarget,
             Combat_Result_EnemyGrazedTarget, Combat_Result_CombatPlayerGrazedTarget,
             Combat_Result_CombatPlayerMissedRangedAttack, Combat_Result_EnemyMissedRangedAttack,
             Combat_Result_EnemyMissedButHit, Combat_Result_CombatPlayerMissedButHit,
@@ -35,14 +34,12 @@
             Combat_EnemyBeginsAttack, Combat_CombatPlayerBeginsAttack, Combat_Result_CombatPlayerReceivedDamage,
             Combat_LootDropped, Combat_Result_HitAndEnemyReceivedDamage, Combat_Result_CombatPlayerKilled,
             Combat_Result_EnemyKilled, Combat_Result_Missed_CombatPlayerMelee, Combat_Result_Missed_EnemyMelee,
-            Combat_CombatPlayerAttackedTrigger,
-            ActionBlockedRanIntoCactus, NPCAttemptingToArrest, ActionUseDrankPotion, ActionUseReadScroll,
-            ActionUseHmsCapePlans,
-            ActionShoppeKeeperInteraction, NoOneToTalkTo, CantTalkSleeping, ComeBackLater, NotTalkative,
-            NpcTalkInteraction, DontHurtMeAfraid, AdvanceClockNoComputation, Combat_CombatPlayerMissedTarget,
-            KarmaChanged, ProvisionQuantityChanged, NpcFreedFromManacles, NpcFreedFromStocks, GuardExtortion,
-            NpcJoinedParty, GoToJail, GoToBlackthornDungeon, PoofHorse, OpenPortcullis, OverrideCombatMapTile,
-            FoodStolenByEnemy
+            Combat_CombatPlayerAttackedTrigger, ActionBlockedRanIntoCactus, NPCAttemptingToArrest, ActionUseDrankPotion,
+            ActionUseReadScroll, ActionUseHmsCapePlans, ActionShoppeKeeperInteraction, NoOneToTalkTo, CantTalkSleeping,
+            ComeBackLater, NotTalkative, NpcTalkInteraction, DontHurtMeAfraid, AdvanceClockNoComputation,
+            Combat_CombatPlayerMissedTarget, KarmaChanged, ProvisionQuantityChanged, NpcFreedFromManacles,
+            NpcFreedFromStocks, GuardExtortion, NpcJoinedParty, GoToJail, GoToBlackthornDungeon, PoofHorse,
+            OpenPortcullis, OverrideCombatMapTile, FoodStolenByEnemy
         }
 
         public bool IsSuccessfulMovement

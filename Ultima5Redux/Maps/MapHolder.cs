@@ -6,16 +6,6 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public class MapHolder
     {
-        public SmallMaps SmallMaps => _smallMaps;
-        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
-        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
-
-        public LargeMap GetLargeMapByLargeMapType(LargeMapLocationReferences.LargeMapType largeMapType) =>
-            largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? OverworldMap : UnderworldMap;
-
-        public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference singleMapReference) =>
-            _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
-
         /// <summary>
         ///     Both underworld and overworld maps
         /// </summary>
@@ -42,5 +32,14 @@ namespace Ultima5Redux.Maps
         public DungeonMap TheDungeonMap { get; internal set; }
 
         [IgnoreDataMember] public CombatMap TheCombatMap { get; internal set; }
+        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
+        public SmallMaps SmallMaps => _smallMaps;
+        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
+
+        public LargeMap GetLargeMapByLargeMapType(LargeMapLocationReferences.LargeMapType largeMapType) =>
+            largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? OverworldMap : UnderworldMap;
+
+        public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference singleMapReference) =>
+            _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
     }
 }

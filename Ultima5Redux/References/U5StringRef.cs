@@ -209,7 +209,6 @@ namespace Ultima5Redux.References
                     typeof(DataOvlReference.ResponseToKeystroke),
                     dataRef.GetDataChunk(DataOvlReference.DataChunkName.RESPONSE_TO_KEYSTROKE).GetChunkAsStringList()
                 }
-
             };
 
         public static string ThouDostFind(string thingYouFound) =>

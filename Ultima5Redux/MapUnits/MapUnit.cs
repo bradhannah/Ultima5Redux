@@ -15,9 +15,21 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public abstract class MapUnit : MapUnitDetails
     {
+        /// <summary>
+        ///     Default number of seconds between animation frames
+        /// </summary>
         private const double D_TIME_BETWEEN_ANIMATION = 0.25f;
+
+        /// <summary>
+        ///     How many tiles can a guard spot you for arrest?
+        /// </summary>
         private const float MAX_VISIBILITY = 5;
+
+        /// <summary>
+        ///     How many tiles away from a gargoyle until it is triggered and becomes alive
+        /// </summary>
         private const int N_DISTANCE_TO_TRIGGER_GARGOYLES = 4;
+
         [DataMember(Name = "KeyTileIndex")] private int _keyTileIndex = -1;
 
         [DataMember(Name = "ScheduleIndex")] private int _scheduleIndex = -1;
@@ -49,6 +61,12 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] private readonly MapUnitPosition _savedMapUnitPosition = new();
 
+        [IgnoreDataMember] private DateTime _lastAnimationUpdate;
+
+        [IgnoreDataMember] private int _nCurrentAnimationIndex;
+
+        [IgnoreDataMember] public virtual bool CanStackMapUnitsOnTop => false;
+
         [IgnoreDataMember] public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
 
         [IgnoreDataMember]
@@ -74,11 +92,6 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember]
         protected virtual NonPlayerCharacterSchedule.AiType OverridenAiType =>
             NPCState?.OverridenAiType ?? NonPlayerCharacterSchedule.AiType.Fixed;
-
-        private DateTime _lastAnimationUpdate;
-
-        private int _nCurrentAnimationIndex;
-        public virtual bool CanStackMapUnitsOnTop => false;
 
         [field: DataMember(Name = "NpcRefIndex")]
         public int NpcRefIndex { get; } = -1;

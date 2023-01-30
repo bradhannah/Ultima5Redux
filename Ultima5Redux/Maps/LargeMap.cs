@@ -15,12 +15,13 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public sealed class LargeMap : RegularMap
     {
-        //[DataMember(Name = "MapChoice")] private readonly LargeMapLocationReferences.LargeMapType _mapChoice;
-
         [DataMember(Name = "BottomRightExtent")]
         private Point2D _bottomRightExtent;
 
         [DataMember(Name = "TopLeftExtent")] private Point2D _topLeftExtent;
+
+
+        [DataMember] public LargeMapLocationReferences.LargeMapType TheLargeLheLargeMapType { get; private set; }
 
         [IgnoreDataMember] public override bool IsRepeatingMap => true;
 
@@ -33,48 +34,14 @@ namespace Ultima5Redux.Maps
 
         private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
-        public override Maps TheMapType => TheLargeLheLargeMapType == LargeMapLocationReferences.LargeMapType.Overworld
-            ? Maps.Overworld
-            : Maps.Underworld;
-
-        public new TileReference GetTileReference(in Point2D xy, bool bIgnoreMoongate = false)
-        {
-            // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
-            // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
-            if (!bIgnoreMoongate &&
-                GameStateReference.State.TheMoongates.IsMoonstoneBuried(new Point3D(xy.X, xy.Y,
-                    TheLargeLheLargeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : 0xFF)))
-                return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
-                       throw new Ultima5ReduxException("Supposed to get a moongate override: " + xy);
-
-            return base.GetTileReference(xy, bIgnoreMoongate);
-        }
-
 
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             _currentSingleMapReference ??=
                 SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(TheLargeLheLargeMapType);
 
-        //public Maps MapType => GetLargeMapTypeToMapType(_mapChoice);
-
-        public static Maps GetLargeMapTypeToMapType(LargeMapLocationReferences.LargeMapType largeMapType) =>
-            largeMapType switch
-            {
-                LargeMapLocationReferences.LargeMapType.Overworld => Maps.Overworld,
-                LargeMapLocationReferences.LargeMapType.Underworld => Maps.Underworld,
-                _ => throw new ArgumentOutOfRangeException(nameof(largeMapType), largeMapType, null)
-            };
-
-        public static LargeMapLocationReferences.LargeMapType GetMapTypeToLargeMapType(Maps map) =>
-            map switch
-            {
-                Maps.Overworld => LargeMapLocationReferences.LargeMapType.Overworld,
-                Maps.Underworld => LargeMapLocationReferences.LargeMapType.Underworld,
-                _ => throw new ArgumentOutOfRangeException(nameof(map), map, null)
-            };
-
-
-        [DataMember] public LargeMapLocationReferences.LargeMapType TheLargeLheLargeMapType { get; private set; }
+        public override Maps TheMapType => TheLargeLheLargeMapType == LargeMapLocationReferences.LargeMapType.Overworld
+            ? Maps.Overworld
+            : Maps.Underworld;
 
 
         [JsonConstructor] private LargeMap()
@@ -87,7 +54,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="lheLargeMapType"></param>
         public LargeMap(LargeMapLocationReferences.LargeMapType lheLargeMapType) : base(
-            SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, (int)lheLargeMapType) 
+            SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, (int)lheLargeMapType)
         {
             TheLargeLheLargeMapType = lheLargeMapType;
             // for now combat maps don't have overrides
@@ -133,6 +100,77 @@ namespace Ultima5Redux.Maps
             return frigate;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <returns>true if a monster was created</returns>
+        /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
+        internal bool CreateRandomMonster(int nTurn)
+        {
+            const int maxTries = 10;
+            const int nDistanceAway = 7;
+
+            // find a position or give up
+            int dX = nDistanceAway;
+            int dY;
+            for (int i = 0; i < maxTries; i++)
+            {
+                dY = Utils.Ran.Next() % nDistanceAway;
+
+                // this logic borrowed from Xu4 to create some randomness
+                if (Utils.OneInXOdds(2)) dX = -dX;
+                if (Utils.OneInXOdds(2)) dY = -dY;
+                if (Utils.OneInXOdds(2)) Utils.SwapInts(ref dX, ref dY);
+
+                Point2D tilePosition = new((CurrentPosition.X + dX) % NumOfXTiles,
+                    (CurrentPosition.Y + dY) % NumOfYTiles);
+                tilePosition.AdjustXAndYToMax(NumOfXTiles);
+
+                if (IsTileOccupied(tilePosition)) continue;
+
+                // it's not occupied so we can create a monster
+                EnemyReference enemyRef =
+                    GameReferences.Instance.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn,
+                        GetTileReference(tilePosition));
+                if (enemyRef == null) continue;
+
+                // add the new character to our list of characters currently on the map
+                Enemy _ = CreateEnemy(tilePosition, enemyRef, CurrentSingleMapReference,
+                    out int _);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Decides if any enemies needed to be spawned or despawned
+        /// </summary>
+        internal void GenerateAndCleanupEnemies(int oneInXOddsOfNewMonster, int nTurn)
+        {
+            ClearEnemiesIfFarAway();
+
+            if (TotalMapUnitsOnMap >= MAX_MAP_CHARACTERS) return;
+            if (oneInXOddsOfNewMonster > 0 && Utils.OneInXOdds(oneInXOddsOfNewMonster))
+                // make a random monster
+                CreateRandomMonster(nTurn);
+        }
+
+
+        internal bool IsAllowedToBuryMoongate()
+        {
+            // if (State.TheVirtualMap.TheTheMapType != Map.Maps.Overworld &&
+            //     State.TheVirtualMap.TheTheMapType != Map.Maps.Underworld)
+            //     return false;
+            //
+            // don't bury one on top of the other
+            if (GameStateReference.State.TheMoongates.IsMoonstoneBuried(CurrentPosition.XYZ)) return false;
+
+            // we check the current terrain and make sure it's buriable
+            TileReference tileRef = GetTileReferenceOnCurrentTile();
+            return GameReferences.Instance.SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
+        }
+
         internal Moonstone SearchAndExposeMoonstone(in Point2D xy)
         {
             // check for moonstones
@@ -155,18 +193,9 @@ namespace Ultima5Redux.Maps
         }
 
 
-        internal bool IsAllowedToBuryMoongate()
+        private void BuildMap(LargeMapLocationReferences.LargeMapType largeMapType)
         {
-            // if (State.TheVirtualMap.TheTheMapType != Map.Maps.Overworld &&
-            //     State.TheVirtualMap.TheTheMapType != Map.Maps.Underworld)
-            //     return false;
-            //
-            // don't bury one on top of the other
-            if (GameStateReference.State.TheMoongates.IsMoonstoneBuried(CurrentPosition.XYZ)) return false;
-
-            // we check the current terrain and make sure it's buriable
-            TileReference tileRef = GetTileReferenceOnCurrentTile();
-            return GameReferences.Instance.SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
+            TheMap = GameReferences.Instance.LargeMapRef.GetMap(largeMapType);
         }
 
         /// <summary>
@@ -203,7 +232,7 @@ namespace Ultima5Redux.Maps
             {
                 // if this is not the initial load of the map then we can trust character states and
                 // movements that are already loaded into memory
-                MapUnitMovement mapUnitMovement =
+                var mapUnitMovement =
                     // (bInitialLoad ? importedMovements.GetMovement(i) : new MapUnitMovement(i)) ??
                     new MapUnitMovement(i);
 
@@ -259,34 +288,35 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public void ClearEnemiesIfFarAway()
-        {
-            const float fMaxDiagonalDistance = 22;
-            MapUnitPosition avatarPosition = CurrentAvatarPosition;
+        //public Maps MapType => GetLargeMapTypeToMapType(_mapChoice);
 
-            int nMaxXY = TheMapType is Maps.Overworld or Maps.Underworld
-                ? LargeMapLocationReferences.XTiles
-                : 32;
-
-            List<Enemy> enemiesToClear = null;
-            foreach (Enemy enemy in CurrentMapUnits.Enemies)
+        public static Maps GetLargeMapTypeToMapType(LargeMapLocationReferences.LargeMapType largeMapType) =>
+            largeMapType switch
             {
-                if (enemy.MapUnitPosition.XY.DistanceBetweenWithWrapAround(avatarPosition.XY, nMaxXY) <=
-                    fMaxDiagonalDistance)
-                    continue;
+                LargeMapLocationReferences.LargeMapType.Overworld => Maps.Overworld,
+                LargeMapLocationReferences.LargeMapType.Underworld => Maps.Underworld,
+                _ => throw new ArgumentOutOfRangeException(nameof(largeMapType), largeMapType, null)
+            };
 
-                enemiesToClear ??= new List<Enemy>();
-                // delete the mapunit
-                enemiesToClear.Add(enemy);
-            }
+        public static LargeMapLocationReferences.LargeMapType GetMapTypeToLargeMapType(Maps map) =>
+            map switch
+            {
+                Maps.Overworld => LargeMapLocationReferences.LargeMapType.Overworld,
+                Maps.Underworld => LargeMapLocationReferences.LargeMapType.Underworld,
+                _ => throw new ArgumentOutOfRangeException(nameof(map), map, null)
+            };
 
-            enemiesToClear?.ForEach(ClearMapUnit);
-        }
-
-
-        private void BuildMap(LargeMapLocationReferences.LargeMapType largeMapType)
+        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
-            TheMap = GameReferences.Instance.LargeMapRef.GetMap(largeMapType);
+            switch (mapUnit)
+            {
+                case Enemy enemy:
+                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
+                case CombatPlayer _:
+                    return WalkableType.StandardWalking;
+                default:
+                    return WalkableType.StandardWalking;
+            }
         }
 
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
@@ -312,68 +342,41 @@ namespace Ultima5Redux.Maps
             RecalculatedHash = Utils.Ran.Next();
         }
 
-        // ReSharper disable once UnusedMember.Global
-        public void PrintMap()
+        public void ClearEnemiesIfFarAway()
         {
-            PrintMapSection(TheMap, 0, 0, 160, 80);
-        }
+            const float fMaxDiagonalDistance = 22;
+            MapUnitPosition avatarPosition = CurrentAvatarPosition;
 
-        protected override float GetAStarWeight(in Point2D xy) => 1;
+            int nMaxXY = TheMapType is Maps.Overworld or Maps.Underworld
+                ? LargeMapLocationReferences.XTiles
+                : 32;
 
-        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
-        {
-            switch (mapUnit)
+            List<Enemy> enemiesToClear = null;
+            foreach (Enemy enemy in CurrentMapUnits.Enemies)
             {
-                case Enemy enemy:
-                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
-                case CombatPlayer _:
-                    return WalkableType.StandardWalking;
-                default:
-                    return WalkableType.StandardWalking;
-            }
-        }
+                if (enemy.MapUnitPosition.XY.DistanceBetweenWithWrapAround(avatarPosition.XY, nMaxXY) <=
+                    fMaxDiagonalDistance)
+                    continue;
 
-        /// <summary>
-        /// </summary>
-        /// <returns>true if a monster was created</returns>
-        /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
-        internal bool CreateRandomMonster(int nTurn)
-        {
-            const int maxTries = 10;
-            const int nDistanceAway = 7;
-
-            // find a position or give up
-            int dX = nDistanceAway;
-            int dY;
-            for (int i = 0; i < maxTries; i++)
-            {
-                dY = Utils.Ran.Next() % nDistanceAway;
-
-                // this logic borrowed from Xu4 to create some randomness
-                if (Utils.OneInXOdds(2)) dX = -dX;
-                if (Utils.OneInXOdds(2)) dY = -dY;
-                if (Utils.OneInXOdds(2)) Utils.SwapInts(ref dX, ref dY);
-
-                Point2D tilePosition = new((CurrentPosition.X + dX) % NumOfXTiles,
-                    (CurrentPosition.Y + dY) % NumOfYTiles);
-                tilePosition.AdjustXAndYToMax(NumOfXTiles);
-
-                if (IsTileOccupied(tilePosition)) continue;
-
-                // it's not occupied so we can create a monster
-                EnemyReference enemyRef =
-                    GameReferences.Instance.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn,
-                        GetTileReference(tilePosition));
-                if (enemyRef == null) continue;
-
-                // add the new character to our list of characters currently on the map
-                Enemy _ = CreateEnemy(tilePosition, enemyRef, CurrentSingleMapReference,
-                    out int _);
-
-                return true;
+                enemiesToClear ??= new List<Enemy>();
+                // delete the mapunit
+                enemiesToClear.Add(enemy);
             }
 
-            return false;
+            enemiesToClear?.ForEach(ClearMapUnit);
+        }
+
+        public new TileReference GetTileReference(in Point2D xy, bool bIgnoreMoongate = false)
+        {
+            // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
+            // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
+            if (!bIgnoreMoongate &&
+                GameStateReference.State.TheMoongates.IsMoonstoneBuried(new Point3D(xy.X, xy.Y,
+                    TheLargeLheLargeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : 0xFF)))
+                return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
+                       throw new Ultima5ReduxException("Supposed to get a moongate override: " + xy);
+
+            return base.GetTileReference(xy, bIgnoreMoongate);
         }
 
         // we don't need to "LoadLargeMap" because it being active or inactive is managed in VirtualMap
@@ -386,19 +389,12 @@ namespace Ultima5Redux.Maps
             GenerateMapUnitsForLargeMapForLegacyImport(TheLargeLheLargeMapType, true, searchItems, importedGameState);
         }
 
-        /// <summary>
-        ///     Decides if any enemies needed to be spawned or despawned
-        /// </summary>
-        internal void GenerateAndCleanupEnemies(int oneInXOddsOfNewMonster, int nTurn)
+        // ReSharper disable once UnusedMember.Global
+        public void PrintMap()
         {
-            ClearEnemiesIfFarAway();
-
-            if (TotalMapUnitsOnMap >= MAX_MAP_CHARACTERS) return;
-            if (oneInXOddsOfNewMonster > 0 && Utils.OneInXOdds(oneInXOddsOfNewMonster))
-                // make a random monster
-                CreateRandomMonster(nTurn);
+            PrintMapSection(TheMap, 0, 0, 160, 80);
         }
-        
-        
+
+        protected override float GetAStarWeight(in Point2D xy) => 1;
     }
 }

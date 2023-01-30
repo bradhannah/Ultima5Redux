@@ -44,6 +44,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public Moonstone(MoonPhaseReferences.MoonPhases phase) : base(0, MOONSTONE_SPRITE,
             InventoryReferences.InventoryReferenceType.Item) =>
             Phase = phase;
-
     }
 }
