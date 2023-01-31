@@ -1245,7 +1245,7 @@ namespace Ultima5Redux.Maps
             {
                 // we start at the next position, and wrap around ensuring we have hit all possible enemies
                 int nIndex = (i + nOffset + 1) % nMapUnits;
-                if (!(CurrentMapUnits.AllMapUnits[nIndex] is Enemy enemy)) continue;
+                if (CurrentMapUnits.AllMapUnits[nIndex] is not Enemy enemy) continue;
                 if (!enemy.IsActive) continue;
                 if (CurrentCombatPlayer == null)
                     throw new Ultima5ReduxException("Tried to get next enemy, but couldn't find the active player");
@@ -1519,13 +1519,14 @@ namespace Ultima5Redux.Maps
             out Point2D missedPoint)
         {
             activeCombatMapUnit = TheInitiativeQueue.GetCurrentCombatUnitAndClean();
+            if (activeCombatMapUnit is not Enemy enemy)
+                throw new Ultima5ReduxException($"Tried to ProcessEnemyTurn but was a {activeCombatMapUnit.GetType()}");
+            
             targetedCombatMapUnit = null;
             missedPoint = null;
 
             // Everything after is ENEMY logic!
             // either move the ENEMY or have them attack someone
-            Debug.Assert(activeCombatMapUnit is Enemy);
-            var enemy = activeCombatMapUnit as Enemy;
 
             // if the enemy is charmed then the player gets to control them instead!
             if (enemy == null)

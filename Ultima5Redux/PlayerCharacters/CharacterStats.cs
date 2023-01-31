@@ -99,8 +99,8 @@ namespace Ultima5Redux.PlayerCharacters
 
         public bool Sleep()
         {
-            if (Status == PlayerCharacterRecord.CharacterStatus.Dead ||
-                Status == PlayerCharacterRecord.CharacterStatus.Poisoned) return false;
+            if (Status is PlayerCharacterRecord.CharacterStatus.Dead
+                or PlayerCharacterRecord.CharacterStatus.Poisoned) return false;
             Status = PlayerCharacterRecord.CharacterStatus.Asleep;
             return true;
         }

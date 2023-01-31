@@ -315,7 +315,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     OddsAndLogic.GetIsDropAfterKillingEnemy(enemy.EnemyReference);
 
                 nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference,
-                    /// TEMP force to generate chests
+                    // TEMP force to generate chests
                     //NonAttackingUnitFactory.DropSprites.Chest,
                     dropped, opposingCombatMapUnit.MapLocation, opposingCombatMapUnit.MapUnitPosition);
 

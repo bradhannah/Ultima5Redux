@@ -60,18 +60,17 @@ namespace Ultima5Redux.Maps
 
                 if (singleMapReference.IsDungeon) return TheMapHolder.TheDungeonMap;
 
-                switch (SavedMapRefs.Location)
+                return SavedMapRefs.Location switch
                 {
-                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
-                        when SavedMapRefs.MapType == Map.Maps.Combat:
-                        return TheMapHolder.TheCombatMap;
-                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
-                        throw new Ultima5ReduxException("Resting and Shrines have not been implemented yet");
-                    case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
-                        return SavedMapRefs.Floor == 0 ? TheMapHolder.OverworldMap : TheMapHolder.UnderworldMap;
-                    default:
-                        return TheMapHolder.GetSmallMap(singleMapReference);
-                }
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine when SavedMapRefs.MapType ==
+                        Map.Maps.Combat => TheMapHolder.TheCombatMap,
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => throw
+                        new Ultima5ReduxException("Resting and Shrines have not been implemented yet"),
+                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => SavedMapRefs.Floor == 0
+                        ? TheMapHolder.OverworldMap
+                        : TheMapHolder.UnderworldMap,
+                    _ => TheMapHolder.GetSmallMap(singleMapReference)
+                };
             }
         }
 
@@ -109,6 +108,8 @@ namespace Ultima5Redux.Maps
                     break;
                 case Map.Maps.Combat:
                     throw new Ultima5ReduxException("Can't load a Combat Map on the initialization of a virtual map");
+                case Map.Maps.Dungeon:
+                    throw new Ultima5ReduxException("Can't load a Dungeon Map on the initialization of a virtual map (yet?)");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -24,7 +25,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     Data chunks for each of the save game sections
         /// </summary>
-        private enum DataChunkName
+        [SuppressMessage("ReSharper", "InconsistentNaming")] private enum DataChunkName
         {
             Unused, CHARACTER_RECORDS, NPC_ISDEAD_TABLE, NPC_ISMET_TABLE, N_PEOPLE_PARTY, FOOD_QUANTITY, GOLD_QUANTITY,
             KEYS_QUANTITY, GEMS_QUANTITY, TORCHES_QUANTITY, TORCHES_TURNS, CURRENT_YEAR, CURRENT_MONTH, CURRENT_DAY,
@@ -44,7 +45,9 @@ namespace Ultima5Redux
 
         internal byte ActivePlayerNumber => DataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
 
-        internal MapUnitMovements CharacterMovements { get; private set; }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        // This is kept as a demonstration of how they saved movements - but we do not use it
+        private MapUnitMovements CharacterMovements { get; set; }
 
         internal PlayerCharacterRecords CharacterRecords { get; private set; }
 

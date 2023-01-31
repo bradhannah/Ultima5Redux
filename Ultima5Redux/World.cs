@@ -22,9 +22,6 @@ using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
-// ProcessXXX methods will take a TurnResults and take care of all messages and command pushing
-// TryToXXXX methods directly reflective of the user executing the command and could have complex branching logic 
-
 namespace Ultima5Redux
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
@@ -202,31 +199,26 @@ namespace Ultima5Redux
         private bool CanFireInPlace(TurnResults turnResults)
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
-            if (State.TheVirtualMap.CurrentMap is LargeMap largeMap)
+            switch (State.TheVirtualMap.CurrentMap)
             {
-                if (largeMap.IsAvatarInFrigate)
-                {
+                case LargeMap largeMap when largeMap.IsAvatarInFrigate:
                     return true;
-                }
-
-                turnResults.PushOutputToConsole(
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                        .FIRE) +
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                        .D_WHAT));
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireWhat));
-                return false;
-            }
-
-            if (State.TheVirtualMap.CurrentMap is CombatMap)
-            {
-                turnResults.PushOutputToConsole(
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                        .FIRE) +
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                        .DASH_NOT_HERE_BANG_N));
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireNotHere));
-                return false;
+                case LargeMap largeMap:
+                    turnResults.PushOutputToConsole(
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                            .FIRE) +
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                            .D_WHAT));
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireWhat));
+                    return false;
+                case CombatMap:
+                    turnResults.PushOutputToConsole(
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                            .FIRE) +
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                            .DASH_NOT_HERE_BANG_N));
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireNotHere));
+                    return false;
             }
 
             List<TileReference> cannonReferences = new()
@@ -312,23 +304,21 @@ namespace Ultima5Redux
                                .RIDE) +
                            GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
                 case Avatar.AvatarState.Frigate:
-                    if (avatar.AreSailsHoisted)
+                    if (!avatar.AreSailsHoisted)
+                        return
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction) +
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                                .ROWING);
+                    
+                    if (bManualMovement)
                     {
-                        if (bManualMovement)
-                        {
-                            return GameReferences.Instance.DataOvlRef.StringReferences.GetString(
-                                       DataOvlReference.WorldStrings
-                                           .HEAD) +
-                                   GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
-                        }
-
-                        return GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
+                        return GameReferences.Instance.DataOvlRef.StringReferences.GetString(
+                                   DataOvlReference.WorldStrings
+                                       .HEAD) +
+                               GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
                     }
 
-                    return
-                        GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction) +
-                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                            .ROWING);
+                    return GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
 
                 case Avatar.AvatarState.Skiff:
                     return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
@@ -1796,14 +1786,14 @@ namespace Ultima5Redux
                 {
                     turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.TravelStrings.BLOCKED));
-                    if (newTileReference.Index == (int)TileReference.SpriteIndex.Cactus)
-                    {
-                        turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
-                            DataOvlReference.WorldStrings.OUCH));
-                        turnResults.PushTurnResult(
-                            new BasicResult(TurnResult.TurnResultType.ActionBlockedRanIntoCactus));
-                        State.CharacterRecords.RanIntoCactus(turnResults);
-                    }
+                    if (!newTileReference.Is(TileReference.SpriteIndex.Cactus))
+                        return AdvanceTime(nTimeAdvanceFactor, turnResults);
+                    
+                    turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.WorldStrings.OUCH));
+                    turnResults.PushTurnResult(
+                        new BasicResult(TurnResult.TurnResultType.ActionBlockedRanIntoCactus));
+                    State.CharacterRecords.RanIntoCactus(turnResults);
                 }
 
                 // if it's not passable then we have no more business here

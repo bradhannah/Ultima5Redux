@@ -46,7 +46,7 @@ namespace Ultima5Redux.References
         private readonly List<SearchItemReference> _searchItemsList = new();
         public int TotalReferences => _searchItemsList.Count;
 
-        public SearchLocationReferences(DataOvlReference dataOvlReference, TileReferences tileReferences)
+        public SearchLocationReferences(DataOvlReference dataOvlReference)
         {
             DataChunk ids = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.SEARCH_OBJECT_ID);
             DataChunk qualities = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.SEARCH_OBJECT_QUALITY);

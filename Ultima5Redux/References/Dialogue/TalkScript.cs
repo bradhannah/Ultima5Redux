@@ -430,15 +430,14 @@ namespace Ultima5Redux.References.Dialogue
             {
                 Console.WriteLine(@"Label #: " + label.LabelNum);
                 Console.WriteLine(@"Initial Line: " + label.InitialLine);
-                if (label.DefaultAnswers.Count > 0)
+                if (label.DefaultAnswers.Count <= 0) continue;
+                
+                foreach (ScriptLine line in label.DefaultAnswers)
                 {
-                    foreach (ScriptLine line in label.DefaultAnswers)
-                    {
-                        Console.WriteLine(@"Default Line(s): " + line);
-                    }
-
-                    label.QuestionAnswers.Print();
+                    Console.WriteLine(@"Default Line(s): " + line);
                 }
+
+                label.QuestionAnswers.Print();
             }
         }
 
@@ -528,9 +527,9 @@ namespace Ultima5Redux.References.Dialogue
 
             public ScriptTalkLabel GetScriptLabel(int nLabel)
             {
-                foreach (ScriptTalkLabel scriptLabel in Labels)
+                foreach (ScriptTalkLabel scriptLabel in Labels.Where(scriptLabel => scriptLabel.LabelNum == nLabel))
                 {
-                    if (scriptLabel.LabelNum == nLabel) return scriptLabel;
+                    return scriptLabel;
                 }
 
                 throw new Ultima5ReduxException("Asked for a label " + nLabel + " that doesn't exist...");

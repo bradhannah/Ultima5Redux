@@ -82,8 +82,8 @@ namespace Ultima5Redux.MapUnits
 
         private static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)
         {
-            const double IntelligenceFactor = 0.015;
-            return (int)(nPrice - nPrice * IntelligenceFactor * records.AvatarRecord.Stats.Intelligence);
+            const double intelligenceFactor = 0.015;
+            return (int)(nPrice - nPrice * intelligenceFactor * records.AvatarRecord.Stats.Intelligence);
         }
 
         public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,

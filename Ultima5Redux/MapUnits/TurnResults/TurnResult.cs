@@ -1,8 +1,10 @@
-﻿namespace Ultima5Redux.MapUnits.TurnResults
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Ultima5Redux.MapUnits.TurnResults
 {
     public abstract class TurnResult
     {
-        public enum TurnResultType
+        [SuppressMessage("ReSharper", "InconsistentNaming")] public enum TurnResultType
         {
             ActionGetMoonstone, OverworldAvatarAttacking, EnemyAttacksOverworldOrSmallMap, DamageOverTimePoisoned,
             DamageOverTimeBurning, DamageFromAcid, ActionXitWhat, ActionXitSuccess, ActionYellSailsHoisted,

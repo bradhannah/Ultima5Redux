@@ -320,12 +320,10 @@ namespace Ultima5Redux.References.Dialogue
             throw new Ultima5ReduxException($"Requested custom talk script \"{talkScriptKey}\" but it doesn't exists");
         }
 
-        public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
+        public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNpc)
         {
-            if (NonPlayerCharacterReference.IsSpecialDialogType(
-                    (NonPlayerCharacterReference.SpecificNpcDialogType)nNPC))
-                return null;
-            return _talkScriptRefs[smallMapRef][nNPC];
+            return NonPlayerCharacterReference.IsSpecialDialogType(
+                (NonPlayerCharacterReference.SpecificNpcDialogType)nNpc) ? null : _talkScriptRefs[smallMapRef][nNpc];
         }
 
         public string Serialize()

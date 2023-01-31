@@ -32,16 +32,15 @@ namespace Ultima5Redux.MapUnits
             set
             {
                 _currentDirection = value;
-                if (IsAvatarOnBoardedThing)
-                {
-                    // when we load from disk, there is possible missing map unit
-                    if (CurrentBoardedMapUnit == null)
-                    {
-                        BoardMapUnitFromAvatarState(CurrentAvatarState);
-                    }
+                if (!IsAvatarOnBoardedThing) return;
 
-                    CurrentBoardedMapUnit.Direction = value;
+                // when we load from disk, there is possible missing map unit
+                if (CurrentBoardedMapUnit == null)
+                {
+                    BoardMapUnitFromAvatarState(CurrentAvatarState);
                 }
+
+                CurrentBoardedMapUnit.Direction = value;
             }
         }
 
@@ -181,8 +180,7 @@ namespace Ultima5Redux.MapUnits
 
         private static AvatarState CalculateAvatarState(TileReference tileReference)
         {
-            if (tileReference.Name == "BasicAvatar") return AvatarState.Regular;
-            if (tileReference.Name == "Avatar1") return AvatarState.Regular;
+            if (tileReference.Name is "BasicAvatar" or "Avatar1") return AvatarState.Regular;
             if (tileReference.Name.StartsWith("Ship")) return AvatarState.Frigate;
             if (tileReference.Name.StartsWith("Skiff")) return AvatarState.Skiff;
             if (tileReference.Name.StartsWith("RidingMagicCarpet") || tileReference.Name.StartsWith("Carpet"))
@@ -234,10 +232,9 @@ namespace Ultima5Redux.MapUnits
 
         private TileReference GetCurrentTileReference()
         {
-            if (CurrentAvatarState is AvatarState.Regular or AvatarState.Hidden)
-                return GetNonBoardedTileReference();
-
-            return CurrentBoardedMapUnit.GetBoardedTileReference();
+            return CurrentAvatarState is AvatarState.Regular or AvatarState.Hidden
+                ? GetNonBoardedTileReference()
+                : CurrentBoardedMapUnit.GetBoardedTileReference();
         }
 
         /// <summary>

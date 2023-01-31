@@ -23,6 +23,7 @@ namespace Ultima5Redux.References.Maps
             HorseRight = 272, HorseLeft = 273, LadderDown = 201, LadderUp = 200, Carpet2_MagicCarpet = 283,
             Manacles = 133, Mirror = 157, MirrorAvatar = 158, MirrorBroken = 159, SmallMountains = 12,
             Daemon1_KeyIndex = 472, StoneGargoyle_KeyIndex = 440, Fighter_KeyIndex = 328, Bard_KeyIndex = 324,
+            PirateShip_Up = 300, PirateShip_Right = 301, PirateShip_Left = 302, PirateShip_Down = 303,
             BardPlaying_KeyIndex = 348, TownsPerson_KeyIndex = 336, Ray_KeyIndex = 400, Fireplace = 188,
             Bat_KeyIndex = 404, ShadowLord_KeyIndex = 508, ItemPotion = 259, ItemScroll = 260, ItemWeapon = 261,
             ItemShield = 262, ItemHelm = 265, ItemRing = 266, ItemArmour = 267, ItemAnkh = 268, Lava = 143,

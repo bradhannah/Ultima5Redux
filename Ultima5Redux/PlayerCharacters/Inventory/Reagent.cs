@@ -59,10 +59,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <summary>
         ///     Create a reagent
         /// </summary>
-        /// <param name="specificReagentTypepe of reagent
-        /// 
-        /// 
-        /// </param>
+        /// <param name="specificReagentType"></param>
         /// <param name="quantity">how many the party has</param>
         public Reagent(SpecificReagentType specificReagentType, int quantity) : base(quantity, REAGENT_SPRITE,
             InventoryReferences.InventoryReferenceType.Reagent) =>

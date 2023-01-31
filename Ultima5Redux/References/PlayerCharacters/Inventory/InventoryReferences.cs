@@ -48,14 +48,14 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <summary>
         ///     All inventory references separated by item types
         /// </summary>
-        public readonly Dictionary<string, List<InventoryReference>> _invRefsDictionary;
+        public readonly Dictionary<string, List<InventoryReference>> InvRefsDictionary;
 
         /// <summary>
         ///     Constructor builds reference tables from embedded resources
         /// </summary>
         public InventoryReferences()
         {
-            _invRefsDictionary =
+            InvRefsDictionary =
                 JsonConvert.DeserializeObject<Dictionary<string, List<InventoryReference>>>(Resources.InventoryDetails);
 
             // we initialize the highlight text list
@@ -144,10 +144,10 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <param name="inventoryReferenceType"></param>
         /// <returns></returns>
         public List<InventoryReference> GetInventoryReferenceList(InventoryReferenceType inventoryReferenceType) =>
-            _invRefsDictionary[inventoryReferenceType.ToString()];
+            InvRefsDictionary[inventoryReferenceType.ToString()];
 
         public IEnumerable<InventoryReference> GetInventoryReferences(int nSpriteIndex) =>
-            from innerInvRefs in _invRefsDictionary.Values.ToList()
+            from innerInvRefs in InvRefsDictionary.Values.ToList()
             from invRef in innerInvRefs
             where invRef.ItemSpriteExposed == nSpriteIndex
             select invRef;

@@ -110,7 +110,7 @@ namespace Ultima5Redux.DayNightMoon
         /// <returns></returns>
         public bool IsMoonstoneBuried(int nMoonstoneIndex)
         {
-            Debug.Assert(nMoonstoneIndex >= 0 && nMoonstoneIndex < TOTAL_MOONSTONES);
+            Debug.Assert(nMoonstoneIndex is >= 0 and < TOTAL_MOONSTONES);
             return _moonstonesBuried[nMoonstoneIndex];
         }
 
@@ -151,7 +151,7 @@ namespace Ultima5Redux.DayNightMoon
 
         public void SetMoonstoneBuried(int nMoonstoneIndex, bool bBuried, Point3D xyz)
         {
-            Debug.Assert(xyz.Z == 0 || xyz.Z == 0xFF);
+            Debug.Assert(xyz.Z is 0 or 0xFF);
             // this one we can just update since it is a zero based index
             _moongatePositions[nMoonstoneIndex] = xyz;
             // set the moonstone to the appropriate buried sate

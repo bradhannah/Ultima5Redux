@@ -9,8 +9,8 @@ namespace Ultima5Redux.DayNightMoon
 {
     public class TimeOfDay
     {
-        public const int N_DAYS_IN_MONTH = 28;
-        public const int N_MONTHS_PER_YEAR = 13;
+        private const int N_DAYS_IN_MONTH = 28;
+        private const int N_MONTHS_PER_YEAR = 13;
 
         /// <summary>
         ///     Dictionary of all change trackers and if time has changed since last check
@@ -76,7 +76,7 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
-        [IgnoreDataMember] public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
+        [IgnoreDataMember] public bool IsDayLight => Hour is >= 5 and < 8 + 12;
 
         [IgnoreDataMember]
         public int MinutesSinceBeginning => Minute + Hour * 60 + Day * N_DAYS_IN_MONTH +

@@ -54,8 +54,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public Weapon GetWeaponFromEquipment(DataOvlReference.Equipment equipment)
         {
             if (equipment == DataOvlReference.Equipment.Nothing) return null;
-            if (!ItemsFromEquipment.ContainsKey(equipment)) return null;
-            return ItemsFromEquipment[equipment];
+            return ItemsFromEquipment.ContainsKey(equipment) ? ItemsFromEquipment[equipment] : null;
         }
     }
 }

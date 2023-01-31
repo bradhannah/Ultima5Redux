@@ -48,18 +48,22 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public string GetProvisionBuyOutput(ProvisionReferences.SpecificProvisionType specificProvision, int nGold)
         {
-            switch (specificProvision)
+            return specificProvision switch
             {
-                case ProvisionReferences.SpecificProvisionType.Torches:
-                    return ShoppeKeeperDialogueReference.GetMerchantString(162, nGold);
-                case ProvisionReferences.SpecificProvisionType.Gems:
-                    return ShoppeKeeperDialogueReference.GetMerchantString(161, nGold);
-                case ProvisionReferences.SpecificProvisionType.Keys:
-                    return ShoppeKeeperDialogueReference.GetMerchantString(160, nGold);
-                case ProvisionReferences.SpecificProvisionType.SkullKeys:
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(specificProvision), specificProvision, null);
-            }
+                ProvisionReferences.SpecificProvisionType.Torches => ShoppeKeeperDialogueReference.GetMerchantString(
+                    162, nGold),
+                ProvisionReferences.SpecificProvisionType.Gems => ShoppeKeeperDialogueReference.GetMerchantString(161,
+                    nGold),
+                ProvisionReferences.SpecificProvisionType.Keys => ShoppeKeeperDialogueReference.GetMerchantString(160,
+                    nGold),
+                ProvisionReferences.SpecificProvisionType.SkullKeys => throw new ArgumentOutOfRangeException(
+                    nameof(specificProvision), specificProvision, null),
+                ProvisionReferences.SpecificProvisionType.Food => throw new ArgumentOutOfRangeException(
+                    nameof(specificProvision), specificProvision, null),
+                ProvisionReferences.SpecificProvisionType.Gold => throw new ArgumentOutOfRangeException(
+                    nameof(specificProvision), specificProvision, null),
+                _ => throw new ArgumentOutOfRangeException(nameof(specificProvision), specificProvision, null)
+            };
         }
     }
 }

@@ -4,7 +4,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
-
+// ReSharper disable UnusedMemberInSuper.Global
 namespace Ultima5Redux.MapUnits.TurnResults
 {
     public interface INonPlayerCharacterInteraction

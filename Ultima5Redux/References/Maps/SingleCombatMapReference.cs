@@ -324,7 +324,7 @@ namespace Ultima5Redux.References.Maps
 
         public Point2D GetEnemyPosition(int nIndex)
         {
-            Debug.Assert(nIndex < NUM_MAP_UNITS && nIndex >= 0);
+            Debug.Assert(nIndex is < NUM_MAP_UNITS and >= 0);
             return _mapUnitPositions[nIndex];
         }
 

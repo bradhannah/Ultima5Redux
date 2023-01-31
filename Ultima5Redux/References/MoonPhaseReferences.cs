@@ -99,7 +99,7 @@ namespace Ultima5Redux.References
             const int nSunsetHour = 19;
             const int nSunriseHour = 6;
             if (tod.Hour == nSunsetHour && tod.Minute <= 50) return TimeOfDayPhases.Sunset;
-            if (tod.Hour == nSunriseHour && tod.Minute >= 10 && tod.Minute <= 60) return TimeOfDayPhases.Sunrise;
+            if (tod.Hour == nSunriseHour && tod.Minute is >= 10 and <= 60) return TimeOfDayPhases.Sunrise;
             if (tod.Hour > nSunriseHour && tod.Hour < nSunsetHour) return TimeOfDayPhases.Daytime;
             return TimeOfDayPhases.Nighttime;
         }
@@ -137,7 +137,7 @@ namespace Ultima5Redux.References
 
             if (timeOfDay.Hour <= 4)
                 return GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun.Felucca);
-            if (timeOfDay.Hour >= 20 && timeOfDay.Hour <= 23)
+            if (timeOfDay.Hour is >= 20 and <= 23)
                 return GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun.Trammel);
 
             throw new Ultima5ReduxException("We have asked for a moongate phase but did not met the criteria. " +
@@ -149,18 +149,16 @@ namespace Ultima5Redux.References
             // the value stored is an offset and needs to be adjusted to a zero based index
             int getAdjustedValue(int nValue) => nValue - N_OFFSET_ADJUST;
 
-            switch (moonsAndSun)
+            return moonsAndSun switch
             {
-                case MoonsAndSun.Felucca:
-                    return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1) * 2]);
-                case MoonsAndSun.Trammel:
-                    return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1) * 2 + 1]);
-                case MoonsAndSun.Sun:
-                    return MoonPhases.NoMoon;
-                default:
-                    throw new Ultima5ReduxException("We have asked for a moon phase but did not met the criteria. " +
-                                                    timeOfDay);
-            }
+                MoonsAndSun.Felucca => (MoonPhases)getAdjustedValue(
+                    _moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1) * 2]),
+                MoonsAndSun.Trammel => (MoonPhases)getAdjustedValue(
+                    _moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1) * 2 + 1]),
+                MoonsAndSun.Sun => MoonPhases.NoMoon,
+                _ => throw new Ultima5ReduxException("We have asked for a moon phase but did not met the criteria. " +
+                                                     timeOfDay)
+            };
         }
 
         /// <summary>
@@ -174,17 +172,13 @@ namespace Ultima5Redux.References
         // ReSharper disable once UnusedMember.Global
         public Point2DFloat GetMoonSunPositionOnCircle(MoonsAndSun moonAndSun, double dDiameter, double dOffset)
         {
-            switch (moonAndSun)
+            return moonAndSun switch
             {
-                case MoonsAndSun.Trammel:
-                    return GetSunMoonPosition(D_TRAMMEL_ANGLE, dDiameter, dOffset);
-                case MoonsAndSun.Felucca:
-                    return GetSunMoonPosition(D_FELUCCA_ANGLE, dDiameter, dOffset);
-                case MoonsAndSun.Sun:
-                    return GetSunMoonPosition(D_SUN_ANGLE, dDiameter, dOffset);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(moonAndSun), moonAndSun, null);
-            }
+                MoonsAndSun.Trammel => GetSunMoonPosition(D_TRAMMEL_ANGLE, dDiameter, dOffset),
+                MoonsAndSun.Felucca => GetSunMoonPosition(D_FELUCCA_ANGLE, dDiameter, dOffset),
+                MoonsAndSun.Sun => GetSunMoonPosition(D_SUN_ANGLE, dDiameter, dOffset),
+                _ => throw new ArgumentOutOfRangeException(nameof(moonAndSun), moonAndSun, null)
+            };
         }
     }
 }

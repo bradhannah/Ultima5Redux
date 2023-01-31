@@ -85,8 +85,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
             List<byte> defenseValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList();
-            if (nIndex >= defenseValueList.Count) return 0;
-            return defenseValueList[nIndex];
+            return nIndex >= defenseValueList.Count ? 0 : defenseValueList[nIndex];
         }
 
         private static string GetEquipmentString(DataOvlReference dataOvlRef, int nString)
@@ -119,8 +118,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
             List<byte> rangeValueList = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_RANGE_VALUES)
                 .GetAsByteList();
-            if (nIndex >= rangeValueList.Count) return 1;
-            return rangeValueList[nIndex];
+            return nIndex >= rangeValueList.Count ? 1 : rangeValueList[nIndex];
         }
 
         private static int GetRequiredStrength(DataOvlReference dataOvlRef, int nIndex)
@@ -129,8 +127,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
             List<byte> requiredStrengthValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REQ_STRENGTH_EQUIP).GetAsByteList();
-            if (nIndex >= requiredStrengthValueList.Count) return 0;
-            return requiredStrengthValueList[nIndex];
+            return nIndex >= requiredStrengthValueList.Count ? 0 : requiredStrengthValueList[nIndex];
         }
 
         private void InitializePrices()

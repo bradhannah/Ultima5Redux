@@ -78,11 +78,11 @@ namespace Ultima5Redux.PlayerCharacters
         public string ApplyRandomCharacterStatusForMixSpell()
         {
             string retStr = "";
-            const int MAX_INJURE_AMOUNT = 20;
+            const int maxInjureAmount = 20;
 
             void injurePlayer(PlayerCharacterRecord record)
             {
-                record.Stats.CurrentHp -= Utils.Ran.Next() % (MAX_INJURE_AMOUNT + 1);
+                record.Stats.CurrentHp -= Utils.Ran.Next() % (maxInjureAmount + 1);
             }
 
             switch (Utils.Ran.Next() % 4)
@@ -228,10 +228,10 @@ namespace Ultima5Redux.PlayerCharacters
 
         public void IncrementStayingAtInnCounters()
         {
-            foreach (PlayerCharacterRecord record in Records)
+            foreach (PlayerCharacterRecord record in Records.Where(record =>
+                         record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.AtTheInn))
             {
-                if (record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.AtTheInn)
-                    record.MonthsSinceStayingAtInn++;
+                record.MonthsSinceStayingAtInn++;
             }
         }
 

@@ -92,7 +92,7 @@ namespace Ultima5Redux.MapUnits
             set => ReplaceAll(value);
         }
 
-        [DataMember(Name = "Itemtacks")]
+        [DataMember(Name = "ItemStacks")]
         private ItemStack[] SaveItemStacks
         {
             get => GetMapUnitByTypeToArray<ItemStack>();

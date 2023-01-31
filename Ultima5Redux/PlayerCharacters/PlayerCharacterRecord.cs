@@ -9,8 +9,10 @@ using Ultima5Redux.Data;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.PlayerCharacters.CombatItems;
+using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+// ReSharper disable CommentTypo
 
 namespace Ultima5Redux.PlayerCharacters
 {
@@ -150,7 +152,7 @@ namespace Ultima5Redux.PlayerCharacters
             Unknown2 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown2];
         }
 
-        private CharacterEquipped.EquippableSlot GetEquippableSlot(CombatItem combatItem)
+        private static CharacterEquipped.EquippableSlot GetEquippableSlot(InventoryItem combatItem)
         {
             return combatItem switch
             {

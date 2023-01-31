@@ -287,21 +287,15 @@ namespace Ultima5Redux.References.Maps
             /// <returns>name of the .NPC file</returns>
             public static string GetNPCFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
             {
-                switch (mapMaster)
+                return mapMaster switch
                 {
-                    case SmallMapMasterFiles.Castle:
-                        return FileConstants.CASTLE_NPC;
-                    case SmallMapMasterFiles.Dwelling:
-                        return FileConstants.DWELLING_NPC;
-                    case SmallMapMasterFiles.Keep:
-                        return FileConstants.KEEP_NPC;
-                    case SmallMapMasterFiles.Towne:
-                        return FileConstants.TOWNE_NPC;
-                    case SmallMapMasterFiles.Dungeon:
-                        break;
-                }
-
-                throw new Ultima5ReduxException("Couldn't map NPC filename");
+                    SmallMapMasterFiles.Castle => FileConstants.CASTLE_NPC,
+                    SmallMapMasterFiles.Dwelling => FileConstants.DWELLING_NPC,
+                    SmallMapMasterFiles.Keep => FileConstants.KEEP_NPC,
+                    SmallMapMasterFiles.Towne => FileConstants.TOWNE_NPC,
+                    SmallMapMasterFiles.Dungeon => throw new Ultima5ReduxException("Couldn't map NPC filename"),
+                    _ => throw new Ultima5ReduxException("Couldn't map NPC filename")
+                };
             }
 
             /// <summary>

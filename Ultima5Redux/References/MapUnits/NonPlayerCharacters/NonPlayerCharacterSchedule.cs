@@ -241,9 +241,9 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 var aiType = (AiType)AiTypeList[nIndex];
 
                 // These are all FULL overrides, that override every AI behaviour in the schedule
-                const int STILLWELT_DIALOG_INDEX = 27;
+                const int stillweltDialogIndex = 27;
                 if (location == SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle
-                    && nonPlayerCharacterReference.DialogIndex == STILLWELT_DIALOG_INDEX)
+                    && nonPlayerCharacterReference.DialogIndex == stillweltDialogIndex)
                 {
                     // this is Stillwelt, the mean guard
                     AiTypeList[nIndex] = (int)AiType.SmallWanderWantsToChat;

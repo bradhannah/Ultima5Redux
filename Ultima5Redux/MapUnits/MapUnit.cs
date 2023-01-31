@@ -672,7 +672,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="fromPosition"></param>
         /// <param name="toPosition">the position they are trying to get to</param>
         /// <returns></returns>
-        private Point2D GetBestNextPositionToMoveTowardsWalkablePointDumb(RegularMap regularMap, Point2D fromPosition,
+        private Point2D GetBestNextPositionToMoveTowardsWalkablePointDumb(Map regularMap, Point2D fromPosition,
             Point2D toPosition)
         {
             double fShortestPath = 999f;
@@ -685,11 +685,10 @@ namespace Ultima5Redux.MapUnits
             {
                 // keep track of the points we could wander to if we don't find a good path
                 double fDistance = point.DistanceBetween(toPosition);
-                if (fDistance < fShortestPath)
-                {
-                    fShortestPath = fDistance;
-                    bestMovePoint = point;
-                }
+                if (fDistance >= fShortestPath) continue;
+
+                fShortestPath = fDistance;
+                bestMovePoint = point;
             }
 
             return bestMovePoint;
@@ -712,7 +711,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        private Point2D GetValidRandomWanderPointDumb(RegularMap regularMap, Point2D toPosition)
+        private Point2D GetValidRandomWanderPointDumb(Map regularMap, Point2D toPosition)
         {
             List<Point2D> wanderablePoints = GetValidWanderPointsDumb(regularMap, toPosition);
 
@@ -968,8 +967,9 @@ namespace Ultima5Redux.MapUnits
         {
             Dictionary<Point2D.Direction, string> tileNameDictionary =
                 UseFourDirections ? FourDirectionToTileNameBoarded : DirectionToTileNameBoarded;
-            if (tileNameDictionary == null) return KeyTileReference;
-            return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
+            return tileNameDictionary == null
+                ? KeyTileReference
+                : GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
         }
 
         public NonPlayerCharacterSchedule.AiType GetCurrentAiType(TimeOfDay tod) =>

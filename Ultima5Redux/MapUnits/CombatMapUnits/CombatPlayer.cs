@@ -48,6 +48,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     case PlayerCharacterRecord.CharacterStatus.Dead:
                     case PlayerCharacterRecord.CharacterStatus.Asleep:
                         return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("DeadBody");
+                    case PlayerCharacterRecord.CharacterStatus.Good:
+                    case PlayerCharacterRecord.CharacterStatus.Poisoned:
+                    case PlayerCharacterRecord.CharacterStatus.Charmed:
                     default: return base.KeyTileReference;
                 }
             }

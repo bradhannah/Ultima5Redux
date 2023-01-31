@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References.Maps;
 
@@ -31,17 +32,16 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
                     int nIndex = i * nReagents + nOffset;
                     SmallMapReferences.SingleMapReference.Location location = locations[i];
-                    if (quantities[nIndex] > 0)
+                    if (quantities[nIndex] <= 0) continue;
+                    
+                    if (!_reagentPriceAndQuantities.ContainsKey(location))
                     {
-                        if (!_reagentPriceAndQuantities.ContainsKey(location))
-                        {
-                            _reagentPriceAndQuantities.Add(location,
-                                new Dictionary<Reagent.SpecificReagentType, ReagentPriceAndQuantity>());
-                        }
-
-                        _reagentPriceAndQuantities[location].Add(reagentType,
-                            new ReagentPriceAndQuantity(prices[nIndex], quantities[nIndex]));
+                        _reagentPriceAndQuantities.Add(location,
+                            new Dictionary<Reagent.SpecificReagentType, ReagentPriceAndQuantity>());
                     }
+
+                    _reagentPriceAndQuantities[location].Add(reagentType,
+                        new ReagentPriceAndQuantity(prices[nIndex], quantities[nIndex]));
                 }
             }
         }
@@ -52,18 +52,10 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <returns></returns>
         private static List<SmallMapReferences.SingleMapReference.Location> GetLocations()
         {
-            List<SmallMapReferences.SingleMapReference.Location> locations = new();
-
             List<byte> reagentSkByteList = GameReferences.Instance.DataOvlRef
                 .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS).GetAsByteList();
-            foreach (byte b in reagentSkByteList)
-            {
-                var location =
-                    (SmallMapReferences.SingleMapReference.Location)b;
-                locations.Add(location);
-            }
 
-            return locations;
+            return reagentSkByteList.Select(b => (SmallMapReferences.SingleMapReference.Location)b).ToList();
         }
 
         public ReagentPriceAndQuantity GetPriceAndQuantity(SmallMapReferences.SingleMapReference.Location location,
@@ -81,12 +73,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         public bool IsReagentSoldAtLocation(SmallMapReferences.SingleMapReference.Location location,
             Reagent.SpecificReagentType specificReagentType)
         {
-            if (!_reagentPriceAndQuantities.ContainsKey(location))
-                return false;
-            if (!_reagentPriceAndQuantities[location].ContainsKey(specificReagentType))
-                return false;
-
-            return true;
+            return _reagentPriceAndQuantities.ContainsKey(location) &&
+                   _reagentPriceAndQuantities[location].ContainsKey(specificReagentType);
         }
     }
 

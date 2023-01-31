@@ -40,13 +40,13 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     starting position (within town) of NPC type
         /// </summary>
-        private static readonly int StartingNPCTypeTownOffset = ScheduleOffsetSize * NPCS_PER_TOWN;
+        private static readonly int StartingNpcTypeTownOffset = ScheduleOffsetSize * NPCS_PER_TOWN;
 
         /// <summary>
         ///     starting position (within town) of NPC dialog
         /// </summary>
-        private static readonly int StartingNPCDialogTownOffset =
-            StartingNPCTypeTownOffset + SIZEOF_NPC_TYPE_BLOCK * NPCS_PER_TOWN;
+        private static readonly int StartingNpcDialogTownOffset =
+            StartingNpcTypeTownOffset + SIZEOF_NPC_TYPE_BLOCK * NPCS_PER_TOWN;
 
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public const int NPCS_PER_TOWN = 32;
 
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterReference>>
-            _locationToNPCsDictionary = new();
+            _locationToNpCsDictionary = new();
 
         private readonly Dictionary<string, NonPlayerCharacterReference> _npcByNameDictionary = new();
 
@@ -132,10 +132,10 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 for (int offset = townOffset; count < NPCS_PER_TOWN; offset++, count++)
                 {
                     // add NPC type
-                    npcTypes.Add(npcData[offset + StartingNPCTypeTownOffset]);
+                    npcTypes.Add(npcData[offset + StartingNpcTypeTownOffset]);
 
                     // add NPC dialog #
-                    npcDialogNumber.Add(npcData[offset + StartingNPCDialogTownOffset]);
+                    npcDialogNumber.Add(npcData[offset + StartingNpcDialogTownOffset]);
                 }
 
                 // go over all of the NPCs, create them and add them to the collection
@@ -146,15 +146,15 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                         talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]));
                     NPCs.Add(npc);
                     // we also create a quick lookup table by location but first need to check that there is an initialized list inside
-                    if (!_locationToNPCsDictionary.ContainsKey(singleMapRef.MapLocation))
-                        _locationToNPCsDictionary.Add(singleMapRef.MapLocation,
+                    if (!_locationToNpCsDictionary.ContainsKey(singleMapRef.MapLocation))
+                        _locationToNpCsDictionary.Add(singleMapRef.MapLocation,
                             new List<NonPlayerCharacterReference>());
 
                     if (npc.Name != string.Empty && !npc.Name.StartsWith("..."))
                         // merchants do not have names recorded :(
                         _npcByNameDictionary.Add(npc.Name, npc);
 
-                    _locationToNPCsDictionary[singleMapRef.MapLocation].Add(npc);
+                    _locationToNpCsDictionary[singleMapRef.MapLocation].Add(npc);
                 }
             }
         }
@@ -179,8 +179,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
         public List<NonPlayerCharacterReference> GetNonPlayerCharactersByLocation(
             SmallMapReferences.SingleMapReference.Location location) =>
-            _locationToNPCsDictionary.ContainsKey(location)
-                ? _locationToNPCsDictionary[location]
+            _locationToNpCsDictionary.ContainsKey(location)
+                ? _locationToNpCsDictionary[location]
                 : new List<NonPlayerCharacterReference>();
     }
 }

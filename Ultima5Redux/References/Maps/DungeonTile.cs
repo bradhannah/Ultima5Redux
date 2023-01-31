@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Ultima5Redux.References
 {
-    public class DungeonTile
+    [SuppressMessage("ReSharper", "UnusedMember.Global")] public class DungeonTile
     {
         public enum ChestType { Normal = 0, Trapped_1 = 1, Trapped_2 = 2, Poisoned = 4 }
 
@@ -37,7 +38,7 @@ namespace Ultima5Redux.References
             "DEBTORS ALLY", "DEEP", "DEEPER", "DEEPEST", "MOTHER LODE MAZE"
         };
 
-        private readonly int[] messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
+        private readonly int[] _messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
 
         public int RoomNumber { get; }
         public ChestType TheChestType { get; }
@@ -54,10 +55,10 @@ namespace Ultima5Redux.References
         {
             get
             {
-                if (messageStarts.Contains(_subTileType))
+                if (_messageStarts.Contains(_subTileType))
                 {
-                    for (int i = 0; i < messageStarts.Length; i++)
-                        if (messageStarts[i] == _subTileType)
+                    for (int i = 0; i < _messageStarts.Length; i++)
+                        if (_messageStarts[i] == _subTileType)
                             return messages[i];
                 }
 

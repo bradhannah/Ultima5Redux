@@ -136,8 +136,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     return new Reagent(GetEnumByInventoryName<Reagent.SpecificReagentType>(itemReference), 1);
                 case InventoryReferences.InventoryReferenceType.Armament:
                     return CreateArmament(itemReference);
-                //CombatItemReference combatItemReference = GameReferences.Instance.CombatItemRefs.GetCombatItemReferenceFromEquipment(itemReference.GetAsEquipment());
-
                 case InventoryReferences.InventoryReferenceType.Spell:
                     var spellWords =
                         GetEnumByInventoryName<MagicReference.SpellWords>(itemReference);

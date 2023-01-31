@@ -104,7 +104,7 @@ namespace Ultima5Redux.Maps
         protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
 
 
-        public Map(SmallMapReferences.SingleMapReference.Location mapLocation, int mapFloor) : this()
+        protected Map(SmallMapReferences.SingleMapReference.Location mapLocation, int mapFloor) : this()
         {
             MapLocation = mapLocation;
             MapFloor = mapFloor;
@@ -1237,25 +1237,24 @@ namespace Ultima5Redux.Maps
             floodFillIfInside(0, -1);
             floodFillIfInside(-1, 0);
 
-            if (bFirst)
-            {
-                // we ONLY do the diagonals during the very first 
-                floodFillIfInside(-1, -1);
-                floodFillIfInside(1, 1);
-                floodFillIfInside(-1, +1);
-                floodFillIfInside(1, -1);
-            }
+            if (!bFirst) return;
+            
+            // we ONLY do the diagonals during the very first 
+            floodFillIfInside(-1, -1);
+            floodFillIfInside(1, 1);
+            floodFillIfInside(-1, +1);
+            floodFillIfInside(1, -1);
         }
 
-        private readonly List<WalkableType> _allAStars = new()
-        {
-            WalkableType.StandardWalking,
-            WalkableType.CombatLand,
-            WalkableType.CombatLand,
-            WalkableType.CombatWater,
-            WalkableType.CombatFlyThroughWalls,
-            WalkableType.CombatLandAndWater
-        };
+        // private readonly List<WalkableType> _allAStars = new()
+        // {
+        //     WalkableType.StandardWalking,
+        //     WalkableType.CombatLand,
+        //     WalkableType.CombatLand,
+        //     WalkableType.CombatWater,
+        //     WalkableType.CombatFlyThroughWalls,
+        //     WalkableType.CombatLandAndWater
+        // };
 
 
         protected virtual Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy) =>

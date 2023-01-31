@@ -20,34 +20,6 @@ namespace Ultima5Redux
                 .ToArray());
         }
 
-        /// <summary>
-        ///     Divides a list of bytes into a two dimension byte array
-        ///     Ideal for serialized byte arrays from map files, into a more readable x,y
-        /// </summary>
-        /// <param name="byteList"></param>
-        /// <param name="splitEveryN">split into a new row every N bytes</param>
-        /// <param name="offset">byte position to start in list</param>
-        /// <param name="length">number of bytes to copy from list to 2d array</param>
-        /// <returns></returns>
-        // public static byte[][] ByteListTo2DArray(List<byte> byteList, short splitEveryN, int offset, int length)
-        // {
-        //     int listCount = byteList.Count;
-        //
-        //     _ = Math.DivRem(listCount, splitEveryN, out int remainder);
-        //
-        //     if (remainder != 0)
-        //         throw new ArgumentOutOfRangeException($"The Remainder: {remainder} should be zero when loading a map");
-        //
-        //     byte[][] byteArray = Init2DArray<byte>(length / splitEveryN, length / splitEveryN);
-        //
-        //     for (int listPos = offset, arrayPos = 0; listPos < offset + length; listPos++, arrayPos++)
-        //     {
-        //         byteArray[arrayPos / splitEveryN][arrayPos % splitEveryN] = byteList[listPos];
-        //     }
-        //
-        //     return byteArray;
-        // }
-
         public static string BytesToStringFixedWidth(List<byte> byteArray, int offset, int length)
         {
             string str = string.Empty;

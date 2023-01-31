@@ -1870,7 +1870,7 @@ namespace Ultima5ReduxTesting
             //GameReferences.Instance.Initialize(DataDirectory);
 
             foreach (KeyValuePair<string, List<InventoryReference>> kvp in GameReferences.Instance.InvRef
-                         ._invRefsDictionary)
+                         .InvRefsDictionary)
             {
                 if (kvp.Value[0].InvRefType == InventoryReferences.InventoryReferenceType.Reagent) continue;
                 foreach (InventoryReference invRef in kvp.Value)

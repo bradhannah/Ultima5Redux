@@ -52,43 +52,30 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public bool DoesPlayerNeedRemedy(RemedyTypes remedy, PlayerCharacterRecord record)
         {
-            switch (remedy)
+            return remedy switch
             {
-                case RemedyTypes.Cure:
-                    return record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned;
-                case RemedyTypes.Heal:
-                    return record.Stats.CurrentHp < record.Stats.MaximumHp;
-                case RemedyTypes.Resurrect:
-                    return record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Dead;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null);
-            }
+                RemedyTypes.Cure => record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned,
+                RemedyTypes.Heal => record.Stats.CurrentHp < record.Stats.MaximumHp,
+                RemedyTypes.Resurrect => record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Dead,
+                _ => throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null)
+            };
         }
 
         public string GetHealerRemedyOfferPrice(RemedyTypes remedy)
         {
-            string offerStr;
-            switch (remedy)
+            string offerStr = remedy switch
             {
-                case RemedyTypes.Cure:
-                    offerStr = DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                        .I_CAN_CURE_THY_POISONED_BODY);
-                    break;
-                case RemedyTypes.Heal:
-                    offerStr = "\"" +
-                               DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                                   .I_CAN_HEAL_THEE);
-                    break;
-                case RemedyTypes.Resurrect:
-                    offerStr = DataOvlReference.StringReferences.GetString(
-                                   DataOvlReference.ShoppeKeeperHealerStrings
-                                       .I_CAN_RAISE_THIS_UNFORTUNATE_PERSON_FROM) +
-                               DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                                   .THE_DEAD);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null);
-            }
+                RemedyTypes.Cure => DataOvlReference.StringReferences.GetString(DataOvlReference
+                    .ShoppeKeeperHealerStrings.I_CAN_CURE_THY_POISONED_BODY),
+                RemedyTypes.Heal => "\"" +
+                                    DataOvlReference.StringReferences.GetString(DataOvlReference
+                                        .ShoppeKeeperHealerStrings.I_CAN_HEAL_THEE),
+                RemedyTypes.Resurrect => DataOvlReference.StringReferences.GetString(DataOvlReference
+                                             .ShoppeKeeperHealerStrings.I_CAN_RAISE_THIS_UNFORTUNATE_PERSON_FROM) +
+                                         DataOvlReference.StringReferences.GetString(DataOvlReference
+                                             .ShoppeKeeperHealerStrings.THE_DEAD),
+                _ => throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null)
+            };
 
             offerStr += ShoppeKeeperDialogueReference.GetMerchantString(
                 DataOvlReference.StringReferences
@@ -107,20 +94,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public string GetRemedyVerb(RemedyTypes remedy)
         {
-            switch (remedy)
+            return remedy switch
             {
-                case RemedyTypes.Cure:
-                    return DataOvlReference.StringReferences.GetString(
-                        DataOvlReference.ShoppeKeeperHealerStrings.CURING);
-                case RemedyTypes.Heal:
-                    return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                        .HEALING);
-                case RemedyTypes.Resurrect:
-                    return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                        .RESURRECT);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null);
-            }
+                RemedyTypes.Cure => DataOvlReference.StringReferences.GetString(DataOvlReference
+                    .ShoppeKeeperHealerStrings.CURING),
+                RemedyTypes.Heal => DataOvlReference.StringReferences.GetString(DataOvlReference
+                    .ShoppeKeeperHealerStrings.HEALING),
+                RemedyTypes.Resurrect => DataOvlReference.StringReferences.GetString(DataOvlReference
+                    .ShoppeKeeperHealerStrings.RESURRECT),
+                _ => throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null)
+            };
         }
 
         public string GetWhoNeedsAid() =>

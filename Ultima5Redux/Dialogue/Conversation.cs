@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Ultima5Redux.Maps;
@@ -20,7 +21,7 @@ namespace Ultima5Redux.Dialogue
     ///     A conversation with an NPC.
     ///     An instantiated object of class Conversation holds and controls all aspects of a conversation.
     /// </summary>
-    public class Conversation
+    [SuppressMessage("ReSharper", "CommentTypo")] public class Conversation
     {
         /// <summary>
         ///     The delegate for the notification that tells the user something was added to the queue
@@ -134,7 +135,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     Loops and waits for a response (response added to responseQueue)
         /// </summary>
-        /// <returns>Users resonse</returns>
+        /// <returns>Users response</returns>
         private string GetResponse()
         {
             lock (((ICollection)_responseQueue).SyncRoot)

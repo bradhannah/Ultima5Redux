@@ -49,11 +49,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         [IgnoreDataMember]
         public NonPlayerCharacterReference NPCRef
         {
-            get
-            {
-                if (_npcRefOverride != null) return _npcRefOverride;
-                return GameReferences.Instance.NpcRefs.GetNonPlayerCharactersByLocation(NPCLocation)[NPCRefIndex];
-            }
+            get =>
+                _npcRefOverride ??
+                GameReferences.Instance.NpcRefs.GetNonPlayerCharactersByLocation(NPCLocation)[NPCRefIndex];
             private set
             {
                 NPCRefIndex = value.DialogIndex;

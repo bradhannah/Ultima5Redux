@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits
     /// </summary>
     [DataContract] public class SmallMapCharacterState
     {
-        [DataMember] private int NPCIndex { get; set; }
+        [DataMember] private int NpcIndex { get; set; }
         [DataMember] public bool Active { get; private set; }
 
         [DataMember] public MapUnitPosition TheMapUnitPosition { get; private set; } = new();
@@ -26,7 +26,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="nMapUnitAnimationStateIndex"></param>
         public SmallMapCharacterState(NonPlayerCharacterReference npcRef, int nMapUnitAnimationStateIndex)
         {
-            NPCIndex = npcRef.DialogIndex;
+            NpcIndex = npcRef.DialogIndex;
             MapUnitAnimationStateIndex = nMapUnitAnimationStateIndex;
             // if you are adding by hand then we can assume that the character is active
             TheMapUnitPosition =
@@ -43,12 +43,12 @@ namespace Ultima5Redux.MapUnits
         ///     Build the character state from data retrieved from disk
         /// </summary>
         /// <param name="stateUInts"></param>
-        /// <param name="nNPCIndex"></param>
-        public SmallMapCharacterState(ushort[] stateUInts, int nNPCIndex)
+        /// <param name="nNpcIndex"></param>
+        public SmallMapCharacterState(ushort[] stateUInts, int nNpcIndex)
         {
             Debug.Assert(stateUInts.Length == 0x8);
             MapUnitAnimationStateIndex = stateUInts[6];
-            NPCIndex = nNPCIndex;
+            NpcIndex = nNpcIndex;
             TheMapUnitPosition.X = stateUInts[1];
             TheMapUnitPosition.Y = stateUInts[2];
             TheMapUnitPosition.Floor = stateUInts[3];

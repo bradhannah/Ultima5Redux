@@ -143,23 +143,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         }
 
         /// <summary>
-        ///     Does the NPC have an empty schedule? If so, then they aren't actually an NPC
-        /// </summary>
-        /// <param name="schedule">daily schedule</param>
-        /// <returns></returns>
-        private static bool IsEmptySchedule(NpcSchedule schedule)
-        {
-            unsafe
-            {
-                if (schedule.times[0] == 0 && schedule.times[1] == 0 && schedule.times[2] == 0 &&
-                    schedule.times[3] == 0 && schedule.times[4] == 0)
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         ///     Return true if the dialog is not part of a standard dialog tree like a guard or shopkeeper
         /// </summary>
         /// <param name="dialogType">The dialog type that yu want to compare</param>
