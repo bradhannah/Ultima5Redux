@@ -19,7 +19,8 @@ namespace Ultima5Redux.MapUnits
     //6	1	depends on object type
     //7	1	depends on object type
 
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public class MapUnitState
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    public class MapUnitState
     {
         public const int NBYTES = 0x8;
 

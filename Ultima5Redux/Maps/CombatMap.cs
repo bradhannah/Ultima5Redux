@@ -1521,7 +1521,7 @@ namespace Ultima5Redux.Maps
             activeCombatMapUnit = TheInitiativeQueue.GetCurrentCombatUnitAndClean();
             if (activeCombatMapUnit is not Enemy enemy)
                 throw new Ultima5ReduxException($"Tried to ProcessEnemyTurn but was a {activeCombatMapUnit.GetType()}");
-            
+
             targetedCombatMapUnit = null;
             missedPoint = null;
 

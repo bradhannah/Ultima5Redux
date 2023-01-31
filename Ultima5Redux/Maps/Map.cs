@@ -1238,7 +1238,7 @@ namespace Ultima5Redux.Maps
             floodFillIfInside(-1, 0);
 
             if (!bFirst) return;
-            
+
             // we ONLY do the diagonals during the very first 
             floodFillIfInside(-1, -1);
             floodFillIfInside(1, 1);

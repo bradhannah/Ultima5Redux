@@ -13,6 +13,32 @@ namespace Ultima5Redux
         public static readonly TextInfo EnTextInfo = new CultureInfo("en-US", false).TextInfo;
         public static Random Ran { get; set; } = new();
 
+        private static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
+        {
+            T[][] theArray = new T[numberOfRows][];
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                theArray[i] = new T[numberOfCols];
+            }
+
+            return theArray;
+        }
+
+        private static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols, T defaultValue)
+        {
+            T[][] theArray = new T[numberOfRows][];
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                theArray[i] = new T[numberOfCols];
+                for (int j = 0; j < numberOfCols; j++)
+                {
+                    theArray[i][j] = defaultValue;
+                }
+            }
+
+            return theArray;
+        }
+
         public static string AddSpacesBeforeCaps(string str)
         {
             // filthy method from here: https://stackoverflow.com/questions/272633/add-spaces-before-capital-letters
@@ -171,32 +197,6 @@ namespace Ultima5Redux
             Debug.Assert(nMin < nMax);
             int nDiff = nMax - nMin;
             return Ran.Next() % nDiff + nMin;
-        }
-
-        private static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
-        {
-            T[][] theArray = new T[numberOfRows][];
-            for (int i = 0; i < numberOfRows; i++)
-            {
-                theArray[i] = new T[numberOfCols];
-            }
-
-            return theArray;
-        }
-
-        private static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols, T defaultValue)
-        {
-            T[][] theArray = new T[numberOfRows][];
-            for (int i = 0; i < numberOfRows; i++)
-            {
-                theArray[i] = new T[numberOfCols];
-                for (int j = 0; j < numberOfCols; j++)
-                {
-                    theArray[i][j] = defaultValue;
-                }
-            }
-
-            return theArray;
         }
 
         public static bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols, bool bDefault = false) =>

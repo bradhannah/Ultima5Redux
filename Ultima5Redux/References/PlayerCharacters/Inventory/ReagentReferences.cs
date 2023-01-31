@@ -33,7 +33,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                     int nIndex = i * nReagents + nOffset;
                     SmallMapReferences.SingleMapReference.Location location = locations[i];
                     if (quantities[nIndex] <= 0) continue;
-                    
+
                     if (!_reagentPriceAndQuantities.ContainsKey(location))
                     {
                         _reagentPriceAndQuantities.Add(location,
@@ -71,11 +71,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         }
 
         public bool IsReagentSoldAtLocation(SmallMapReferences.SingleMapReference.Location location,
-            Reagent.SpecificReagentType specificReagentType)
-        {
-            return _reagentPriceAndQuantities.ContainsKey(location) &&
-                   _reagentPriceAndQuantities[location].ContainsKey(specificReagentType);
-        }
+            Reagent.SpecificReagentType specificReagentType) =>
+            _reagentPriceAndQuantities.ContainsKey(location) &&
+            _reagentPriceAndQuantities[location].ContainsKey(specificReagentType);
     }
 
     public class ReagentPriceAndQuantity

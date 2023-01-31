@@ -431,7 +431,7 @@ namespace Ultima5Redux.References.Dialogue
                 Console.WriteLine(@"Label #: " + label.LabelNum);
                 Console.WriteLine(@"Initial Line: " + label.InitialLine);
                 if (label.DefaultAnswers.Count <= 0) continue;
-                
+
                 foreach (ScriptLine line in label.DefaultAnswers)
                 {
                     Console.WriteLine(@"Default Line(s): " + line);

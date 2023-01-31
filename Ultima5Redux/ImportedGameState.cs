@@ -25,7 +25,8 @@ namespace Ultima5Redux
         /// <summary>
         ///     Data chunks for each of the save game sections
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private enum DataChunkName
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        private enum DataChunkName
         {
             Unused, CHARACTER_RECORDS, NPC_ISDEAD_TABLE, NPC_ISMET_TABLE, N_PEOPLE_PARTY, FOOD_QUANTITY, GOLD_QUANTITY,
             KEYS_QUANTITY, GEMS_QUANTITY, TORCHES_QUANTITY, TORCHES_TURNS, CURRENT_YEAR, CURRENT_MONTH, CURRENT_DAY,
@@ -44,10 +45,6 @@ namespace Ultima5Redux
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
 
         internal byte ActivePlayerNumber => DataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        // This is kept as a demonstration of how they saved movements - but we do not use it
-        private MapUnitMovements CharacterMovements { get; set; }
 
         internal PlayerCharacterRecords CharacterRecords { get; private set; }
 
@@ -143,6 +140,10 @@ namespace Ultima5Redux
         // map overlay data chunks
         private DataChunk ActiveOverlayDataChunks =>
             DataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES);
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        // This is kept as a demonstration of how they saved movements - but we do not use it
+        private MapUnitMovements CharacterMovements { get; set; }
 
         private DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
 

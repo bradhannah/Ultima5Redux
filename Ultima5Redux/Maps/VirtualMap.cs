@@ -63,7 +63,7 @@ namespace Ultima5Redux.Maps
                 return SavedMapRefs.Location switch
                 {
                     SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine when SavedMapRefs.MapType ==
-                        Map.Maps.Combat => TheMapHolder.TheCombatMap,
+                                                                           Map.Maps.Combat => TheMapHolder.TheCombatMap,
                     SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => throw
                         new Ultima5ReduxException("Resting and Shrines have not been implemented yet"),
                     SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => SavedMapRefs.Floor == 0
@@ -109,7 +109,8 @@ namespace Ultima5Redux.Maps
                 case Map.Maps.Combat:
                     throw new Ultima5ReduxException("Can't load a Combat Map on the initialization of a virtual map");
                 case Map.Maps.Dungeon:
-                    throw new Ultima5ReduxException("Can't load a Dungeon Map on the initialization of a virtual map (yet?)");
+                    throw new Ultima5ReduxException(
+                        "Can't load a Dungeon Map on the initialization of a virtual map (yet?)");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }

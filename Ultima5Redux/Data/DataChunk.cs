@@ -165,7 +165,8 @@ namespace Ultima5Redux.Data
         /// <summary>
         ///     The encoding of the data
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")] public enum DataFormatType
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public enum DataFormatType
         {
             Unknown, FixedString, SimpleString, StringList, UINT16List, UINT16, ByteList, Bitmap, Byte,
             StringListFromIndexes

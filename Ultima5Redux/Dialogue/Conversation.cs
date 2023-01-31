@@ -21,7 +21,8 @@ namespace Ultima5Redux.Dialogue
     ///     A conversation with an NPC.
     ///     An instantiated object of class Conversation holds and controls all aspects of a conversation.
     /// </summary>
-    [SuppressMessage("ReSharper", "CommentTypo")] public class Conversation
+    [SuppressMessage("ReSharper", "CommentTypo")]
+    public class Conversation
     {
         /// <summary>
         ///     The delegate for the notification that tells the user something was added to the queue

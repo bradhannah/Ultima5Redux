@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace Ultima5Redux.References
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")] public class DungeonTile
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    public class DungeonTile
     {
         public enum ChestType { Normal = 0, Trapped_1 = 1, Trapped_2 = 2, Poisoned = 4 }
 
@@ -28,6 +29,8 @@ namespace Ultima5Redux.References
 
         public enum TrapType { LowerTrapVisible, BombTrap, InvisibleTrap, UpperTrapVisible }
 
+        private readonly int[] _messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
+
         private readonly byte _subTileType;
 
         private readonly List<string> messages = new()
@@ -37,8 +40,6 @@ namespace Ultima5Redux.References
             "THE PRISON WRONG", "THE CRYPT", "UPPER CRYPTS", "LOWER CRYPTS",
             "DEBTORS ALLY", "DEEP", "DEEPER", "DEEPEST", "MOTHER LODE MAZE"
         };
-
-        private readonly int[] _messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
 
         public int RoomNumber { get; }
         public ChestType TheChestType { get; }

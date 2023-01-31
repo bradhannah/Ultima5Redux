@@ -10,7 +10,8 @@ namespace Ultima5Redux.References
     /// <summary>
     ///     Class for quick access to the static contents of the Data.ovl file
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global")] public class DataOvlReference
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    public class DataOvlReference
     {
         public enum AdditionalStrings
         {

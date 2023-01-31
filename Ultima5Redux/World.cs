@@ -124,6 +124,51 @@ namespace Ultima5Redux
             }
         }
 
+        private static void CastSleep(TurnResults turnResults, PlayerCharacterRecord record, out bool bWasPutToSleep)
+        {
+            bWasPutToSleep = record.Stats.Sleep();
+            turnResults.PushOutputToConsole(
+                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                    .SLEPT_BANG_N),
+                false);
+        }
+
+        /// <summary>
+        ///     Gets a +/- 1 x/y adjustment based on the current position and given direction
+        /// </summary>
+        /// <param name="direction">direction to go</param>
+        /// <param name="xAdjust">output X adjustment</param>
+        /// <param name="yAdjust">output Y adjustment</param>
+        private static void GetAdjustments(Point2D.Direction direction, out int xAdjust, out int yAdjust)
+        {
+            xAdjust = 0;
+            yAdjust = 0;
+
+            // if you are on a repeating map then you should assume that the adjust suc
+
+            switch (direction)
+            {
+                case Point2D.Direction.Down:
+                    yAdjust = 1;
+                    break;
+                case Point2D.Direction.Up:
+                    yAdjust = -1;
+                    break;
+                case Point2D.Direction.Right:
+                    xAdjust = 1;
+                    break;
+                case Point2D.Direction.Left:
+                    xAdjust = -1;
+                    break;
+                case Point2D.Direction.None:
+                    // do nothing, no adjustment
+                    break;
+                default:
+                    throw new Ultima5ReduxException(
+                        "Requested an adjustment but didn't provide a KeyCode that represents a direction.");
+            }
+        }
+
         /// <summary>
         ///     Gets the tile reference for a chair when pushed in a given direction
         /// </summary>
@@ -152,6 +197,58 @@ namespace Ultima5Redux
             }
         }
 
+        private static string GetKlimbOutput(string output = "")
+        {
+            if (output == "")
+                return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
+                    .KLIMB);
+            return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
+                       .KLIMB) +
+                   output;
+        }
+
+        private static string GetMovementVerb(Avatar avatar, Point2D.Direction direction, bool bManualMovement)
+        {
+            switch (avatar.CurrentAvatarState)
+            {
+                case Avatar.AvatarState.Regular:
+                    return GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
+                case Avatar.AvatarState.Carpet:
+                    return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                               .FLY) +
+                           GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
+                case Avatar.AvatarState.Horse:
+                    return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                               .RIDE) +
+                           GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
+                case Avatar.AvatarState.Frigate:
+                    if (!avatar.AreSailsHoisted)
+                        return
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction) +
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                                .ROWING);
+
+                    if (bManualMovement)
+                    {
+                        return GameReferences.Instance.DataOvlRef.StringReferences.GetString(
+                                   DataOvlReference.WorldStrings
+                                       .HEAD) +
+                               GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
+                    }
+
+                    return GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
+
+                case Avatar.AvatarState.Skiff:
+                    return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                               .ROW) +
+                           GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
+                case Avatar.AvatarState.Hidden:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(avatar.CurrentAvatarState), avatar.CurrentAvatarState,
+                        null);
+            }
+        }
+
         private static SpecialSearchLocation GetSpecialSearchLocation(
             SmallMapReferences.SingleMapReference.Location location,
             int nFloor, Point2D position)
@@ -162,6 +259,10 @@ namespace Ultima5Redux
 
             return SpecialSearchLocation.None;
         }
+
+        private static string GetThouHolds(string shard) =>
+            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
+                .GEM_SHARD_THOU_HOLD_EVIL_SHARD) + "\n" + shard;
 
         private static TurnResult.TurnResultType GetTurnResultMovedByAvatarState(Avatar avatar, bool bManualMovement)
         {
@@ -244,92 +345,11 @@ namespace Ultima5Redux
             return false;
         }
 
-        private static void CastSleep(TurnResults turnResults, PlayerCharacterRecord record, out bool bWasPutToSleep)
-        {
-            bWasPutToSleep = record.Stats.Sleep();
-            turnResults.PushOutputToConsole(
-                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                    .SLEPT_BANG_N),
-                false);
-        }
-
-        /// <summary>
-        ///     Gets a +/- 1 x/y adjustment based on the current position and given direction
-        /// </summary>
-        /// <param name="direction">direction to go</param>
-        /// <param name="xAdjust">output X adjustment</param>
-        /// <param name="yAdjust">output Y adjustment</param>
-        private static void GetAdjustments(Point2D.Direction direction, out int xAdjust, out int yAdjust)
-        {
-            xAdjust = 0;
-            yAdjust = 0;
-
-            // if you are on a repeating map then you should assume that the adjust suc
-
-            switch (direction)
-            {
-                case Point2D.Direction.Down:
-                    yAdjust = 1;
-                    break;
-                case Point2D.Direction.Up:
-                    yAdjust = -1;
-                    break;
-                case Point2D.Direction.Right:
-                    xAdjust = 1;
-                    break;
-                case Point2D.Direction.Left:
-                    xAdjust = -1;
-                    break;
-                case Point2D.Direction.None:
-                    // do nothing, no adjustment
-                    break;
-                default:
-                    throw new Ultima5ReduxException(
-                        "Requested an adjustment but didn't provide a KeyCode that represents a direction.");
-            }
-        }
-
-        private static string GetMovementVerb(Avatar avatar, Point2D.Direction direction, bool bManualMovement)
-        {
-            switch (avatar.CurrentAvatarState)
-            {
-                case Avatar.AvatarState.Regular:
-                    return GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
-                case Avatar.AvatarState.Carpet:
-                    return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                               .FLY) +
-                           GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
-                case Avatar.AvatarState.Horse:
-                    return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                               .RIDE) +
-                           GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
-                case Avatar.AvatarState.Frigate:
-                    if (!avatar.AreSailsHoisted)
-                        return
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction) +
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                                .ROWING);
-                    
-                    if (bManualMovement)
-                    {
-                        return GameReferences.Instance.DataOvlRef.StringReferences.GetString(
-                                   DataOvlReference.WorldStrings
-                                       .HEAD) +
-                               GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
-                    }
-
-                    return GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
-
-                case Avatar.AvatarState.Skiff:
-                    return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                               .ROW) +
-                           GameReferences.Instance.DataOvlRef.StringReferences.GetDirectionString(direction);
-                case Avatar.AvatarState.Hidden:
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(avatar.CurrentAvatarState), avatar.CurrentAvatarState,
-                        null);
-            }
-        }
+        private string GetOnFootResponse() =>
+            GameReferences.Instance.DataOvlRef.StringReferences
+                .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + "\n" + GameReferences.Instance
+                .DataOvlRef
+                .StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.ON_FOOT).Trim();
 
 
         private bool IsLeavingMap(Point2D xyProposedPosition) =>
@@ -889,12 +909,6 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
-        private string GetOnFootResponse() =>
-            GameReferences.Instance.DataOvlRef.StringReferences
-                .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + "\n" + GameReferences.Instance
-                .DataOvlRef
-                .StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.ON_FOOT).Trim();
-
         /// <summary>
         ///     Attempt to enter a building at a coordinate
         ///     Will load new map if successful
@@ -1443,16 +1457,6 @@ namespace Ultima5Redux
             return new List<VirtualMap.AggressiveMapUnitInfo>();
         }
 
-        private static string GetKlimbOutput(string output = "")
-        {
-            if (output == "")
-                return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
-                    .KLIMB);
-            return GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
-                       .KLIMB) +
-                   output;
-        }
-
         /// <summary>
         ///     Try to klimb the given tile - typically called after you select a direction
         /// </summary>
@@ -1788,7 +1792,7 @@ namespace Ultima5Redux
                         DataOvlReference.TravelStrings.BLOCKED));
                     if (!newTileReference.Is(TileReference.SpriteIndex.Cactus))
                         return AdvanceTime(nTimeAdvanceFactor, turnResults);
-                    
+
                     turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WorldStrings.OUCH));
                     turnResults.PushTurnResult(
@@ -2463,10 +2467,6 @@ namespace Ultima5Redux
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
-
-        private static string GetThouHolds(string shard) =>
-            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
-                .GEM_SHARD_THOU_HOLD_EVIL_SHARD) + "\n" + shard;
 
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseSpecialItem(SpecialItem spcItem, out bool bWasUsed,
             TurnResults turnResults)

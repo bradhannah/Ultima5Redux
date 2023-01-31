@@ -183,12 +183,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         protected string FlattenStr(string str) => str.Trim().Replace("\n", " ");
 
-        protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender)
-        {
-            return DataOvlReference.StringReferences.GetString(gender == PlayerCharacterRecord.CharacterGender.Male
+        protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender) =>
+            DataOvlReference.StringReferences.GetString(gender == PlayerCharacterRecord.CharacterGender.Male
                 ? DataOvlReference.ShoppeKeeperBarKeepStrings2.SIR
                 : DataOvlReference.ShoppeKeeperBarKeepStrings2.MILADY);
-        }
 
         protected string GetNumberInPartyAsStringWord(int nNum)
         {

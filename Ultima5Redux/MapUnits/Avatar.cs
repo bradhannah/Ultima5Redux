@@ -230,12 +230,10 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        private TileReference GetCurrentTileReference()
-        {
-            return CurrentAvatarState is AvatarState.Regular or AvatarState.Hidden
+        private TileReference GetCurrentTileReference() =>
+            CurrentAvatarState is AvatarState.Regular or AvatarState.Hidden
                 ? GetNonBoardedTileReference()
                 : CurrentBoardedMapUnit.GetBoardedTileReference();
-        }
 
         /// <summary>
         ///     Creates an Avatar MapUnit at the default small map position

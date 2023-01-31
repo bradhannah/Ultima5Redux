@@ -92,18 +92,14 @@ namespace Ultima5Redux.References.Maps
         /// <returns></returns>
         /// <exception cref="Ultima5ReduxException"></exception>
         private Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(AllTerritories territory, int nMapNumber,
-            int nFloor)
-        {
-            return TileOverrideExists(territory, nMapNumber, nFloor)
+            int nFloor) =>
+            TileOverrideExists(territory, nMapNumber, nFloor)
                 ? _tileOverrideMap[territory][nMapNumber][nFloor]
                 : null;
-        }
 
-        private bool TileOverrideExists(AllTerritories territory, int nMapNumber, int nFloor)
-        {
-            return _tileOverrideMap.ContainsKey(territory) && _tileOverrideMap[territory].ContainsKey(nMapNumber) &&
-                   _tileOverrideMap[territory][nMapNumber].ContainsKey(nFloor);
-        }
+        private bool TileOverrideExists(AllTerritories territory, int nMapNumber, int nFloor) =>
+            _tileOverrideMap.ContainsKey(territory) && _tileOverrideMap[territory].ContainsKey(nMapNumber) &&
+            _tileOverrideMap[territory][nMapNumber].ContainsKey(nFloor);
 
         public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference) =>
             GetTileOverrides(GetOverrideTerritory(singleCombatMapReference),

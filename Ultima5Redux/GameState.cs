@@ -178,6 +178,20 @@ namespace Ultima5Redux
                 smallMap.ReloadNpcData(TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation);
         }
 
+        private static void MoveFileAsBackup(string currentSaveGamePathAndFile)
+        {
+            string currentSaveGamePathAndFileBackup = currentSaveGamePathAndFile + ".bak";
+
+            if (!File.Exists(currentSaveGamePathAndFile)) return;
+
+            if (File.Exists(currentSaveGamePathAndFileBackup))
+            {
+                File.Delete(currentSaveGamePathAndFileBackup);
+            }
+
+            File.Move(currentSaveGamePathAndFile, currentSaveGamePathAndFileBackup);
+        }
+
         /// <summary>
         ///     Initializes (one time) the virtual map component
         ///     Must be initialized pretty much after everything else has been loaded into memory
@@ -214,20 +228,6 @@ namespace Ultima5Redux
                     }
                 }
             };
-        }
-
-        private static void MoveFileAsBackup(string currentSaveGamePathAndFile)
-        {
-            string currentSaveGamePathAndFileBackup = currentSaveGamePathAndFile + ".bak";
-
-            if (!File.Exists(currentSaveGamePathAndFile)) return;
-
-            if (File.Exists(currentSaveGamePathAndFileBackup))
-            {
-                File.Delete(currentSaveGamePathAndFileBackup);
-            }
-
-            File.Move(currentSaveGamePathAndFile, currentSaveGamePathAndFileBackup);
         }
 
 
