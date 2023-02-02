@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
@@ -198,6 +199,7 @@ namespace Ultima5Redux.DayNightMoon
             SetAllChangeTrackers();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] 
         public TimeOfDay Copy()
         {
             var tod = new TimeOfDay

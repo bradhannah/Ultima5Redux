@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Ultima5Redux.External;
@@ -1737,6 +1738,7 @@ namespace Ultima5Redux.Maps
             return false;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] 
         public void TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
             out bool bPushedAThing, TurnResults turnResults)
         {

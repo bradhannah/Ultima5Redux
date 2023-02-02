@@ -13,13 +13,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         [DataMember(Name = "OverrideMap")] private Dictionary<Point2D, int> _overrideMap = new();
 
-        //private readonly Queue<InventoryItem> _emptyQueue = new();
-
         [IgnoreDataMember] internal Map TheMap { get; set; }
-
-        [IgnoreDataMember] public int NumOfCols => TheMap.NumOfYTiles;
-
-        [IgnoreDataMember] public int NumOfRows => TheMap.NumOfXTiles;
 
         [JsonConstructor] private MapOverrides()
         {

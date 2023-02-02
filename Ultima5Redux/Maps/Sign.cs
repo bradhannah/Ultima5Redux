@@ -152,6 +152,7 @@ namespace Ultima5Redux.Maps
             return trimmedStr.Trim();
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static SignType GetSignTypeByIndex(int nIndex)
         {
             switch ((SignType)nIndex)

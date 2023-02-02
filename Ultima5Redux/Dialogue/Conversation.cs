@@ -400,6 +400,8 @@ namespace Ultima5Redux.Dialogue
                     case SkipInstruction.DontSkip:
                         // do nothing
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -411,6 +413,7 @@ namespace Ultima5Redux.Dialogue
         /// <returns>string equivalent of the ScriptItem</returns>
         private string TextProcessItem(TalkScript.ScriptItem item)
         {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (item.Command)
             {
                 case TalkScript.TalkCommand.ExtortionAmount:
@@ -598,16 +601,16 @@ namespace Ultima5Redux.Dialogue
                             "\nI am called " + TheNonPlayerCharacterState.NPCRef.Name));
 
                 // if in label && next line include <AvatarName>, then skip label
-                const int StartingIndexForLabel = 0;
+                const int startingIndexForLabel = 0;
 
                 ///// IT'S A LABEL
                 // if we have just begun a label section, then let's handle it slightly difference then the normal conversation
-                if (splitLines[StartingIndexForLabel].IsLabelDefinition())
+                if (splitLines[startingIndexForLabel].IsLabelDefinition())
                 {
-                    Debug.Assert(splitLines[StartingIndexForLabel].NumberOfScriptItems == 2,
+                    Debug.Assert(splitLines[startingIndexForLabel].NumberOfScriptItems == 2,
                         "If it is a label definition, then it must have only 2 items defined in it");
-                    int nLabel = splitLines[StartingIndexForLabel].GetScriptItem(1).LabelNum;
-                    Debug.Assert(nLabel >= 0 && nLabel <= TalkScript.TOTAL_LABELS - 1,
+                    int nLabel = splitLines[startingIndexForLabel].GetScriptItem(1).LabelNum;
+                    Debug.Assert(nLabel is >= 0 and <= TalkScript.TOTAL_LABELS - 1,
                         "Label number must be between 0 and 9");
 
                     // get the label object

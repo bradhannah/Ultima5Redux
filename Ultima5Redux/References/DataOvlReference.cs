@@ -10,7 +10,7 @@ namespace Ultima5Redux.References
     /// <summary>
     ///     Class for quick access to the static contents of the Data.ovl file
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")] [SuppressMessage("ReSharper", "IdentifierTypo")]
     public class DataOvlReference
     {
         public enum AdditionalStrings
@@ -559,6 +559,7 @@ namespace Ultima5Redux.References
             // [31] = {string} "No"        
         }
 
+        [SuppressMessage("ReSharper", "IdentifierTypo")] 
         public enum ShoppeKeeperBarKeepStrings2
         {
             TWO, THREE, FOUR, FIVE, SIX, SIR, MILADY, THAT_WILL_BE_SP, SP_GOLD_FOR_THE_SP, S_OF_YE_COMMA_N,

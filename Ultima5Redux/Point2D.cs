@@ -24,9 +24,13 @@ namespace Ultima5Redux
             Y = y;
         }
 
-        public static bool operator ==(Point2DFloat point1, Point2DFloat point2) => ReferenceEquals(point1, null)
-            ? ReferenceEquals(point2, null)
-            : point1.Equals(point2);
+        // public static bool operator ==(Point2DFloat point1, Point2DFloat point2) => ReferenceEquals(point1, null)
+        //     ? ReferenceEquals(point2, null)
+        //     : point1.Equals(point2);
+
+        public static bool operator ==(Point2DFloat point1, Point2DFloat point2) =>
+            point1?.Equals(point2) ?? ReferenceEquals(point2, null);
+
 
         public static bool operator !=(Point2DFloat point1, Point2DFloat point2) => !(point1 == point2);
 

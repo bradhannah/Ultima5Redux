@@ -124,6 +124,7 @@ namespace Ultima5Redux
             }
         }
 
+        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Local")] 
         private static void CastSleep(TurnResults turnResults, PlayerCharacterRecord record, out bool bWasPutToSleep)
         {
             bWasPutToSleep = record.Stats.Sleep();
@@ -302,7 +303,7 @@ namespace Ultima5Redux
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
             switch (State.TheVirtualMap.CurrentMap)
             {
-                case LargeMap largeMap when largeMap.IsAvatarInFrigate:
+                case LargeMap { IsAvatarInFrigate: true }:
                     return true;
                 case LargeMap largeMap:
                     turnResults.PushOutputToConsole(
@@ -345,7 +346,7 @@ namespace Ultima5Redux
             return false;
         }
 
-        private string GetOnFootResponse() =>
+        private static string GetOnFootResponse() =>
             GameReferences.Instance.DataOvlRef.StringReferences
                 .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + "\n" + GameReferences.Instance
                 .DataOvlRef
@@ -1166,6 +1167,10 @@ namespace Ultima5Redux
                         }
 
                         break;
+                    case Point2D.Direction.Left:
+                    case Point2D.Direction.Right:
+                    case Point2D.Direction.None:
+                        break;
                 }
 
                 // else pass on by - something isn't quite right
@@ -1183,37 +1188,37 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.CurrentMap.IsMapUnitOccupiedTile(xy))
             {
                 MapUnit mapUnit = State.TheVirtualMap.CurrentMap.GetTopVisibleMapUnit(xy, true);
-                if (mapUnit is ItemStack { HasStackableItems: true } itemStack)
+                switch (mapUnit)
                 {
-                    StackableItem stackableItem = itemStack.PopStackableItem();
-                    InventoryItem invItem = stackableItem.InvItem;
-                    inventoryItem = invItem ?? throw new Ultima5ReduxException(
-                        "Tried to get inventory item from StackableItem but it was null");
-                    State.PlayerInventory.AddInventoryItemToInventory(inventoryItem);
-
-                    // if the items are all gone then we delete the stack from the map
-                    // NOTE: lets try not deleting it so the 3d program knows to not draw it
-                    if (!itemStack.HasStackableItems)
+                    case ItemStack { HasStackableItems: true } itemStack:
                     {
-                        State.TheVirtualMap.CurrentMap.ClearAndSetEmptyMapUnits(itemStack);
+                        StackableItem stackableItem = itemStack.PopStackableItem();
+                        InventoryItem invItem = stackableItem.InvItem;
+                        inventoryItem = invItem ?? throw new Ultima5ReduxException(
+                            "Tried to get inventory item from StackableItem but it was null");
+                        State.PlayerInventory.AddInventoryItemToInventory(inventoryItem);
+
+                        // if the items are all gone then we delete the stack from the map
+                        // NOTE: lets try not deleting it so the 3d program knows to not draw it
+                        if (!itemStack.HasStackableItems)
+                        {
+                            State.TheVirtualMap.CurrentMap.ClearAndSetEmptyMapUnits(itemStack);
+                        }
+
+                        turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(invItem.FindDescription), false);
+                        turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetStackableItem));
+                        return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                     }
-
-                    turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(invItem.FindDescription), false);
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetStackableItem));
-                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-                }
-
-                if (mapUnit is MoonstoneNonAttackingUnit moonstoneNonAttackingUnit)
-                {
-                    // get the Moonstone!
-                    State.PlayerInventory.AddInventoryItemToInventory(moonstoneNonAttackingUnit.TheMoonstone);
-                    inventoryItem = moonstoneNonAttackingUnit.TheMoonstone;
-                    turnResults.PushOutputToConsole(
-                        U5StringRef.ThouDostFind(moonstoneNonAttackingUnit.TheMoonstone.FindDescription), false);
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetMoonstone));
-                    // get rid of it from the map
-                    State.TheVirtualMap.CurrentMap.ClearMapUnit(moonstoneNonAttackingUnit);
-                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                    case MoonstoneNonAttackingUnit moonstoneNonAttackingUnit:
+                        // get the Moonstone!
+                        State.PlayerInventory.AddInventoryItemToInventory(moonstoneNonAttackingUnit.TheMoonstone);
+                        inventoryItem = moonstoneNonAttackingUnit.TheMoonstone;
+                        turnResults.PushOutputToConsole(
+                            U5StringRef.ThouDostFind(moonstoneNonAttackingUnit.TheMoonstone.FindDescription), false);
+                        turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetMoonstone));
+                        // get rid of it from the map
+                        State.TheVirtualMap.CurrentMap.ClearMapUnit(moonstoneNonAttackingUnit);
+                        return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                 }
             }
 
@@ -2148,7 +2153,6 @@ namespace Ultima5Redux
             }
 
             bool bHasNpcRef = npc.NPCRef != null;
-            // bool bIsShoppeKeeper = bHasNpcRef && npc.NPCRef.IsShoppeKeeper;
 
             if (State.TheVirtualMap.CurrentMap is SmallMap smallMap)
             {
@@ -2200,12 +2204,10 @@ namespace Ultima5Redux
                     break;
                 case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                 case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
-                    // turnResults.PushOutputToConsole("...", false);
                     turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic,
                         OddsAndLogic.GetGuardExtortionAmount(OddsAndLogic.GetEraByTurn(State.TurnsSinceStart))));
                     break;
                 case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
-                    // turnResults.PushOutputToConsole("...", false);
                     turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold, 0));
                     break;
                 case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:

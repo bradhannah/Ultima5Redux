@@ -100,7 +100,7 @@ namespace Ultima5Redux.References
             const int nSunriseHour = 6;
             if (tod.Hour == nSunsetHour && tod.Minute <= 50) return TimeOfDayPhases.Sunset;
             if (tod.Hour == nSunriseHour && tod.Minute is >= 10 and <= 60) return TimeOfDayPhases.Sunrise;
-            if (tod.Hour > nSunriseHour && tod.Hour < nSunsetHour) return TimeOfDayPhases.Daytime;
+            if (tod.Hour is > nSunriseHour and < nSunsetHour) return TimeOfDayPhases.Daytime;
             return TimeOfDayPhases.Nighttime;
         }
 

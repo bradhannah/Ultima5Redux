@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -36,7 +37,7 @@ namespace Ultima5Redux.Maps
         internal MapUnitPosition CurrentAvatarPosition
         {
             get => GetAvatarMapUnit().MapUnitPosition;
-            set => GetAvatarMapUnit().MapUnitPosition = value;
+            private set => GetAvatarMapUnit().MapUnitPosition = value;
         }
 
         [IgnoreDataMember]
@@ -60,7 +61,7 @@ namespace Ultima5Redux.Maps
 
 
         [IgnoreDataMember]
-        public int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
+        protected int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
 
         [IgnoreDataMember]
         public override MapUnitPosition CurrentPosition
@@ -109,6 +110,7 @@ namespace Ultima5Redux.Maps
         /// <param name="nIndex"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Local
+        // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Global
         internal MagicCarpet CreateMagicCarpet(Point2D xy, Point2D.Direction direction, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(TheMapType);
@@ -128,6 +130,7 @@ namespace Ultima5Redux.Maps
         /// <param name="direction"></param>
         /// <param name="nIndex"></param>
         /// <returns></returns>
+        // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Global
         internal Skiff CreateSkiff(Point2D xy, Point2D.Direction direction, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(TheMapType);
@@ -135,19 +138,12 @@ namespace Ultima5Redux.Maps
 
             Skiff skiff = new(
                 new MapUnitMovement(nIndex),
-                //importedMovements.GetMovement(nIndex),
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
                 new MapUnitPosition(xy.X, xy.Y, 0));
 
             AddNewMapUnit(Maps.Overworld, skiff, nIndex);
             return skiff;
         }
-
-        //[IgnoreDataMember] protected Avatar MasterAvatarMapUnit { get; set; }
-        //[IgnoreDataMember] protected readonly ImportedGameState importedGameState;
-
-        //[IgnoreDataMember] protected readonly MapUnitMovements importedMovements;
-
 
         internal void DamageShip(Point2D.Direction windDirection, TurnResults turnResults)
         {
@@ -791,6 +787,7 @@ namespace Ultima5Redux.Maps
         public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
             ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public Horse CreateHorse(MapUnitPosition mapUnitPosition, Maps map, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(TheMapType);
@@ -832,7 +829,8 @@ namespace Ultima5Redux.Maps
             return horse;
         }
 
-        public MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
+        // ReSharper disable once UnusedMethodReturnValue.Global
+        protected MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
             SmallMapReferences.SingleMapReference singleMapReference)
         {
             int nIndex = FindNextFreeMapUnitIndex(TheMapType);
@@ -967,13 +965,14 @@ namespace Ultima5Redux.Maps
             IsLandNearby(CurrentPosition.XY, false, GetAvatarMapUnit().CurrentAvatarState);
 
 
-        /// <summary>
-        ///     Gets a map unit if it's on the current tile
-        /// </summary>
-        /// <returns>true if there is a map unit of on the tile</returns>
-        public bool IsMapUnitOccupiedTile() => IsMapUnitOccupiedTile(CurrentPosition.XY);
+        // /// <summary>
+        // ///     Gets a map unit if it's on the current tile
+        // /// </summary>
+        // /// <returns>true if there is a map unit of on the tile</returns>
+        // public bool IsMapUnitOccupiedTile() => IsMapUnitOccupiedTile(CurrentPosition.XY);
 
-        public Skiff MakeAndBoardSkiff()
+        // ReSharper disable once UnusedMethodReturnValue.Local
+        private Skiff MakeAndBoardSkiff()
         {
             Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().Direction,
                 out int _);

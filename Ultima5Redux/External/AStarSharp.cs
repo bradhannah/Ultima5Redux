@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Ultima5Redux.External
@@ -63,40 +64,40 @@ namespace Ultima5Redux.External
             return temp;
         }
 
-        /// <summary>
-        ///     Finds the best path based on surrounding tiles around a single end position
-        ///     For example, below the 0 represents the end position, while the Xs represent the tiles that will be checked
-        ///     XXXXX
-        ///     X 0 X
-        ///     XXXXX
-        ///     This can be used to help find the best path to get in range of an attack
-        /// </summary>
-        /// <param name="startPosition"></param>
-        /// <param name="endPosition"></param>
-        /// <param name="nUnitsOut"></param>
-        /// <returns>a stack of nodes if a path is found, otherwise null if no path is found</returns>
-        public Stack<Node> FindBestPathForSurroundingTiles(in Point2D startPosition, in Point2D endPosition,
-            int nUnitsOut)
-        {
-            int nXExtent = _grid.Count - 1;
-            int nYExtent = _grid[0].Count - 1;
-
-            List<Point2D> points = endPosition.GetConstrainedSurroundingPoints(nUnitsOut, nXExtent, nYExtent);
-
-            int nBestPathNodes = 0xFFFF;
-            Stack<Node> bestPath = null;
-            foreach (Point2D point in points)
-            {
-                Stack<Node> nodes = FindPath(startPosition, point);
-                if (nodes?.Count < nBestPathNodes)
-                {
-                    nBestPathNodes = nodes.Count;
-                    bestPath = nodes;
-                }
-            }
-
-            return nBestPathNodes == 0xFFFF ? null : bestPath;
-        }
+        // /// <summary>
+        // ///     Finds the best path based on surrounding tiles around a single end position
+        // ///     For example, below the 0 represents the end position, while the Xs represent the tiles that will be checked
+        // ///     XXXXX
+        // ///     X 0 X
+        // ///     XXXXX
+        // ///     This can be used to help find the best path to get in range of an attack
+        // /// </summary>
+        // /// <param name="startPosition"></param>
+        // /// <param name="endPosition"></param>
+        // /// <param name="nUnitsOut"></param>
+        // /// <returns>a stack of nodes if a path is found, otherwise null if no path is found</returns>
+        // public Stack<Node> FindBestPathForSurroundingTiles(in Point2D startPosition, in Point2D endPosition,
+        //     int nUnitsOut)
+        // {
+        //     int nXExtent = _grid.Count - 1;
+        //     int nYExtent = _grid[0].Count - 1;
+        //
+        //     List<Point2D> points = endPosition.GetConstrainedSurroundingPoints(nUnitsOut, nXExtent, nYExtent);
+        //
+        //     int nBestPathNodes = 0xFFFF;
+        //     Stack<Node> bestPath = null;
+        //     foreach (Point2D point in points)
+        //     {
+        //         Stack<Node> nodes = FindPath(startPosition, point);
+        //         if (nodes?.Count < nBestPathNodes)
+        //         {
+        //             nBestPathNodes = nodes.Count;
+        //             bestPath = nodes;
+        //         }
+        //     }
+        //
+        //     return nBestPathNodes == 0xFFFF ? null : bestPath;
+        // }
 
         public Stack<Node> FindPath(in Point2D startPosition, in Point2D endPosition)
         {
@@ -182,6 +183,7 @@ namespace Ultima5Redux.External
 
         public bool GetWalkable(Point2D position) => GetNode(position).Walkable;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] 
         public string GetWalkableDebug()
         {
             string debugOut = "";
@@ -198,9 +200,9 @@ namespace Ultima5Redux.External
             return debugOut;
         }
 
-        protected void SetWalkable(Point2D position, bool bWalkable)
-        {
-            GetNode(position).Walkable = bWalkable;
-        }
+        // protected void SetWalkable(Point2D position, bool bWalkable)
+        // {
+        //     GetNode(position).Walkable = bWalkable;
+        // }
     }
 }
