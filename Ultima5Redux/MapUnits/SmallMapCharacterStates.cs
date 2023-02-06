@@ -23,9 +23,7 @@ namespace Ultima5Redux.MapUnits
 
         public SmallMapCharacterStates(DataChunk charStatesDataChunk)
         {
-            DataChunk dataChunk = charStatesDataChunk;
-
-            List<ushort> characterStateBytes = dataChunk.GetChunkAsUint16List();
+            List<ushort> characterStateBytes = charStatesDataChunk.GetChunkAsUint16List();
 
             for (int nIndex = 0; nIndex < MAX_CHARACTER_STATES; nIndex++)
             {

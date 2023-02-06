@@ -202,6 +202,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
             NonPlayerCharacterReference.SpecificNpcDialogType specificNpcType,
             PlayerCharacterRecords playerCharacterRecords, Inventory inventory)
         {
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             return specificNpcType switch
             {
                 NonPlayerCharacterReference.SpecificNpcDialogType.Blacksmith => new BlackSmith(this, inventory,

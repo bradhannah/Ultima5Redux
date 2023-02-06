@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -13,6 +14,7 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public abstract class CombatMapUnit : MapUnit
     {
         public enum HitState
@@ -23,7 +25,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
 
         [IgnoreDataMember]
-        internal HitState CurrentHitState
+        private HitState CurrentHitState
         {
             get
             {

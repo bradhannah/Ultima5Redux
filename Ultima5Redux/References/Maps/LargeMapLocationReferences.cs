@@ -20,10 +20,10 @@ namespace Ultima5Redux.References.Maps
         private const int TOTAL_CHUNKS_PER_Y = 16; // total number of chunks vertically
 
         public const int
-            XTiles = TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
+            X_TILES = TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
 
         public const int
-            YTiles = TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
+            Y_TILES = TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
         /// <summary>
         ///     Maps the xy based on the location
@@ -67,7 +67,7 @@ namespace Ultima5Redux.References.Maps
         /// <param name="overlayFilename">If present, the special overlay file for Britannia</param>
         /// <param name="ignoreOverlay">Do we ignore the overlay?</param>
         /// <returns></returns>
-        internal static byte[][] BuildGenericMap(string mapDatFilename, string overlayFilename, bool ignoreOverlay)
+        private static byte[][] BuildGenericMap(string mapDatFilename, string overlayFilename, bool ignoreOverlay)
         {
             List<byte> theChunksSerial = Utils.GetFileAsByteList(mapDatFilename);
 
@@ -83,7 +83,7 @@ namespace Ultima5Redux.References.Maps
             }
 
             // declare the actual full map 4096*4096 tiles, with 255 (16*16) total chunks
-            byte[][] theMap = Utils.Init2DByteArray(YTiles, XTiles);
+            byte[][] theMap = Utils.Init2DByteArray(Y_TILES, X_TILES);
 
             // counter for the serial chunks from brit.dat
             int britDatChunkCount = 0;
@@ -167,21 +167,17 @@ namespace Ultima5Redux.References.Maps
         public SmallMapReferences.SingleMapReference.Location GetLocationByMapXY(Point2D mapXY) =>
             LocationXYLocations[mapXY];
 
-        public byte[][] GetMap(LargeMapType largeMapType)
+        public static byte[][] GetMap(LargeMapType largeMapType)
         {
-            switch (largeMapType)
+            return largeMapType switch
             {
-                case LargeMapType.Overworld:
-                    return BuildGenericMap(
-                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.BRIT_DAT),
-                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.DATA_OVL), false);
-                case LargeMapType.Underworld:
-                    return BuildGenericMap(
-                        Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "",
-                        true);
-                default:
-                    throw new Ultima5ReduxException($"Tried to get a large map with: {largeMapType}");
-            }
+                LargeMapType.Overworld => BuildGenericMap(
+                    Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.BRIT_DAT),
+                    Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.DATA_OVL), false),
+                LargeMapType.Underworld => BuildGenericMap(
+                    Path.Combine(GameReferences.Instance.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "", true),
+                _ => throw new Ultima5ReduxException($"Tried to get a large map with: {largeMapType}")
+            };
         }
 
         /// <summary>

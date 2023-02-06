@@ -139,6 +139,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             }
 
             int nKeySpriteIndex = N_FIRST_SPRITE + nMonsterIndex * N_FRAMES_PER_SPRITE;
+            // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
             if (nMonsterIndex == PIRATE_SHIP_NUMBER) // pirates!
             {
                 // force a pirate ship when referring to an enemy (otherwise it will be person in stocks)

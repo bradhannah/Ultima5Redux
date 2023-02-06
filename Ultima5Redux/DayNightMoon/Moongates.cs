@@ -91,11 +91,11 @@ namespace Ultima5Redux.DayNightMoon
             {
                 Point3D xyz = _moongatePositions[nMoonstone];
                 if (xyz.Z != (int)map) continue;
-                if (xyzPos == xyz)
-                {
-                    nPos = nMoonstone;
-                    break;
-                }
+
+                if (xyzPos != xyz) continue;
+
+                nPos = nMoonstone;
+                break;
             }
 
             if (nPos == -1) throw new Ultima5ReduxException("Unable to get moon phase by position");

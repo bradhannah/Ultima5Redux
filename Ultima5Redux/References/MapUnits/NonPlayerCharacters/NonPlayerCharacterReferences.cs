@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,7 +8,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 {
-    public class NonPlayerCharacterReferences
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    public sealed class NonPlayerCharacterReferences
     {
         /// <summary>
         ///     Sizeof(bytes) a single NPC dialog number in file
@@ -62,7 +64,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     All of the NPCs
         /// </summary>
-        public List<NonPlayerCharacterReference> NPCs { get; } = new();
+        // ReSharper disable once InconsistentNaming
+        //private List<NonPlayerCharacterReference> NPCs { get; } = new();
 
         /// <summary>
         ///     Construct all of the non player characters across all of the SmallMaps
@@ -90,6 +93,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <param name="mapMaster">The master map from which to load</param>
         /// <param name="smallMapRef">Small map reference to help link NPCs to a map</param>
         /// <param name="talkScriptsRef"></param>
+        // ReSharper disable once InconsistentNaming
         private void InitializeNPCs(string u5Directory,
             SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReferences smallMapRef,
             TalkScripts talkScriptsRef)
@@ -144,7 +148,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     NonPlayerCharacterReference npc = new(location, schedules[nNpc],
                         npcTypes[nNpc], npcDialogNumber[nNpc], nNpc,
                         talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]));
-                    NPCs.Add(npc);
+                    //NPCs.Add(npc);
                     // we also create a quick lookup table by location but first need to check that there is an initialized list inside
                     if (!_locationToNpCsDictionary.ContainsKey(singleMapRef.MapLocation))
                         _locationToNpCsDictionary.Add(singleMapRef.MapLocation,

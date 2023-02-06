@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -10,7 +11,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public sealed class Spell : InventoryItem
     {
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum UnpublishedSpells
         {
             An_Ylem, // negate matter 
@@ -68,9 +69,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public string GetLiteralTranslation()
         {
-            string[] spellStrs = SpellIncantation.ToString().Split('_');
+            string[] spellStrings = SpellIncantation.ToString().Split('_');
             StringBuilder sb = new();
-            foreach (string str in spellStrs)
+            foreach (string str in spellStrings)
             {
                 sb.Append(Spells.GetLiteralTranslation(str) + " ");
             }

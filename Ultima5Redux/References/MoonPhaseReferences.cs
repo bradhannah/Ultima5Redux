@@ -98,8 +98,10 @@ namespace Ultima5Redux.References
         {
             const int nSunsetHour = 19;
             const int nSunriseHour = 6;
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (tod.Hour == nSunsetHour && tod.Minute <= 50) return TimeOfDayPhases.Sunset;
             if (tod.Hour == nSunriseHour && tod.Minute is >= 10 and <= 60) return TimeOfDayPhases.Sunrise;
+            // ReSharper disable once ConvertIfStatementToReturnStatement
             if (tod.Hour is > nSunriseHour and < nSunsetHour) return TimeOfDayPhases.Daytime;
             return TimeOfDayPhases.Nighttime;
         }
@@ -135,6 +137,7 @@ namespace Ultima5Redux.References
             // we don't have a moon phase in the day time
             if (timeOfDay.IsDayLight) return MoonPhases.NoMoon;
 
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (timeOfDay.Hour <= 4)
                 return GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun.Felucca);
             if (timeOfDay.Hour is >= 20 and <= 23)

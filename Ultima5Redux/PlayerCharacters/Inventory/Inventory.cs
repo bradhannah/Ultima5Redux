@@ -194,7 +194,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 case SpecialItem specialItem:
                     SpecializedItems.Items[specialItem.ItemType].Quantity += specialItem.Quantity;
                     break;
-                case Spell spell:
+                case Spell:
                     // I don't think this should happen - but I guess we could use this when mixing for new spells
                     break;
                 default:

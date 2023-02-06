@@ -12,6 +12,7 @@
 
             DoSetupAndStateCheck(state, spellResult);
 
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (MagicRef.SpellEnum)
             {
                 case MagicReference.SpellWords.An_Sanct:

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.References.Maps;
@@ -60,11 +61,11 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             SpecificProvisionType specificProvisionType)
         {
             int nIndex = 0;
-            foreach (byte b in GameReferences.Instance.DataOvlRef
-                         .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList())
+            foreach (SmallMapReferences.SingleMapReference.Location potentialLocation in GameReferences.Instance
+                         .DataOvlRef
+                         .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList()
+                         .Select(b => (SmallMapReferences.SingleMapReference.Location)b))
             {
-                var potentialLocation =
-                    (SmallMapReferences.SingleMapReference.Location)b;
                 if (potentialLocation == location)
                     // they sell it, now we find it
                     return Prices[nIndex, ProvisionOrder[specificProvisionType]];

@@ -64,6 +64,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 _shoppeKeepersByLocationAndType[shoppeKeeper.ShoppeKeeperLocation]
                     .Add(shoppeKeeper.TheShoppeKeeperType, shoppeKeeper);
 
+                // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
                 switch (shoppeKeeper.NpcRef.NpcType)
                 {
                     // if it's a blacksmith then we load their items for sale

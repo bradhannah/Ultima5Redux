@@ -40,16 +40,17 @@ namespace Ultima5Redux.Maps
 
         public SmallMapReferences.SingleMapReference GetSingleMapReference()
         {
-            if (Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
-                return SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(Floor == 0
-                    ? LargeMapLocationReferences.LargeMapType.Overworld
-                    : LargeMapLocationReferences.LargeMapType.Underworld);
-            if (Location == SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
+            switch (Location)
             {
-                return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+                case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
+                    return SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(Floor == 0
+                        ? LargeMapLocationReferences.LargeMapType.Overworld
+                        : LargeMapLocationReferences.LargeMapType.Underworld);
+                case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
+                    return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+                default:
+                    return GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor);
             }
-
-            return GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor);
         }
 
         public void SetByLargeMapType(LargeMapLocationReferences.LargeMapType largeMapType, Point2D playerPosition)

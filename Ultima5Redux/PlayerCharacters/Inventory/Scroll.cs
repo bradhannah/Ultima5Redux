@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.References;
@@ -8,7 +9,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public class Scroll : InventoryItem
     {
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum ScrollSpells
         {
             Vas_Lor = 0x27A, Rel_Hur = 0x27B, In_Sanct = 0x27C, In_An = 0x27D, In_Quas_Wis = 0x27E,

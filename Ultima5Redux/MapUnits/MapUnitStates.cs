@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.References;
 
@@ -10,6 +12,7 @@ namespace Ultima5Redux.MapUnits
     /// </summary>
     public class MapUnitStates
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum MapUnitStatesFiles { SAVED_GAM, BRIT_OOL, UNDER_OOL }
 
         private const int MAX_CHARACTER_STATES = 0x20;
@@ -38,13 +41,8 @@ namespace Ultima5Redux.MapUnits
 
         public MapUnitState GetCharacterStateByPosition(Point2D xy, int nFloor)
         {
-            foreach (MapUnitState characterState in _mapUnitStates)
-            {
-                if (characterState.X == xy.X && characterState.Y == xy.Y && characterState.Floor == nFloor)
-                    return characterState;
-            }
-
-            return null;
+            return _mapUnitStates.FirstOrDefault(characterState =>
+                characterState.X == xy.X && characterState.Y == xy.Y && characterState.Floor == nFloor);
         }
 
         /// <summary>

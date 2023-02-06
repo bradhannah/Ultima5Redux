@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ultima5Redux.Maps;
-using Ultima5Redux.References.Maps;
 
-namespace Ultima5Redux.References
+namespace Ultima5Redux.References.Maps
 {
     // maybe just this one class because a single tile can transform
 

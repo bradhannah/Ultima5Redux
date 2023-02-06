@@ -66,11 +66,11 @@ namespace Ultima5Redux.PlayerCharacters
         /// <param name="turnResults"></param>
         public void AddMemberToParty(NonPlayerCharacter npc, TurnResults turnResults)
         {
-            PlayerCharacterRecord record = GetCharacterRecordByNPC(npc.NPCRef);
+            PlayerCharacterRecord record = GetCharacterRecordByNpc(npc.NpcRef);
             if (record == null)
                 throw new Ultima5ReduxException("Adding a member to party resulted in no retrieved record");
             record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
-            turnResults.PushTurnResult(new NpcJoinedParty(npc.NPCRef));
+            turnResults.PushTurnResult(new NpcJoinedParty(npc.NpcRef));
             // IsInParty
             npc.IsInParty = true;
         }
@@ -181,7 +181,7 @@ namespace Ultima5Redux.PlayerCharacters
             return nPosition >= activeRecords.Count ? null : activeRecords[nPosition];
         }
 
-        public int GetCharacterIndexByNPC(NonPlayerCharacterReference npc)
+        public int GetCharacterIndexByNpc(NonPlayerCharacterReference npc)
         {
             for (int i = 0; i < Records.Count; i++)
             {
@@ -191,7 +191,7 @@ namespace Ultima5Redux.PlayerCharacters
             return -1;
         }
 
-        public PlayerCharacterRecord GetCharacterRecordByNPC(NonPlayerCharacterReference npc)
+        public PlayerCharacterRecord GetCharacterRecordByNpc(NonPlayerCharacterReference npc)
         {
             return Records.FirstOrDefault(record => record.Name == npc.Name);
         }

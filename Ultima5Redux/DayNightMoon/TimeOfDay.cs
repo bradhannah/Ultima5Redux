@@ -89,15 +89,13 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <returns></returns>
         [IgnoreDataMember]
-        public string TimeOfDayName
-        {
-            get
+        public string TimeOfDayName =>
+            Hour switch
             {
-                if (Hour is > 5 and < 12) return "morning";
-                if (Hour is >= 12 and < 17) return "afternoon";
-                return "evening";
-            }
-        }
+                > 5 and < 12 => "morning",
+                >= 12 and < 17 => "afternoon",
+                _ => "evening"
+            };
 
         [JsonConstructor] private TimeOfDay()
         {

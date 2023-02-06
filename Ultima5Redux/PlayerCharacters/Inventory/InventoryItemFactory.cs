@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
@@ -21,6 +22,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         // 438,Sceptre,,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,1,FALSE,0,TRUE,-2,Guess,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,None
         // 439,Amulet,,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,1,FALSE,0,TRUE,-2,Guess,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,None
 
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private enum SpriteRefs
         {
             Potion = 259, Scroll = 260, Weapon = 251, Shield = 262, Helm = 265, Ring = 266, Armour = 267, Ankh = 268,
@@ -33,24 +35,21 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 GameReferences.Instance.CombatItemRefs.GetCombatItemReferenceFromEquipment(
                     itemReference.GetAsEquipment());
 
-            switch (combatItemReference)
+            return combatItemReference switch
             {
-                case WeaponReference weaponReference:
-                    return new Weapon(weaponReference, 1);
-                case ArmourReference armourReference:
-                    return armourReference.TheArmourType switch
-                    {
-                        ArmourReference.ArmourType.Amulet => new Amulet(combatItemReference, 1),
-                        ArmourReference.ArmourType.ChestArmour => new ChestArmour(combatItemReference, 1),
-                        ArmourReference.ArmourType.Helm => new Helm(combatItemReference, 1),
-                        ArmourReference.ArmourType.Ring => new Ring(combatItemReference, 1),
-                        _ => throw new Ultima5ReduxException(
-                            $"Tried to get inventory armour type and only got one - but was expecting more for {itemReference.ItemSpriteExposed}")
-                    };
-                default:
-                    throw new Ultima5ReduxException(
-                        $"Tried to get inventory ref and only got one - but was expecting more for {itemReference.ItemSpriteExposed}");
-            }
+                WeaponReference weaponReference => new Weapon(weaponReference, 1),
+                ArmourReference armourReference => armourReference.TheArmourType switch
+                {
+                    ArmourReference.ArmourType.Amulet => new Amulet(combatItemReference, 1),
+                    ArmourReference.ArmourType.ChestArmour => new ChestArmour(combatItemReference, 1),
+                    ArmourReference.ArmourType.Helm => new Helm(combatItemReference, 1),
+                    ArmourReference.ArmourType.Ring => new Ring(combatItemReference, 1),
+                    _ => throw new Ultima5ReduxException(
+                        $"Tried to get inventory armour type and only got one - but was expecting more for {itemReference.ItemSpriteExposed}")
+                },
+                _ => throw new Ultima5ReduxException(
+                    $"Tried to get inventory ref and only got one - but was expecting more for {itemReference.ItemSpriteExposed}")
+            };
         }
 
         private static InventoryItem CreateItem(InventoryReference itemReference)
@@ -142,9 +141,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     return new Spell(spellWords, 1);
                 case InventoryReferences.InventoryReferenceType.Item:
                     return CreateItem(itemReference);
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-
-            return null;
         }
     }
 }

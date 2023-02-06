@@ -8,6 +8,7 @@ namespace Ultima5Redux.References
 {
     public class SearchItemReference
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private int RawId { get; }
         public int CalcId { get; }
         public TileReference CalcTileReference { get; }
@@ -90,13 +91,10 @@ namespace Ultima5Redux.References
 
 
         public List<SearchItemReference> GetListOfSearchItemReferences(
-            SmallMapReferences.SingleMapReference.Location location,
-            int nFloor, Point2D position)
-        {
-            if (!IsSearchItemAtLocation(location, nFloor, position)) return new List<SearchItemReference>();
-
-            return _searchItems[location][nFloor][position];
-        }
+            SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D position) =>
+            !IsSearchItemAtLocation(location, nFloor, position)
+                ? new List<SearchItemReference>()
+                : _searchItems[location][nFloor][position];
 
         public List<SearchItemReference> GetListOfSearchItemReferences(
             SmallMapReferences.SingleMapReference.Location location)
@@ -105,12 +103,10 @@ namespace Ultima5Redux.References
 
             if (!_searchItems.ContainsKey(location)) return searchItemReferences;
 
-            foreach (KeyValuePair<int, Dictionary<Point2D, List<SearchItemReference>>> floors in _searchItems[location])
+            foreach (KeyValuePair<Point2D, List<SearchItemReference>> searchItem in _searchItems[location]
+                         .SelectMany(floors => floors.Value))
             {
-                foreach (KeyValuePair<Point2D, List<SearchItemReference>> searchItem in floors.Value)
-                {
-                    searchItemReferences.AddRange(searchItem.Value);
-                }
+                searchItemReferences.AddRange(searchItem.Value);
             }
 
             return searchItemReferences;
@@ -123,13 +119,11 @@ namespace Ultima5Redux.References
 
             if (!_searchItems.ContainsKey(location)) return searchItemReferences;
 
-            foreach (KeyValuePair<int, Dictionary<Point2D, List<SearchItemReference>>> floors in _searchItems[location])
+            foreach (KeyValuePair<Point2D, List<SearchItemReference>> searchItem in _searchItems[location]
+                         .SelectMany(floors => floors.Value))
             {
-                foreach (KeyValuePair<Point2D, List<SearchItemReference>> searchItem in floors.Value)
-                {
-                    searchItemReferences.AddRange(searchItem.Value.Where(searchItemReference =>
-                        searchItemReference.Floor == nFloor));
-                }
+                searchItemReferences.AddRange(searchItem.Value.Where(searchItemReference =>
+                    searchItemReference.Floor == nFloor));
             }
 
             return searchItemReferences;

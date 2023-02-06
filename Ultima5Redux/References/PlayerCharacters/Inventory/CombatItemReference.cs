@@ -98,6 +98,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         private static MissileType GetMissileType(DataOvlReference.Equipment equipment, int nRange)
         {
+            // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (equipment)
             {
                 case DataOvlReference.Equipment.Sling:

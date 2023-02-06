@@ -122,10 +122,14 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public InventoryReference GetInventoryReference(InventoryReferenceType inventoryReferenceType, string invItem)
         {
-            foreach (InventoryReference invRef in GetInventoryReferenceList(inventoryReferenceType))
-            {
-                if (invRef.ItemName.Trim() == invItem) return invRef;
-            }
+            InventoryReference invRef = GetInventoryReferenceList(inventoryReferenceType)
+                .FirstOrDefault(invRef => invRef.ItemName.Trim() == invItem);
+            if (invRef != null) return invRef;
+            // foreach (InventoryReference invRef in GetInventoryReferenceList(inventoryReferenceType)
+            //              .Where(invRef => invRef.ItemName.Trim() == invItem))
+            // {
+            //     return invRef;
+            // }
 
             throw new Ultima5ReduxException("Asked for an inventory reference : " + invItem + " but it doesn't exist");
         }
@@ -155,7 +159,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <summary>
         ///     Returns a string with all available keywords highlighted
         /// </summary>
-        /// <remarks>the string returned is in a richtext format compatible with Unity's TextMeshPro library</remarks>
+        /// <remarks>the string returned is in a rich text format compatible with Unity's TextMeshPro library</remarks>
         /// <param name="description"></param>
         /// <returns>the string with highlight tags</returns>
         public string HighlightKeywords(string description)
@@ -163,10 +167,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             string finalDescription = description;
 
             // highlight all reagents
-            foreach (string highlightKeyword in _reagentKeywordHighlightList)
+            foreach (string highlightKeyword in _reagentKeywordHighlightList.Where(highlightKeyword =>
+                         Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)))
             {
-                if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
-
                 finalDescription = Regex.Replace(finalDescription, highlightKeyword,
                     REAGENT_HIGHLIGHT_COLOR + highlightKeyword + "</color>");
                 string upperCaseStr = char.ToUpper(highlightKeyword[0]) + highlightKeyword.Substring(1);
@@ -175,6 +178,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             }
 
             // highlight all spell names
+            // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
             foreach (string highlightKeyword in _spellKeywordHighlightList)
             {
                 if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;

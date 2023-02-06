@@ -125,13 +125,11 @@ namespace Ultima5Redux.Maps
             CurrentMapUnits.AllMapUnits[nIndex] = new EmptyMapUnit();
         }
 
-        internal TileReference GetOriginalTileReference(in Point2D xy)
-        {
-            if (IsXYOverride(xy, TileOverrideReference.TileType.Primary))
-                return GameReferences.Instance.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
-
-            return GameReferences.Instance.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
-        }
+        internal TileReference GetOriginalTileReference(in Point2D xy) =>
+            GameReferences.Instance.SpriteTileReferences.GetTileReference(
+                IsXYOverride(xy, TileOverrideReference.TileType.Primary)
+                    ? GetTileOverride(xy).SpriteNum
+                    : TheMap[xy.X][xy.Y]);
 
         internal bool IsInsideBounds(in Point2D xy) =>
             !(xy.X >= VisibleOnMap.Length || xy.X < 0 ||
@@ -197,12 +195,9 @@ namespace Ultima5Redux.Maps
             }
 
             // we only open the inner items up if it exposes on search like DeadBodies and Spatters
-            if (nonAttackingMapUnit.ExposeInnerItemsOnSearch)
-            {
-                return ProcessSearchInnerItems(turnResults, nonAttackingMapUnit, true, false);
-            }
+            if (!nonAttackingMapUnit.ExposeInnerItemsOnSearch) return false;
 
-            return false;
+            return ProcessSearchInnerItems(turnResults, nonAttackingMapUnit, true, false);
         }
 
         /// <summary>
@@ -347,8 +342,9 @@ namespace Ultima5Redux.Maps
             Avatar.AvatarState avatarState) =>
             IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
 
-        public static bool IsMapUnitOccupiedFromList(in Point2D xy, int nFloor, IEnumerable<MapUnit> mapUnits)
+        protected static bool IsMapUnitOccupiedFromList(in Point2D xy, int nFloor, IEnumerable<MapUnit> mapUnits)
         {
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (MapUnit mapUnit in mapUnits)
                 // sometimes characters are null because they don't exist - and that is OK
             {
@@ -604,10 +600,12 @@ namespace Ultima5Redux.Maps
         {
             List<MapUnit> mapUnits = new();
 
+            // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
             foreach (MapUnit mapUnit in CurrentMapUnits.AllMapUnits)
             {
                 if (!mapUnit.IsActive) continue;
 
+                // ReSharper disable once InvertIf
                 if (mapUnit.MapUnitPosition.X == xy.X && mapUnit.MapUnitPosition.Y == xy.Y &&
                     mapUnit.MapUnitPosition.Floor == nFloor)
                 {
@@ -637,7 +635,7 @@ namespace Ultima5Redux.Maps
             return mapUnits;
         }
 
-        public NonAttackingUnit GetNonAttackingMapUnitOnTileBySearchPriority(in Point2D xy)
+        private NonAttackingUnit GetNonAttackingMapUnitOnTileBySearchPriority(in Point2D xy)
         {
             if (CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
@@ -645,15 +643,13 @@ namespace Ultima5Redux.Maps
             List<MapUnit> mapUnitsAtPosition = GetMapUnitsOnTile(xy);
 
             // this is inefficient, but the lists are so small it is unlikely to matter
-            foreach (Type type in _searchOrderPriority)
+            foreach (MapUnit mapUnit in _searchOrderPriority.SelectMany(type =>
+                         mapUnitsAtPosition.Where(mapUnit => mapUnit.GetType() == type)))
             {
-                foreach (MapUnit mapUnit in mapUnitsAtPosition.Where(mapUnit => mapUnit.GetType() == type))
-                {
-                    if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
-                    if (!nonAttackingUnit.IsSearchable) continue;
+                if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
+                if (!nonAttackingUnit.IsSearchable) continue;
 
-                    return nonAttackingUnit;
-                }
+                return nonAttackingUnit;
             }
 
             return null;
@@ -902,8 +898,8 @@ namespace Ultima5Redux.Maps
             //if (CurrentMap is LargeMap)
             if (IsRepeatingMap)
                 positions = position.GetConstrainedFourDirectionSurroundingPointsWrapAround(
-                    LargeMapLocationReferences.XTiles,
-                    LargeMapLocationReferences.YTiles);
+                    LargeMapLocationReferences.X_TILES,
+                    LargeMapLocationReferences.Y_TILES);
             else
                 positions = position.GetConstrainedFourDirectionSurroundingPoints(NumOfXTiles, NumOfYTiles);
 
@@ -1121,6 +1117,7 @@ namespace Ultima5Redux.Maps
         protected Point2D AvatarXyPos;
         public bool TouchedOuterBorder { get; protected set; }
 
+        // ReSharper disable once MemberCanBeProtected.Global
         public abstract bool IsRepeatingMap { get; }
 
         internal void ClearOpenDoors()

@@ -99,7 +99,7 @@ namespace Ultima5Redux.Maps
                 case Map.Maps.Small:
                     LoadSmallMap(currentSmallMapReference, null, !importedGameState.IsInitialSaveFile,
                         importedGameState);
-                    if (CurrentMap is not SmallMap smallMap)
+                    if (CurrentMap is not SmallMap)
                         throw new Ultima5ReduxException("Tried to load Small Map initially but wasn't set correctly");
                     break;
                 case Map.Maps.Overworld:
@@ -468,7 +468,7 @@ namespace Ultima5Redux.Maps
                     EnemyReference enemyReference =
                         GameReferences.Instance.EnemyRefs.GetEnemyReference(npc.KeyTileReference.Index);
                     LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.South, records,
-                        enemyReference, npc.NPCRef);
+                        enemyReference, npc.NpcRef);
                     return;
             }
 

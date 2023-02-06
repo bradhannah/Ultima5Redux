@@ -59,6 +59,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         protected InventoryItem(int quantity, int spriteNum, InventoryReferences.InventoryReferenceType invRefType)
         {
+            // ReSharper disable once VirtualMemberCallInConstructor
             Quantity = quantity;
             SpriteNum = spriteNum;
             InvRefType = invRefType;

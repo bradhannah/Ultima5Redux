@@ -104,7 +104,7 @@ namespace Ultima5Redux.Maps
 
         public override Maps TheMapType => Maps.Combat;
 
-        public Enemy ActiveEnemy => TheInitiativeQueue.GetCurrentCombatUnitAndClean() is Enemy enemy ? enemy : null;
+        public Enemy ActiveEnemy => TheInitiativeQueue.GetCurrentCombatUnitAndClean() as Enemy;
 
         /// <summary>
         ///     The player character who the player has selected to focus on (#1-#6)
@@ -131,7 +131,7 @@ namespace Ultima5Redux.Maps
         public bool AreEnemiesLeft => NumberOfEnemies > 0;
 
         public CombatPlayer CurrentCombatPlayer =>
-            TheInitiativeQueue.GetCurrentCombatUnitAndClean() is CombatPlayer player ? player : null;
+            TheInitiativeQueue.GetCurrentCombatUnitAndClean() as CombatPlayer;
 
         /// <summary>
         ///     Current player or enemy who is active in current round
@@ -448,7 +448,7 @@ namespace Ultima5Redux.Maps
         {
             CombatMapUnit activeCombatMapUnit = TheInitiativeQueue.GetCurrentCombatUnitAndClean();
 
-            if (!(activeCombatMapUnit is CombatPlayer combatPlayer))
+            if (activeCombatMapUnit is not CombatPlayer combatPlayer)
                 throw new Ultima5ReduxException("Tried to get CurrentCombatPlayer, but there isn't one");
 
             return combatPlayer;
@@ -516,7 +516,7 @@ namespace Ultima5Redux.Maps
             return randomSurroundingPoint;
         }
 
-        private WalkableType GetWalkableTypeByEnemy(Enemy enemy)
+        private static WalkableType GetWalkableTypeByEnemy(Enemy enemy)
         {
             WalkableType walkableType;
             if (enemy.EnemyReference.IsWaterEnemy)
@@ -784,6 +784,7 @@ namespace Ultima5Redux.Maps
         /// <param name="bMoved">did the CombatMapUnit move</param>
         /// <returns>The combat player that they are heading towards</returns>
         private CombatMapUnit MoveToClosestAttackableCombatMapUnit(TurnResults turnResults,
+            // ReSharper disable once SuggestBaseTypeForParameter
             CombatMapUnit activeCombatUnit, SpecificCombatMapUnit preferredAttackTarget, out bool bMoved
         )
         {
@@ -912,6 +913,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void PerformAdditionalHitProcessing(TurnResults turnResults, CombatMapUnit.HitState hitState,
+            // ReSharper disable once SuggestBaseTypeForParameter
             CombatMapUnit affectedCombatMapUnit)
         {
             // some things only occur if they are hit - but not if they are killed or missed
@@ -940,9 +942,9 @@ namespace Ultima5Redux.Maps
                     if (affectedCombatMapUnit is Enemy deadEnemy)
                     {
                         // if the enemy was an NPC then we kill them!
-                        if (deadEnemy.NPCRef != null)
+                        if (deadEnemy.NpcRef != null)
                         {
-                            deadEnemy.NPCState.IsDead = true;
+                            deadEnemy.NpcState.IsDead = true;
                         }
                     }
 
@@ -1003,7 +1005,7 @@ namespace Ultima5Redux.Maps
             return mapUnit switch
             {
                 Enemy enemy => GetWalkableTypeByEnemy(enemy),
-                CombatPlayer _ => WalkableType.CombatLand,
+                CombatPlayer => WalkableType.CombatLand,
                 _ => WalkableType.StandardWalking
             };
         }
@@ -1061,7 +1063,6 @@ namespace Ultima5Redux.Maps
             nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
             if (nIndex == -1) return null;
 
-            // Enemy enemy = new(importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
             Enemy enemy = new(new MapUnitMovement(nIndex), enemyReference, MapLocation, null,
                 new MapUnitPosition(xy.X, xy.Y, 0));
 
@@ -1247,6 +1248,7 @@ namespace Ultima5Redux.Maps
                 // we start at the next position, and wrap around ensuring we have hit all possible enemies
                 int nIndex = (i + nOffset + 1) % nMapUnits;
                 if (CurrentMapUnits.AllMapUnits[nIndex] is not Enemy enemy) continue;
+                // ReSharper disable once MergeIntoPattern
                 if (!enemy.IsActive) continue;
                 if (CurrentCombatPlayer == null)
                     throw new Ultima5ReduxException("Tried to get next enemy, but couldn't find the active player");
@@ -1363,13 +1365,13 @@ namespace Ultima5Redux.Maps
             ProcessTileEffectsForMapUnit(turnResults, currentCombatUnit);
 
             // you can trigger tiles by simply walking on them
-            if (TheCombatMapReference.HasTriggers && TheCombatMapReference.TheTriggerTiles.HasTriggerAtPosition(xy))
+            if (!TheCombatMapReference.HasTriggers ||
+                !TheCombatMapReference.TheTriggerTiles.HasTriggerAtPosition(xy)) return;
+
+            bool bWasTrigger = HandleTrigger(turnResults, xy);
+            if (bWasTrigger)
             {
-                bool bWasTrigger = HandleTrigger(turnResults, xy);
-                if (bWasTrigger)
-                {
-                    TheInitiativeQueue.RefreshFutureRounds();
-                }
+                TheInitiativeQueue.RefreshFutureRounds();
             }
         }
 
@@ -1474,6 +1476,7 @@ namespace Ultima5Redux.Maps
 
                     // if the player attacks, but misses with a range weapon the we need see if they
                     // accidentally hit someone else
+                    // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                     switch (targetedHitState)
                     {
                         // we missed - BUT - we have a range weapon so we may have hit someone/something else

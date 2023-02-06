@@ -45,6 +45,8 @@ namespace Ultima5Redux.MapUnits.TurnResults
             OpenPortcullis, OverrideCombatMapTile, FoodStolenByEnemy
         }
 
+        [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool IsSuccessfulMovement
         {
             get
@@ -76,6 +78,8 @@ namespace Ultima5Redux.MapUnits.TurnResults
 IsNewMapTurnResult: {IsNewMapTurnResult()}";
         // Combat_Category_Action_Who_Details
 
+        [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool IsNewMapTurnResult()
         {
             switch (TheTurnResultType)

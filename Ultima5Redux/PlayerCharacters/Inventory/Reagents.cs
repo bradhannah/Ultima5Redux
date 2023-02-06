@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.References.Maps;
@@ -39,14 +40,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public List<Reagent> GetReagentsForSale(SmallMapReferences.SingleMapReference.Location location)
         {
-            List<Reagent> items = new();
-            foreach (Reagent reagent in Items.Values)
-            {
-                if (!reagent.IsReagentForSale(location)) continue;
-                items.Add(reagent);
-            }
-
-            return items;
+            return Items.Values.Where(reagent => reagent.IsReagentForSale(location)).ToList();
         }
     }
 }

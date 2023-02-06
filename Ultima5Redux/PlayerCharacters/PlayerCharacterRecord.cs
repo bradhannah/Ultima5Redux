@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -19,6 +20,7 @@ namespace Ultima5Redux.PlayerCharacters
 {
     public sealed class PlayerCharacterRecord
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         private enum CharacterRecordOffsets
         {
             Name = 0x00, Gender = 0x09, Class = 0x0A, Status = 0x0B, Strength = 0x0C, Dexterity = 0x0D,
@@ -157,10 +159,10 @@ namespace Ultima5Redux.PlayerCharacters
         {
             return combatItem switch
             {
-                Helm _ => CharacterEquipped.EquippableSlot.Helm,
-                Amulet _ => CharacterEquipped.EquippableSlot.Amulet,
-                Ring _ => CharacterEquipped.EquippableSlot.Ring,
-                Armour _ => CharacterEquipped.EquippableSlot.Armour,
+                Helm => CharacterEquipped.EquippableSlot.Helm,
+                Amulet => CharacterEquipped.EquippableSlot.Amulet,
+                Ring => CharacterEquipped.EquippableSlot.Ring,
+                Armour => CharacterEquipped.EquippableSlot.Armour,
                 Weapon weapon => weapon.TheCombatItemReference.IsShield
                     ? CharacterEquipped.EquippableSlot.RightHand
                     : CharacterEquipped.EquippableSlot.LeftHand,
@@ -188,6 +190,7 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
+        [SuppressMessage("ReSharper", "InvertIf")]
         public EquipResult EquipEquipment(Inventory.Inventory inventory, DataOvlReference.Equipment newEquipment)
         {
             // detect the equipable slot
@@ -277,6 +280,7 @@ namespace Ultima5Redux.PlayerCharacters
 
         public void ProcessPlayerTurn(TurnResults turnResults)
         {
+            // ReSharper disable once InvertIf
             if (Stats.Status == CharacterStatus.Poisoned)
             {
                 int nDamage = Stats.ProcessTurnPoison();
@@ -292,6 +296,7 @@ namespace Ultima5Redux.PlayerCharacters
             InnOrParty = (byte)location;
             MonthsSinceStayingAtInn = 0;
             // if the character goes to the Inn while poisoned then they die there immediately
+            // ReSharper disable once InvertIf
             if (Stats.Status == CharacterStatus.Poisoned)
             {
                 Stats.CurrentHp = 0;

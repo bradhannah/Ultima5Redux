@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Ultima5Redux.References.Dialogue;
 using Ultima5Redux.References.Maps;
@@ -8,6 +9,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
     /// <summary>
     ///     A single non player character (NPC)
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class NonPlayerCharacterReference
     {
         /// <summary>
@@ -71,6 +73,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     What type of NPC are they?
         /// </summary>
+        [SuppressMessage("ReSharper", "ConvertIfStatementToSwitchStatement")]
         public SpecificNpcDialogType NpcType
         {
             get
@@ -150,6 +153,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public static bool IsSpecialDialogType(SpecificNpcDialogType dialogType)
         {
             if (dialogType == 0) return true;
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (SpecificNpcDialogType tempDialogType in (SpecificNpcDialogType[])Enum.GetValues(
                          typeof(SpecificNpcDialogType)))
             {

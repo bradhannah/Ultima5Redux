@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -6,7 +7,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public class SpecialItem : InventoryItem
+    [DataContract] [SuppressMessage("ReSharper", "InconsistentNaming")]
+    public class SpecialItem : InventoryItem
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public enum SpecificItemType

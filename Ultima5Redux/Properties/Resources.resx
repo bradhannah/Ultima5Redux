@@ -123,63 +123,76 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <!-- ReSharper disable once ResxNotResolved -->
     <assembly alias="System.Windows.Forms"
               name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"/>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="TileData" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\TileData.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="TileOverrides" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\TileOverrides.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="InventoryDetails" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\InventoryDetails.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="ShoppeKeeperMap" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\ShoppeKeeperMap.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="CombatMaps" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\CombatMaps.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="AdditionalEnemyFlags" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\AdditionalEnemyFlags.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="MagicDefinitions" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\MagicDefinitions.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="InitGam" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\InitialSaveGame\INIT.GAM;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="InitOol" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\InitialSaveGame\INIT.OOL;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="CustomDialogue" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\CustomDialogue.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="BritOol" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\InitialSaveGame\BRIT.OOL;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <!-- ReSharper disable once ResxNotResolved -->
     <data name="UnderOol" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\InitialSaveGame\UNDER.OOL;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089

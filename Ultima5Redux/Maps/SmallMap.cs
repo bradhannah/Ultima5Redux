@@ -82,14 +82,14 @@ namespace Ultima5Redux.Maps
             foreach (NonPlayerCharacter mapUnit in CurrentMapUnits.NonPlayerCharacters
                          .Where(m => m.KeyTileReference.Index == (int)TileReference.SpriteIndex.Rat_KeyIndex)!)
             {
-                mapUnit.NPCState.IsDead = false;
+                mapUnit.NpcState.IsDead = false;
             }
 
             // Gargoyles may have overriden AI when the avatar gets too close them 
             foreach (NonPlayerCharacter mapUnit in CurrentMapUnits.NonPlayerCharacters.Where(m =>
                          m.KeyTileReference.Index == (int)TileReference.SpriteIndex.StoneGargoyle_KeyIndex)!)
             {
-                mapUnit.NPCState.UnsetOverridenAi();
+                mapUnit.NpcState.UnsetOverridenAi();
             }
 
             //NPCState.OverrideAi(NonPlayerCharacterSchedule.AiType.DrudgeWorthThing);
@@ -99,7 +99,7 @@ namespace Ultima5Redux.Maps
             // and when you give them your password, they tend to leave you alone after unless
             // you engage in conversation with them
             bool? _ = CurrentMapUnits.NonPlayerCharacters.All(
-                n => n.NPCState.HasExtortedAvatar = false);
+                n => n.NpcState.HasExtortedAvatar = false);
         }
 
         /// <summary>
@@ -123,6 +123,7 @@ namespace Ultima5Redux.Maps
             List<Point2D> bestChoiceList = new(sortedPoints.Count);
 
             // to make it more familiar, we will transfer to an ordered list
+            // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
             foreach (Point2D xy in sortedPoints.Values)
             {
                 bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy, WalkableType.StandardWalking) > 0;
@@ -184,6 +185,7 @@ namespace Ultima5Redux.Maps
         /// <exception cref="Ultima5ReduxException"></exception>
         internal void HandleSpecialCasesForSmallMapLoad()
         {
+            // ReSharper disable once InvertIf
             if (CurrentSingleMapReference.MapLocation ==
                 SmallMapReferences.SingleMapReference.Location.Iolos_Hut
                 && GameStateReference.State.TheTimeOfDay.IsFirstDay())
@@ -192,7 +194,7 @@ namespace Ultima5Redux.Maps
                 // it it is the first day then we don't include Smith or the Rats. Let's start the day off
                 // on a positive note!
                 NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
-                                               (TileReference.SpriteIndex)m.NPCRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
+                                               (TileReference.SpriteIndex)m.NpcRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
                                                or TileReference.SpriteIndex.HorseRight) ??
                                            throw new Ultima5ReduxException("Smith was not in Iolo's hut");
 
@@ -220,7 +222,6 @@ namespace Ultima5Redux.Maps
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
-                // MapUnitMovement mapUnitMovement = importedMovements.GetMovement(i) ?? new MapUnitMovement(i);
                 var mapUnitMovement = new MapUnitMovement(i);
 
                 switch (i)
@@ -324,24 +325,21 @@ namespace Ultima5Redux.Maps
             for (int i = 1; i < CurrentMapUnits.AllMapUnits.Count; i++)
             {
                 MapUnit mapUnit = CurrentMapUnits.AllMapUnits[i];
-                if (mapUnit is not EmptyMapUnit and not DiscoverableLoot)
-                {
-                    if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
-                        mapUnit.NPCRef == null) continue;
-                    if (mapUnit.NPCRef == null)
-                        throw new Ultima5ReduxException($"Expected NPCRef for MapUnit {mapUnit.GetType()}");
-                    if (mapUnit.NPCRef.DialogIndex != -1)
-                    {
-                        // get the specific NPC reference 
-                        NonPlayerCharacterState npcState =
-                            GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location,
-                                mapUnit.NPCRef.DialogIndex);
+                // ReSharper disable once ConvertIfStatementToSwitchStatement
+                if (mapUnit is EmptyMapUnit or DiscoverableLoot) continue;
 
-                        mapUnit.NPCState = npcState;
-                        // No need to refresh the SmallMapCharacterState because it is saved to the save file 
-                        //new SmallMapCharacterState(npcState.NPCRef, i);
-                    }
-                }
+                if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
+                    mapUnit.NpcRef == null) continue;
+                if (mapUnit.NpcRef == null)
+                    throw new Ultima5ReduxException($"Expected NPCRef for MapUnit {mapUnit.GetType()}");
+                if (mapUnit.NpcRef.DialogIndex == -1) continue;
+
+                // get the specific NPC reference 
+                NonPlayerCharacterState npcState =
+                    GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location,
+                        mapUnit.NpcRef.DialogIndex);
+
+                mapUnit.NpcState = npcState;
             }
         }
 
@@ -387,7 +385,7 @@ namespace Ultima5Redux.Maps
         /// <param name="positionList">list of positions</param>
         /// <param name="destinedPosition">the destination position</param>
         /// <returns>an ordered directory list of paths based on the shortest path (straight line path)</returns>
-        private SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList,
+        private static SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList,
             in Point2D destinedPosition)
         {
             SortedDictionary<double, Point2D> sortedPoints = new();
@@ -414,7 +412,7 @@ namespace Ultima5Redux.Maps
                 Enemy enemy => enemy.EnemyReference.IsWaterEnemy
                     ? WalkableType.CombatWater
                     : WalkableType.StandardWalking,
-                CombatPlayer _ => WalkableType.StandardWalking,
+                CombatPlayer => WalkableType.StandardWalking,
                 _ => WalkableType.StandardWalking
             };
         }
@@ -494,7 +492,7 @@ namespace Ultima5Redux.Maps
         }
 
 
-        public bool IsNPCInBed(NonPlayerCharacter npc) =>
+        public bool IsNpcInBed(NonPlayerCharacter npc) =>
             GetTileReference(npc.MapUnitPosition.XY).Index ==
             GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("LeftBed");
 

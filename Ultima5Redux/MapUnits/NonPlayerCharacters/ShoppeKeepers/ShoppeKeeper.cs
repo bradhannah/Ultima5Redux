@@ -190,6 +190,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         protected string GetNumberInPartyAsStringWord(int nNum)
         {
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (nNum > 6) return "many";
             if (nNum == 1) return "one";
             Debug.Assert(nNum > 0);

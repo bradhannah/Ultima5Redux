@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Ultima5Redux.References
+namespace Ultima5Redux.References.Maps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     public class DungeonTile
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum ChestType { Normal = 0, Trapped_1 = 1, Trapped_2 = 2, Poisoned = 4 }
 
         //char fountStr[3][7] = { "Heal", "Poison", "Hurt" };
@@ -33,7 +36,7 @@ namespace Ultima5Redux.References
 
         private readonly byte _subTileType;
 
-        private readonly List<string> messages = new()
+        private readonly List<string> _messages = new()
         {
             "BOTTOMLESS PIT", "THE MAZE OF LOST SOULS",
             // floor 0 Wrong
@@ -56,12 +59,11 @@ namespace Ultima5Redux.References
         {
             get
             {
-                if (_messageStarts.Contains(_subTileType))
-                {
-                    for (int i = 0; i < _messageStarts.Length; i++)
-                        if (_messageStarts[i] == _subTileType)
-                            return messages[i];
-                }
+                if (!_messageStarts.Contains(_subTileType)) return "";
+
+                for (int i = 0; i < _messageStarts.Length; i++)
+                    if (_messageStarts[i] == _subTileType)
+                        return _messages[i];
 
                 return "";
             }
