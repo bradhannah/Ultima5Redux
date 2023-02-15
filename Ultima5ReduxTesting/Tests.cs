@@ -152,17 +152,25 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
                 LargeMapLocationReferences.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
-            List<MapUnit> mapUnits = world.State.TheVirtualMap.CurrentMap.GetMapUnitsByPosition(dockLocation, 0);
+            List<MapUnit> mapUnits =
+                world.State.TheVirtualMap.TheMapHolder.OverworldMap.GetMapUnitsByPosition(dockLocation, 0);
 
-            var frigate2 = world.State.TheVirtualMap.CurrentMap.GetSpecificMapUnitByLocation<Frigate>(dockLocation, 0);
+            var frigate2 =
+                world.State.TheVirtualMap.TheMapHolder.OverworldMap.GetSpecificMapUnitByLocation<Frigate>(dockLocation,
+                    0);
             Assert.True(frigate2 != null);
 
             Assert.True(
                 world.State.TheVirtualMap.IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location.Minoc));
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
+            if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
+            {
+                Debug.Assert(false, "after large map load it did not become a large map");
+                throw new Exception();
+            }
 
-            smallMap.MoveAvatar(new Point2D(frigate2.MapUnitPosition.X, frigate2.MapUnitPosition.Y));
+            largeMap.MoveAvatar(new Point2D(frigate2.MapUnitPosition.X, frigate2.MapUnitPosition.Y));
             var turnResults = new TurnResults();
             world.TryToBoard(out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
@@ -190,8 +198,10 @@ namespace Ultima5ReduxTesting
                 LargeMapLocationReferences.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
             List<MapUnit> mapUnits = world.State.TheVirtualMap.CurrentMap.GetMapUnitsByPosition(dockLocation, 0);
 
-            var skiff = world.State.TheVirtualMap.CurrentMap.GetSpecificMapUnitByLocation<Skiff>(dockLocation, 0);
-
+            var skiff =
+                world.State.TheVirtualMap.TheMapHolder.OverworldMap
+                    .GetSpecificMapUnitByLocation<Skiff>(dockLocation, 0);
+            Assert.IsNotNull(skiff);
             Assert.True(
                 world.State.TheVirtualMap.IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location.Minoc));
 
@@ -206,8 +216,6 @@ namespace Ultima5ReduxTesting
             Assert.True(bWasSuccessful);
 
             Assert.True(skiff != null);
-            Assert.True(mapUnits[0] is Skiff);
-            Assert.True(true);
         }
 
         [Test] [TestCase(SaveFiles.Britain)] public void test_LoadSkaraBraeSmallMapsLoadTest(SaveFiles saveFiles)

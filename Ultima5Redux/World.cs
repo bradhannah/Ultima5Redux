@@ -822,9 +822,8 @@ namespace Ultima5Redux
             //MapUnit currentAvatarTileRef = State.TheVirtualMap.GetMapUnitOnCurrentTile();
             bWasSuccessful = true;
 
-            if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap
-                //currentAvatarTileRef is null 
-                || !regularMap.GetMapUnitOnCurrentTile().KeyTileReference.IsBoardable)
+            if (!(State.TheVirtualMap.CurrentMap is RegularMap regularMap
+                  && (regularMap.GetMapUnitOnCurrentTile()?.KeyTileReference.IsBoardable ?? false)))
             {
                 bWasSuccessful = false;
                 // can't board it
