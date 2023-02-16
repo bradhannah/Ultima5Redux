@@ -1686,13 +1686,13 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromNewSave(saveFiles, true, false);
             Assert.NotNull(world);
             Assert.NotNull(world.State);
-            if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
-                throw new Ultima5ReduxException("Should be large map");
             //GameReferences.Instance.Initialize(DataDirectory);
 
             world.ReLoadFromJson();
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
+            if (world.State.TheVirtualMap.CurrentMap is not LargeMap largeMap)
+                throw new Ultima5ReduxException("Should be large map");
             var newAvatarPos = new Point2D(146, 254);
             newAvatarPos = new Point2D(146, 255);
             largeMap.MoveAvatar(newAvatarPos);
@@ -2404,18 +2404,23 @@ namespace Ultima5ReduxTesting
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
 
+            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+                throw new Ultima5ReduxException("should have been a small map");
+            
             // fountain
             var courtYard = new Point2D(15, 19);
-            nClosest = largeMap.ClosestTileReferenceAround(
-                GameReferences.Instance.SpriteTileReferences.GetTileReference(216), courtYard, 8);
+            nClosest = smallMap.ClosestTileReferenceAround(
+                GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                    .Fountain_KeyIndex), courtYard, 8);
             Assert.Less(nClosest, 255);
 
-            nClosest = largeMap.ClosestTileReferenceAround(
-                GameReferences.Instance.SpriteTileReferences.GetTileReference(216), courtYard, 2);
+            nClosest = smallMap.ClosestTileReferenceAround(
+                GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                    .Fountain_KeyIndex), courtYard, 2);
             Assert.AreEqual(nClosest, 255);
 
             // brick in the corner
-            nClosest = largeMap.ClosestTileReferenceAround(
+            nClosest = smallMap.ClosestTileReferenceAround(
                 GameReferences.Instance.SpriteTileReferences.GetTileReference(68), Point2D.Zero, 8);
             Assert.Less(nClosest, 255);
         }
