@@ -230,8 +230,7 @@ namespace Ultima5Redux.References.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         public static bool IsStocks(int nSprite)
         {
-            bool bIsStocks = nSprite == 132;
-            //GetTileNumberByName("Stocks"); // is it the stocks
+            bool bIsStocks = nSprite == (int)TileReference.SpriteIndex.Stocks;
             return bIsStocks;
         }
 
