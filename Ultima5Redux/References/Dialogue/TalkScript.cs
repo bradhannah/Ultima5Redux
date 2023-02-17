@@ -84,9 +84,6 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         public TalkScript()
         {
-            // let's add it immediately instead of waiting for someone to commit it
-            // note; this will fail if the currentScriptLine is not a reference - but I'm pretty sure it is
-            //_scriptLines.Add(_currentScriptLine);
         }
 
         public TalkScript(IEnumerable<ScriptItem> name, IEnumerable<ScriptItem> description,
@@ -120,22 +117,8 @@ namespace Ultima5Redux.References.Dialogue
         /// <param name="context"></param>
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            //_currentScriptLine = _scriptLines[0];
             InitScript();
         }
-
-        /// <summary>
-        ///     Add to the current script line, but no string associated
-        ///     For example: STRING
-        ///     <NEWLINE>
-        ///         <AVATARNAME>
-        /// </summary>
-        /// <param name="talkCommand"></param>
-        // public void AddTalkCommand(TalkCommand talkCommand)
-        // {
-        //     _currentScriptLine ??= new ScriptLine();
-        //     _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
-        // }
 
         /// <summary>
         ///     Add to the current script line
@@ -937,9 +920,7 @@ namespace Ultima5Redux.References.Dialogue
                             item.ItemAdditionalData =
                                 OddsAndLogic.GetGuardExtortionAmount(
                                     OddsAndLogic.GetEraByTurn(GameStateReference.State.TurnsSinceStart));
-                            //var splitScriptLine = new SplitScriptLine();
                             lines[nSection].AddScriptItem(item);
-                            //lines.Add();
                             break;
                         case TalkCommand.Change:
                             // advance to next section

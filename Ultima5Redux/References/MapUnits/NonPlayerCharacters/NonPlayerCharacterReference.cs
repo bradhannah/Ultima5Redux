@@ -90,7 +90,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     && MapLocation == SmallMapReferences.SingleMapReference.Location.Windemere)
                     return SpecificNpcDialogType.Guard;
 
-                //if (NPCKeySprite is >= 368 and <= 371) return SpecificNpcDialogType.Guard;
                 // it's the Avatar
                 if (NPCKeySprite == 256) return SpecificNpcDialogType.None;
 

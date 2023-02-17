@@ -24,10 +24,6 @@ namespace Ultima5Redux
             Y = y;
         }
 
-        // public static bool operator ==(Point2DFloat point1, Point2DFloat point2) => ReferenceEquals(point1, null)
-        //     ? ReferenceEquals(point2, null)
-        //     : point1.Equals(point2);
-
         public static bool operator ==(Point2DFloat point1, Point2DFloat point2) =>
             point1?.Equals(point2) ?? ReferenceEquals(point2, null);
 
@@ -386,8 +382,6 @@ namespace Ultima5Redux
 
         public string GetFriendlyString() => "X=" + X + ",Y=" + Y;
 
-        // public Point2D GetPoint2DOrNullOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0) =>
-        //     IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : this;
 
         /// <summary>
         ///     Determines if the current point is out of the range provided

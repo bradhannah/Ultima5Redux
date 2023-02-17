@@ -20,14 +20,6 @@ namespace Ultima5Redux.Maps
         /// </summary>
         [DataMember(Name = "SmallMaps")] private readonly SmallMaps _smallMaps = new();
 
-
-        /// <summary>
-        ///     The current small map (null if on large map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        // [DataMember]
-        // public SmallMap CurrentSmallMap { get; private set; }
-
         [DataMember]
         public DungeonMap TheDungeonMap { get; internal set; }
 

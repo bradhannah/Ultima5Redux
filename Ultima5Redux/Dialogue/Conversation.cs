@@ -290,7 +290,6 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.Pause:
                         EnqueueToOutputBuffer(item);
-                        //await Task.Delay(TimeSpan.FromSeconds(0.5f)).ConfigureAwait(false);
                         break;
                     case TalkScript.TalkCommand.PlainString:
                         // we put it through the processor to change the text around if we are wrapped in a rune tag

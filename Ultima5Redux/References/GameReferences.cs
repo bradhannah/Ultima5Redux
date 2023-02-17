@@ -45,7 +45,6 @@ namespace Ultima5Redux.References
         public DungeonReferences DungeonReferences { get; private set; }
 
         public EnemyReferences EnemyRefs { get; private set; }
-        //get; set; }
 
         /// <summary>
         ///     Detailed inventory information reference
@@ -169,9 +168,6 @@ namespace Ultima5Redux.References
             }
 
             _legacyDataDirectory = dataDirectory;
-
-            // Instance = new GameReferences(dataDirectory);
-            // IsInitialized = true;
         }
     }
 }

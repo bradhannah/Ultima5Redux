@@ -13,8 +13,6 @@ namespace Ultima5Redux.Maps
             if (!_triggerTilesByPosition.ContainsKey(triggeredPosition))
             {
                 _triggerTilesByPosition.Add(triggeredPosition, new List<TriggerTileData>());
-                // throw new Ultima5ReduxException(
-                //     $"Tried to put the triggers that trigger at the same position: {triggeredPosition.X}, {triggeredPosition.Y}");
             }
 
             _triggerTilesByPosition[triggeredPosition].Add(new TriggerTileData(triggerSprite, triggeredPosition,

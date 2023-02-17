@@ -50,13 +50,6 @@ namespace Ultima5Redux.MapUnits
             set => ReplaceAll(value);
         }
 
-        // [IgnoreDataMember] //DataMember(Name = "NonAttackingUnits")]
-        // private NonAttackingUnit[] SaveNonAttackingUnits
-        // {
-        //     get => GetMapUnitByTypeToArray<NonAttackingUnit>();
-        //     set => ReplaceAll(value);
-        // }
-
         [DataMember(Name = "DiscoverableLoot")]
         private DiscoverableLoot[] SaveDiscoverableLoot
         {

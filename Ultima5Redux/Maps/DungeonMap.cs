@@ -32,7 +32,7 @@ namespace Ultima5Redux.Maps
         public override bool IsRepeatingMap => false;
         public override int NumOfXTiles => SingleDungeonMapFloorReference.N_DUNGEON_COLS_PER_ROW;
         public override int NumOfYTiles => SingleDungeonMapFloorReference.N_DUNGEON_ROWS_PER_MAP;
-        public override bool ShowOuterSmallMapTiles => false;
+        public virtual bool ShowOuterSmallMapTiles => false;
 
         public override byte[][] TheMap { get; protected set; }
 
@@ -66,16 +66,9 @@ namespace Ultima5Redux.Maps
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
         {
-            //throw new System.NotImplementedException();
         }
 
         public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => WalkableType.StandardWalking;
-
-        // dungeon map
-        // internal void LoadDungeonMap(SmallMapReferences.SingleMapReference.Location location)
-        // {
-        //
-        // }
 
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {

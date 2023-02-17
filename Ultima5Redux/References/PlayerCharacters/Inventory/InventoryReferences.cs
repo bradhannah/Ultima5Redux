@@ -90,7 +90,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 }
             }
 
-            //build spell name highlight table
+            // build spell name highlight table
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Spell))
             {
                 invRef.InvRefType = InventoryReferenceType.Spell;
@@ -125,11 +125,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             InventoryReference invRef = GetInventoryReferenceList(inventoryReferenceType)
                 .FirstOrDefault(invRef => invRef.ItemName.Trim() == invItem);
             if (invRef != null) return invRef;
-            // foreach (InventoryReference invRef in GetInventoryReferenceList(inventoryReferenceType)
-            //              .Where(invRef => invRef.ItemName.Trim() == invItem))
-            // {
-            //     return invRef;
-            // }
 
             throw new Ultima5ReduxException("Asked for an inventory reference : " + invItem + " but it doesn't exist");
         }

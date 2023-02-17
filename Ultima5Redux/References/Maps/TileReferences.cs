@@ -256,7 +256,6 @@ namespace Ultima5Redux.References.Maps
         // ReSharper disable once UnusedMember.Global
         public static bool RequiresGrapplingHook(int nSprite) =>
             nSprite == (int)TileReference.SpriteIndex.SmallMountains;
-        //private double _
 
         public TileReference GetAnimatedTileReference(int nSprite)
         {

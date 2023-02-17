@@ -214,9 +214,6 @@ namespace Ultima5Redux.References.Maps
                         Location.Britannia_Underworld,
                         largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1, 0);
 
-            // return new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory,
-            //     Location.Britannia_Underworld,
-            //     map == Map.Maps.Overworld ? 0 : -1, 0);
             /// <summary>
             ///     Gets the master file type based on the location
             /// </summary>

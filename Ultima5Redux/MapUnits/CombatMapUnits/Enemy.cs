@@ -96,9 +96,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
 
             ProcessNextMoveTowardsAvatarAStar(regularMap);
-            // , regularMap.CurrentAvatarPosition.XY,
-            // regularMap.GetWalkableTypeByMapUnit(this), //virtualMap.TheMapUnits,
-            // regularMap.TheMapOverrides);
         }
 
         public override TileReference GetNonBoardedTileReference() => KeyTileReference;

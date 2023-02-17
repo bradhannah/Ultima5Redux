@@ -82,29 +82,6 @@ namespace Ultima5Redux
             return str;
         }
 
-        // /// <summary>
-        // ///     Creates an offset list when uint16 offsets are described in a data file
-        // /// </summary>
-        // /// <remarks>this is only mildly useful due to it not passing back the byte array</remarks>
-        // /// <param name="filename">data fileNameAndPath and path</param>
-        // /// <param name="offset">initial offset (typically 0)</param>
-        // /// <param name="length">number of bytes to read</param>
-        // /// <returns>a list of offsets</returns>
-        // public static List<int> CreateOffsetList(string filename, int offset, int length)
-        // {
-        //     List<byte> byteArray = GetFileAsByteList(filename);
-        //
-        //     List<int> offsetArray = new();
-        //
-        //     // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
-        //     for (int i = 0; i < length; i += 2)
-        //     {
-        //         offsetArray.Add((int)(byteArray[i] | ((uint)byteArray[i + 1] << 8)));
-        //     }
-        //
-        //     return offsetArray;
-        // }
-
         public static List<ushort> CreateOffsetList(byte[] byteArray, int offset, int length)
         {
             List<ushort> offsetArray = new();
@@ -273,22 +250,6 @@ namespace Ultima5Redux
         }
 
         public static bool RandomOdds(float fLikelihoodOfTrue) => Ran.NextDouble() <= fLikelihoodOfTrue;
-
-        // /// <summary>
-        // /// </summary>
-        // /// <remarks>Borrowed from: https://www.developerfusion.com/article/84519/mastering-structs-in-c </remarks>
-        // /// <param name="fs"></param>
-        // /// <param name="t"></param>
-        // /// <returns></returns>
-        // public static object ReadStruct(FileStream fs, Type t)
-        // {
-        //     byte[] buffer = new byte[Marshal.SizeOf(t)];
-        //     fs.Read(buffer, 0, Marshal.SizeOf(t));
-        //     GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-        //     object temp = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), t);
-        //     handle.Free();
-        //     return temp;
-        // }
 
         /// <summary>
         /// </summary>

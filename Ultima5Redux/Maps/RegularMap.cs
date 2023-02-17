@@ -204,9 +204,6 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException(
                     "Tried to GetAggressiveMapUnitInfo but CurrentMap.CurrentSingleMapReference was null");
 
-            // if (CurrentMap is not RegularMap regularMap)
-            //     throw new Ultima5ReduxException("Tried to call GetNonCombatMapAggressiveMapUnitInfo on combat map");
-            //
             foreach (MapUnit mapUnit in CurrentMapUnits.AllActiveMapUnits)
             {
                 // we don't calculate any special movement or events for map units on different floors
@@ -531,10 +528,6 @@ namespace Ultima5Redux.Maps
 
             VirtualMap.AggressiveMapUnitInfo mapUnitInfo = new(aggressorMapUnit);
 
-            // if they are not Enemy type (probably NPC) then we are certain they don't have a range attack
-            // UNLESS you are a wanted man - then the guards will try to attack you!
-            //bool isWantedManByThePoPo = IsWantedManByThePoPo;
-            //bool declinedExtortion = CurrentMap is SmallMap { DeclinedExtortion: true };
             bool bIsMadGuard = false;
             if (aggressorMapUnit is NonPlayerCharacter npc) bIsMadGuard = IsWantedManByThePoPo && npc.NpcRef.IsGuard;
 

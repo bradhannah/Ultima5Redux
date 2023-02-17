@@ -19,8 +19,6 @@ using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
-//using Ultima5Redux.MapUnits.CurrentMapUnits;
-
 namespace Ultima5Redux.Maps
 {
     public class CombatMap : Map
@@ -29,10 +27,6 @@ namespace Ultima5Redux.Maps
         ///     For tracking which escape route was used
         /// </summary>
         public enum EscapeType { None, EscapeKey, KlimbDown, KlimbUp, North, South, East, West }
-        //private readonly MapUnits.MapUnits _mapUnits;
-
-        //private readonly MapOverrides _mapOverrides;
-        // when computing what should happen when a player hits - these states can be triggered 
 
         public enum SelectionAction { None, Magic, Attack }
 
@@ -44,17 +38,6 @@ namespace Ultima5Redux.Maps
             get => CurrentCombatPlayer?.MapUnitPosition;
             set => CurrentCombatPlayer.MapUnitPosition = value;
         }
-
-        // public List<CombatMapUnit> GetTopNCurrentMapUnits(int nUnits)
-        // {
-        //     // if there aren't the minimum number of turns, then we force it to add additional turns to at least
-        //     // the stated number of units
-        //     if (_initiativeQueue.TotalTurnsInQueue < nUnits)
-        //         _initiativeQueue.CalculateNextInitiativeQueue();
-        //
-        //     return _initiativeQueue.GetTopNCurrentMapUnits(nUnits);
-        // }
-
 
         private readonly List<Type> _visiblePriorityOrder = new()
         {
@@ -81,17 +64,12 @@ namespace Ultima5Redux.Maps
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
 
-        /// <summary>
-        ///     Current combat map units for current combat map
-        /// </summary>
-        //private MapUnits.MapUnits CurrentMapUnits { get; }
-
         public override bool IsRepeatingMap => false;
 
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
         public override int NumOfYTiles => SingleCombatMapReference.YTILES;
 
-        public override bool ShowOuterSmallMapTiles => false;
+        public virtual bool ShowOuterSmallMapTiles => false;
 
         public override byte[][] TheMap
         {
@@ -171,9 +149,6 @@ namespace Ultima5Redux.Maps
         /// <param name="singleCombatMapReference"></param>
         public CombatMap(SingleCombatMapReference singleCombatMapReference) //, MapUnits.MapUnits mapUnits)
         {
-            //_mapUnits = mapUnits;
-            //_mapOverrides = mapOverrides;
-            //CurrentMapUnits = GameStateReference.State.TheVirtualMap.TheMapUnits;
             TheCombatMapReference = singleCombatMapReference;
             XYOverrides = GameReferences.Instance.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
         }
@@ -505,8 +480,6 @@ namespace Ultima5Redux.Maps
             List<Point2D> surroundingCombatPlayerPoints =
                 surroundThisPoint.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
 
-            // remove all the bad points
-            //notThesePoints.ForEach(m => surroundingCombatPlayerPoints.Remove(m));
             // if the play character is some how in range then remove them (shouldn't happen for range)
             surroundingCombatPlayerPoints.Remove(notThisPoint);
 
@@ -637,7 +610,6 @@ namespace Ultima5Redux.Maps
             Point2D newAttackPosition =
                 GetRandomSurroundingPointThatIsnt(attackPosition, //new(),
                     attackingCombatMapUnit.MapUnitPosition.XY);
-            //{ attackingCombatMapUnit.MapUnitPosition.XY, attackPosition });
 
             Debug.Assert(newAttackPosition != null);
             if (newAttackPosition == attackingCombatMapUnit.MapUnitPosition.XY)
@@ -771,7 +743,6 @@ namespace Ultima5Redux.Maps
         private bool IsTileRangePathBlocked(Point2D xy)
         {
             TileReference tileReference = GetTileReference(xy);
-            //GetOriginalTileReference(xy);
             return !tileReference.RangeWeapon_Passable;
         }
 
@@ -978,7 +949,7 @@ namespace Ultima5Redux.Maps
 
             // this is to actually replace the tile
             //GameStateReference.State.TheVirtualMap.CurrentMap.
-            SetOverridingTileReferece(newTileReference, triggerPosition);
+            SetOverridingTileReference(newTileReference, triggerPosition);
 
             // Not sure I need this - but maybe I will react visually 
             turnResults.PushTurnResult(new TileOverrideOnCombatMap(triggerPosition,

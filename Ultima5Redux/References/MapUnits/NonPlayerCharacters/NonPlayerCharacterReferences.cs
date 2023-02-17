@@ -62,12 +62,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         private readonly Dictionary<string, NonPlayerCharacterReference> _npcByNameDictionary = new();
 
         /// <summary>
-        ///     All of the NPCs
-        /// </summary>
-        // ReSharper disable once InconsistentNaming
-        //private List<NonPlayerCharacterReference> NPCs { get; } = new();
-
-        /// <summary>
         ///     Construct all of the non player characters across all of the SmallMaps
         /// </summary>
         /// <param name="u5Directory">the directory with Ultima 5 data files</param>
@@ -148,7 +142,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     NonPlayerCharacterReference npc = new(location, schedules[nNpc],
                         npcTypes[nNpc], npcDialogNumber[nNpc], nNpc,
                         talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]));
-                    //NPCs.Add(npc);
                     // we also create a quick lookup table by location but first need to check that there is an initialized list inside
                     if (!_locationToNpCsDictionary.ContainsKey(singleMapRef.MapLocation))
                         _locationToNpCsDictionary.Add(singleMapRef.MapLocation,

@@ -28,7 +28,7 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public override int NumOfXTiles => LargeMapLocationReferences.X_TILES;
         [IgnoreDataMember] public override int NumOfYTiles => LargeMapLocationReferences.Y_TILES;
 
-        [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => false;
+        [IgnoreDataMember] public bool ShowOuterSmallMapTiles => false;
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
 
@@ -158,10 +158,6 @@ namespace Ultima5Redux.Maps
 
         internal bool IsAllowedToBuryMoongate()
         {
-            // if (State.TheVirtualMap.TheTheMapType != Map.Maps.Overworld &&
-            //     State.TheVirtualMap.TheTheMapType != Map.Maps.Underworld)
-            //     return false;
-            //
             // don't bury one on top of the other
             if (GameStateReference.State.TheMoongates.IsMoonstoneBuried(CurrentPosition.XYZ)) return false;
 
@@ -365,11 +361,6 @@ namespace Ultima5Redux.Maps
 
             return base.GetTileReference(xy, bIgnoreMoongate);
         }
-
-        // we don't need to "LoadLargeMap" because it being active or inactive is managed in VirtualMap
-        // public void LoadLargeMap(SearchItems searchItems)
-        // {
-        // }
 
         public void InitializeFromLegacy(SearchItems searchItems, ImportedGameState importedGameState)
         {

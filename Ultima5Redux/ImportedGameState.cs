@@ -232,8 +232,6 @@ namespace Ultima5Redux
         {
             var scrollSpell =
                 (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
-            // const int offset = 0x27A;
-            // int nIndex = offset + (int)scrollSpell;
             return GetByteAsIntFromGameStateByteArray(Scroll.GetLegacySaveQuantityIndex(scrollSpell));
         }
 

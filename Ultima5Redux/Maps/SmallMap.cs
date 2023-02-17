@@ -29,7 +29,7 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public override int NumOfXTiles => CurrentSingleMapReference.XTiles;
         [IgnoreDataMember] public override int NumOfYTiles => CurrentSingleMapReference.YTiles;
 
-        [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => true;
+        [IgnoreDataMember] public bool ShowOuterSmallMapTiles => true;
 
         [IgnoreDataMember]
         public bool IsBasement
@@ -39,7 +39,6 @@ namespace Ultima5Redux.Maps
                 if (CurrentSingleMapReference == null) return false;
 
                 return MapFloor == -1;
-                //return CurrentMap is not LargeMap && CurrentMap.CurrentSingleMapReference.Floor == -1;
             }
         }
 

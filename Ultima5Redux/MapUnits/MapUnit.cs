@@ -466,7 +466,6 @@ namespace Ultima5Redux.MapUnits
                         break;
                     case NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         RunAwayFromAvatar(smallMap,
-                            //aStar, 
                             MapUnitPosition);
                         break;
                     case NonPlayerCharacterSchedule.AiType.CustomAi:
@@ -474,7 +473,7 @@ namespace Ultima5Redux.MapUnits
                         // don't think they move....?
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
-                        GetCloserToAvatar(smallMap); //, aStar);
+                        GetCloserToAvatar(smallMap); 
                         break;
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
@@ -498,9 +497,7 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
                         if (smallMap.IsWantedManByThePoPo)
                         {
-                            //BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
                             GetCloserToAvatar(smallMap);
-                            //, aStar);
                         }
 
                         // else they stay where they are
@@ -581,17 +578,14 @@ namespace Ultima5Redux.MapUnits
                             // move to the correct position
                             BuildPath(this, npcDestinationPosition.XY,
                                 CreateAStar(smallMap));
-                        //, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         // if the avatar is close by then move away from him, otherwise return to original path, one move at a time
                         RunAwayFromAvatar(smallMap,
-                            //aStar, 
                             MapUnitPosition);
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
                         GetCloserToAvatar(smallMap);
-                        //, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
@@ -605,14 +599,11 @@ namespace Ultima5Redux.MapUnits
                         if (smallMap.IsWantedManByThePoPo)
                         {
                             GetCloserToAvatar(smallMap);
-                            //, aStar);
-                            //BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
                         }
                         else // get where you are going so you can be stationary
                         {
                             BuildPath(this, npcDestinationPosition.XY,
                                 CreateAStar(smallMap));
-                            //, aStar);
                         }
 
                         break;

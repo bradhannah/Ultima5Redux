@@ -318,7 +318,6 @@ namespace Ultima5Redux.References.Maps
             var location =
                 (SmallMapReferences.SingleMapReference.Location)nLocation;
 
-            //CombatMapNum
             return GameReferences.Instance.DungeonReferences.GetDungeon(location);
         }
 
