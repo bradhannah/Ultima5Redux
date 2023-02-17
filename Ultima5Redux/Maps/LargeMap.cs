@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
@@ -19,7 +20,6 @@ namespace Ultima5Redux.Maps
         private Point2D _bottomRightExtent;
 
         [DataMember(Name = "TopLeftExtent")] private Point2D _topLeftExtent;
-
 
         [DataMember] public LargeMapLocationReferences.LargeMapType TheLargeLheLargeMapType { get; private set; }
 
@@ -46,7 +46,6 @@ namespace Ultima5Redux.Maps
 
         [JsonConstructor] private LargeMap()
         {
-            // for now combat maps don't have overrides
         }
 
         /// <summary>
@@ -57,7 +56,6 @@ namespace Ultima5Redux.Maps
             SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, (int)lheLargeMapType)
         {
             TheLargeLheLargeMapType = lheLargeMapType;
-            // for now combat maps don't have overrides
 
             BuildMap(lheLargeMapType);
         }
@@ -86,7 +84,7 @@ namespace Ultima5Redux.Maps
 
             if (nIndex == -1) return null;
 
-            Frigate frigate = new(new MapUnitMovement(nIndex), 
+            Frigate frigate = new(new MapUnitMovement(nIndex),
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
                 new MapUnitPosition(xy.X, xy.Y, 0))
             {
@@ -104,7 +102,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <returns>true if a monster was created</returns>
         /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
-        internal bool CreateRandomMonster(int nTurn)
+        private bool CreateRandomMonster(int nTurn)
         {
             const int maxTries = 10;
             const int nDistanceAway = 7;
@@ -292,7 +290,7 @@ namespace Ultima5Redux.Maps
                 _ => throw new ArgumentOutOfRangeException(nameof(map), map, null)
             };
 
-        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) =>
+        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) =>
             mapUnit switch
             {
                 Enemy enemy => enemy.EnemyReference.IsWaterEnemy
@@ -325,7 +323,7 @@ namespace Ultima5Redux.Maps
             RecalculatedHash = Utils.Ran.Next();
         }
 
-        public void ClearEnemiesIfFarAway()
+        private void ClearEnemiesIfFarAway()
         {
             const float fMaxDiagonalDistance = 22;
             MapUnitPosition avatarPosition = CurrentAvatarPosition;
@@ -349,6 +347,7 @@ namespace Ultima5Redux.Maps
             enemiesToClear?.ForEach(ClearMapUnit);
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public new TileReference GetTileReference(in Point2D xy, bool bIgnoreMoongate = false)
         {
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
@@ -362,13 +361,13 @@ namespace Ultima5Redux.Maps
             return base.GetTileReference(xy, bIgnoreMoongate);
         }
 
-        public void InitializeFromLegacy(SearchItems searchItems, ImportedGameState importedGameState)
+        internal void InitializeFromLegacy(SearchItems searchItems, ImportedGameState importedGameState)
         {
             GenerateMapUnitsForLargeMapForLegacyImport(TheLargeLheLargeMapType, true, searchItems, importedGameState);
         }
 
         // ReSharper disable once UnusedMember.Global
-        public void PrintMap()
+        internal void PrintMap()
         {
             PrintMapSection(TheMap, 0, 0, 160, 80);
         }

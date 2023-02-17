@@ -683,7 +683,7 @@ namespace Ultima5Redux.Maps
             if (!TheCombatMapReference.TheTriggerTiles.HasTriggerAtPosition(position))
                 return false;
 
-            List<TriggerTileData> triggerTiles =
+            IEnumerable<TriggerTileData> triggerTiles =
                 TheCombatMapReference.TheTriggerTiles.GetTriggerTileDataByPosition(position);
 
             foreach (TriggerTileData triggerTileData in triggerTiles.Where(t => !t.Triggered))
@@ -971,7 +971,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             return mapUnit switch
             {

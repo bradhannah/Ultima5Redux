@@ -102,6 +102,7 @@
         <Compile Include="Maps\Sign.cs" />
         <Compile Include="Maps\SingleDungeonMapFloorReference.cs" />
         <Compile Include="Maps\TileStack.cs" />
+        <Compile Include="Maps\TriggerTileData.cs" />
         <Compile Include="Maps\TriggerTiles.cs" />
         <Compile Include="Maps\VirtualMap.AggressiveMapUnitInfo.cs" />
         <Compile Include="MapUnits\Avatar.cs" />

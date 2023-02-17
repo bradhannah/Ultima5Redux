@@ -69,8 +69,6 @@ namespace Ultima5Redux.Maps
             get => CurrentAvatarPosition;
             set => CurrentAvatarPosition = value;
         }
-        //[DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; private set; }
-
 
         [IgnoreDataMember]
         protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides =>
@@ -959,13 +957,6 @@ namespace Ultima5Redux.Maps
 
         public bool IsLandNearbyForAvatar() =>
             IsLandNearby(CurrentPosition.XY, false, GetAvatarMapUnit().CurrentAvatarState);
-
-
-        // /// <summary>
-        // ///     Gets a map unit if it's on the current tile
-        // /// </summary>
-        // /// <returns>true if there is a map unit of on the tile</returns>
-        // public bool IsMapUnitOccupiedTile() => IsMapUnitOccupiedTile(CurrentPosition.XY);
 
         // ReSharper disable once UnusedMethodReturnValue.Local
         private Skiff MakeAndBoardSkiff()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -32,6 +33,7 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public bool ShowOuterSmallMapTiles => true;
 
         [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsBasement
         {
             get
@@ -43,6 +45,7 @@ namespace Ultima5Redux.Maps
         }
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
+
         private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
         public override Maps TheMapType => Maps.Small;
@@ -90,8 +93,6 @@ namespace Ultima5Redux.Maps
             {
                 mapUnit.NpcState.UnsetOverridenAi();
             }
-
-            //NPCState.OverrideAi(NonPlayerCharacterSchedule.AiType.DrudgeWorthThing);
 
             // as we exit the Small Map we must make sure we reset the extorted flag 
             // most maps only have one jerky guard, but Blackthorn's is crawling with them
@@ -404,7 +405,7 @@ namespace Ultima5Redux.Maps
             return sortedPoints;
         }
 
-        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             return mapUnit switch
             {
@@ -444,7 +445,7 @@ namespace Ultima5Redux.Maps
         ///     Gets the appropriate out of bounds sprite based on the map
         /// </summary>
         /// <returns></returns>
-        public int GetOutOfBoundsSprite(in Point2D position)
+        internal int GetOutOfBoundsSprite(in Point2D position)
         {
             byte currentSingleMapReferenceId = CurrentSingleMapReference.Id;
             return currentSingleMapReferenceId switch
@@ -466,20 +467,20 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy">position of stairs</param>
         /// <returns>stair sprite</returns>
-        public TileReference GetStairsSprite(in Point2D xy)
+        internal TileReference GetStairsSprite(in Point2D xy)
         {
             bool _ = IsStairGoingUp(xy, out TileReference stairTileReference);
             return stairTileReference;
         }
 
-        public bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
+        internal bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
 
         /// <summary>
         ///     Checks if a tile is in bounds of the actual map and not a border tile
         /// </summary>
         /// <param name="position">position within the virtual map</param>
         /// <returns></returns>
-        public bool IsInBounds(Point2D position)
+        internal static bool IsInBounds(Point2D position)
         {
             // determine if the x or y coordinates are in bounds, if they are out of bounds and the map does not repeat
             // then we are going to draw a default texture on the outside areas.
@@ -490,10 +491,8 @@ namespace Ultima5Redux.Maps
             return xInBounds && yInBounds;
         }
 
-
         public bool IsNpcInBed(NonPlayerCharacter npc) =>
-            GetTileReference(npc.MapUnitPosition.XY).Index ==
-            GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("LeftBed");
+            GetTileReference(npc.MapUnitPosition.XY).Is(TileReference.SpriteIndex.LeftBed);
 
         /// <summary>
         ///     Are the stairs at the given position going down?
@@ -520,6 +519,7 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <param name="stairTileReference"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool IsStairGoingUp(in Point2D xy, out TileReference stairTileReference)
         {
             stairTileReference = null;
@@ -536,6 +536,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
+        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Global")]
         public bool IsStairGoingUp(out TileReference stairTileReference) =>
             IsStairGoingUp(CurrentPosition.XY, out stairTileReference);
 
@@ -543,6 +544,7 @@ namespace Ultima5Redux.Maps
         ///     Are the stairs at the player characters current position going down?
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsStairsGoingDown(out TileReference stairTileReference) =>
             IsStairGoingDown(CurrentPosition.XY, out stairTileReference);
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.References;
@@ -41,6 +42,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool DoStairsGoDown(SmallMapReferences.SingleMapReference.Location location, int nFloor,
             Point2D tilePos, out TileReference stairTileReference) =>
             !DoStairsGoUp(location, nFloor, tilePos, out stairTileReference);

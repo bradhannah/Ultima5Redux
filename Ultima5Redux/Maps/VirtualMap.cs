@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -14,9 +15,7 @@ using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 // ReSharper disable UnusedMember.Global
-
 // ReSharper disable IdentifierTypo
-
 namespace Ultima5Redux.Maps
 {
     [DataContract] public partial class VirtualMap
@@ -122,12 +121,8 @@ namespace Ultima5Redux.Maps
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            // // this is so we don't break old save games
-            // if (TheSearchItems == null)
-            // {
             TheSearchItems = new SearchItems();
             TheSearchItems.Initialize();
-            // }
         }
 
 
@@ -233,7 +228,7 @@ namespace Ultima5Redux.Maps
             TheMapHolder.OverworldMap.CreateSkiff(LargeMapLocationReferences.GetLocationOfDock(location),
                 Point2D.Direction.Right, out _);
 
-        public int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
+        private int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
             bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, MapUnit mapUnit, out bool bDrawCharacterOnTile)
         {
             int nSprite = tileReference.Index;
@@ -332,7 +327,7 @@ namespace Ultima5Redux.Maps
 
             // this checks to see if you are on the outer bounds of a small map, and if the flood fill touched it
             // if it has touched it then we draw the outer tiles
-            if (CurrentMap is SmallMap smallMap && !smallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
+            if (CurrentMap is SmallMap smallMap && !SmallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
             {
                 TileReference outerTileReference = GameReferences.Instance.SpriteTileReferences.GetTileReference(
                     smallMap.GetOutOfBoundsSprite(xy));
@@ -448,6 +443,7 @@ namespace Ultima5Redux.Maps
         /// <param name="records"></param>
         /// <param name="primaryEnemyReference"></param>
         /// <param name="npcRef"></param>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] 
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
@@ -482,6 +478,7 @@ namespace Ultima5Redux.Maps
         /// <param name="entryDirection"></param>
         /// <param name="records"></param>
         /// <param name="enemyReference"></param>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] 
         public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference enemyReference)

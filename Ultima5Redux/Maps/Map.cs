@@ -80,19 +80,6 @@ namespace Ultima5Redux.Maps
 
         public abstract byte[][] TheMap { get; protected set; }
 
-        // public IEnumerable<MapUnit> AllVisibleActiveMapUnits
-        // {
-        //     get
-        //     {
-        //         IEnumerable<Point2D> allPoints =
-        //             CurrentMapUnits.AllActiveMapUnits.Select(e => e.MapUnitPosition.XY);
-        //         // filter out NULL mapunits - this is when a MapUnit is Active but not visible, like DiscoverableLoot
-        //         IEnumerable<MapUnit> visibleMapUnits =
-        //             allPoints.Select(point => GetTopVisibleMapUnit(point, false)).Where(p => p != null);
-        //         return visibleMapUnits;
-        //     }
-        // }
-
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         // ReSharper disable once MemberCanBeProtected.Global
         public int RecalculatedHash { get; protected set; }
@@ -491,7 +478,7 @@ namespace Ultima5Redux.Maps
         }
 
 
-        public abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
+        internal abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
 
         public bool AreAnyTilesWithinFourDirections(Point2D position, IEnumerable<TileReference> tileReferences)
         {

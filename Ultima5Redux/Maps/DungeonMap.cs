@@ -68,7 +68,7 @@ namespace Ultima5Redux.Maps
         {
         }
 
-        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => WalkableType.StandardWalking;
+        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => WalkableType.StandardWalking;
 
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
