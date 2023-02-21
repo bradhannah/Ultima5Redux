@@ -16,6 +16,8 @@ namespace Ultima5Redux.MapUnits
         [DataMember] public bool Active { get; private set; }
 
         [DataMember] public MapUnitPosition TheMapUnitPosition { get; private set; } = new();
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         [IgnoreDataMember] private int MapUnitAnimationStateIndex { get; }
 
         /// <summary>

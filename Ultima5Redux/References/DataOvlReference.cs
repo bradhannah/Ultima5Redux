@@ -13,6 +13,7 @@ namespace Ultima5Redux.References
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "IdentifierTypo")]
     [SuppressMessage("ReSharper", "CommentTypo")]
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class DataOvlReference
     {
         public enum AdditionalStrings

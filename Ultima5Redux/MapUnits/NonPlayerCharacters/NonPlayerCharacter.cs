@@ -85,21 +85,21 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             SmallMapReferences.SingleMapReference.Location location, MapUnitPosition mapUnitPosition,
             NonPlayerCharacterState npcState) : base(smallMapTheSmallMapCharacterState, mapUnitMovement, location,
             Point2D.Direction.None, npcState,
-            GameReferences.Instance.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
+            GameReferences.Instance.SpriteTileReferences.GetTileReference(npcState.NpcRef.NPCKeySprite),
             mapUnitPosition)
         {
             NpcState = npcState;
-            bool bLargeMap = TheSmallMapCharacterState == null && NpcState.NPCRef == null;
+            bool bLargeMap = TheSmallMapCharacterState == null && NpcState.NpcRef == null;
 
             PlayerCharacterRecord record = null;
 
             // gets the player character record for an NPC if one exists
             // this is commonly used when meeting NPCs who have not yet joined your party 
-            if (NpcState.NPCRef != null)
-                record = GameStateReference.State.CharacterRecords.GetCharacterRecordByNpc(NpcState.NPCRef);
+            if (NpcState.NpcRef != null)
+                record = GameStateReference.State.CharacterRecords.GetCharacterRecordByNpc(NpcState.NpcRef);
 
             _playerCharacterRecordIndex =
-                GameStateReference.State.CharacterRecords.GetCharacterIndexByNpc(NpcState.NPCRef);
+                GameStateReference.State.CharacterRecords.GetCharacterIndexByNpc(NpcState.NpcRef);
 
             // is the NPC you are loading currently in the party?
             IsInParty = record is { PartyStatus: PlayerCharacterRecord.CharacterPartyStatus.InTheParty };
@@ -114,7 +114,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // there is no TheSmallMapCharacterState which indicates that it is a large map
                 if (!bLoadedFromDisk)
                 {
-                    if (NpcState.NPCRef != null)
+                    if (NpcState.NpcRef != null)
                         MoveNpcToDefaultScheduledPosition(GameStateReference.State.TheTimeOfDay);
                 }
                 else

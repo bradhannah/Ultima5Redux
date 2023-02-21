@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -75,6 +76,7 @@ namespace Ultima5Redux.PlayerCharacters
             npc.IsInParty = true;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string ApplyRandomCharacterStatusForMixSpell()
         {
             string retStr = "";
@@ -159,12 +161,13 @@ namespace Ultima5Redux.PlayerCharacters
             List<PlayerCharacterRecord> activeCharacterRecords = Records.Where(characterRecord =>
                 characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty).ToList();
 
-            if (activeCharacterRecords.Count == 0)
-                throw new Ultima5ReduxException("Even the Avatar is dead, no records returned in active party");
-            if (activeCharacterRecords.Count > MAX_PARTY_MEMBERS)
-                throw new Ultima5ReduxException("There are too many party members in the party... party...");
-
-            return activeCharacterRecords;
+            return activeCharacterRecords.Count switch
+            {
+                0 => throw new Ultima5ReduxException("Even the Avatar is dead, no records returned in active party"),
+                > MAX_PARTY_MEMBERS => throw new Ultima5ReduxException(
+                    "There are too many party members in the party... party..."),
+                _ => activeCharacterRecords
+            };
         }
 
         /// <summary>
@@ -217,12 +220,13 @@ namespace Ultima5Redux.PlayerCharacters
             return Records.Where(record => record.CurrentInnLocation == location).ToList();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void HealAllPlayers()
         {
-            foreach (PlayerCharacterRecord characterRecord in Records)
+            foreach (PlayerCharacterRecord characterRecord in Records.Where(characterRecord =>
+                         characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty))
             {
-                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty)
-                    characterRecord.Stats.CurrentHp = characterRecord.Stats.MaximumHp;
+                characterRecord.Stats.CurrentHp = characterRecord.Stats.MaximumHp;
             }
         }
 

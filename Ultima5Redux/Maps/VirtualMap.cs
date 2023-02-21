@@ -483,16 +483,15 @@ namespace Ultima5Redux.Maps
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference enemyReference)
         {
-            int nPrimaryEnemies = 1;
+            const int nPrimaryEnemies = 1;
             int nSecondaryEnemies = 1;
 
             if (enemyReference.IsNpc) nSecondaryEnemies = 0;
 
-            EnemyReference primaryEnemyReference = enemyReference;
             EnemyReference secondaryEnemyReference =
-                GameReferences.Instance.EnemyRefs.GetFriendReference(primaryEnemyReference);
+                GameReferences.Instance.EnemyRefs.GetFriendReference(enemyReference);
 
-            LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, nPrimaryEnemies,
+            LoadCombatMap(singleCombatMapReference, entryDirection, records, enemyReference, nPrimaryEnemies,
                 secondaryEnemyReference, nSecondaryEnemies);
         }
 
@@ -552,8 +551,12 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException("CurrentMap did not switch to SmallMap on load");
 
             smallMap.InitializeFromLegacy(TheMapHolder.SmallMaps, singleMapReference.MapLocation,
-                importedGameState, bLoadFromDisk,
-                TheSearchItems);
+                importedGameState, bLoadFromDisk, TheSearchItems);
+
+            // smallMap.CurrentPosition.Floor = singleMapReference.Floor;
+            smallMap.CurrentPosition = xy == null
+                ? new MapUnitPosition(0, 0, singleMapReference.Floor)
+                : new MapUnitPosition(xy.X, xy.Y, singleMapReference.Floor);
 
             smallMap.HandleSpecialCasesForSmallMapLoad();
         }

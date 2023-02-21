@@ -68,7 +68,7 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public virtual bool CanStackMapUnitsOnTop => false;
 
-        [IgnoreDataMember] public NonPlayerCharacterReference NpcRef => NpcState?.NPCRef;
+        [IgnoreDataMember] public NonPlayerCharacterReference NpcRef => NpcState?.NpcRef;
 
         [IgnoreDataMember]
         public virtual TileReference KeyTileReference
@@ -118,6 +118,7 @@ namespace Ultima5Redux.MapUnits
         {
             TheSmallMapCharacterState = null;
             Movement = null;
+            // ReSharper disable once VirtualMemberCallInConstructor
             Direction = Point2D.Direction.None;
         }
 
@@ -141,7 +142,7 @@ namespace Ultima5Redux.MapUnits
             // ReSharper disable once VirtualMemberCallInConstructor
             Direction = direction;
 
-            if (npcState != null) NpcRefIndex = npcState.NPCRef?.DialogIndex ?? -1;
+            if (npcState != null) NpcRefIndex = npcState.NpcRef?.DialogIndex ?? -1;
 
             Debug.Assert(Movement != null);
 
@@ -473,7 +474,7 @@ namespace Ultima5Redux.MapUnits
                         // don't think they move....?
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
-                        GetCloserToAvatar(smallMap); 
+                        GetCloserToAvatar(smallMap);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
@@ -540,6 +541,7 @@ namespace Ultima5Redux.MapUnits
                             $"An unexpected movement AI was encountered: {aiType} for NPC: {NpcRef?.Name}");
                 }
             else // character not in correct position
+                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                 switch (aiType)
                 {
                     // Horses don't move if they are touching a hitching post
@@ -1043,10 +1045,8 @@ namespace Ultima5Redux.MapUnits
         protected void ProcessNextMoveTowardsMapUnitDumb(RegularMap regularMap, Point2D fromPosition,
             Point2D toPosition)
         {
-            Point2D positionToMoveTo = null;
-
-            // it IS a large map, so we do the less resource intense way of pathfinding
-            positionToMoveTo =
+            Point2D positionToMoveTo =
+                // it IS a large map, so we do the less resource intense way of pathfinding
                 GetBestNextPositionToMoveTowardsWalkablePointDumb(regularMap, fromPosition, toPosition);
 
             if (positionToMoveTo == null)

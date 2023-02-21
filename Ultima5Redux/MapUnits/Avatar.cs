@@ -40,6 +40,9 @@ namespace Ultima5Redux.MapUnits
                     BoardMapUnitFromAvatarState(CurrentAvatarState);
                 }
 
+                if (CurrentBoardedMapUnit == null)
+                    throw new Ultima5ReduxException($"Expected to have boarded a unit as {CurrentAvatarState}");
+                
                 CurrentBoardedMapUnit.Direction = value;
             }
         }

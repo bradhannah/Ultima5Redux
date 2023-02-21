@@ -2406,7 +2406,7 @@ namespace Ultima5ReduxTesting
 
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("should have been a small map");
-            
+
             // fountain
             var courtYard = new Point2D(15, 19);
             nClosest = smallMap.ClosestTileReferenceAround(
@@ -3787,6 +3787,57 @@ namespace Ultima5ReduxTesting
             if (bReloadJson) world.ReLoadFromJson();
 
             world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(new Point2D(15, 15));
+        }
+
+        [Test] [TestCase(SaveFiles.brandnew, false)] [TestCase(SaveFiles.brandnew, true)]
+        public void test_CheckSmallMapsLoaded(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle,
+                    0));
+            Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentPosition.Floor == 0);
+            if (world.State.TheVirtualMap.CurrentMap is SmallMap smallMap)
+            {
+                Assert.IsNotNull(smallMap);
+                if (smallMap == null) throw new NullReferenceException();
+                Assert.IsNotNull(smallMap.GetSmallMaps());
+            }
+            else
+            {
+                throw new Ultima5ReduxException("Supposed to be small map");
+            }
+        }
+
+        public void test_BasicLoadDifferentFloors(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle,
+                    0));
+            Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentPosition.Floor == 0);
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle,
+                    -1));
+            Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentPosition.Floor == -1);
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle,
+                    1));
+            Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentPosition.Floor == 1);
         }
     }
 }

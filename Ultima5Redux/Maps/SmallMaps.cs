@@ -14,6 +14,11 @@ namespace Ultima5Redux.Maps
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>
             _mapLocationDictionary = new();
 
+        [IgnoreDataMember]
+        public IReadOnlyDictionary<SmallMapReferences.SingleMapReference.Location,
+                Dictionary<int, SmallMap>>
+            MapLocationDictionary => _mapLocationDictionary;
+
         [JsonConstructor] public SmallMaps()
         {
             // if the _mapLocationDictionary already has elements, then we assume it was deserialized and skip this step

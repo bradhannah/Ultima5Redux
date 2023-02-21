@@ -15,7 +15,9 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         public class SingleMapReference
         {
-            [SuppressMessage("ReSharper", "IdentifierTypo")] [JsonConverter(typeof(StringEnumConverter))]
+            [SuppressMessage("ReSharper", "IdentifierTypo")]
+            [JsonConverter(typeof(StringEnumConverter))]
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
             public enum Location
             {
                 Britannia_Underworld = 0x00, Moonglow = 1, Britain = 2, Jhelom = 3, Yew = 4, Minoc = 5, Trinsic = 6,

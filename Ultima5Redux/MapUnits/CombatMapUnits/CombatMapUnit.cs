@@ -32,27 +32,25 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 int nCriticalThreshold = Stats.MaximumHp >> 2; /* (MaximumHp / 4) */
                 int nHeavyThreshold = Stats.MaximumHp >> 1; /* (MaximumHp / 2) */
                 int nLightThreshold = nCriticalThreshold + nHeavyThreshold;
-
-                if (Stats.CurrentHp <= 0)
+                const int nFleeingThreshold = 24;
+                switch (Stats.CurrentHp)
                 {
-                    return HitState.Dead;
-                }
-
-                if (Stats.CurrentHp < 24)
-                {
-                    return HitState.Fleeing;
+                    case <= 0:
+                        return HitState.Dead;
+                    case < nFleeingThreshold:
+                        return HitState.Fleeing;
                 }
 
                 if (Stats.CurrentHp < nCriticalThreshold)
                 {
                     return HitState.CriticallyWounded;
                 }
-
                 if (Stats.CurrentHp < nHeavyThreshold)
                 {
                     return HitState.HeavilyWounded;
                 }
 
+                // ReSharper disable once ConvertIfStatementToReturnStatement
                 if (Stats.CurrentHp < nLightThreshold)
                 {
                     return HitState.LightlyWounded;

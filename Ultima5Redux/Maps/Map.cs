@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -667,6 +668,7 @@ namespace Ultima5Redux.Maps
                 // sometimes characters are null because they don't exist - and that is OK
                 if (!mapUnit.IsActive) continue;
 
+                // ReSharper disable once InvertIf
                 if (mapUnit.MapUnitPosition.XY == xy &&
                     mapUnit.MapUnitPosition.Floor == nFloor)
                 {
@@ -718,6 +720,8 @@ namespace Ultima5Redux.Maps
         /// <param name="bExcludeAvatar"></param>
         /// <returns>MapUnit or null</returns>
         // ReSharper disable once MemberCanBePrivate.Global
+        [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
+        [SuppressMessage("ReSharper", "ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator")]
         public MapUnit GetTopVisibleMapUnit(in Point2D xy, bool bExcludeAvatar)
         {
             List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);

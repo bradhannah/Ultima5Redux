@@ -762,6 +762,7 @@ namespace Ultima5Redux.Maps
 
             // gets an adjusted position OR returns null if the position is not valid
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (MapUnitMovement.MovementCommandDirection direction in Enum.GetValues(
                          typeof(MapUnitMovement.MovementCommandDirection)))
             {
@@ -903,15 +904,17 @@ namespace Ultima5Redux.Maps
             {
                 // last second check for water enemy - they can occasionally appear on a "land" tile like bridges
                 // so we take the chance to force a Bay map just in case
-                if (targetedMapUnit is Enemy waterCheckEnemy)
-                {
-                    if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
-                        return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
-                            SingleCombatMapReference.BritanniaCombatMaps.Bay, territory);
-                    // if the enemy is on bay but is not a water creature then we cannot attack them
-                    if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
-                        return null;
-                }
+                if (targetedMapUnit is not Enemy waterCheckEnemy)
+                    return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                        attackToTileReference.CombatMapIndex, territory);
+
+                if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
+                    return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                        SingleCombatMapReference.BritanniaCombatMaps.Bay, territory);
+
+                // if the enemy is on bay but is not a water creature then we cannot attack them
+                if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
+                    return null;
 
                 return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
                     attackToTileReference.CombatMapIndex, territory);
@@ -1049,7 +1052,7 @@ namespace Ultima5Redux.Maps
                 newUnit = new EmptyMapUnit();
             }
             else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active &&
-                     npcState.NPCRef.NormalNPC)
+                     npcState.NpcRef.NormalNPC)
             {
                 newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
                     mapUnitPosition, npcState);
@@ -1083,7 +1086,7 @@ namespace Ultima5Redux.Maps
             {
                 // This is where we will do custom stuff for special NPS
                 // guard or daemon or stone gargoyle or fighter or bard or townes person or rat or bat or shadowlord
-                if ((TileReference.SpriteIndex)npcState.NPCRef.NPCKeySprite is
+                if ((TileReference.SpriteIndex)npcState.NpcRef.NPCKeySprite is
                     TileReference.SpriteIndex.Guard_KeyIndex
                     or TileReference.SpriteIndex.Daemon1_KeyIndex
                     or TileReference.SpriteIndex.StoneGargoyle_KeyIndex
@@ -1099,7 +1102,7 @@ namespace Ultima5Redux.Maps
                 }
                 else
                 {
-                    newUnit = NonAttackingUnitFactory.Create(npcState.NPCRef.NPCKeySprite, location, mapUnitPosition);
+                    newUnit = NonAttackingUnitFactory.Create(npcState.NpcRef.NPCKeySprite, location, mapUnitPosition);
                     newUnit.MapLocation = location;
                 }
             }

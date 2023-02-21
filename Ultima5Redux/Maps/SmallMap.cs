@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -54,7 +55,15 @@ namespace Ultima5Redux.Maps
         {
         }
 
+        internal void SetSmallMaps(SmallMaps smallMaps)
+        {
+            Debug.Assert(smallMaps != null);
+            _smallMaps = smallMaps;
+        }
 
+        public SmallMaps GetSmallMaps() => _smallMaps;
+        
+        
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference
         /// </summary>
@@ -142,6 +151,7 @@ namespace Ultima5Redux.Maps
         /// <param name="destinedPosition">the position you are trying to get to</param>
         /// <param name="currentPosition">the current position of the character</param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
         internal List<Point2D> getBestStairsAndLadderLocationBasedOnCurrentPosition(
             VirtualMap.LadderOrStairDirection ladderOrStairDirection, Point2D destinedPosition, Point2D currentPosition)
         {
@@ -196,13 +206,14 @@ namespace Ultima5Redux.Maps
                 NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
                                                (TileReference.SpriteIndex)m.NpcRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
                                                or TileReference.SpriteIndex.HorseRight) ??
-                                           throw new Ultima5ReduxException("Smith was not in Iolo's hut");
+                                           throw new Ultima5ReduxException("Smith was not in Iolos hut");
 
                 CurrentMapUnits.ClearMapUnit(smith);
                 CurrentMapUnits.AllMapUnits.RemoveAll(m => m is NonPlayerCharacter);
             }
         }
 
+        
 
         // small map
         /// <summary>
@@ -275,11 +286,11 @@ namespace Ultima5Redux.Maps
                 // if it's an initial load we use the imported state, otherwise we assume it's fresh and new
                 SmallMapCharacterState smallMapCharacterState = bInitialMapAndSmall
                     ? importedGameState.SmallMapCharacterStates.GetCharacterState(i)
-                    : new SmallMapCharacterState(npcState.NPCRef, i);
+                    : new SmallMapCharacterState(npcState.NpcRef, i);
 
                 MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location, npcState,
                     smallMapCharacterState.TheMapUnitPosition,
-                    GameReferences.Instance.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(npcState.NpcRef.NPCKeySprite),
                     smallMapCharacterState);
 
                 // I want to be able to do this - but if I do then no new map units are created...

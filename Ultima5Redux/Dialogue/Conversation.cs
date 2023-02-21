@@ -96,7 +96,7 @@ namespace Ultima5Redux.Dialogue
         /// <param name="npcState"></param>
         public Conversation(GameState state, NonPlayerCharacterState npcState)
         {
-            _script = npcState.NPCRef.Script;
+            _script = npcState.NpcRef.Script;
             _gameState = state;
             TheNonPlayerCharacterState = npcState;
         }
@@ -597,7 +597,7 @@ namespace Ultima5Redux.Dialogue
                     if (Utils.OneInXOdds(2))
                         // okay, tell them who you are
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
-                            "\nI am called " + TheNonPlayerCharacterState.NPCRef.Name));
+                            "\nI am called " + TheNonPlayerCharacterState.NpcRef.Name));
 
                 // if in label && next line include <AvatarName>, then skip label
                 const int startingIndexForLabel = 0;
@@ -760,7 +760,7 @@ namespace Ultima5Redux.Dialogue
                     smallMap.IsWantedManByThePoPo = true;
                     CallForGuardsAfterConversation = true;
                     // if it's a guard that calls guards then they will attack you immediately, you had your chance!
-                    if (TheNonPlayerCharacterState.NPCRef.IsGuard) smallMap.DeclinedExtortion = true;
+                    if (TheNonPlayerCharacterState.NpcRef.IsGuard) smallMap.DeclinedExtortion = true;
                     break;
                 case TalkScript.TalkCommand.Gold:
                     _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
@@ -769,11 +769,11 @@ namespace Ultima5Redux.Dialogue
                 case TalkScript.TalkCommand.JoinParty:
                     NonPlayerCharacter npc =
                         _gameState.TheVirtualMap.CurrentMap.CurrentMapUnits.NonPlayerCharacters.First(m =>
-                            m.NpcRefIndex == TheNonPlayerCharacterState.NPCRef.DialogIndex);
+                            m.NpcRefIndex == TheNonPlayerCharacterState.NpcRef.DialogIndex);
                     if (npc == null)
                     {
                         throw new Ultima5ReduxException(
-                            $"Tried to get the Npc on the map so they could join but couldn't find dialog #{TheNonPlayerCharacterState.NPCRef.DialogIndex}");
+                            $"Tried to get the Npc on the map so they could join but couldn't find dialog #{TheNonPlayerCharacterState.NpcRef.DialogIndex}");
                     }
 
                     _gameState.CharacterRecords.AddMemberToParty(npc, TheTurnResults);

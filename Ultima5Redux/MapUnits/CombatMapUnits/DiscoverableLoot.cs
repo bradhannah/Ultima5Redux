@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
@@ -101,9 +102,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             InnerItemStack = new ItemStack(MapUnitPosition);
 
-            foreach (InventoryItem inventoryItem in _inventoryItems)
+            foreach (StackableItem stackableItem in _inventoryItems.Select(inventoryItem =>
+                         new StackableItem(inventoryItem)))
             {
-                var stackableItem = new StackableItem(inventoryItem);
                 InnerItemStack.PushStackableItem(stackableItem);
             }
         }

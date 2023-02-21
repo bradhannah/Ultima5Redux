@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.References;
@@ -51,7 +52,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             SmallMapReferences.SingleMapReference.Location location, int nIndex) =>
             _npcMap[location][nIndex];
 
-        public NonPlayerCharacterState GetStateByNPCRef(NonPlayerCharacterReference npcRef) =>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public NonPlayerCharacterState GetStateByNpcRef(NonPlayerCharacterReference npcRef) =>
             _npcMap[npcRef.MapLocation][npcRef.DialogIndex];
     }
 }
