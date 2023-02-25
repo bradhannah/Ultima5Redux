@@ -939,9 +939,9 @@ namespace Ultima5Redux.Maps
                     if (affectedCombatMapUnit is Enemy deadEnemy)
                     {
                         // if the enemy was an NPC then we kill them!
-                        if (deadEnemy.NPCRef != null)
+                        if (deadEnemy.NpcRef != null)
                         {
-                            deadEnemy.NPCState.IsDead = true;
+                            deadEnemy.NpcState.IsDead = true;
                         }
                     }
 

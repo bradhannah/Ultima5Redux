@@ -353,8 +353,8 @@ namespace Ultima5Redux.Maps
                         turnResults.PushTurnResult(new NpcTalkInteraction(npc));
                         // if they want to chat, then we start a pissed off counter
                         // it only really matters for guards though 
-                        if (npc.NPCRef.IsGuard && npc.NPCState.PissedOffCountDown <= 0)
-                            npc.NPCState.PissedOffCountDown = OddsAndLogic.TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU;
+                        if (npc.NpcRef.IsGuard && npc.NpcState.PissedOffCountDown <= 0)
+                            npc.NpcState.PissedOffCountDown = OddsAndLogic.TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU;
                         continue;
                     }
                     case VirtualMap.AggressiveMapUnitInfo.DecidedAction.Begging:
@@ -370,8 +370,8 @@ namespace Ultima5Redux.Maps
                         if (mapUnit is not NonPlayerCharacter npc)
                             throw new Ultima5ReduxException(
                                 $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
-                        if (npc.NPCState.HasExtortedAvatar) continue;
-                        npc.NPCState.HasExtortedAvatar = true;
+                        if (npc.NpcState.HasExtortedAvatar) continue;
+                        npc.NpcState.HasExtortedAvatar = true;
                         turnResults.PushTurnResult(new GuardExtortion(npc,
                             GuardExtortion.ExtortionType.BlackthornPassword, 0));
                         continue;
@@ -389,8 +389,8 @@ namespace Ultima5Redux.Maps
                         if (mapUnit is not NonPlayerCharacter npc)
                             throw new Ultima5ReduxException(
                                 $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
-                        if (npc.NPCState.HasExtortedAvatar) continue;
-                        npc.NPCState.HasExtortedAvatar = true;
+                        if (npc.NpcState.HasExtortedAvatar) continue;
+                        npc.NpcState.HasExtortedAvatar = true;
                         turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold, 0));
                         continue;
                     }
@@ -400,8 +400,8 @@ namespace Ultima5Redux.Maps
                         if (mapUnit is not NonPlayerCharacter npc)
                             throw new Ultima5ReduxException(
                                 $"A non-npc tried generic extortion. They are a {mapUnit.GetType()}");
-                        if (npc.NPCState.HasExtortedAvatar) continue;
-                        npc.NPCState.HasExtortedAvatar = true;
+                        if (npc.NpcState.HasExtortedAvatar) continue;
+                        npc.NpcState.HasExtortedAvatar = true;
                         turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic,
                             OddsAndLogic.GetGuardExtortionAmount(
                                 OddsAndLogic.GetEraByTurn(GameStateReference.State.TurnsSinceStart))));
@@ -540,7 +540,7 @@ namespace Ultima5Redux.Maps
             //bool isWantedManByThePoPo = IsWantedManByThePoPo;
             //bool declinedExtortion = CurrentMap is SmallMap { DeclinedExtortion: true };
             bool bIsMadGuard = false;
-            if (aggressorMapUnit is NonPlayerCharacter npc) bIsMadGuard = IsWantedManByThePoPo && npc.NPCRef.IsGuard;
+            if (aggressorMapUnit is NonPlayerCharacter npc) bIsMadGuard = IsWantedManByThePoPo && npc.NpcRef.IsGuard;
 
             // if the guard is next to you, then they will ask you to come quietly
             bool bNextToEachOther = attackFromPosition.IsWithinNFourDirections(attackToPosition);
@@ -562,7 +562,7 @@ namespace Ultima5Redux.Maps
 
                 // because this overrides a LOT of AI behaviours, I just let all guards try to attack
                 // you if you turned down the extortion
-                if (nextToEachOtherNpc.NPCRef.IsGuard && IsWantedManByThePoPo && DeclinedExtortion)
+                if (nextToEachOtherNpc.NpcRef.IsGuard && IsWantedManByThePoPo && DeclinedExtortion)
                 {
                     ForceAttack(mapUnitInfo, attackFromTileReference);
                 }
@@ -619,8 +619,8 @@ namespace Ultima5Redux.Maps
                             break;
                         case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
                             // if they wanted to chat and they are a guard they can get pissed off and arrest you
-                            if (IsWantedManByThePoPo || (nextToEachOtherNpc.NPCState.PissedOffCountDown == 0 &&
-                                                         nextToEachOtherNpc.NPCRef.IsGuard))
+                            if (IsWantedManByThePoPo || (nextToEachOtherNpc.NpcState.PissedOffCountDown == 0 &&
+                                                         nextToEachOtherNpc.NpcRef.IsGuard))
                             {
                                 mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
                                     .AttemptToArrest);
@@ -648,12 +648,12 @@ namespace Ultima5Redux.Maps
             // if a guard wants to chat, they lose patience after a while and want to arrest you
             // so we count down like a stern parent
             else if (aggressorMapUnit is NonPlayerCharacter pissedOffNonPlayerCharacter
-                     && pissedOffNonPlayerCharacter.NPCState.PissedOffCountDown > 0
-                     && pissedOffNonPlayerCharacter.NPCRef.IsGuard
-                     && pissedOffNonPlayerCharacter.NPCState.OverridenAiType ==
+                     && pissedOffNonPlayerCharacter.NpcState.PissedOffCountDown > 0
+                     && pissedOffNonPlayerCharacter.NpcRef.IsGuard
+                     && pissedOffNonPlayerCharacter.NpcState.OverridenAiType ==
                      NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat)
             {
-                pissedOffNonPlayerCharacter.NPCState.PissedOffCountDown--;
+                pissedOffNonPlayerCharacter.NpcState.PissedOffCountDown--;
             }
 
             if (aggressorMapUnit is not Enemy enemy) return mapUnitInfo;

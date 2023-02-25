@@ -82,14 +82,14 @@ namespace Ultima5Redux.Maps
             foreach (NonPlayerCharacter mapUnit in CurrentMapUnits.NonPlayerCharacters
                          .Where(m => m.KeyTileReference.Index == (int)TileReference.SpriteIndex.Rat_KeyIndex)!)
             {
-                mapUnit.NPCState.IsDead = false;
+                mapUnit.NpcState.IsDead = false;
             }
 
             // Gargoyles may have overriden AI when the avatar gets too close them 
             foreach (NonPlayerCharacter mapUnit in CurrentMapUnits.NonPlayerCharacters.Where(m =>
                          m.KeyTileReference.Index == (int)TileReference.SpriteIndex.StoneGargoyle_KeyIndex)!)
             {
-                mapUnit.NPCState.UnsetOverridenAi();
+                mapUnit.NpcState.UnsetOverridenAi();
             }
 
             //NPCState.OverrideAi(NonPlayerCharacterSchedule.AiType.DrudgeWorthThing);
@@ -99,7 +99,7 @@ namespace Ultima5Redux.Maps
             // and when you give them your password, they tend to leave you alone after unless
             // you engage in conversation with them
             bool? _ = CurrentMapUnits.NonPlayerCharacters.All(
-                n => n.NPCState.HasExtortedAvatar = false);
+                n => n.NpcState.HasExtortedAvatar = false);
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Ultima5Redux.Maps
                 // it it is the first day then we don't include Smith or the Rats. Let's start the day off
                 // on a positive note!
                 NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
-                                               (TileReference.SpriteIndex)m.NPCRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
+                                               (TileReference.SpriteIndex)m.NpcRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
                                                or TileReference.SpriteIndex.HorseRight) ??
                                            throw new Ultima5ReduxException("Smith was not in Iolo's hut");
 
@@ -327,17 +327,17 @@ namespace Ultima5Redux.Maps
                 if (mapUnit is not EmptyMapUnit and not DiscoverableLoot)
                 {
                     if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
-                        mapUnit.NPCRef == null) continue;
-                    if (mapUnit.NPCRef == null)
+                        mapUnit.NpcRef == null) continue;
+                    if (mapUnit.NpcRef == null)
                         throw new Ultima5ReduxException($"Expected NPCRef for MapUnit {mapUnit.GetType()}");
-                    if (mapUnit.NPCRef.DialogIndex != -1)
+                    if (mapUnit.NpcRef.DialogIndex != -1)
                     {
                         // get the specific NPC reference 
                         NonPlayerCharacterState npcState =
                             GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location,
-                                mapUnit.NPCRef.DialogIndex);
+                                mapUnit.NpcRef.DialogIndex);
 
-                        mapUnit.NPCState = npcState;
+                        mapUnit.NpcState = npcState;
                         // No need to refresh the SmallMapCharacterState because it is saved to the save file 
                         //new SmallMapCharacterState(npcState.NPCRef, i);
                     }

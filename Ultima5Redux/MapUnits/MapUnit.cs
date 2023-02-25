@@ -57,7 +57,7 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] public bool ArrivedAtLocation { get; private set; }
 
-        [DataMember] public NonPlayerCharacterState NPCState { get; protected internal set; }
+        [DataMember] public NonPlayerCharacterState NpcState { get; protected internal set; }
 
         [IgnoreDataMember] private readonly MapUnitPosition _savedMapUnitPosition = new();
 
@@ -67,14 +67,14 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public virtual bool CanStackMapUnitsOnTop => false;
 
-        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
+        [IgnoreDataMember] public NonPlayerCharacterReference NpcRef => NpcState?.NPCRef;
 
         [IgnoreDataMember]
         public virtual TileReference KeyTileReference
         {
-            get => NPCRef == null
+            get => NpcRef == null
                 ? GameReferences.Instance.SpriteTileReferences.GetTileReference(_keyTileIndex)
-                : GameReferences.Instance.SpriteTileReferences.GetTileReference(NPCRef.NPCKeySprite);
+                : GameReferences.Instance.SpriteTileReferences.GetTileReference(NpcRef.NPCKeySprite);
             set => _keyTileIndex = value.Index;
         }
 
@@ -85,13 +85,13 @@ namespace Ultima5Redux.MapUnits
         protected internal virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
 
-        [IgnoreDataMember] protected internal virtual bool OverrideAiType => NPCState?.OverrideAiType ?? false;
+        [IgnoreDataMember] protected internal virtual bool OverrideAiType => NpcState?.OverrideAiType ?? false;
 
         [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
 
         [IgnoreDataMember]
         protected virtual NonPlayerCharacterSchedule.AiType OverridenAiType =>
-            NPCState?.OverridenAiType ?? NonPlayerCharacterSchedule.AiType.Fixed;
+            NpcState?.OverridenAiType ?? NonPlayerCharacterSchedule.AiType.Fixed;
 
         [field: DataMember(Name = "NpcRefIndex")]
         public int NpcRefIndex { get; } = -1;
@@ -103,7 +103,7 @@ namespace Ultima5Redux.MapUnits
         {
             get
             {
-                if (NPCRef == null) return true;
+                if (NpcRef == null) return true;
                 return GetCurrentAiType(GameStateReference.State.TheTimeOfDay) !=
                        NonPlayerCharacterSchedule.AiType.StoneGargoyleTrigger;
             }
@@ -146,7 +146,7 @@ namespace Ultima5Redux.MapUnits
             _keyTileIndex = tileReference.Index;
 
             // testing - not sure why I left this out in the first place
-            NPCState = npcState;
+            NpcState = npcState;
 
             // set the characters position 
             MapUnitPosition = mapUnitPosition;
@@ -214,7 +214,7 @@ namespace Ultima5Redux.MapUnits
             // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
             // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
             // NPCs
-            Debug.WriteLine(NPCRef?.FriendlyName ??
+            Debug.WriteLine(NpcRef?.FriendlyName ??
                             $"NOT_NPC got stuck after {MovementAttempts.ToString()} so we are going to find a new direction for them");
 
             Movement.ClearMovements();
@@ -316,11 +316,11 @@ namespace Ultima5Redux.MapUnits
             // added some safety to save potential exceptions
             // if there is no NPC reference (currently only horses) then we just assign their intended position
             // as their current position 
-            MapUnitPosition npcDestinationPosition = NPCRef == null
+            MapUnitPosition npcDestinationPosition = NpcRef == null
                 ? MapUnitPosition
-                : NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+                : NpcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
-            bool bIsDead = NPCState?.IsDead ?? false;
+            bool bIsDead = NpcState?.IsDead ?? false;
             // a little hacky - if they are dead then we just place them at 0,0 which is understood to be the 
             // location for NPCs that aren't present on the map
             if (bIsDead && (npcDestinationPosition.X != 0 || npcDestinationPosition.Y != 0))
@@ -338,7 +338,7 @@ namespace Ultima5Redux.MapUnits
             // if the NPC is destined for a different floor then we watch to see if they are on stairs on a ladder
             bool bDifferentFloor = npcDestinationPosition.Floor != MapUnitPosition.Floor;
 
-            if (!OverrideAiType && NPCRef == null)
+            if (!OverrideAiType && NpcRef == null)
                 throw new Ultima5ReduxException(
                     "You MUST override the AI Type of a MapUnit if they have no corresponding NPC Reference");
 
@@ -348,7 +348,7 @@ namespace Ultima5Redux.MapUnits
                 smallMap.CurrentAvatarPosition.XY.DistanceBetween(MapUnitPosition.XY) < MAX_VISIBILITY;
             NonPlayerCharacterSchedule.AiType aiType;
             if (smallMap.IsWantedManByThePoPo && bWithinVisibilityRange)
-                aiType = NPCRef is { IsGuard: false }
+                aiType = NpcRef is { IsGuard: false }
                     ? NonPlayerCharacterSchedule.AiType.ChildRunAway
                     : NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow;
             else
@@ -366,9 +366,9 @@ namespace Ultima5Redux.MapUnits
                 {
                     // we already know they aren't on this floor, so that is safe to assume
                     // so we find the closest and best ladder or stairs for them, make sure they are not occupied and send them down
-                    if (NPCRef == null)
+                    if (NpcRef == null)
                         throw new Ultima5ReduxException("Tried to get NPC schedule, but NPCRef was null");
-                    MapUnitPosition npcPrevXy = NPCRef.Schedule.GetCharacterPreviousPositionByTime(timeOfDay);
+                    MapUnitPosition npcPrevXy = NpcRef.Schedule.GetCharacterPreviousPositionByTime(timeOfDay);
                     VirtualMap.LadderOrStairDirection ladderOrStairDirection = nMapCurrentFloor > npcPrevXy.Floor
                         ? VirtualMap.LadderOrStairDirection.Down
                         : VirtualMap.LadderOrStairDirection.Up;
@@ -380,7 +380,7 @@ namespace Ultima5Redux.MapUnits
                     if (stairsAndLadderLocations.Count <= 0)
                     {
                         Debug.WriteLine(
-                            $"{NPCRef.FriendlyName} can't find a damn ladder or staircase at {timeOfDay.FormattedTime}");
+                            $"{NpcRef.FriendlyName} can't find a damn ladder or staircase at {timeOfDay.FormattedTime}");
 
                         // there is a rare situation (Gardner in Serpents hold) where he needs to go down, but only has access to an up ladder
                         stairsAndLadderLocations = smallMap.GetBestStairsAndLadderLocation(
@@ -388,9 +388,9 @@ namespace Ultima5Redux.MapUnits
                                 ? VirtualMap.LadderOrStairDirection.Up
                                 : VirtualMap.LadderOrStairDirection.Down, npcDestinationPosition.XY);
                         Debug.WriteLine(
-                            $"{NPCRef.FriendlyName} couldn't find a ladder or stair going {ladderOrStairDirection.ToString()} {timeOfDay.FormattedTime}");
+                            $"{NpcRef.FriendlyName} couldn't find a ladder or stair going {ladderOrStairDirection.ToString()} {timeOfDay.FormattedTime}");
                         if (stairsAndLadderLocations.Count <= 0)
-                            throw new Ultima5ReduxException(NPCRef.FriendlyName +
+                            throw new Ultima5ReduxException(NpcRef.FriendlyName +
                                                             " can't find a damn ladder or staircase at " +
                                                             timeOfDay.FormattedTime);
                     }
@@ -418,7 +418,7 @@ namespace Ultima5Redux.MapUnits
                     {
                         // teleport them and return immediately
                         MoveNpcToDefaultScheduledPosition(timeOfDay);
-                        Debug.WriteLine($"{NPCRef?.FriendlyName} just went to a different floor");
+                        Debug.WriteLine($"{NpcRef?.FriendlyName} just went to a different floor");
                         return;
                     }
 
@@ -436,7 +436,7 @@ namespace Ultima5Redux.MapUnits
                     }
 
                     Debug.WriteLine(
-                        $"Tried to build a path for {NPCRef?.FriendlyName} to {npcDestinationPosition} but it failed, keep an eye on it...");
+                        $"Tried to build a path for {NpcRef?.FriendlyName} to {npcDestinationPosition} but it failed, keep an eye on it...");
                     return;
                 }
             }
@@ -488,7 +488,7 @@ namespace Ultima5Redux.MapUnits
                         MapUnitPosition avatarPosition = smallMap.CurrentAvatarPosition;
                         if (avatarPosition.XY.DistanceBetween(MapUnitPosition.XY) <= N_DISTANCE_TO_TRIGGER_GARGOYLES)
                         {
-                            NPCState?.OverrideAi(NonPlayerCharacterSchedule.AiType.DrudgeWorthThing);
+                            NpcState?.OverrideAi(NonPlayerCharacterSchedule.AiType.DrudgeWorthThing);
                         }
 
                         break;
@@ -537,7 +537,7 @@ namespace Ultima5Redux.MapUnits
                         break;
                     default:
                         throw new Ultima5ReduxException(
-                            $"An unexpected movement AI was encountered: {aiType} for NPC: {NPCRef?.Name}");
+                            $"An unexpected movement AI was encountered: {aiType} for NPC: {NpcRef?.Name}");
                 }
             else // character not in correct position
                 switch (aiType)
@@ -622,7 +622,7 @@ namespace Ultima5Redux.MapUnits
                         break;
                     default:
                         throw new Ultima5ReduxException(
-                            $"An unexpected movement AI was encountered: {aiType} for NPC: {NPCRef?.Name}");
+                            $"An unexpected movement AI was encountered: {aiType} for NPC: {NpcRef?.Name}");
                 }
         }
 
@@ -833,10 +833,10 @@ namespace Ultima5Redux.MapUnits
         private void UpdateScheduleTracking(TimeOfDay tod)
         {
             // sometime there is no NPCRef so lets just return (like purchased horses)
-            if (NPCRef == null) return;
-            if (MapUnitPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod)) ArrivedAtLocation = true;
+            if (NpcRef == null) return;
+            if (MapUnitPosition == NpcRef.Schedule.GetCharacterDefaultPositionByTime(tod)) ArrivedAtLocation = true;
 
-            int nCurrentScheduleIndex = NPCRef.Schedule.GetScheduleIndex(tod);
+            int nCurrentScheduleIndex = NpcRef.Schedule.GetScheduleIndex(tod);
             // it's the first time, so we don't reset the ArrivedAtLocation flag 
             if (_scheduleIndex == -1)
             {
@@ -868,8 +868,8 @@ namespace Ultima5Redux.MapUnits
 
             MapUnitPosition mapUnitPosition = MapUnitPosition;
             MapUnitPosition scheduledPosition;
-            if (NPCRef != null)
-                scheduledPosition = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+            if (NpcRef != null)
+                scheduledPosition = NpcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
             else if (TheSmallMapCharacterState != null)
                 scheduledPosition = TheSmallMapCharacterState.TheMapUnitPosition;
             else
@@ -973,7 +973,7 @@ namespace Ultima5Redux.MapUnits
         }
 
         public NonPlayerCharacterSchedule.AiType GetCurrentAiType(TimeOfDay tod) =>
-            OverrideAiType ? OverridenAiType : NPCRef.Schedule.GetCharacterAiTypeByTime(tod);
+            OverrideAiType ? OverridenAiType : NpcRef.Schedule.GetCharacterAiTypeByTime(tod);
 
         protected virtual bool CanMoveToDumb(Map map, Point2D mapUnitPosition) => false;
 
@@ -991,7 +991,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         protected void MoveNpcToDefaultScheduledPosition(TimeOfDay timeOfDay)
         {
-            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+            MapUnitPosition npcXy = NpcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;

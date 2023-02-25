@@ -466,7 +466,7 @@ namespace Ultima5Redux.Maps
                     EnemyReference enemyReference =
                         GameReferences.Instance.EnemyRefs.GetEnemyReference(npc.KeyTileReference.Index);
                     LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.South, records,
-                        enemyReference, npc.NPCRef);
+                        enemyReference, npc.NpcRef);
                     return;
             }
 

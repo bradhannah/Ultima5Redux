@@ -18,7 +18,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         [IgnoreDataMember] public override string BoardXitName => "Board them? You hardly know them!";
 
-        [IgnoreDataMember] public override string FriendlyName => NPCRef.FriendlyName;
+        [IgnoreDataMember] public override string FriendlyName => NpcRef.FriendlyName;
 
         /// <summary>
         ///     Is the map character currently an active character on the current map
@@ -31,7 +31,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // if they are in our party then we don't include them in the map 
                 if (IsInParty) return false;
 
-                if (NPCState.IsDead) return false;
+                if (NpcState.IsDead) return false;
 
                 // if they are in 0,0 then I am certain they are not real
                 if (MapUnitPosition.X == 0 && MapUnitPosition.Y == 0) return false;
@@ -74,7 +74,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 .BardPlaying_KeyIndex)
             : KeyTileReference;
 
-        public bool IsMinstrel => NPCRef.NPCKeySprite == (int)TileReference.SpriteIndex.BardPlaying_KeyIndex;
+        public bool IsMinstrel => NpcRef.NPCKeySprite == (int)TileReference.SpriteIndex.BardPlaying_KeyIndex;
 
         [JsonConstructor] public NonPlayerCharacter()
         {
@@ -88,18 +88,18 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             GameReferences.Instance.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
             mapUnitPosition)
         {
-            NPCState = npcState;
-            bool bLargeMap = TheSmallMapCharacterState == null && NPCState.NPCRef == null;
+            NpcState = npcState;
+            bool bLargeMap = TheSmallMapCharacterState == null && NpcState.NPCRef == null;
 
             PlayerCharacterRecord record = null;
 
             // gets the player character record for an NPC if one exists
             // this is commonly used when meeting NPCs who have not yet joined your party 
-            if (NPCState.NPCRef != null)
-                record = GameStateReference.State.CharacterRecords.GetCharacterRecordByNPC(NPCState.NPCRef);
+            if (NpcState.NPCRef != null)
+                record = GameStateReference.State.CharacterRecords.GetCharacterRecordByNPC(NpcState.NPCRef);
 
             _playerCharacterRecordIndex =
-                GameStateReference.State.CharacterRecords.GetCharacterIndexByNPC(NPCState.NPCRef);
+                GameStateReference.State.CharacterRecords.GetCharacterIndexByNPC(NpcState.NPCRef);
 
             // is the NPC you are loading currently in the party?
             IsInParty = record is { PartyStatus: PlayerCharacterRecord.CharacterPartyStatus.InTheParty };
@@ -118,7 +118,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // there is no TheSmallMapCharacterState which indicates that it is a large map
                 if (!bLoadedFromDisk)
                 {
-                    if (NPCState.NPCRef != null)
+                    if (NpcState.NPCRef != null)
                         MoveNpcToDefaultScheduledPosition(GameStateReference.State.TheTimeOfDay);
                 }
                 else
@@ -142,10 +142,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         // ReSharper disable once UnusedMember.Global
         public override string GetDebugDescription(TimeOfDay timeOfDay)
         {
-            if (NPCRef != null)
-                return "Name=" + NPCRef.FriendlyName + " " + MapUnitPosition + " Scheduled to be at: " +
-                       NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) + " with AI Mode: " +
-                       NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) + " <b>Movement Attempts</b>: " +
+            if (NpcRef != null)
+                return "Name=" + NpcRef.FriendlyName + " " + MapUnitPosition + " Scheduled to be at: " +
+                       NpcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) + " with AI Mode: " +
+                       NpcRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) + " <b>Movement Attempts</b>: " +
                        MovementAttempts + " " + Movement;
 
             return "MapUnit " + KeyTileReference.Description + " " + MapUnitPosition + " Scheduled to be at: " +

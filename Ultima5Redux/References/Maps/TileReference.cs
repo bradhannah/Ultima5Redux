@@ -30,7 +30,7 @@ namespace Ultima5Redux.References.Maps
             MagicField = 489, FireField = 490, ElectricField = 491, ItemFood = 271, ItemGem = 264, ItemTorch = 269,
             ItemMoney = 258, Beggar_KeyIndex = 365, HolyFloorSymbol = 278, Telescope = 89, Clock1 = 250, Clock2 = 251,
             Well = 161, Fountain_KeyIndex = 216, StoneBrickWall = 79, LargeRockWall = 77, Portcullis = 153,
-            BrickFloor = 68
+            BrickFloor = 68, Bridge = 106
         }
 
 

@@ -352,7 +352,7 @@ namespace Ultima5Redux
                 throw new Ultima5ReduxException("Should be small map");
 
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackMurder));
-            npc.NPCState.IsDead = true;
+            npc.NpcState.IsDead = true;
             State.ChangeKarma(-10, turnResults);
             smallMap.IsWantedManByThePoPo = true;
         }
@@ -1331,7 +1331,7 @@ namespace Ultima5Redux
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NpcFreedFromStocks));
                 turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N).Trim(), false);
-                mapUnit.NPCState.OverrideAi(
+                mapUnit.NpcState.OverrideAi(
                     NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain);
 
                 State.ChangeKarma(2, turnResults);
@@ -1343,7 +1343,7 @@ namespace Ultima5Redux
                 turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N).Trim(), false);
 
-                mapUnit.NPCState.OverrideAi(NonPlayerCharacterSchedule.AiType.BigWander);
+                mapUnit.NpcState.OverrideAi(NonPlayerCharacterSchedule.AiType.BigWander);
 
                 State.ChangeKarma(2, turnResults);
             }
@@ -2153,7 +2153,7 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            bool bHasNpcRef = npc.NPCRef != null;
+            bool bHasNpcRef = npc.NpcRef != null;
             // bool bIsShoppeKeeper = bHasNpcRef && npc.NPCRef.IsShoppeKeeper;
 
             if (State.TheVirtualMap.CurrentMap is SmallMap smallMap)
@@ -2220,7 +2220,7 @@ namespace Ultima5Redux
                     if (State.TheVirtualMap.CurrentMap is not SmallMap merchantSmallMap)
                         throw new Ultima5ReduxException("Cannot have merchant AI outside of a small map");
                     ShoppeKeeper shoppeKeeper = GameReferences.Instance.ShoppeKeeperDialogueReference.GetShoppeKeeper(
-                        merchantSmallMap.MapLocation, npc.NPCRef.NpcType,
+                        merchantSmallMap.MapLocation, npc.NpcRef.NpcType,
                         State.CharacterRecords, State.PlayerInventory);
 
                     if (npc.ArrivedAtLocation && shoppeKeeper.IsOnDuty(State.TheTimeOfDay))
@@ -2235,7 +2235,7 @@ namespace Ultima5Redux
 
                     break;
                 default:
-                    if (npc.NPCRef.Script != null)
+                    if (npc.NpcRef.Script != null)
                     {
                         // just a plain old conversation
                         turnResults.PushTurnResult(new NpcTalkInteraction(npc));
@@ -2244,7 +2244,7 @@ namespace Ultima5Redux
 
                     turnResults.PushOutputToConsole("They are not talkative...", false);
 
-                    int nIndex = npc.NPCRef.Schedule.GetScheduleIndex(State.TheTimeOfDay);
+                    int nIndex = npc.NpcRef.Schedule.GetScheduleIndex(State.TheTimeOfDay);
 
                     turnResults.PushOutputToConsole($"Because their aitype is {aiType} with AiIndex: {nIndex}", false);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NotTalkative));
