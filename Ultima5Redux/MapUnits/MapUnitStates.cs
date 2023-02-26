@@ -10,6 +10,7 @@ namespace Ultima5Redux.MapUnits
     ///     Map character animation states
     ///     This is a generic application of it. The raw data must be passed in during construction.
     /// </summary>
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class MapUnitStates
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -42,9 +43,9 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        public MapUnitState GetCharacterState(int nIndex) => _mapUnitStates[nIndex];
+        internal MapUnitState GetCharacterState(int nIndex) => _mapUnitStates[nIndex];
 
-        public MapUnitState GetCharacterStateByPosition(Point2D xy, int nFloor)
+        internal MapUnitState GetCharacterStateByPosition(Point2D xy, int nFloor)
         {
             return _mapUnitStates.FirstOrDefault(characterState =>
                 characterState.X == xy.X && characterState.Y == xy.Y && characterState.Floor == nFloor);
@@ -73,7 +74,7 @@ namespace Ultima5Redux.MapUnits
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
             {
                 MapUnitState mapUnitState = new(characterStateBytes
-                    .GetRange(i * MapUnitState.NBYTES + nOffset, MapUnitState.NBYTES).ToArray());
+                    .GetRange(i * MapUnitState.N_BYTES + nOffset, MapUnitState.N_BYTES).ToArray());
 
                 // cute little hack that makes sure the first unit is ALWAYS the Avatar. The init.gam does not properly
                 // set this up otherwise

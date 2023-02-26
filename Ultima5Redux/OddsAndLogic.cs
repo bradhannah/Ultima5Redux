@@ -9,7 +9,7 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux
 {
-    public static class OddsAndLogic
+    internal static class OddsAndLogic
     {
         private static readonly Dictionary<NonAttackingUnit.TrapType, int> ChestTrapsWeighted = new()
         {

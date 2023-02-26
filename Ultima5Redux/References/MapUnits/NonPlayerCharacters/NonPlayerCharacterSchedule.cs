@@ -227,7 +227,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             throw new Ultima5ReduxException("GetRawScheduleIndex fell all the way through which doesn't make sense.");
         }
 
-        private Point2D GetXY(int nIndex) => new(Coords[nIndex].X, Coords[nIndex].Y);
+        private Point2D GetXy(int nIndex) => new(Coords[nIndex].X, Coords[nIndex].Y);
 
         /// <summary>
         ///     This will review the scheduled AI types and give them more specific AI types
@@ -368,7 +368,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             int nIndex = GetScheduleIndex(timeOfDay);
 
             mapUnitPosition.Floor = GetFloor(nIndex);
-            mapUnitPosition.XY = GetXY(nIndex);
+            mapUnitPosition.XY = GetXy(nIndex);
 
             return mapUnitPosition;
         }
@@ -394,7 +394,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             };
 
             mapUnitPosition.Floor = GetFloor(nIndex);
-            mapUnitPosition.XY = GetXY(nIndex);
+            mapUnitPosition.XY = GetXy(nIndex);
 
             return mapUnitPosition;
         }

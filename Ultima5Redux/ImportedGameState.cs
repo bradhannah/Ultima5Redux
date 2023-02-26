@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
@@ -30,7 +29,7 @@ namespace Ultima5Redux
         {
             Unused,
             CHARACTER_RECORDS,
-            NPC_ISDEAD_TABLE,
+            NPC_IS_DEAD_TABLE,
             NPC_ISMET_TABLE,
             N_PEOPLE_PARTY,
             FOOD_QUANTITY,
@@ -73,7 +72,7 @@ namespace Ultima5Redux
         }
 
         // ReSharper disable once UnusedMember.Local
-        [IgnoreDataMember] public MapUnitStates MapUnitStatesByInitialMap => GetMapUnitStatesByMap(InitialMap);
+        //[IgnoreDataMember] public MapUnitStates MapUnitStatesByInitialMap => GetMapUnitStatesByMap(InitialMap);
 
         private readonly DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
@@ -369,8 +368,8 @@ namespace Ultima5Redux
 
             // Initialize a table to determine if an NPC hsa been killed/is dead
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Dead Bitmap", 0x5B4, 0x80, 0x00,
-                DataChunkName.NPC_ISDEAD_TABLE);
-            List<bool> npcAlive = DataChunks.GetDataChunk(DataChunkName.NPC_ISDEAD_TABLE).GetAsBitmapBoolList();
+                DataChunkName.NPC_IS_DEAD_TABLE);
+            List<bool> npcAlive = DataChunks.GetDataChunk(DataChunkName.NPC_IS_DEAD_TABLE).GetAsBitmapBoolList();
             NpcIsDeadArray = Utils.ListTo2DArray(npcAlive, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00,
                 NonPlayerCharacterReferences.NPCS_PER_TOWN *
                 SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
@@ -455,6 +454,7 @@ namespace Ultima5Redux
                 Map.Maps.Underworld => UnderworldMapUnitStates,
                 Map.Maps.Combat => throw new Ultima5ReduxException(
                     "Can't return a map state for a combat map from the imported game state"),
+                //Map.Maps.Dungeon => ,
                 _ => throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" + map)
             };
         }

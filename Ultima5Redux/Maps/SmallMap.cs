@@ -261,7 +261,7 @@ namespace Ultima5Redux.Maps
                 NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
                                                (TileReference.SpriteIndex)m.NpcRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
                                                or TileReference.SpriteIndex.HorseRight) ??
-                                           throw new Ultima5ReduxException("Smith was not in Iolos hut");
+                                           throw new Ultima5ReduxException("Smith was not in Iolo's hut");
 
                 CurrentMapUnits.ClearMapUnit(smith);
                 CurrentMapUnits.AllMapUnits.RemoveAll(m => m is NonPlayerCharacter);

@@ -20,9 +20,12 @@ namespace Ultima5Redux.MapUnits
     //7	1	depends on object type
 
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    // this class is generally not used - but provides context on the original save states which will
+    // be kept for posterity
     public class MapUnitState
     {
-        public const int NBYTES = 0x8;
+        public const int N_BYTES = 0x8;
 
         // ReSharper disable once NotAccessedField.Local
         private readonly byte[] _stateBytes;

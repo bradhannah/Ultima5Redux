@@ -485,6 +485,7 @@ namespace Ultima5Redux.References.Dialogue
         ///     Print the script out to the console
         ///     This is the raw print routine that uses the relatively raw script data
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void PrintScript()
         {
             foreach (ScriptLine line in _scriptLines)
@@ -673,7 +674,7 @@ namespace Ultima5Redux.References.Dialogue
             ///     Get an array of all associated questions
             /// </summary>
             /// <returns></returns>
-            public string[] GetScriptQuestions() => QuestionAnswers.Keys.ToArray();
+            // public string[] GetScriptQuestions() => QuestionAnswers.Keys.ToArray();
 
             /// <summary>
             ///     Print the object to the console
@@ -682,6 +683,7 @@ namespace Ultima5Redux.References.Dialogue
             {
                 Dictionary<ScriptQuestionAnswer, bool> seenAnswers = new();
 
+                // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                 foreach (ScriptQuestionAnswer sqa in QuestionAnswers.Values)
                 {
                     if (seenAnswers.ContainsKey(sqa)) continue;

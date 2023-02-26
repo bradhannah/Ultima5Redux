@@ -160,6 +160,7 @@ namespace Ultima5Redux.Data
     /// <summary>
     ///     A data chunk represents a stream of bytes that can be represented in variety of ways depending on the data type
     /// </summary>
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class DataChunk
     {
         /// <summary>
@@ -344,15 +345,13 @@ namespace Ultima5Redux.Data
         public string GetChunkAsString()
         {
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (DataFormat)
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+            return DataFormat switch
             {
-                case DataFormatType.FixedString:
-                    return Utils.BytesToStringFixedWidth(RawData.ToList(), 0, DataLength);
-                case DataFormatType.SimpleString:
-                    return Utils.BytesToStringNullTerm(RawData.ToList(), 0, DataLength);
-                default:
-                    throw new Ultima5ReduxException("String datatype doesn't match predefined list.");
-            }
+                DataFormatType.FixedString => Utils.BytesToStringFixedWidth(RawData.ToList(), 0, DataLength),
+                DataFormatType.SimpleString => Utils.BytesToStringNullTerm(RawData.ToList(), 0, DataLength),
+                _ => throw new Ultima5ReduxException("String datatype doesn't match predefined list.")
+            };
         }
 
         /// <summary>

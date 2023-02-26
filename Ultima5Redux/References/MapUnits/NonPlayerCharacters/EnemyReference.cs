@@ -38,6 +38,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         // 0x0004 - Gates in Daemons (F)
         // 0x0002 - Poisons (G)
         // 0x0001 - Infect with Plague (H) - poison melee? 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum EnemyAbility
         {
             Bludgeons = 0,
@@ -79,6 +80,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public int Experience => _additionalEnemyFlags.Experience;
         public int FriendIndex { get; }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool HasLargeMapMissile => _additionalEnemyFlags.LargeMapMissile != CombatItemReference.MissileType.None;
 
         public bool IsNpc => KeyTileReference.IsNPC;
@@ -88,7 +90,9 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
         public TileReference KeyTileReference { get; }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int LargeMapMissileRange => _additionalEnemyFlags.LargeMapMissileRange;
+
         public CombatItemReference.MissileType LargeMapMissileType => _additionalEnemyFlags.LargeMapMissile;
         public string MixedCaseSingularName { get; }
 

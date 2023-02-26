@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace Ultima5Redux.PlayerCharacters
@@ -32,6 +33,7 @@ namespace Ultima5Redux.PlayerCharacters
         [IgnoreDataMember] private int _currentHp;
         [IgnoreDataMember] private PlayerCharacterRecord.CharacterStatus _status;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int GetMaximumMp(PlayerCharacterRecord.CharacterClass characterClass)
         {
             // this differs from Ultima IV, and is far more conservative

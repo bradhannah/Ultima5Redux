@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class ArmourReference : CombatItemReference
     {
         public enum ArmourType
@@ -51,7 +53,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             dataOvlReference, inventoryReference) =>
             TheArmourType = GetArmourTypeByEquipment(inventoryReference.GetAsEquipment());
 
-        internal static ArmourType GetArmourTypeByEquipment(DataOvlReference.Equipment equipment)
+        private static ArmourType GetArmourTypeByEquipment(DataOvlReference.Equipment equipment)
         {
             if (CombatItemReferences.EquipmentMatches(Enum.GetValues(typeof(SpecificHelm)), ref equipment))
                 return ArmourType.Helm;

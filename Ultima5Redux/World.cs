@@ -633,6 +633,7 @@ namespace Ultima5Redux
         /// <param name="enqueuedScriptItem">a handler to be called when script items are enqueued</param>
         /// <param name="customDialogueId">leave "" if you don't want a custom dialogue id</param>
         /// <returns>A conversation object to be used to follow along with the conversation</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public Conversation CreateConversationAndBegin(NonPlayerCharacterState npcState,
             Conversation.EnqueuedScriptItem enqueuedScriptItem, string customDialogueId = "")
         {
@@ -660,6 +661,7 @@ namespace Ultima5Redux
         ///     Avatar MUST be on a moongate teleport location
         /// </summary>
         /// <returns>the coordinates</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public Point3D GetMoongateTeleportLocation()
         {
             Debug.Assert(State.TheVirtualMap.CurrentMap is LargeMap);
@@ -672,6 +674,7 @@ namespace Ultima5Redux
         ///     Determines if the current tile the Avatar is on, is an ACTIVE moongate
         /// </summary>
         /// <returns>true if the Avatar is on an active moongate</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsAvatarOnActiveMoongate()
         {
             if (State.TheVirtualMap.CurrentMap is not LargeMap || State.TheTimeOfDay.IsDayLight) return false;
@@ -689,6 +692,11 @@ namespace Ultima5Redux
             combatPlayer?.Record.ProcessPlayerTurn(turnResults);
         }
 
+        /// <summary>
+        ///     Reloads the game as if it was saved to disk and loaded fresh.
+        ///     Generally only useful when testing the game is handling save states correct.
+        /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void ReLoadFromJson()
         {
             string stateJsonOrig = State.Serialize();
@@ -713,6 +721,7 @@ namespace Ultima5Redux
         /// <param name="turnResults"></param>
         /// <returns>the final decision on how to handle the attack</returns>
         /// <exception cref="Ultima5ReduxException"></exception>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public IEnumerable<VirtualMap.AggressiveMapUnitInfo> TryToAttackNonCombatMap(Point2D attackTargetPosition,
             out MapUnit mapUnit, out SingleCombatMapReference singleCombatMapReference,
             out TryToAttackResult tryToAttackResult, TurnResults turnResults)
@@ -834,6 +843,7 @@ namespace Ultima5Redux
         /// <param name="bWasSuccessful"></param>
         /// <param name="turnResults"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToBoard(out bool bWasSuccessful, TurnResults turnResults)
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
@@ -937,6 +947,7 @@ namespace Ultima5Redux
         /// <param name="bWasSuccessful">true if successfully entered</param>
         /// <param name="turnResults"></param>
         /// <returns>output string</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToEnterBuilding(Point2D xy, out bool bWasSuccessful,
             TurnResults turnResults)
         {
@@ -997,6 +1008,7 @@ namespace Ultima5Redux
         /// <param name="direction"></param>
         /// <param name="turnResults"></param>
         /// <param name="cannonBallDestination"></param>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToFire(Point2D.Direction direction,
             TurnResults turnResults, out Point2D cannonBallDestination)
         {
@@ -1086,6 +1098,7 @@ namespace Ultima5Redux
         /// <param name="direction"></param>
         /// <returns>the output string</returns>
         // ReSharper disable once UnusedMethodReturnValue.Global
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToGetAThing(Point2D xy, out bool bGotAThing,
             out InventoryItem inventoryItem, TurnResults turnResults, Point2D.Direction direction)
         {
@@ -1388,6 +1401,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     Climbs the ladder on the current tile that the Avatar occupies
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToKlimb(out KlimbResult klimbResult, TurnResults turnResults)
         {
             switch (State.TheVirtualMap.CurrentMap)
@@ -1617,15 +1631,10 @@ namespace Ultima5Redux
             turnResults.PushOutputToConsole(lookStr, false);
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionLook));
 
-            // if (tileReference.Index == (int)TileReference.SpriteIndex.Well)
-            // {
-            //     // some wells are supposed to spawn horses, and some aren't... I think maybe all of them should..?
-            //     
-            // }
-
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void TryToMoveCombatMap(Point2D.Direction direction, TurnResults turnResults, bool bKlimb)
         {
             if (State.TheVirtualMap.CurrentMap is not CombatMap combatMap)
@@ -1693,6 +1702,7 @@ namespace Ultima5Redux
         /// <param name="turnResults"></param>
         /// <param name="bManualMovement">true if movement is manual</param>
         /// <returns>output string (may be empty)</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToMoveNonCombatMap(Point2D.Direction direction, bool bKlimb,
             bool bFreeMove, TurnResults turnResults, bool bManualMovement = true)
         {
@@ -1978,6 +1988,7 @@ namespace Ultima5Redux
         ///     Standard way of passing time, makes sure it passes the default amount of time (2 minutes)
         /// </summary>
         /// <returns>"" or a string that describes what happened when passing time</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToPassTime(TurnResults turnResults)
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
@@ -1997,6 +2008,7 @@ namespace Ultima5Redux
         /// <param name="bPushedAThing">was a thing actually pushed?</param>
         /// <param name="turnResults"></param>
         /// <returns>the string to output to the user</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
             out bool bPushedAThing, TurnResults turnResults)
         {
@@ -2069,6 +2081,7 @@ namespace Ultima5Redux
         /// <param name="bWasSuccessful">result if it was successful, true if you found one or more things</param>
         /// <param name="turnResults"></param>
         /// <returns>the output string to write to console</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToSearch(Point2D xy, out bool bWasSuccessful,
             TurnResults turnResults)
         {
@@ -2146,6 +2159,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToTalk(MapUnitMovement.MovementCommandDirection direction,
             TurnResults turnResults)
         {
@@ -2264,6 +2278,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseLordBritishArtifactItem(
             LordBritishArtifact lordBritishArtifact, TurnResults turnResults)
         {
@@ -2310,6 +2325,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseMoonstone(Moonstone moonstone, out bool bMoonstoneBuried,
             TurnResults turnResults)
         {
@@ -2345,6 +2361,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUsePotion(Potion potion, PlayerCharacterRecord record,
             out bool bSucceeded, out MagicReference.SpellWords spell, TurnResults turnResults)
         {
@@ -2445,6 +2462,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseScroll(Scroll scroll, PlayerCharacterRecord record,
             TurnResults turnResults)
         {
@@ -2455,6 +2473,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseShadowLordShard(ShadowlordShard shadowlordShard,
             TurnResults turnResults)
         {
@@ -2483,6 +2502,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseSpecialItem(SpecialItem spcItem, out bool bWasUsed,
             TurnResults turnResults)
         {
@@ -2546,6 +2566,7 @@ namespace Ultima5Redux
         /// <param name="bWasSuccessful">did you successfully eXit the vehicle</param>
         /// <param name="turnResults"></param>
         /// <returns>string to print out for user</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToXit(out bool bWasSuccessful, TurnResults turnResults)
         {
             if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
@@ -2573,6 +2594,7 @@ namespace Ultima5Redux
         /// <param name="bSailsHoisted">are they now hoisted?</param>
         /// <param name="turnResults"></param>
         /// <returns>output string</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToYellForSails(out bool bSailsHoisted, TurnResults turnResults)
         {
             if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)
@@ -2605,6 +2627,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void YellWord(string word)
         {
             // not yet implemented

@@ -239,6 +239,7 @@ namespace Ultima5Redux.DayNightMoon
 
         public bool IsFirstDay() => Day == 5 && Month == 4 && Year == 139;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsSameTime(TimeOfDay tod)
         {
             if (tod == null) return false;
@@ -246,6 +247,7 @@ namespace Ultima5Redux.DayNightMoon
                    Minute == tod.Minute;
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool IsTimeChangeTrackerIdValid(Guid changeTrackerId) =>
             _timeHasChangedDictionary.ContainsKey(changeTrackerId);
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
@@ -105,7 +106,7 @@ namespace Ultima5Redux.References.Maps
             ///     the offset of the map data in the data file
             /// </summary>
             [IgnoreDataMember]
-            public int FileOffset { get; }
+            private int FileOffset { get; }
 
             /// <summary>
             ///     ID of the map location (used in saved.gam references)
@@ -137,7 +138,7 @@ namespace Ultima5Redux.References.Maps
             /// </summary>
             // ReSharper disable once UnusedMember.Global
             [IgnoreDataMember]
-            public SmallMapMasterFiles MasterFile
+            private SmallMapMasterFiles MasterFile
             {
                 get
                 {
@@ -355,10 +356,10 @@ namespace Ultima5Redux.References.Maps
                     case SmallMapMasterFiles.Towne:
                         return FileConstants.TOWNE_TLK;
                     case SmallMapMasterFiles.Dungeon:
-                        break;
+                    case SmallMapMasterFiles.None:
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(mapMaster), mapMaster, null);
                 }
-
-                throw new Ultima5ReduxException("Couldn't map NPC filename");
             }
 
             public override int GetHashCode() => Utils.Ran.Next(Id) + Utils.Ran.Next(Floor);

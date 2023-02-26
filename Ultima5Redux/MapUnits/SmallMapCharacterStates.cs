@@ -29,7 +29,8 @@ namespace Ultima5Redux.MapUnits
             for (int nIndex = 0; nIndex < MAX_CHARACTER_STATES; nIndex++)
             {
                 CharacterStates.Add(new SmallMapCharacterState(
-                    characterStateBytes.GetRange(nIndex * MapUnitState.NBYTES, MapUnitState.NBYTES).ToArray(), nIndex));
+                    characterStateBytes.GetRange(nIndex * MapUnitState.N_BYTES, MapUnitState.N_BYTES).ToArray(),
+                    nIndex));
             }
         }
 

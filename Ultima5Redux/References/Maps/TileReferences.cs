@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using Ultima5Redux.Properties;
 
@@ -358,6 +359,7 @@ namespace Ultima5Redux.References.Maps
         /// <param name="nSprite"></param>
         /// <returns></returns>
         /// <exception cref="Ultima5ReduxException"></exception>
+        [SuppressMessage("ReSharper", "RedundantCaseLabel")]
         public string GetSlowMovementString(int nSprite)
         {
             TileReference tileRef = GetTileReference(nSprite);

@@ -270,9 +270,8 @@ namespace Ultima5Redux.Maps
             }
 
             // we only open the inner items up if it exposes on search like DeadBodies and Spatters
-            if (!nonAttackingMapUnit.ExposeInnerItemsOnSearch) return false;
-
-            return ProcessSearchInnerItems(turnResults, nonAttackingMapUnit, true, false);
+            return nonAttackingMapUnit.ExposeInnerItemsOnSearch &&
+                   ProcessSearchInnerItems(turnResults, nonAttackingMapUnit, true, false);
         }
 
         internal void SwapTiles(Point2D tile1Pos, Point2D tile2Pos)
@@ -434,6 +433,7 @@ namespace Ultima5Redux.Maps
                          mapUnitsAtPosition.Where(mapUnit => mapUnit.GetType() == type)))
             {
                 if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
+                // ReSharper disable once MergeIntoPattern
                 if (!nonAttackingUnit.IsSearchable) continue;
 
                 return nonAttackingUnit;
@@ -475,6 +475,7 @@ namespace Ultima5Redux.Maps
         }
 
         // ReSharper disable once SuggestBaseTypeForParameter
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
         private bool RePlaceNonAttackingUnit(NonAttackingUnit originalNonAttackingUnit,
             NonAttackingUnit replacementNonAttackingUnit, MapUnitPosition mapUnitPosition,
             Maps map)
@@ -760,6 +761,7 @@ namespace Ultima5Redux.Maps
                         continue;
 
                     // we don't show NPCs who are now in our party
+                    // ReSharper disable once MergeIntoLogicalPattern
                     if (mapUnit is NonPlayerCharacter { IsInParty: true }) continue;
 
                     // if we find the first highest priority item, then we simply return it

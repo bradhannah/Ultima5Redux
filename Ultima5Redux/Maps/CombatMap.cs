@@ -21,7 +21,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.Maps
 {
-    public class CombatMap : Map
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    public sealed class CombatMap : Map
     {
         /// <summary>
         ///     For tracking which escape route was used
@@ -45,7 +46,7 @@ namespace Ultima5Redux.Maps
             Attack
         }
 
-        public enum SpecificCombatMapUnit
+        private enum SpecificCombatMapUnit
         {
             All,
             CombatPlayer,
@@ -101,7 +102,7 @@ namespace Ultima5Redux.Maps
 
         public override Maps TheMapType => Maps.Combat;
 
-        public virtual bool ShowOuterSmallMapTiles => false;
+        public bool ShowOuterSmallMapTiles => false;
 
         public Enemy ActiveEnemy => TheInitiativeQueue.GetCurrentCombatUnitAndClean() as Enemy;
 
@@ -111,16 +112,23 @@ namespace Ultima5Redux.Maps
         /// <returns>active player character record OR null if none selected</returns>
         public PlayerCharacterRecord ActivePlayerCharacterRecord => TheInitiativeQueue.ActivePlayerCharacterRecord;
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public IEnumerable<CombatPlayer> AllCombatPlayers => CurrentMapUnits.CombatPlayers;
+
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public IEnumerable<Enemy> AllEnemies => CurrentMapUnits.Enemies;
 
         public IEnumerable<MapUnit> AllMapUnits => CurrentMapUnits.AllMapUnits;
+
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public IEnumerable<NonAttackingUnit> AllNonAttackUnits => CurrentMapUnits.NonAttackingUnits;
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public IEnumerable<CombatMapUnit> AllVisibleAttackableCurrentMapUnits =>
             CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
                 combatMapUnit.IsAttackable && combatMapUnit.IsActive);
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public IEnumerable<CombatMapUnit> AllVisibleCurrentMapUnits =>
             CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
                 combatMapUnit.IsActive);
@@ -145,6 +153,7 @@ namespace Ultima5Redux.Maps
 
         public int NumberOfCombatItemInQueue => _currentCombatItemQueue.Count;
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public int NumberOfEnemies => CurrentMapUnits.Enemies.Count(enemy => enemy.IsActive);
 
 
@@ -155,8 +164,10 @@ namespace Ultima5Redux.Maps
 
         public PlayerCharacterRecord SelectedCombatPlayerRecord => TheInitiativeQueue.ActivePlayerCharacterRecord;
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public SingleCombatMapReference TheCombatMapReference { get; }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public InitiativeQueue TheInitiativeQueue { get; private set; }
 
         public int Turn => TheInitiativeQueue.Turn;
@@ -201,7 +212,8 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        internal int AddCombatMapUnit(CombatMapUnit mapUnit)
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+        private int AddCombatMapUnit(CombatMapUnit mapUnit)
         {
             int nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
             if (nIndex < 0) return -1;
@@ -1306,7 +1318,7 @@ namespace Ultima5Redux.Maps
             return null;
         }
 
-        public void InitializeCombatMapReferences()
+        private void InitializeCombatMapReferences()
         {
             CurrentMapUnits.Clear();
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
@@ -1315,9 +1327,9 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public bool IsCombatMapUnitOccupiedTile(in Point2D xy) =>
-            IsMapUnitOccupiedFromList(xy, CurrentSingleMapReference.Floor,
-                CurrentMapUnits.AllCombatMapUnits);
+        // public bool IsCombatMapUnitOccupiedTile(in Point2D xy) =>
+        //     IsMapUnitOccupiedFromList(xy, CurrentSingleMapReference.Floor,
+        //         CurrentMapUnits.AllCombatMapUnits);
 
         /// <summary>
         ///     Moves the active combat unit to a new map position

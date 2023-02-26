@@ -26,7 +26,7 @@ namespace Ultima5Redux.External
         public Node Parent { get; internal set; }
         // Change this depending on what the desired size is for each element in the grid
 
-        public bool Walkable { get; set; }
+        public bool Walkable { get; }
 
         public Node(in Point2D pos, bool walkable, float weight = 1)
         {

@@ -81,7 +81,7 @@ namespace Ultima5Redux.PlayerCharacters
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string ApplyRandomCharacterStatusForMixSpell()
         {
-            string retStr = "";
+            string retStr;
             const int maxInjureAmount = 20;
 
             void injurePlayer(PlayerCharacterRecord record)

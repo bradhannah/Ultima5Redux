@@ -15,6 +15,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     NPC Type, any other value is a specific character
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum SpecificNpcDialogType
         {
             Blacksmith = 0x81,
@@ -27,7 +28,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             GuildMaster = 0x86,
             None = 0xFF,
             Guard = 0xFE,
-
             WishingWell = 0xFD
             // unknowns may be crown and sandlewood box
         }

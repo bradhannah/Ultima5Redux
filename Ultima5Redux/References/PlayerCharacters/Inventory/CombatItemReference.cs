@@ -4,6 +4,8 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -11,6 +13,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     public class CombatItemReference
     {
         [JsonConverter(typeof(StringEnumConverter))]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum MissileType
         {
             None = -1,
@@ -44,6 +47,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [IgnoreDataMember] public virtual bool CanSell => BasePrice > 0;
 
         [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public bool IsAmmo =>
             SpecificEquipment is DataOvlReference.Equipment.Quarrels or DataOvlReference.Equipment.Arrows;
 

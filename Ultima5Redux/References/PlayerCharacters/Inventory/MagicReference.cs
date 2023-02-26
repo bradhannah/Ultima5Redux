@@ -79,6 +79,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum SpecificSpellTargetType
         {
             NoSelection,
