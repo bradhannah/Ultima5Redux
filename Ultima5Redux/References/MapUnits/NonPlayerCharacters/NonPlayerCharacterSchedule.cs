@@ -74,7 +74,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
         /// <summary>
         /// </summary>
-        public readonly List<byte> AiTypeList = new();
+        public List<byte> AiTypeList { get; } = new();
 
         /// <summary>
         ///     3D Coordinates including floor number

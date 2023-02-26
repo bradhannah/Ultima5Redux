@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -8,7 +9,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     [DataContract]
     public sealed class WeaponReference : CombatItemReference
     {
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum SpecificWeaponType
         {
             BareHands = -2,

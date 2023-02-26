@@ -20,6 +20,8 @@ namespace Ultima5Redux.PlayerCharacters
 
         private const int TOTAL_CHARACTER_RECORDS = 16;
         public const int AVATAR_RECORD = 0x00;
+
+        // ReSharper disable once MemberCanBePrivate.Global
         public const int MAX_PARTY_MEMBERS = 6;
 
         [DataMember] public readonly List<PlayerCharacterRecord> Records = new(TOTAL_CHARACTER_RECORDS);
@@ -43,6 +45,7 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int MaxCharactersInParty => MAX_PARTY_MEMBERS;
 
         [JsonConstructor]
@@ -158,6 +161,7 @@ namespace Ultima5Redux.PlayerCharacters
         ///     Gets all active character records for members in the Avatars party
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public List<PlayerCharacterRecord> GetActiveCharacterRecords()
         {
             List<PlayerCharacterRecord> activeCharacterRecords = Records.Where(characterRecord =>
@@ -178,6 +182,7 @@ namespace Ultima5Redux.PlayerCharacters
         /// </summary>
         /// <param name="nPosition"></param>
         /// <returns>PlayerCharacterRecord or null if there is not one at that position</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public PlayerCharacterRecord GetCharacterFromParty(int nPosition)
         {
             Debug.Assert(nPosition is >= 0 and < MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
@@ -256,6 +261,7 @@ namespace Ultima5Redux.PlayerCharacters
             return TotalPartyMembers() == MAX_PARTY_MEMBERS;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void JoinPlayerCharacter(PlayerCharacterRecord record)
         {
             int nJoinedCharacterIndex = TotalPartyMembers();
@@ -306,6 +312,7 @@ namespace Ultima5Redux.PlayerCharacters
         {
             bool bWasPoisoned = false;
             // do some thing that maybe poisons people?
+            // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
             foreach (PlayerCharacterRecord record in Records)
             {
                 if (!Utils.OneInXOdds(OddsAndLogic.GETTING_POISONED_BY_STEPPING_ON_SWAMP)) continue;
@@ -318,6 +325,7 @@ namespace Ultima5Redux.PlayerCharacters
             return bWasPoisoned;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void SwapPositions(PlayerCharacterRecord record1, PlayerCharacterRecord record2)
         {
             int nPosition1 = -1;
@@ -337,6 +345,7 @@ namespace Ultima5Redux.PlayerCharacters
             SwapPositions(nPosition1, nPosition2);
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void SwapPositions(int nFirstPos, int nSecondPos)
         {
             int nActiveRecs = TotalPartyMembers();

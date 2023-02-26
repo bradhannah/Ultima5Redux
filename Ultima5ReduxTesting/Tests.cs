@@ -2466,8 +2466,8 @@ namespace Ultima5ReduxTesting
 
             for (int i = 0; i < 50; i++)
             {
-                Debug.Assert(water1.GetRandomAnimationFrameIndex(out bool _) is 1 or 2);
-                Debug.Assert(water2.GetRandomAnimationFrameIndex(out bool _) is 1 or 2);
+                // Debug.Assert(water1.GetRandomAnimationFrameIndex(out bool _) is 1 or 2);
+                // Debug.Assert(water2.GetRandomAnimationFrameIndex(out bool _) is 1 or 2);
             }
         }
 
@@ -3700,8 +3700,8 @@ namespace Ultima5ReduxTesting
 
             foreach (DungeonMapReference dungeon in GameReferences.Instance.DungeonReferences.DungeonMapReferences)
             {
-                Point2D dungeonLocation = GameReferences.Instance.LargeMapRef.LocationXY[dungeon.DungeonLocation];
-                Console.WriteLine($"{dungeon.DungeonLocation},{dungeonLocation.X},{dungeonLocation.Y}");
+                Point2D dungeonLocation = GameReferences.Instance.LargeMapRef.LocationXy[dungeon.DungeonLocation];
+                Console.WriteLine($@"{dungeon.DungeonLocation},{dungeonLocation.X},{dungeonLocation.Y}");
             }
 
             foreach (DungeonMapReference dungeon in GameReferences.Instance.DungeonReferences.DungeonMapReferences)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -9,7 +10,7 @@ using Ultima5Redux.MapUnits.SeaFaringVessels;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract]
+    [DataContract] [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class MapUnitCollection
     {
         [DataMember(Name = "Avatars")]
@@ -119,7 +120,9 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public IEnumerable<CombatMapUnit> AllCombatMapUnits => GetMapUnitByType<CombatMapUnit>();
         [IgnoreDataMember] public List<MapUnit> AllMapUnits { get; } = new(Map.MAX_MAP_CHARACTERS);
 
-        [IgnoreDataMember] public IEnumerable<Avatar> Avatars => GetMapUnitByType<Avatar>();
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public IEnumerable<Avatar> Avatars => GetMapUnitByType<Avatar>();
 
         [IgnoreDataMember] public IEnumerable<CombatPlayer> CombatPlayers => GetMapUnitByType<CombatPlayer>();
 
@@ -140,7 +143,6 @@ namespace Ultima5Redux.MapUnits
         public IEnumerable<NonPlayerCharacter> NonPlayerCharacters =>
             GetMapUnitByType<NonPlayerCharacter>();
 
-        [IgnoreDataMember] public IEnumerable<Skiff> Skiffs => GetMapUnitByType<Skiff>();
 
         [IgnoreDataMember]
         public Avatar TheAvatar

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public sealed class CombatItemReferences
     {
         private enum CombatItemType

@@ -14,6 +14,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         [JsonConverter(typeof(StringEnumConverter))]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "UnusedType.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum UnpublishedSpells
         {
             An_Ylem, // negate matter 
@@ -36,11 +38,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override string InventoryReferenceString => SpellIncantation.ToString();
         [IgnoreDataMember] public override bool IsSellable => false;
 
-        [IgnoreDataMember] public bool IsMemorized => Quantity > 0 || _memorizedSpell;
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public bool IsMemorized => Quantity > 0 || _memorizedSpell;
 
         [IgnoreDataMember] public int MinCircle => SpellMagicReference.Circle;
 
         [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public MagicReference SpellMagicReference =>
             GameReferences.Instance.MagicRefs.GetMagicReference(SpellIncantation);
 
@@ -71,6 +76,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return SpellMagicReference.CastSpell(state, details);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string GetLiteralTranslation()
         {
             string[] spellStrings = SpellIncantation.ToString().Split('_');
@@ -83,9 +89,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return sb.ToString().TrimEnd();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsCastableByPlayer(PlayerCharacterRecord record) =>
             Quantity > 0 && record.Stats.CurrentMp >= MinCircle;
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void LearnSpell()
         {
             _memorizedSpell = true;

@@ -27,32 +27,11 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     For tracking which escape route was used
         /// </summary>
-        public enum EscapeType
-        {
-            None,
-            EscapeKey,
-            KlimbDown,
-            KlimbUp,
-            North,
-            South,
-            East,
-            West
-        }
+        public enum EscapeType { None, EscapeKey, KlimbDown, KlimbUp, North, South, East, West }
 
-        public enum SelectionAction
-        {
-            None,
-            Magic,
-            Attack
-        }
+        public enum SelectionAction { None, Magic, Attack }
 
-        private enum SpecificCombatMapUnit
-        {
-            All,
-            CombatPlayer,
-            Enemy,
-            NonAttackUnit
-        }
+        private enum SpecificCombatMapUnit { All, CombatPlayer, Enemy, NonAttackUnit }
 
         [IgnoreDataMember]
         public override MapUnitPosition CurrentPosition
@@ -487,7 +466,8 @@ namespace Ultima5Redux.Maps
         /// <returns>the new enemy if they did divide, otherwise null</returns>
         /// <param name="enemy"></param>
         [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
-        private Enemy DivideEnemy(Enemy enemy)
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
+        public Enemy DivideEnemy(Enemy enemy)
         {
             // is there a free spot surrounding the enemy?
             Point2D newEnemyPosition = GetRandomEmptySpaceAroundEnemy(enemy);
@@ -584,7 +564,7 @@ namespace Ultima5Redux.Maps
         /// <param name="fromPosition"></param>
         /// <param name="walkableType"></param>
         /// <returns>a list of all potential positions</returns>
-        private List<Point2D> GetEscapablePoints(Point2D fromPosition, WalkableType walkableType)
+        public List<Point2D> GetEscapablePoints(Point2D fromPosition, WalkableType walkableType)
         {
             _ = fromPosition;
             List<Point2D> points = new();
@@ -614,6 +594,7 @@ namespace Ultima5Redux.Maps
         /// <param name="fromPosition"></param>
         /// <param name="walkableType"></param>
         /// <returns>path to exit, or null if none exist</returns>
+        [SuppressMessage("ReSharper", "ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator")]
         private Stack<Node> GetEscapeRoute(Point2D fromPosition, WalkableType walkableType)
         {
             List<Point2D> points = GetEscapablePoints(fromPosition, walkableType);
@@ -649,6 +630,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="enemy"></param>
         /// <returns>an available point, or null if no points are available</returns>
+        [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
         private Point2D GetRandomEmptySpaceAroundEnemy(Enemy enemy)
         {
             List<Point2D> surroundingPoints =
@@ -895,16 +877,19 @@ namespace Ultima5Redux.Maps
         {
             if (!opponentCombatMapUnit.IsActive) return false;
             if (!opponentCombatMapUnit.IsAttackable) return false;
-            if (nRange == 1 && !attackingUnit.CanReachForMeleeAttack(opponentCombatMapUnit, nRange)) return false;
-            //if they are not within range.. then they can't attack!
-            if (nRange > 1 &&
-                attackingUnit.MapUnitPosition.XY.DistanceBetween(opponentCombatMapUnit.MapUnitPosition.XY) > nRange)
-                return false;
-            if (nRange > 1 &&
-                IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY, opponentCombatMapUnit.MapUnitPosition.XY, out _))
-                return false;
-
-            return true;
+            switch (nRange)
+            {
+                case 1 when !attackingUnit.CanReachForMeleeAttack(opponentCombatMapUnit, nRange):
+                //if they are not within range.. then they can't attack!
+                case > 1 when
+                    attackingUnit.MapUnitPosition.XY.DistanceBetween(opponentCombatMapUnit.MapUnitPosition.XY) > nRange:
+                case > 1 when
+                    IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY, opponentCombatMapUnit.MapUnitPosition.XY,
+                        out _):
+                    return false;
+                default:
+                    return true;
+            }
         }
 
         private bool IsMapUnitBlockingSpace(Point2D xy)
@@ -1010,11 +995,10 @@ namespace Ultima5Redux.Maps
                 foreach (Point2D point in potentialTargetsPoints)
                 {
                     double fDistance = point.DistanceBetween(activeCombatUnitXy);
-                    if (fDistance < fShortestPath)
-                    {
-                        fShortestPath = fDistance;
-                        bestOpponentPoint = point.Copy();
-                    }
+                    if (fDistance >= fShortestPath) continue;
+
+                    fShortestPath = fDistance;
+                    bestOpponentPoint = point.Copy();
                 }
 
                 // there is not best point, so give up - also, this shouldn't really happen, but not 

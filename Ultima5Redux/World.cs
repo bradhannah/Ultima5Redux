@@ -46,6 +46,7 @@ namespace Ultima5Redux
         ///     Special things that can be looked at in the world that will require special consideration
         /// </summary>
         // ReSharper disable once UnusedMember.Global
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum SpecialLookCommand
         {
             None,
@@ -98,7 +99,7 @@ namespace Ultima5Redux
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool IsPendingFall { get; private set; }
 
-        public static bool MonsterAi => true;
+        public bool MonsterAi { get; set; } = true;
 
         /// <summary>
         ///     Ultima 5 data and save files directory
@@ -2624,7 +2625,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public void YellWord(string word)
         {
             // not yet implemented

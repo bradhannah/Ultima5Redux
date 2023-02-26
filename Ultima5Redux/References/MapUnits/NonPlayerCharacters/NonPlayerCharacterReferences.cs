@@ -172,6 +172,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             return npcRefs.Where(npcRef => npcRef.NpcType == specificNpcType).ToList();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public NonPlayerCharacterReference GetNonPlayerCharacterByName(string name) => _npcByNameDictionary[name];
 
         public List<NonPlayerCharacterReference> GetNonPlayerCharactersByLocation(

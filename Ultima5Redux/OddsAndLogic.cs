@@ -12,7 +12,7 @@ namespace Ultima5Redux
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    internal static class OddsAndLogic
+    public static class OddsAndLogic
     {
         private static readonly Dictionary<NonAttackingUnit.TrapType, int> ChestTrapsWeighted = new()
         {
@@ -155,6 +155,7 @@ namespace Ultima5Redux
         public static int GetEraByTurn(int nTurn)
         {
             if (nTurn >= BeginningOfEras[2]) return 2;
+            // ReSharper disable once ConvertIfStatementToReturnStatement
             if (nTurn >= BeginningOfEras[1]) return 1;
             return 0;
         }

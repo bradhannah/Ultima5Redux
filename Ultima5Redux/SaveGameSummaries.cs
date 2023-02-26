@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux
 {
+    [SuppressMessage("ReSharper", "UnusedType.Global")] [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class SaveGameSummaries
     {
         private readonly List<GameSummary> _gameStates = new();
+
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public IEnumerable<GameSummary> GameStateBases => _gameStates;
 
         /// <summary>

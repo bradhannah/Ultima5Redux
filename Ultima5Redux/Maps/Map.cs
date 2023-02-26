@@ -638,7 +638,7 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
         /// <returns>MapUnit or null if non exist at location</returns>
-        protected List<MapUnit> GetMapUnitsByPosition(in Point2D xy, int nFloor)
+        public List<MapUnit> GetMapUnitsByPosition(in Point2D xy, int nFloor)
         {
             List<MapUnit> mapUnits = new();
 

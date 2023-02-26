@@ -24,13 +24,13 @@ namespace U5ConversationSimulator
                     break;
                 case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
                     Console.Write(
-                        conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOUR_INTEREST));
+                        Conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOUR_INTEREST));
                     userResponse = Console.ReadLine();
                     conversation.AddUserResponse(userResponse);
                     break;
                 case TalkScript.TalkCommand.PromptUserForInput_NPCQuestion:
                     Console.Write(
-                        conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOU_RESPOND));
+                        Conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOU_RESPOND));
                     userResponse = Console.ReadLine();
                     conversation.AddUserResponse(userResponse);
                     break;

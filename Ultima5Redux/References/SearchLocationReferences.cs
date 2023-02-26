@@ -100,15 +100,15 @@ namespace Ultima5Redux.References
             SmallMapReferences.SingleMapReference.Location location)
         {
             List<SearchItemReference> searchItemReferences = new();
-
+        
             if (!_searchItems.ContainsKey(location)) return searchItemReferences;
-
+        
             foreach (KeyValuePair<Point2D, List<SearchItemReference>> searchItem in _searchItems[location]
                          .SelectMany(floors => floors.Value))
             {
                 searchItemReferences.AddRange(searchItem.Value);
             }
-
+        
             return searchItemReferences;
         }
 
@@ -138,6 +138,7 @@ namespace Ultima5Redux.References
             return _searchItemsList[nIndex];
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool IsSearchItemAtLocation(SmallMapReferences.SingleMapReference.Location location,
             int nFloor, Point2D position) =>
             _searchItems.ContainsKey(location) && _searchItems[location].ContainsKey(nFloor)

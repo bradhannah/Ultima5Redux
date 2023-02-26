@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Ultima5Redux
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")] [SuppressMessage("ReSharper", "UnusedType.Global")]
     public class StreamingOutput
     {
         private static StreamingOutput _instance;

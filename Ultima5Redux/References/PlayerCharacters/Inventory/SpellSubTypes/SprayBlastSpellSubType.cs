@@ -16,6 +16,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
         }
 
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+        [SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Local")]
         private void CastSpray(SprayType sprayType)
         {
             // placeholder

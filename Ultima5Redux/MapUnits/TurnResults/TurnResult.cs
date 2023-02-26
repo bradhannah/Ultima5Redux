@@ -178,10 +178,11 @@ namespace Ultima5Redux.MapUnits.TurnResults
             }
         }
 
-        public TurnResultType TheTurnResultType { get; set; }
+        public TurnResultType TheTurnResultType { get; }
 
         protected TurnResult(TurnResultType theTurnResultType) => TheTurnResultType = theTurnResultType;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public virtual string GetDebugString() =>
             $@"IsSuccessfulMovement: {IsSuccessfulMovement}
 IsNewMapTurnResult: {IsNewMapTurnResult()}";

@@ -74,6 +74,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
         [IgnoreDataMember] public abstract int ClosestAttackRange { get; }
 
         [IgnoreDataMember] public abstract int Defense { get; }
@@ -82,11 +83,17 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         [IgnoreDataMember] public abstract int Experience { get; }
         [IgnoreDataMember] public abstract bool IsInvisible { get; }
+
+        [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
         [IgnoreDataMember] public abstract string PluralName { get; }
 
-        [IgnoreDataMember] public abstract string SingularName { get; }
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
+        public abstract string SingularName { get; }
 
-        [IgnoreDataMember] public PlayerCombatStats CombatStats { get; } = new();
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public PlayerCombatStats CombatStats { get; } = new();
 
         [IgnoreDataMember] public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
         [IgnoreDataMember] public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;

@@ -38,6 +38,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override bool IsSellable => false;
 
         [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public MagicReference ScrollMagicReference
         {
             get => GameReferences.Instance.MagicRefs.GetMagicReference(ScrollSpell);

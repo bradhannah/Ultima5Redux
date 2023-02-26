@@ -12,7 +12,7 @@ namespace Ultima5Redux
     public static class Utils
     {
         public static readonly TextInfo EnTextInfo = new CultureInfo("en-US", false).TextInfo;
-        public static Random Ran { get; } = new();
+        public static Random Ran { get; set; } = new();
 
         private static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
         {

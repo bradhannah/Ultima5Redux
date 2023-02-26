@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -278,6 +279,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     Take fall damage from klimbing mountains
         /// </summary>
+        [SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global")]
         public void GrapplingFall()
         {
             // called when falling from a Klimb on a mountain

@@ -235,11 +235,15 @@ namespace Ultima5Redux.Maps
 
             foreach (CombatMapUnit combatMapUnit in _mapUnitCollection.AllCombatMapUnits)
             {
-                // if it's an enemy and they aren't an active attacker such as a POISON FIELD
-                // then we just skip them since they have a DEX of 0
-                if (combatMapUnit is Enemy enemy && !enemy.EnemyReference.ActivelyAttacks) continue;
-                // we definitely do not care about dex values for inanimate objects
-                if (combatMapUnit is NonAttackingUnit) continue;
+                switch (combatMapUnit)
+                {
+                    // if it's an enemy and they aren't an active attacker such as a POISON FIELD
+                    // then we just skip them since they have a DEX of 0
+                    case Enemy enemy when !enemy.EnemyReference.ActivelyAttacks:
+                    // we definitely do not care about dex values for inanimate objects
+                    case NonAttackingUnit:
+                        continue;
+                }
 
                 int nDexterity = combatMapUnit.Dexterity;
                 if (nDexterity == 0)
@@ -274,16 +278,8 @@ namespace Ultima5Redux.Maps
             return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0 && bIsOnTop;
         }
 
-        private int GetNumberOfTurnsInQueue()
-        {
-            int nTally = 0;
-            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
-            {
-                nTally += mapUnits.Count(CombatMapUnitIsPresentAndActive);
-            }
-
-            return nTally;
-        }
+        private int GetNumberOfTurnsInQueue() =>
+            _initiativeQueue.Sum(mapUnits => mapUnits.Count(CombatMapUnitIsPresentAndActive));
 
         private bool IsAtLeastNTurnsInQueue(int nMin)
         {
@@ -306,27 +302,19 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         private bool IsCombatMapUnit(MapUnit mapUnit)
         {
-            switch (mapUnit)
+            return mapUnit switch
             {
-                case CombatPlayer playerUnit:
-                    return CombatMapUnitIsPresentOnMap(playerUnit);
-                case Enemy enemyUnit:
-                    return CombatMapUnitIsPresentOnMap(enemyUnit, false);
-                case NonAttackingUnit:
-                    return false;
-            }
-
-            return false;
+                CombatPlayer playerUnit => CombatMapUnitIsPresentOnMap(playerUnit),
+                Enemy enemyUnit => CombatMapUnitIsPresentOnMap(enemyUnit, false),
+                NonAttackingUnit => false,
+                _ => false
+            };
         }
 
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
-        private bool IsCombatMapUnitVisible(CombatMapUnit combatMapUnit)
-        {
-            if (_combatMap.VisibleOnMap != null &&
-                !_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
-                return false;
-            return true;
-        }
+        private bool IsCombatMapUnitVisible(CombatMapUnit combatMapUnit) =>
+            _combatMap.VisibleOnMap == null ||
+            _combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y];
 
         public void AddCombatMapUnitToQueue(CombatMapUnit combatMapUnit)
         {

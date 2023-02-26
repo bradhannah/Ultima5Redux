@@ -50,6 +50,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             get
             {
                 string foundStr = "";
+                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
                 foreach (StackableItem item in _stackableItems)
                 {
                     foundStr += item.InvItem.FindDescription + "\n";

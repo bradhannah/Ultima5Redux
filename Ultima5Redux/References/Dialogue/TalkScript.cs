@@ -173,7 +173,7 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         /// <param name="nLabel">0 based index of label</param>
         /// <returns>The corresponding script line</returns>
-        internal ScriptLine GetScriptLineLabel(int nLabel) => _scriptLines[GetScriptLineLabelIndex(nLabel)];
+        //internal ScriptLine GetScriptLineLabel(int nLabel) => _scriptLines[GetScriptLineLabelIndex(nLabel)];
 
         /// <summary>
         ///     Move to the next line in the script (for adding new content)
@@ -556,12 +556,12 @@ namespace Ultima5Redux.References.Dialogue
             /// <summary>
             ///     The default answer if non of the QuestionAnswers are satisfied
             /// </summary>
-            public List<ScriptLine> DefaultAnswers { get; set; }
+            public List<ScriptLine> DefaultAnswers { get; }
 
             /// <summary>
             ///     The initial line that you will always show when jumping to the label
             /// </summary>
-            public ScriptLine InitialLine { get; set; }
+            public ScriptLine InitialLine { get; }
 
             /// <summary>
             ///     The label reference number
@@ -766,7 +766,6 @@ namespace Ultima5Redux.References.Dialogue
                     char[] trimChars = { '"' };
                     return _str.Trim(trimChars);
                 }
-                set => _str = value;
             }
 
             /// <summary>
@@ -909,10 +908,10 @@ namespace Ultima5Redux.References.Dialogue
                 return _scriptItems[index];
             }
 
-            public void InsertScriptItemAtFront(ScriptItem scriptItem)
-            {
-                _scriptItems.Insert(0, scriptItem);
-            }
+            // public void InsertScriptItemAtFront(ScriptItem scriptItem)
+            // {
+            //     _scriptItems.Insert(0, scriptItem);
+            // }
 
             /// <summary>
             ///     Does this line represent a new label definition

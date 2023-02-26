@@ -51,6 +51,7 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int Heal()
         {
             int nCurrentHp = CurrentHp;
@@ -92,6 +93,7 @@ namespace Ultima5Redux.PlayerCharacters
             return OddsAndLogic.POISON_DAMAGE_MIN;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool Resurrect()
         {
             if (Status != PlayerCharacterRecord.CharacterStatus.Dead) return false;

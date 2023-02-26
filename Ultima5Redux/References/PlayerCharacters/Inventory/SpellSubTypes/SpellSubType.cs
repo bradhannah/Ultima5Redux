@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
@@ -11,6 +12,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
 
         protected SpellSubType(MagicReference magicRef) => MagicRef = magicRef;
 
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public abstract SpellResult CastSpell(GameState state, SpellCastingDetails details);
 
         public bool IsCastablePresently(GameState state)

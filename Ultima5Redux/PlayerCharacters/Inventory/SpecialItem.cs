@@ -59,6 +59,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 InventoryReferences.InventoryReferenceType.Item) =>
             ItemType = itemType;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public static SpecificItemType GetItemOffset(SpecificItemTypeSprite specificItemTypeSprite)
         {
             var specificItemType =

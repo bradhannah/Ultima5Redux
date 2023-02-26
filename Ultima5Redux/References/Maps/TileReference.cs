@@ -12,6 +12,7 @@ namespace Ultima5Redux.References.Maps
         /// <summary>
         ///     This is not ideal but leaving unlabelled integers all over the code is a worse offense
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum SpriteIndex
         {
             Nothing = 0,
@@ -170,15 +171,17 @@ namespace Ultima5Redux.References.Maps
 
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsRangeWeaponPassable => RangeWeapon_Passable;
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool IsSolidSprite => !IsWalking_Passable;
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsSolidSpriteButNotDoor => !IsWalking_Passable && !IsOpenable;
+        //public bool IsSolidSpriteButNotDoor => !IsWalking_Passable && !IsOpenable;
 
         // Exclude the black square from this, it messes up door and tombstone horizontal checks
-        public bool IsSolidSpriteButNotDoorAndNotNPC => IsSolidSpriteButNotDoor && !IsNPC && Index != 255;
+        //public bool IsSolidSpriteButNotDoorAndNotNPC => IsSolidSpriteButNotDoor && !IsNPC && Index != 255;
         public bool IsSolidSpriteButNotNPC => IsSolidSprite && !IsNPC && Index != 255;
 
         public bool IsTableWithFood =>
@@ -187,6 +190,7 @@ namespace Ultima5Redux.References.Maps
 
         public bool IsWaterTile => Name.ToLower().Contains("water");
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public int KeyTileTileReferenceIndex => Index - AnimationIndex;
 
         public int SearchReplacementIndex
@@ -253,6 +257,7 @@ namespace Ultima5Redux.References.Maps
 
         public bool Is(SpriteIndex spriteIndex) => Index == (int)spriteIndex;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsIndexWithinAnimationFrames(int nIndex)
         {
             if (TotalAnimationFrames <= 1) return nIndex == Index;

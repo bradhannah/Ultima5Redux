@@ -14,7 +14,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     [DataContract]
     public class MagicReference
     {
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum SpecificMagicType
         {
             Peace,
@@ -268,6 +268,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         public static int GetLegacySaveQuantityIndex(SpellWords spellWords) => (int)spellWords;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsCastablePresently(GameState state) => CreateSpellCasting().IsCastablePresently(state);
 
         public bool IsCorrectReagents(IEnumerable<Reagent.SpecificReagentType> reagents)
@@ -282,6 +283,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             return nReagents == _reagentsDictionary.Count(r => r.Value);
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool IsReagentRequired(Reagent.SpecificReagentType specificReagentType) =>
             _reagentsDictionary[specificReagentType];
     }

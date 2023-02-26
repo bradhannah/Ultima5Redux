@@ -65,21 +65,13 @@ namespace Ultima5Redux
         }
     }
 
-    [DataContract]
-    public sealed class Point2D
+    [DataContract] public sealed class Point2D
     {
         /// <summary>
         ///     4 way direction
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum Direction
-        {
-            Up,
-            Down,
-            Left,
-            Right,
-            None
-        }
+        public enum Direction { Up, Down, Left, Right, None }
 
         [DataMember] public int X { get; set; }
         [DataMember] public int Y { get; set; }
@@ -175,6 +167,7 @@ namespace Ultima5Redux
         public static bool IsOutOfRangeStatic(int nX, int nY, int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0) =>
             nX < nMinX || nX > nMaxX || nY < nMinY || nY > nMaxY;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public static bool IsWithinNFourDirections(int x1, int y1, int x2, int y2) =>
             Math.Abs(DistanceBetween(x1, y1, x2, y2) - 1) < 0.01;
 
@@ -234,13 +227,12 @@ namespace Ultima5Redux
             return Y == other.Y;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public Point2D GetAdjustedPosition(Direction direction, int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
         {
             Point2D adjustedPos = GetAdjustedPosition(direction);
             return adjustedPos.IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : adjustedPos;
         }
-
-        //public Point2D GetAdjustedPosition(int nXDiff, int nYDiff) => new(X + nXDiff, Y + nYDiff);
 
         public Point2D GetAdjustedPosition(Direction direction, int nSpaces = 1)
         {

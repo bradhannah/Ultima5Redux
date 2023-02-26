@@ -80,6 +80,7 @@ namespace Ultima5Redux.PlayerCharacters
             Dead = 'D'
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum EquipResult
         {
             Success,
@@ -227,6 +228,7 @@ namespace Ultima5Redux.PlayerCharacters
             return nHealPoints;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
         public bool Cure()
         {
             if (Stats.Status != CharacterStatus.Poisoned) return false;
@@ -234,7 +236,7 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
-        [SuppressMessage("ReSharper", "InvertIf")]
+        [SuppressMessage("ReSharper", "InvertIf")] [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public EquipResult EquipEquipment(Inventory.Inventory inventory, DataOvlReference.Equipment newEquipment)
         {
             // detect the equipable slot
@@ -247,10 +249,6 @@ namespace Ultima5Redux.PlayerCharacters
             // put the old one back in your inventory
             if (oldEquippedEquipment != DataOvlReference.Equipment.Nothing)
             {
-                // CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment) ??
-                //                                    throw new ArgumentNullException(
-                //                                        "inventory.GetItemFromEquipment(oldEquippedEquipment)");
-                // oldEquippedCombatItem.Quantity++;
                 bool bWasUnequipped = UnequipEquipment(equippableSlot, inventory);
                 if (!bWasUnequipped)
                     throw new Ultima5ReduxException($"Tried to unequip {equippableSlot} but was not successful");
@@ -299,8 +297,8 @@ namespace Ultima5Redux.PlayerCharacters
             return EquipResult.Success;
         }
 
-        public string GetPlayerSelectedMessage(DataOvlReference dataOvlReference, bool bPlayerEscaped,
-            out bool bIsSelectable)
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public string GetPlayerSelectedMessage(bool bPlayerEscaped, out bool bIsSelectable)
         {
             bIsSelectable = false;
             if (bPlayerEscaped) return "Invalid!";
@@ -359,11 +357,10 @@ namespace Ultima5Redux.PlayerCharacters
             IsRat = true;
         }
 
-        public bool TurnInvisible()
+        public void TurnInvisible()
         {
             //285 Apparition
             IsInvisible = true;
-            return true;
         }
 
         public void TurnVisible()
@@ -376,6 +373,7 @@ namespace Ultima5Redux.PlayerCharacters
         /// </summary>
         /// <param name="equippableSlot"></param>
         /// <param name="inventory"></param>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool UnequipEquipment(CharacterEquipped.EquippableSlot equippableSlot, Inventory.Inventory inventory)
         {
             if (!Equipped.IsEquipped(equippableSlot)) return false;
@@ -391,6 +389,7 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
         public bool WakeUp()
         {
             if (Stats.Status is CharacterStatus.Dead or CharacterStatus.Poisoned) return false;

@@ -75,6 +75,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// </summary>
         public abstract List<ShoppeKeeperOption> ShoppeKeeperOptions { get; }
 
+        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public ShoppeKeeperReference TheShoppeKeeperReference { get; }
 
         /// <summary>

@@ -170,6 +170,7 @@ namespace Ultima5Redux.References.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         public static bool IsHeadOfBed(int nSprite) => nSprite == (int)TileReference.SpriteIndex.LeftBed;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public static bool IsHeadstone(int nSprite) =>
             nSprite is (int)TileReference.SpriteIndex.SimpleCross
                 or (int)TileReference.SpriteIndex.StoneHeadstone;
@@ -426,6 +427,7 @@ namespace Ultima5Redux.References.Maps
                 GetTileReference(tileReference.Index - tileReference.AnimationIndex);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsBurningThing(int nSprite) => _burningThings.ContainsKey((TileReference.SpriteIndex)nSprite);
 
         public bool IsFrigate(int nSprite) =>

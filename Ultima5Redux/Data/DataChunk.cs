@@ -255,6 +255,7 @@ namespace Ultima5Redux.Data
             List<string> strList = new(indexList.Count);
             const int maxStrLength = 20;
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (ushort index in indexList)
             {
                 // we grab the strings from the fullRawData because it is the entire file

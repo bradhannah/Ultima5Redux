@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using Ultima5Redux.References.Maps;
@@ -56,6 +57,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public int Y { get; }
 
+        [SuppressMessage("ReSharper", "ParameterTypeCanBeEnumerable.Local")]
         public Sign(SmallMapReferences.SingleMapReference.Location location, int floor, int x, int y, byte[] signText,
             int nOffset) : this(location, floor, x, y, ScrubSignText(signText), nOffset)
         {

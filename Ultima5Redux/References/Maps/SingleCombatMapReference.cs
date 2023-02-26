@@ -57,6 +57,7 @@ namespace Ultima5Redux.References.Maps
             Doom = 34
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum EntryDirection
         {
             East = 0,

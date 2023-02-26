@@ -27,6 +27,9 @@ namespace Ultima5Redux.Maps
             _currentSingleMapReference ??=
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
 
+
+        public SmallMaps GetSmallMaps() => _smallMaps;
+
         [IgnoreDataMember] public override bool IsRepeatingMap => false;
 
         [IgnoreDataMember] public override int NumOfXTiles => CurrentSingleMapReference.XTiles;
@@ -274,6 +277,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
+        [SuppressMessage("ReSharper", "ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator")]
         internal void InitializeFromLegacy(SmallMaps smallMaps, SmallMapReferences.SingleMapReference.Location location,
             ImportedGameState importedGameState,
             bool bInitialLegacyLoad, SearchItems searchItems)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
@@ -82,6 +83,7 @@ namespace Ultima5Redux.References.Maps
             return sb.ToString();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<SingleCombatMapReference> GetListOfSingleCombatMapReferences(
             SingleCombatMapReference.Territory territory) =>
             _singleCombatMapReferences[territory];
@@ -94,6 +96,7 @@ namespace Ultima5Redux.References.Maps
             return _singleCombatMapReferences[territory][nIndex];
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global")]
         public SingleCombatMapReference GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map,
             SingleCombatMapReference.Territory territory) =>
             GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);

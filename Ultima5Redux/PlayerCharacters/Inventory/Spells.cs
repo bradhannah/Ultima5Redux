@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -73,6 +74,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public static string GetLiteralTranslation(string syllable) =>
             LiteralTranslationDictionary[Utils.EnTextInfo.ToTitleCase(syllable)];
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public static string GetSpellWordByChar(string spellCharacter)
         {
             IEnumerable<KeyValuePair<string, string>> hey =

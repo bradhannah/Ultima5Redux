@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -13,6 +14,7 @@ namespace Ultima5Redux.References.Maps
         private readonly DungeonMapReference[] _dungeons =
             new DungeonMapReference[DungeonMapReference.N_DUNGEONS];
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public IReadOnlyList<DungeonMapReference> DungeonMapReferences => _dungeons;
 
         public DungeonReferences(string legacyDataDatFilePath)

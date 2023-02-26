@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
     {
         private const int N_TOTAL_MONSTERS = 0x30;
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public List<EnemyReference> AllEnemyReferences { get; } = new(N_TOTAL_MONSTERS);
 
         public EnemyReferences(DataOvlReference dataOvlReference, TileReferences tileReferences)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory
@@ -6,8 +7,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     /// <summary>
     ///     Specific inventory item reference
     /// </summary>
-    [DataContract]
-    public class InventoryReference
+    [DataContract] public class InventoryReference
     {
         [DataMember] public InventoryReferences.InventoryReferenceType InvRefType { get; internal set; }
         [DataMember] public string ItemDescription { get; set; }
@@ -47,6 +47,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         ///     Gets a formatted description WITHOUT any attribution
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string GetRichTextDescriptionNoAttribution() => ItemDescription;
     }
 }

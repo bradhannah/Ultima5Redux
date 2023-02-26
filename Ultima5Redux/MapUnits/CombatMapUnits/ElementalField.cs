@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
@@ -50,6 +51,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             set => throw new NotImplementedException("Can't set the trap type Elemental Field");
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public FieldType TheFieldType { get; }
 
         public ElementalField(FieldType theFieldType, MapUnitPosition mapUnitPosition)

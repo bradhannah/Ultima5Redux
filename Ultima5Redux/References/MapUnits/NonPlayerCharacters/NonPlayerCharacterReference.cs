@@ -61,6 +61,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// </summary>
         public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public byte MapLocationId => (byte)(MapLocation - 1);
 
         // based on Xu4 AI = (0x0-fixed, 0x1-wander, 0x80-follow, 0xFF-attack)

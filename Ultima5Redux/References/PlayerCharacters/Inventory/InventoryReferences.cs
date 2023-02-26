@@ -54,7 +54,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <summary>
         ///     All inventory references separated by item types
         /// </summary>
-        public readonly Dictionary<string, List<InventoryReference>> InvRefsDictionary;
+        public Dictionary<string, List<InventoryReference>> InvRefsDictionary { get; }
 
         /// <summary>
         ///     Constructor builds reference tables from embedded resources

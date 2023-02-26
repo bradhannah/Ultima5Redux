@@ -158,7 +158,7 @@ namespace Ultima5Redux
 
         internal int TurnsSinceStart => DataChunks.GetDataChunk(DataChunkName.TURNS_SINCE_START).GetChunkAsByte();
 
-        internal MapUnitStates UnderworldMapUnitStates { get; set; }
+        internal MapUnitStates UnderworldMapUnitStates { get; private set; }
 
         /// <summary>
         ///     Saved X location of Avatar

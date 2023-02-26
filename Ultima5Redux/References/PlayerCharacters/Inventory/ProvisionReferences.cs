@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -67,6 +68,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <param name="location"></param>
         /// <param name="specificProvisionType"></param>
         /// <returns>Greater than zero if it is sold, otherwise returns -1</returns>
+        [SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global")]
         public int GetBasePrice(SmallMapReferences.SingleMapReference.Location location,
             SpecificProvisionType specificProvisionType)
         {
@@ -89,6 +91,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         ///     Gets the bundle quantity for the current provision
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global")]
         public int GetBundleQuantity(SpecificProvisionType specificProvisionType) =>
             BundleQuantity[specificProvisionType];
     }
