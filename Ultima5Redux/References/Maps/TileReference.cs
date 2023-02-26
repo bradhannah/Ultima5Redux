@@ -32,7 +32,7 @@ namespace Ultima5Redux.References.Maps
             ItemMoney = 258, Beggar_KeyIndex = 365, HolyFloorSymbol = 278, Telescope = 89, Clock1 = 250, Clock2 = 251,
             Well = 161, Fountain_KeyIndex = 216, StoneBrickWall = 79, LargeRockWall = 77, Portcullis = 153,
             BrickFloor = 68, Stocks = 132, BrickWallArchway = 135, LeftDesert2 = 30, RightDesert2 = 31,
-            StarPattern = 256
+            StarPattern = 256, Bridge = 106
         }
 
 
@@ -107,13 +107,12 @@ namespace Ultima5Redux.References.Maps
             {
                 if (!HasSearchReplacement) return Index;
 
-                switch ((SpriteIndex)Index)
+                // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+                return (SpriteIndex)Index switch
                 {
-                    case SpriteIndex.StoneBrickWallSecret:
-                        return (int)SpriteIndex.LockedDoor;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                    SpriteIndex.StoneBrickWallSecret => (int)SpriteIndex.LockedDoor,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
             }
         }
 
@@ -128,39 +127,40 @@ namespace Ultima5Redux.References.Maps
             if (Name.Contains("Left")) return Point2D.Direction.Left;
             if (Name.Contains("Right")) return Point2D.Direction.Right;
             if (Name.Contains("Down")) return Point2D.Direction.Down;
+            // ReSharper disable once ConvertIfStatementToReturnStatement
             if (Name.Contains("Up")) return Point2D.Direction.Up;
             return Point2D.Direction.None;
         }
 
-        public int GetRandomAnimationFrameIndex(out bool bNonRandomTime)
-        {
-            int nNewTileIndex = 0;
-
-            switch (TotalAnimationFrames)
-            {
-                case -1:
-                    // this means there is a custom animation we will need to account for
-                    nNewTileIndex = 0;
-                    bNonRandomTime = true;
-                    break;
-                case 2:
-                    // we will simply toggle between the two, perhaps we don't do random intervals either?
-                    nNewTileIndex = AnimationIndex == 0 ? Index + 1 : Index;
-                    bNonRandomTime = false;
-                    break;
-                default:
-                    // make sure it's greater than zero
-                    if (TotalAnimationFrames <= 1)
-                        throw new Ultima5ReduxException(
-                            $"asked for an animation frame with invalid frame total: {TotalAnimationFrames}");
-                    // find a new frame that isn't the current one - or do we even care?
-                    nNewTileIndex = KeyTileTileReferenceIndex + Utils.GetNumberFromAndTo(0, TotalAnimationFrames);
-                    bNonRandomTime = true;
-                    break;
-            }
-
-            return nNewTileIndex;
-        }
+        // public int GetRandomAnimationFrameIndex(out bool bNonRandomTime)
+        // {
+        //     int nNewTileIndex = 0;
+        //
+        //     switch (TotalAnimationFrames)
+        //     {
+        //         case -1:
+        //             // this means there is a custom animation we will need to account for
+        //             nNewTileIndex = 0;
+        //             bNonRandomTime = true;
+        //             break;
+        //         case 2:
+        //             // we will simply toggle between the two, perhaps we don't do random intervals either?
+        //             nNewTileIndex = AnimationIndex == 0 ? Index + 1 : Index;
+        //             bNonRandomTime = false;
+        //             break;
+        //         default:
+        //             // make sure it's greater than zero
+        //             if (TotalAnimationFrames <= 1)
+        //                 throw new Ultima5ReduxException(
+        //                     $"asked for an animation frame with invalid frame total: {TotalAnimationFrames}");
+        //             // find a new frame that isn't the current one - or do we even care?
+        //             nNewTileIndex = KeyTileTileReferenceIndex + Utils.GetNumberFromAndTo(0, TotalAnimationFrames);
+        //             bNonRandomTime = true;
+        //             break;
+        //     }
+        //
+        //     return nNewTileIndex;
+        // }
 
 
         public bool Is(SpriteIndex spriteIndex) => Index == (int)spriteIndex;

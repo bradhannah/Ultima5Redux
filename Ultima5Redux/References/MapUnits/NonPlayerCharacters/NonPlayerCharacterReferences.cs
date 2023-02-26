@@ -94,7 +94,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         {
             // open the appropriate NPC data file
             string dataFilenameAndPath = Path.Combine(u5Directory,
-                SmallMapReferences.SingleMapReference.GetNPCFilenameFromMasterFile(mapMaster));
+                SmallMapReferences.SingleMapReference.GetNpcFilenameFromMasterFile(mapMaster));
 
             // load the file into memory
             List<byte> npcData = Utils.GetFileAsByteList(dataFilenameAndPath);

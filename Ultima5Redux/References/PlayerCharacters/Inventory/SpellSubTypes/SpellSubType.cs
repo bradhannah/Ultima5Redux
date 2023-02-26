@@ -6,6 +6,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
 {
     public abstract class SpellSubType
     {
+        // ReSharper disable once MemberCanBeProtected.Global
         public MagicReference MagicRef { get; }
 
         protected SpellSubType(MagicReference magicRef) => MagicRef = magicRef;

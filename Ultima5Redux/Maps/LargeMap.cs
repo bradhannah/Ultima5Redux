@@ -102,6 +102,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <returns>true if a monster was created</returns>
         /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
+        // ReSharper disable once UnusedMethodReturnValue.Local
         private bool CreateRandomMonster(int nTurn)
         {
             const int maxTries = 10;
@@ -141,7 +142,7 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        ///     Decides if any enemies needed to be spawned or despawned
+        ///     Decides if any enemies needed to be spawned or de-spawned
         /// </summary>
         internal void GenerateAndCleanupEnemies(int oneInXOddsOfNewMonster, int nTurn)
         {
@@ -328,14 +329,14 @@ namespace Ultima5Redux.Maps
             const float fMaxDiagonalDistance = 22;
             MapUnitPosition avatarPosition = CurrentAvatarPosition;
 
-            int nMaxXY = TheMapType is Maps.Overworld or Maps.Underworld
+            int nMaxXy = TheMapType is Maps.Overworld or Maps.Underworld
                 ? LargeMapLocationReferences.X_TILES
                 : 32;
 
             List<Enemy> enemiesToClear = null;
             foreach (Enemy enemy in CurrentMapUnits.Enemies)
             {
-                if (enemy.MapUnitPosition.XY.DistanceBetweenWithWrapAround(avatarPosition.XY, nMaxXY) <=
+                if (enemy.MapUnitPosition.XY.DistanceBetweenWithWrapAround(avatarPosition.XY, nMaxXy) <=
                     fMaxDiagonalDistance)
                     continue;
 

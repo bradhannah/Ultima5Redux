@@ -71,8 +71,8 @@ namespace Ultima5Redux.Maps
         }
 
         [IgnoreDataMember]
-        protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides =>
-            _xyOverrides ??= GameReferences.Instance.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
+        protected sealed override Dictionary<Point2D, TileOverrideReference> XyOverrides =>
+            _xyOverrides ??= GameReferences.Instance.TileOverrideRefs.GetTileXyOverrides(CurrentSingleMapReference);
 
         private Dictionary<Point2D, TileOverrideReference> _xyOverrides;
 
@@ -156,13 +156,13 @@ namespace Ultima5Redux.Maps
             // if the wind is blowing the same direction then we double the damage
             if (avatar.Direction == windDirection) nDamage *= 2;
             // decrement the damage from the frigate
-            frigate.Hitpoints -= nDamage;
+            frigate.HitPoints -= nDamage;
 
             turnResults.PushOutputToConsole(
                 GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
                     .BREAKING_UP), false);
             // if we hit zero hitpoints then the ship is destroyed and a skiff is boarded
-            if (frigate.Hitpoints <= 0)
+            if (frigate.HitPoints <= 0)
             {
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveShipDestroyed));
                 // destroy the ship and leave board the Avatar onto a skiff
@@ -179,7 +179,7 @@ namespace Ultima5Redux.Maps
             }
             else
             {
-                if (frigate.Hitpoints <= 10)
+                if (frigate.HitPoints <= 10)
                     turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WorldStrings
                             .HULL_WEAK), false);
@@ -451,7 +451,7 @@ namespace Ultima5Redux.Maps
         }
 
 
-        private void ForceAttack(VirtualMap.AggressiveMapUnitInfo mapUnitInfo, TileReference attackFromTileReference)
+        private static void ForceAttack(VirtualMap.AggressiveMapUnitInfo mapUnitInfo, TileReference attackFromTileReference)
         {
             mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction.EnemyAttackCombatMap);
             SingleCombatMapReference singleCombatMapReference =
@@ -935,6 +935,8 @@ namespace Ultima5Redux.Maps
             }
 
             // if attacking another frigate, then it's boat to boat
+            Debug.Assert(targetedMapUniTileReference != null, nameof(targetedMapUniTileReference) + " != null");
+            // ReSharper disable once ConvertIfStatementToReturnStatement
             if (GameReferences.Instance.SpriteTileReferences.IsFrigate(targetedMapUniTileReference.Index))
                 return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
                     SingleCombatMapReference.BritanniaCombatMaps.BoatBoat, territory);
@@ -1106,7 +1108,7 @@ namespace Ultima5Redux.Maps
                     newUnit.MapLocation = location;
                 }
             }
-            else if (GameReferences.Instance.SpriteTileReferences.IsMonster(tileReference.Index))
+            else if (TileReferences.IsMonster(tileReference.Index))
             {
                 Debug.Assert(GameReferences.Instance.EnemyRefs != null);
                 newUnit = new Enemy(mapUnitMovement, GameReferences.Instance.EnemyRefs.GetEnemyReference(tileReference),

@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Ultima5Redux.References.Maps;
 
-namespace Ultima5Redux.References
+namespace Ultima5Redux.References.Maps
 {
     public class DungeonReferences
     {

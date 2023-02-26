@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -25,8 +26,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public Moonstones TheMoonstones { get; set; }
         [DataMember] public Provisions TheProvisions { get; set; }
         [DataMember] public Weapons TheWeapons { get; set; }
-        [IgnoreDataMember] public List<InventoryItem> AllItems { get; } = new();
-        [IgnoreDataMember] public List<CombatItem> CombatItems { get; } = new();
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "CollectionNeverQueried.Global")]
+        public List<InventoryItem> AllItems { get; } = new();
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "CollectionNeverQueried.Global")]
+        public List<CombatItem> CombatItems { get; } = new();
 
         [IgnoreDataMember]
         public int Food => TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Food].Quantity;

@@ -278,13 +278,13 @@ namespace Ultima5Redux.References.Maps
         ///     This method will use the info provided to provide a suitable substitution
         /// </summary>
         /// <param name="nSprite">The default sprite</param>
-        /// <param name="bIsNPCTile">Is there an NPC on the tile as well?</param>
+        /// <param name="bIsNpcTile">Is there an NPC on the tile as well?</param>
         /// <param name="bIsAvatarTile">Is the Avatar on the tile?</param>
         /// <param name="bIsFoodNearby">Is there food within +/- 1 y pos?</param>
         /// <param name="bIsDaylight"> Is it current daylight </param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Global
-        public int GetCorrectSprite(int nSprite, bool bIsNPCTile, bool bIsAvatarTile, bool bIsFoodNearby,
+        public int GetCorrectSprite(int nSprite, bool bIsNpcTile, bool bIsAvatarTile, bool bIsFoodNearby,
             bool bIsDaylight)
         {
             int nNewSprite = nSprite;
@@ -294,7 +294,7 @@ namespace Ultima5Redux.References.Maps
                 // this is trickier than you would think because the chair can 
                 // be in multiple directions
 
-                if (!bIsNPCTile && !bIsAvatarTile) return nNewSprite;
+                if (!bIsNpcTile && !bIsAvatarTile) return nNewSprite;
 
                 if (bIsFoodNearby)
                 {
@@ -309,20 +309,20 @@ namespace Ultima5Redux.References.Maps
             }
             else if (IsLadder(nSprite)) // on a ladder
             {
-                if (bIsNPCTile || bIsAvatarTile)
+                if (bIsNpcTile || bIsAvatarTile)
                     nNewSprite = IsLadderUp(nSprite)
                         ? GetTileNumberByName("KlimbLadderUp")
                         : GetTileNumberByName("KlimbLadderDown");
             }
-            else if (IsHeadOfBed(nSprite) && (bIsNPCTile || bIsAvatarTile)) // in bed
+            else if (IsHeadOfBed(nSprite) && (bIsNpcTile || bIsAvatarTile)) // in bed
             {
                 nNewSprite = GetTileNumberByName("SleepingInBed");
             }
-            else if (IsStocks(nSprite) && (bIsNPCTile || bIsAvatarTile)) // in the stocks
+            else if (IsStocks(nSprite) && (bIsNpcTile || bIsAvatarTile)) // in the stocks
             {
                 nNewSprite = GetTileNumberByName("PersonStocks1");
             }
-            else if (IsManacles(nSprite) && (bIsNPCTile || bIsAvatarTile)) // shackled up
+            else if (IsManacles(nSprite) && (bIsNpcTile || bIsAvatarTile)) // shackled up
             {
                 nNewSprite = GetTileNumberByName("WallPrisoner1");
             }
@@ -423,10 +423,10 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadder(int nSprite) => IsLadderDown(nSprite) || IsLadderUp(nSprite);
+        public static bool IsLadder(int nSprite) => IsLadderDown(nSprite) || IsLadderUp(nSprite);
 
         // a bit a rough cut right now, this will need to be refined as the monsters are assigned actual behaviours
-        public bool IsMonster(int nSprite) => nSprite is >= 384 and <= 511;
+        public static bool IsMonster(int nSprite) => nSprite is >= 384 and <= 511;
 
         /// <summary>
         ///     Can you typically bury a moonstone on the tile type?

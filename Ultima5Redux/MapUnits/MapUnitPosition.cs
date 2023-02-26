@@ -22,9 +22,12 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] private int _floor;
 
-        [IgnoreDataMember] public Point3D XYZ => new(X, Y, Floor);
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public Point3D XYZ => new(X, Y, Floor);
 
         [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public Point2D XY
         {
             get => new(X, Y);
@@ -73,7 +76,8 @@ namespace Ultima5Redux.MapUnits
 
         public override string ToString() => "X=" + X + ",Y=" + Y + ", Floor=" + Floor;
 
-        public string GetFriendlyFloorString(int nFloor) =>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static string GetFriendlyFloorString(int nFloor) =>
             nFloor switch
             {
                 -1 => "Basement",

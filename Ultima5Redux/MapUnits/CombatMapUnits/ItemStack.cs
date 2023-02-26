@@ -17,7 +17,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [DataMember] private readonly Stack<StackableItem> _stackableItems = new();
         public override bool ExposeInnerItemsOnOpen => false;
         public override bool ExposeInnerItemsOnSearch => true;
-        public override string FriendlyName { get; }
+        public override string FriendlyName => "ItemStack";
         public override bool HasInnerItemStack => false;
 
         public override bool IsActive => HasStackableItems;
@@ -37,9 +37,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             set => throw new NotImplementedException("Cannot assign KeyTileReference in ItemStack");
         }
 
-        public override string Name { get; }
-        public override string PluralName { get; }
-        public override string SingularName { get; }
+        public override string Name => "ItemStack";
+        public override string PluralName => "ItemStack";
+        public override string SingularName => "ItemStack";
 
         public bool HasStackableItems => TotalItems > 0;
 

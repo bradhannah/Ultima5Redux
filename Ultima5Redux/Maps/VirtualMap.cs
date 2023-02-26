@@ -84,6 +84,7 @@ namespace Ultima5Redux.Maps
         /// <param name="theSearchItems"></param>
         internal VirtualMap(
             Map.Maps initialMap,
+            // ReSharper disable once UnusedParameter.Local
             SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites,
             ImportedGameState importedGameState, SearchItems theSearchItems)
         {
@@ -246,7 +247,7 @@ namespace Ultima5Redux.Maps
             // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
             bool bIsChair = TileReferences.IsChair(nSprite);
             // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite
-            bool bIsLadder = GameReferences.Instance.SpriteTileReferences.IsLadder(nSprite);
+            bool bIsLadder = TileReferences.IsLadder(nSprite);
             // is it the human sleeping side of the bed?
             bool bIsHeadOfBed = TileReferences.IsHeadOfBed(nSprite);
             // we need to check these before they get "corrected"
@@ -355,7 +356,7 @@ namespace Ultima5Redux.Maps
 
             // if there is an alternate flat sprite (for example, trees have grass)
             if (origTileReference.HasAlternateFlatSprite ||
-                CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
+                CurrentMap.IsXyOverride(xy, TileOverrideReference.TileType.Flat))
             {
                 TileReference flatTileReference =
                     GameReferences.Instance.SpriteTileReferences.GetTileReference(

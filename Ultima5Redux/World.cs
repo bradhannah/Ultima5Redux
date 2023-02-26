@@ -921,7 +921,7 @@ namespace Ultima5Redux
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
 
-            bool isOnBuilding = GameReferences.Instance.LargeMapRef.IsMapXYEnterable(xy);
+            bool isOnBuilding = GameReferences.Instance.LargeMapRef.IsMapXyEnterable(xy);
 
             if (!isOnBuilding)
             {
@@ -936,7 +936,7 @@ namespace Ultima5Redux
             }
 
             SmallMapReferences.SingleMapReference.Location location =
-                GameReferences.Instance.LargeMapRef.GetLocationByMapXY(xy);
+                GameReferences.Instance.LargeMapRef.GetLocationByMapXy(xy);
             SmallMapReferences.SingleMapReference singleMap =
                 GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(location, 0);
 
@@ -956,7 +956,7 @@ namespace Ultima5Redux
 
             State.TheVirtualMap.LoadSmallMap(singleMap);
             // set us to the front of the building
-            State.TheVirtualMap.CurrentMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation();
+            State.TheVirtualMap.CurrentMap.CurrentPosition.XY = SmallMapReferences.GetStartingXyByLocation();
 
             turnResults.PushOutputToConsole(
                 GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
@@ -1402,7 +1402,7 @@ namespace Ultima5Redux
             TileReference curTileRef = smallMap.GetTileReferenceOnCurrentTile();
 
             // we can't klimb on the current tile, so we need to pick a direction
-            if (!GameReferences.Instance.SpriteTileReferences.IsLadder(curTileRef.Index) &&
+            if (!TileReferences.IsLadder(curTileRef.Index) &&
                 !TileReferences.IsGrate(curTileRef.Index))
             {
                 klimbResult = KlimbResult.RequiresDirection;
@@ -1810,7 +1810,6 @@ namespace Ultima5Redux
             // this will prevent a never ending growth or shrinking of character position in case the travel the world only moving right a bagillion times
             State.TheVirtualMap.CurrentMap.CurrentPosition.X %= nTilesPerMapCol;
             State.TheVirtualMap.CurrentMap.CurrentPosition.Y %= nTilesPerMapRow;
-            //State.TheVirtualMap.SavePreviousPosition(State.TheVirtualMap.CurrentMap.CurrentPosition);
 
             // if you walk on top of a staircase then we will immediately jump to the next floor
             if (TileReferences.IsStaircase(newTileReference.Index) &&

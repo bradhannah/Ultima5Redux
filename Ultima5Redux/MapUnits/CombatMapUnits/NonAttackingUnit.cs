@@ -90,9 +90,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     stats.Sleep();
                     break;
                 case TrapType.POISON:
-                    turnResult =
-                        new SinglePlayerCharacterAffected(TurnResult.TurnResultType.PlayerCharacterPoisoned, stats);
-                    turnResults.PushTurnResult(turnResult);
+                    // NOTE: this is temporary - you don't automatically poison the whole party from a poison trap
+                    foreach (PlayerCharacterRecord record in records.Records)
+                    {
+                        turnResult =
+                            new SinglePlayerCharacterAffected(TurnResult.TurnResultType.PlayerCharacterPoisoned, record, stats);
+                        turnResults.PushTurnResult(turnResult);
+                    }
+
                     stats.Poison();
                     break;
                 case TrapType.BOMB:

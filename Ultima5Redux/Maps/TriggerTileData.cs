@@ -10,6 +10,7 @@ namespace Ultima5Redux.Maps
         public bool Triggered { get; private set; }
 
         // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public Point2D TriggeredPosition { get; }
 
         public TileReference TriggerSprite { get; }

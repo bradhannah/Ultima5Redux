@@ -114,6 +114,7 @@ namespace Ultima5Redux.References.Dialogue
         {
             // Note: I originally wrote this just to catch the exceptions, but it was SUPER SLOW, so I hopefully smartened it up
             // is the index in the range that we can even lookup?
+            // ReSharper disable once ConvertIfStatementToReturnStatement
             if (index > _compressWordLookupMap.Keys.Max() - _compressWordLookupMap.Keys.Min()) return false;
             // if the index is in range, then does the key exist?
             return _compressWordLookupMap.ContainsKey(index);

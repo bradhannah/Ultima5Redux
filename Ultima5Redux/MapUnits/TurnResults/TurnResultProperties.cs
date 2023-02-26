@@ -10,7 +10,7 @@ namespace Ultima5Redux.MapUnits.TurnResults
 {
     public interface INonPlayerCharacterInteraction
     {
-        public NonPlayerCharacter NPC { get; }
+        public NonPlayerCharacter Npc { get; }
     }
 
     public interface IHitState

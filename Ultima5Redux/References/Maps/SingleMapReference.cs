@@ -284,8 +284,9 @@ namespace Ultima5Redux.References.Maps
             /// </summary>
             /// <param name="mapMaster"></param>
             /// <returns>name of the .NPC file</returns>
-            public static string GetNPCFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
+            public static string GetNpcFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
             {
+                // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
                 return mapMaster switch
                 {
                     SmallMapMasterFiles.Castle => FileConstants.CASTLE_NPC,

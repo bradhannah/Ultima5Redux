@@ -91,7 +91,7 @@ namespace Ultima5Redux.References.Maps
         /// <param name="nFloor"></param>
         /// <returns></returns>
         /// <exception cref="Ultima5ReduxException"></exception>
-        private Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(AllTerritories territory, int nMapNumber,
+        private Dictionary<Point2D, TileOverrideReference> GetTileXyOverrides(AllTerritories territory, int nMapNumber,
             int nFloor) =>
             TileOverrideExists(territory, nMapNumber, nFloor)
                 ? _tileOverrideMap[territory][nMapNumber][nFloor]
@@ -114,14 +114,14 @@ namespace Ultima5Redux.References.Maps
             GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id,
                 singleMapReference.Floor);
 
-        public Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(
+        public Dictionary<Point2D, TileOverrideReference> GetTileXyOverrides(
             SmallMapReferences.SingleMapReference singleMapReference) =>
-            GetTileXYOverrides(
+            GetTileXyOverrides(
                 GetOverrideTerritory(singleMapReference), singleMapReference.Id, singleMapReference.Floor);
 
-        public Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(
+        public Dictionary<Point2D, TileOverrideReference> GetTileXyOverrides(
             SingleCombatMapReference singleCombatMapReference) =>
-            GetTileXYOverrides(GetOverrideTerritory(singleCombatMapReference),
+            GetTileXyOverrides(GetOverrideTerritory(singleCombatMapReference),
                 singleCombatMapReference.CombatMapNum,
                 0);
     }

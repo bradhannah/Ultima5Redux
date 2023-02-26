@@ -4,8 +4,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
     public class GoToBlackthornDungeon : TurnResult, INonPlayerCharacterInteraction
     {
-        public GoToBlackthornDungeon(NonPlayerCharacter npc) : base(TurnResultType.GoToBlackthornDungeon) => NPC = npc;
+        public GoToBlackthornDungeon(NonPlayerCharacter npc) : base(TurnResultType.GoToBlackthornDungeon) => Npc = npc;
 
-        public NonPlayerCharacter NPC { get; }
+        public NonPlayerCharacter Npc { get; }
     }
 }

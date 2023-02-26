@@ -6,15 +6,15 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     {
         public readonly string CustomDialogueId = "";
 
-        public NpcTalkInteraction(NonPlayerCharacter npc) : base(TurnResultType.NpcTalkInteraction) => NPC = npc;
+        public NpcTalkInteraction(NonPlayerCharacter npc) : base(TurnResultType.NpcTalkInteraction) => Npc = npc;
 
         public NpcTalkInteraction(NonPlayerCharacter npc, string customDialogueId) : base(TurnResultType
             .NpcTalkInteraction)
         {
             CustomDialogueId = customDialogueId;
-            NPC = npc;
+            Npc = npc;
         }
 
-        public NonPlayerCharacter NPC { get; }
+        public NonPlayerCharacter Npc { get; }
     }
 }

@@ -637,7 +637,7 @@ namespace Ultima5Redux.MapUnits
             // is player on a ladder or staircase going in the direction they intend to go?
             bool bIsOnStairCaseOrLadder =
                 TileReferences.IsStaircase(currentTileRef.Index) ||
-                GameReferences.Instance.SpriteTileReferences.IsLadder(currentTileRef.Index);
+                TileReferences.IsLadder(currentTileRef.Index);
 
             if (!bIsOnStairCaseOrLadder) return false;
 

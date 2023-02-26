@@ -28,7 +28,7 @@ namespace Ultima5Redux.References.Maps
         /// <summary>
         ///     Maps the xy based on the location
         /// </summary>
-        private Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location> LocationXYLocations { get; } =
+        private Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location> LocationXyLocations { get; } =
             new();
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         // ReSharper disable once CollectionNeverQueried.Global
-        public Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXY { get; } =
+        public Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXy { get; } =
             new();
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace Ultima5Redux.References.Maps
                 Point2D mapPoint = new(xPos[nVector], yPos[nVector]);
                 SmallMapReferences.SingleMapReference.Location location =
                     (SmallMapReferences.SingleMapReference.Location)nVector + 1;
-                LocationXY.Add(location, mapPoint);
-                LocationXYLocations.Add(mapPoint, location);
+                LocationXy.Add(location, mapPoint);
+                LocationXyLocations.Add(mapPoint, location);
             }
         }
 
@@ -162,10 +162,10 @@ namespace Ultima5Redux.References.Maps
         /// <summary>
         ///     Gets the location at a particular xy
         /// </summary>
-        /// <param name="mapXY"></param>
+        /// <param name="mapXy"></param>
         /// <returns></returns>
-        public SmallMapReferences.SingleMapReference.Location GetLocationByMapXY(Point2D mapXY) =>
-            LocationXYLocations[mapXY];
+        public SmallMapReferences.SingleMapReference.Location GetLocationByMapXy(Point2D mapXy) =>
+            LocationXyLocations[mapXy];
 
         public static byte[][] GetMap(LargeMapType largeMapType)
         {
@@ -183,8 +183,8 @@ namespace Ultima5Redux.References.Maps
         /// <summary>
         ///     Tells you if an xy is enterable (command key E)
         /// </summary>
-        /// <param name="mapXY"></param>
+        /// <param name="mapXy"></param>
         /// <returns>true if it's enterable</returns>
-        public bool IsMapXYEnterable(Point2D mapXY) => LocationXYLocations.ContainsKey(mapXY);
+        public bool IsMapXyEnterable(Point2D mapXy) => LocationXyLocations.ContainsKey(mapXy);
     }
 }

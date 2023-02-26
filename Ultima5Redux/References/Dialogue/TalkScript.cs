@@ -87,7 +87,7 @@ namespace Ultima5Redux.References.Dialogue
         }
 
         public TalkScript(IEnumerable<ScriptItem> name, IEnumerable<ScriptItem> description,
-            IEnumerable<ScriptItem> greeting, IEnumerable<ScriptItem> jobResponse, List<ScriptItem> byeResponse)
+            IEnumerable<ScriptItem> greeting, IEnumerable<ScriptItem> jobResponse, IEnumerable<ScriptItem> byeResponse)
         {
             void addToCurrent(IEnumerable<ScriptItem> commands)
             {
@@ -595,6 +595,7 @@ namespace Ultima5Redux.References.Dialogue
 
             private string GetQuestionKey(string userSuppliedQuestion)
             {
+                // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                 foreach (string question in QuestionAnswers.Keys)
                 {
                     if (userSuppliedQuestion.ToLower().StartsWith(question.ToLower())) return question;
@@ -612,6 +613,7 @@ namespace Ultima5Redux.References.Dialogue
                 if (sqa.Questions == null)
                     return;
 
+                // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                 foreach (string question in sqa.Questions)
                 {
                     if (!QuestionAnswers.Keys.Contains(question.Trim())) QuestionAnswers.Add(question.Trim(), sqa);

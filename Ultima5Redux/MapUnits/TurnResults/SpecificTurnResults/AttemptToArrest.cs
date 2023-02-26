@@ -5,8 +5,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     public class AttemptToArrest : TurnResult, INonPlayerCharacterInteraction
     {
         public AttemptToArrest(TurnResultType theTurnResultType, NonPlayerCharacter npc) : base(theTurnResultType) =>
-            NPC = npc;
+            Npc = npc;
 
-        public NonPlayerCharacter NPC { get; }
+        public NonPlayerCharacter Npc { get; }
     }
 }

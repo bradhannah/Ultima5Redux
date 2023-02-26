@@ -34,7 +34,7 @@ namespace Ultima5Redux.Maps
         public override int NumOfYTiles => SingleDungeonMapFloorReference.N_DUNGEON_ROWS_PER_MAP;
         public virtual bool ShowOuterSmallMapTiles => false;
 
-        public override byte[][] TheMap { get; protected set; }
+        public sealed override byte[][] TheMap { get; protected set; }
 
         public override Maps TheMapType => Maps.Dungeon;
 

@@ -203,8 +203,6 @@ namespace Ultima5Redux.References.Maps
             }
 
             // Set up all the monsters and entities that can be on the map
-
-            Dictionary<Point2D, bool> duplicateMapUnitPositionDictionary = new();
             for (int nMapUnit = 0; nMapUnit < NUM_MAP_UNITS; nMapUnit++)
             {
                 int nMapUnitCol = nMapUnit + XTILES;

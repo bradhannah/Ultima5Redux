@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
@@ -164,9 +165,10 @@ namespace Ultima5Redux.References.Maps
             // add one or more map references 
             IEnumerable<SingleMapReference> singleMaps =
                 GenerateSingleMapReferences(location, hasBasement ? -1 : 0, nFloors, roomOffset);
-            MapReferenceList.AddRange(singleMaps);
+            IEnumerable<SingleMapReference> singleMapReferences = singleMaps.ToList();
+            MapReferenceList.AddRange(singleMapReferences);
             _mapReferenceDictionary.Add(location, new Dictionary<int, SingleMapReference>());
-            foreach (SingleMapReference singleMapReference in singleMaps)
+            foreach (SingleMapReference singleMapReference in singleMapReferences)
             {
                 _mapReferenceDictionary[location].Add(singleMapReference.Floor, singleMapReference);
             }
@@ -204,18 +206,19 @@ namespace Ultima5Redux.References.Maps
         ///     Gets the starting location of a small map
         /// </summary>
         /// <returns></returns>
-        public static Point2D GetStartingXYByLocation() => new(32 / 2 - 1, 30);
+        public static Point2D GetStartingXyByLocation() => new(32 / 2 - 1, 30);
 
         /// <summary>
         ///     Gets the starting position of a small map
         /// </summary>
         /// <returns></returns>
-        public static MapUnitPosition GetStartingXYZByLocation()
+        public static MapUnitPosition GetStartingXyzByLocation()
         {
-            Point2D startingXY = GetStartingXYByLocation();
-            return new MapUnitPosition(startingXY.X, startingXY.Y, 0);
+            Point2D startingXy = GetStartingXyByLocation();
+            return new MapUnitPosition(startingXy.X, startingXy.Y, 0);
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool DoesFloorExist(SingleMapReference.Location location, int nFloor) =>
             _mapReferenceDictionary[location].ContainsKey(nFloor);
 

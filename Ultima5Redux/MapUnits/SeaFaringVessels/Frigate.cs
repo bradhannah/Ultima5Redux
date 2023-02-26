@@ -49,9 +49,9 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public override bool IsAttackable => false;
 
-        public int Hitpoints { get; set; }
+        public int HitPoints { get; set; }
 
-        public bool SailsHoisted { get; set; } = false;
+        public bool SailsHoisted { get; set; }
 
         /// <summary>
         ///     How many skiffs does the frigate have aboard?
@@ -72,7 +72,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : this(mapUnitMovement, location,
             direction, npcState, mapUnitPosition)
         {
-            Hitpoints = mapUnitState.Depends1;
+            HitPoints = mapUnitState.Depends1;
             SkiffsAboard = mapUnitState.Depends3;
         }
 

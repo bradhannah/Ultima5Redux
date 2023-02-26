@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -280,6 +281,7 @@ namespace Ultima5Redux
             }
         }
 
+        [SuppressMessage("ReSharper", "RedundantAssignment")]
         public static void SwapInts(ref int a, ref int b)
         {
             int t = a;

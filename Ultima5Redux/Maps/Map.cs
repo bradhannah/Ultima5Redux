@@ -85,7 +85,7 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once MemberCanBeProtected.Global
         public int RecalculatedHash { get; protected set; }
 
-        protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
+        protected abstract Dictionary<Point2D, TileOverrideReference> XyOverrides { get; }
 
 
         protected Map(SmallMapReferences.SingleMapReference.Location mapLocation, int mapFloor) : this()
@@ -112,7 +112,7 @@ namespace Ultima5Redux.Maps
 
         internal TileReference GetOriginalTileReference(in Point2D xy) =>
             GameReferences.Instance.SpriteTileReferences.GetTileReference(
-                IsXYOverride(xy, TileOverrideReference.TileType.Primary)
+                IsXyOverride(xy, TileOverrideReference.TileType.Primary)
                     ? GetTileOverride(xy).SpriteNum
                     : TheMap[xy.X][xy.Y]);
 
@@ -418,7 +418,7 @@ namespace Ultima5Redux.Maps
             return null;
         }
 
-        private TileOverrideReference GetTileOverride(in Point2D xy) => XYOverrides[xy];
+        private TileOverrideReference GetTileOverride(in Point2D xy) => XyOverrides[xy];
 
         private bool IsCurrentPositionFreeToMoveDirection(in Point2D.Direction direction,
             Avatar.AvatarState avatarState) =>
@@ -436,6 +436,7 @@ namespace Ultima5Redux.Maps
         /// <param name="map"></param>
         /// <returns></returns>
         // ReSharper disable once SuggestBaseTypeForParameter
+        // ReSharper disable once UnusedMethodReturnValue.Local
         private bool PlaceNonAttackingUnit(NonAttackingUnit nonAttackingUnit, MapUnitPosition mapUnitPosition,
             Maps map)
         {
@@ -568,7 +569,7 @@ namespace Ultima5Redux.Maps
 
         public int GetAlternateFlatSprite(in Point2D xy)
         {
-            if (IsXYOverride(xy, TileOverrideReference.TileType.Flat))
+            if (IsXyOverride(xy, TileOverrideReference.TileType.Flat))
                 return GetTileOverride(xy).SpriteNum;
 
             int nSprite = GetTileReference(xy).FlatTileSubstitutionIndex;
@@ -758,7 +759,7 @@ namespace Ultima5Redux.Maps
         {
             Dictionary<int, int> tileCountDictionary = new();
 
-            if (IsXYOverride(xy, TileOverrideReference.TileType.Flat))
+            if (IsXyOverride(xy, TileOverrideReference.TileType.Flat))
                 return GetTileOverride(xy).SpriteNum;
 
             for (int i = -1; i <= 1; i++)
@@ -858,11 +859,11 @@ namespace Ultima5Redux.Maps
             IsMapUnitOccupiedFromList(xy, CurrentSingleMapReference.Floor,
                 CurrentMapUnits.AllActiveMapUnits);
 
-        public bool IsXYOverride(in Point2D xy, TileOverrideReference.TileType tileType) =>
+        public bool IsXyOverride(in Point2D xy, TileOverrideReference.TileType tileType) =>
             // this is kind of hacky - but the map is only aware of the primary tile, so if the override is 
             // FLAT then we ignore it and find it later with VirtualMap
-            XYOverrides != null && XYOverrides.ContainsKey(xy) &&
-            XYOverrides[xy].TheTileType == tileType;
+            XyOverrides != null && XyOverrides.ContainsKey(xy) &&
+            XyOverrides[xy].TheTileType == tileType;
 
         /// <summary>
         ///     Sets an override for the current tile which will be favoured over the static map tile

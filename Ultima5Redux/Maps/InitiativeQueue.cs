@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
@@ -316,6 +317,7 @@ namespace Ultima5Redux.Maps
             return false;
         }
 
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
         private bool IsCombatMapUnitVisible(CombatMapUnit combatMapUnit)
         {
             if (_combatMap.VisibleOnMap != null &&

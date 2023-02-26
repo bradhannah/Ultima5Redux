@@ -33,7 +33,13 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     Instructs the calling method how to handle proceeding TalkScript lookups
         /// </summary>
-        private enum SkipInstruction { DontSkip = 0, SkipNext, SkipAfterNext, SkipToLabel }
+        private enum SkipInstruction
+        {
+            DontSkip = 0,
+            SkipNext,
+            SkipAfterNext,
+            SkipToLabel
+        }
 
         /// <summary>
         ///     a list of conversation indexes that refer to the particular conversationOrderScriptLines[] we are on
@@ -73,20 +79,19 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         private bool _runeMode;
 
-        public bool CallForGuardsAfterConversation { get; private set; }
-
         /// <summary>
         ///     Has the conversation ended?
         /// </summary>
-        public bool ConversationEnded { get; set; }
+        private bool ConversationEnded { get; set; }
 
         /// <summary>
         ///     The callback for the notification that tells the user something was added to the queue
         /// </summary>
         public EnqueuedScriptItem EnqueuedScriptItemCallback { get; set; }
 
-        public NonPlayerCharacterState TheNonPlayerCharacterState { get; }
+        private NonPlayerCharacterState TheNonPlayerCharacterState { get; }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public TurnResults TheTurnResults { get; } = new();
 
         /// <summary>
@@ -758,7 +763,6 @@ namespace Ultima5Redux.Dialogue
                 case TalkScript.TalkCommand.CallGuards:
 
                     smallMap.IsWantedManByThePoPo = true;
-                    CallForGuardsAfterConversation = true;
                     // if it's a guard that calls guards then they will attack you immediately, you had your chance!
                     if (TheNonPlayerCharacterState.NpcRef.IsGuard) smallMap.DeclinedExtortion = true;
                     break;

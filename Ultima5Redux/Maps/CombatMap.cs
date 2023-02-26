@@ -140,7 +140,7 @@ namespace Ultima5Redux.Maps
 
         public int Turn => TheInitiativeQueue.Turn;
 
-        protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
+        protected sealed override Dictionary<Point2D, TileOverrideReference> XyOverrides { get; }
 
         /// <summary>
         ///     Creates CombatMap.
@@ -150,7 +150,7 @@ namespace Ultima5Redux.Maps
         public CombatMap(SingleCombatMapReference singleCombatMapReference) //, MapUnits.MapUnits mapUnits)
         {
             TheCombatMapReference = singleCombatMapReference;
-            XYOverrides = GameReferences.Instance.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
+            XyOverrides = GameReferences.Instance.TileOverrideRefs.GetTileXyOverrides(singleCombatMapReference);
         }
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
@@ -587,7 +587,7 @@ namespace Ultima5Redux.Maps
             attackStr += "\nYou think better of it and skip your turn.";
             turnResults.PushOutputToConsole(attackStr);
             turnResults.PushTurnResult(new SinglePlayerCharacterAffected(
-                TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackSelf, combatPlayer.Stats));
+                TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackSelf, combatPlayer.Record, combatPlayer.Stats));
             AdvanceIfSafe(combatPlayer, turnResults);
         }
 
@@ -776,23 +776,23 @@ namespace Ultima5Redux.Maps
 
             foreach (CombatMapUnit combatMapUnit in GetActiveCurrentMapUnitsByType(preferredAttackTarget))
             {
-                Point2D combatMapUnitXY = combatMapUnit.MapUnitPosition.XY;
+                Point2D combatMapUnitXy = combatMapUnit.MapUnitPosition.XY;
 
-                potentialTargetsPoints.Add(combatMapUnitXY);
+                potentialTargetsPoints.Add(combatMapUnitXy);
 
                 // get the shortest path to the unit - we ignore the range value because by calling this method we are insisting
                 // that they move
-                Stack<Node> theWay = aStar.FindPath(activeCombatUnit.MapUnitPosition.XY, combatMapUnitXY);
+                Stack<Node> theWay = aStar.FindPath(activeCombatUnit.MapUnitPosition.XY, combatMapUnitXy);
                 int nMoves = theWay?.Count ?? noPath;
-                if (nMoves < nMinMoves)
-                {
-                    nMinMoves = nMoves;
-                    preferredRoute = theWay;
-                    preferredAttackVictim = combatMapUnit;
-                }
+                
+                if (nMoves >= nMinMoves) continue;
+                
+                nMinMoves = nMoves;
+                preferredRoute = theWay;
+                preferredAttackVictim = combatMapUnit;
             }
 
-            Point2D activeCombatUnitXY = activeCombatUnit.MapUnitPosition.XY;
+            Point2D activeCombatUnitXy = activeCombatUnit.MapUnitPosition.XY;
 
             if (nMinMoves == noPath)
             {
@@ -803,7 +803,7 @@ namespace Ultima5Redux.Maps
                 // cycle through all potential targets and determine and pick the closest available target
                 foreach (Point2D point in potentialTargetsPoints)
                 {
-                    double fDistance = point.DistanceBetween(activeCombatUnitXY);
+                    double fDistance = point.DistanceBetween(activeCombatUnitXy);
                     if (fDistance < fShortestPath)
                     {
                         fShortestPath = fDistance;
@@ -844,6 +844,7 @@ namespace Ultima5Redux.Maps
             return preferredAttackVictim;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
         private CombatPlayer MoveToClosestAttackableCombatPlayer(TurnResults turnResults,
             CombatMapUnit activeCombatUnit, out bool bMoved) =>
             MoveToClosestAttackableCombatMapUnit(turnResults, activeCombatUnit,
@@ -910,15 +911,18 @@ namespace Ultima5Redux.Maps
                 case CombatMapUnit.HitState.CriticallyWounded:
                 case CombatMapUnit.HitState.Fleeing:
                 case CombatMapUnit.HitState.Dead:
-                    if (affectedCombatMapUnit is Enemy deadEnemy)
+                    // ReSharper disable once MergeIntoPattern
+                    if (affectedCombatMapUnit is Enemy deadEnemy && deadEnemy.NpcRef != null)
                     {
                         // if the enemy was an NPC then we kill them!
-                        if (deadEnemy.NpcRef != null)
-                        {
-                            deadEnemy.NpcState.IsDead = true;
-                        }
+                        deadEnemy.NpcState.IsDead = true;
                     }
 
+                    break;
+                case CombatMapUnit.HitState.None:
+                case CombatMapUnit.HitState.Blocked:
+                case CombatMapUnit.HitState.HitTrigger:
+                case CombatMapUnit.HitState.HitNothingOfNote:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(hitState), hitState, null);
@@ -959,16 +963,15 @@ namespace Ultima5Redux.Maps
 
         public static EscapeType DirectionToEscapeType(Point2D.Direction direction)
         {
-            switch (direction)
+            return direction switch
             {
-                case Point2D.Direction.Up: return EscapeType.North;
-                case Point2D.Direction.Down: return EscapeType.South;
-                case Point2D.Direction.Left: return EscapeType.West;
-                case Point2D.Direction.Right: return EscapeType.East;
-                case Point2D.Direction.None: return EscapeType.None;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-            }
+                Point2D.Direction.Up => EscapeType.North,
+                Point2D.Direction.Down => EscapeType.South,
+                Point2D.Direction.Left => EscapeType.West,
+                Point2D.Direction.Right => EscapeType.East,
+                Point2D.Direction.None => EscapeType.None,
+                _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+            };
         }
 
         internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
@@ -1022,13 +1025,14 @@ namespace Ultima5Redux.Maps
             return combatMapUnit;
         }
 
-        public void BuildCombatItemQueue(List<CombatItem> combatItems)
+        private void BuildCombatItemQueue(IEnumerable<CombatItem> combatItems)
         {
             _currentCombatItemQueue = new Queue<CombatItem>(combatItems);
         }
 
 
-        public Enemy CreateEnemyOnCombatMap(Point2D xy, EnemyReference enemyReference, out int nIndex)
+        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Local")]
+        private Enemy CreateEnemyOnCombatMap(Point2D xy, EnemyReference enemyReference, out int nIndex)
         {
             Debug.Assert(TheMapType == Maps.Combat);
             nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
@@ -1042,7 +1046,7 @@ namespace Ultima5Redux.Maps
             return enemy;
         }
 
-        public NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)
+        private NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)
         {
             Debug.Assert(TheMapType == Maps.Combat);
             nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
@@ -1061,14 +1065,15 @@ namespace Ultima5Redux.Maps
             return nonAttackingUnit;
         }
 
-        public CombatItem DequeueCurrentCombatItem() => _currentCombatItemQueue.Dequeue();
+        // public CombatItem DequeueCurrentCombatItem() => _currentCombatItemQueue.Dequeue();
 
         /// <summary>
         ///     Takes an enemy and divides them on the combat map, making a fresh copy of them
         /// </summary>
         /// <returns>the new enemy if they did divide, otherwise null</returns>
         /// <param name="enemy"></param>
-        public Enemy DivideEnemy(Enemy enemy)
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
+        private Enemy DivideEnemy(Enemy enemy)
         {
             // is there a free spot surrounding the enemy?
             Point2D newEnemyPosition = GetRandomEmptySpaceAroundEnemy(enemy);
@@ -1089,23 +1094,20 @@ namespace Ultima5Redux.Maps
             return newEnemy;
         }
 
-        public IEnumerable<CombatMapUnit> GetActiveCurrentMapUnitsByType(SpecificCombatMapUnit specificCombatMapUnit)
+        private IEnumerable<CombatMapUnit> GetActiveCurrentMapUnitsByType(SpecificCombatMapUnit specificCombatMapUnit)
         {
-            switch (specificCombatMapUnit)
+            return specificCombatMapUnit switch
             {
-                case SpecificCombatMapUnit.All:
-                    return AllVisibleAttackableCurrentMapUnits;
-                case SpecificCombatMapUnit.CombatPlayer:
-                    return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive);
-                case SpecificCombatMapUnit.Enemy:
-                    return AllEnemiesGeneric.Where(enemy => enemy.IsActive);
-                case SpecificCombatMapUnit.NonAttackUnit:
-                    return AllNonAttackUnits.Where(nau => nau.IsActive);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(specificCombatMapUnit), specificCombatMapUnit, null);
-            }
+                SpecificCombatMapUnit.All => AllVisibleAttackableCurrentMapUnits,
+                SpecificCombatMapUnit.CombatPlayer => AllCombatPlayersGeneric.Where(combatPlayer =>
+                    combatPlayer.IsActive),
+                SpecificCombatMapUnit.Enemy => AllEnemiesGeneric.Where(enemy => enemy.IsActive),
+                SpecificCombatMapUnit.NonAttackUnit => AllNonAttackUnits.Where(nau => nau.IsActive),
+                _ => throw new ArgumentOutOfRangeException(nameof(specificCombatMapUnit), specificCombatMapUnit, null)
+            };
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public CombatMapUnit GetAndRefreshCurrentCombatMapUnit()
         {
             CombatMapUnit combatUnit = TheInitiativeQueue.GetCurrentCombatUnitAndClean();
@@ -1115,15 +1117,18 @@ namespace Ultima5Redux.Maps
             return combatUnit;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public Enemy GetClosestEnemyInRange(CombatPlayer attackingCombatPlayer, CombatItem combatItem) =>
             GetClosestCombatMapUnitInRange<Enemy>(attackingCombatPlayer,
                 combatItem.TheCombatItemReference.Range);
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record)
         {
             return CurrentMapUnits.CombatPlayers.FirstOrDefault(player => player.Record == record);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string GetCombatPlayerOutputText()
         {
             CombatPlayer combatPlayer = GetCurrentCombatPlayer();
@@ -1132,7 +1137,7 @@ namespace Ultima5Redux.Maps
             return combatPlayer.Record.Name + ", armed with " + combatPlayer.GetAttackWeaponsString();
         }
 
-        public CombatMapUnit GetCombatUnit(Point2D unitPosition)
+        private CombatMapUnit GetCombatUnit(Point2D unitPosition)
         {
             MapUnit mapUnit = GetTopVisibleMapUnit(unitPosition, true);
 
@@ -1147,7 +1152,7 @@ namespace Ultima5Redux.Maps
         /// <param name="fromPosition"></param>
         /// <param name="walkableType"></param>
         /// <returns>a list of all potential positions</returns>
-        public List<Point2D> GetEscapablePoints(Point2D fromPosition, WalkableType walkableType)
+        private List<Point2D> GetEscapablePoints(Point2D fromPosition, WalkableType walkableType)
         {
             _ = fromPosition;
             List<Point2D> points = new();
@@ -1177,7 +1182,7 @@ namespace Ultima5Redux.Maps
         /// <param name="fromPosition"></param>
         /// <param name="walkableType"></param>
         /// <returns>path to exit, or null if none exist</returns>
-        public Stack<Node> GetEscapeRoute(Point2D fromPosition, WalkableType walkableType)
+        private Stack<Node> GetEscapeRoute(Point2D fromPosition, WalkableType walkableType)
         {
             List<Point2D> points = GetEscapablePoints(fromPosition, walkableType);
 
@@ -1197,8 +1202,10 @@ namespace Ultima5Redux.Maps
             return shortestPath;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool GetHasPlayerChangedSinceLastCheckAndReset()
         {
             if (!_bPlayerHasChanged) return false;
@@ -1206,6 +1213,7 @@ namespace Ultima5Redux.Maps
             return true;
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
         {
             int nOffset = GetCombatMapUnitIndex(currentEnemy);
@@ -1236,6 +1244,8 @@ namespace Ultima5Redux.Maps
         /// <param name="bExcludeAvatar"></param>
         /// <returns>MapUnit or null</returns>
         // ReSharper disable once MemberCanBePrivate.Global
+        [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
+        [SuppressMessage("ReSharper", "ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator")]
         public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
         {
             List<CombatMapUnit> currentMapUnitsAtPosition =
@@ -1273,7 +1283,7 @@ namespace Ultima5Redux.Maps
             IsMapUnitOccupiedFromList(xy, CurrentSingleMapReference.Floor,
                 CurrentMapUnits.AllCombatMapUnits);
 
-        public void MakePlayerEscape(CombatPlayer combatPlayer)
+        private void MakePlayerEscape(CombatPlayer combatPlayer)
         {
             Debug.Assert(!combatPlayer.HasEscaped);
 
@@ -1281,7 +1291,6 @@ namespace Ultima5Redux.Maps
 
             if (combatPlayer.Record == TheInitiativeQueue.ActivePlayerCharacterRecord)
             {
-                //_initiativeQueue.SetActivePlayerCharacter(null);
                 SetActivePlayerCharacter(null);
             }
 
@@ -1346,6 +1355,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public Enemy MoveToClosestAttackableEnemy(TurnResults turnResults, out string outputStr, out bool bMoved) =>
             MoveToClosestAttackableEnemy(turnResults, CurrentCombatPlayer, out outputStr, out bMoved);
 
@@ -1354,6 +1364,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="escapedPlayer">the player who escaped, or null if none left</param>
         /// <returns>true if a player escaped, false if none were found</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool NextCharacterEscape(out CombatPlayer escapedPlayer)
         {
             foreach (CombatPlayer combatPlayer in CurrentMapUnits.CombatPlayers)
@@ -1369,8 +1380,10 @@ namespace Ultima5Redux.Maps
             return false;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void ProcessCombatPlayerTurn(TurnResults turnResults, SelectionAction selectedAction,
             Point2D actionPosition, out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit)
         {
@@ -1489,6 +1502,7 @@ namespace Ultima5Redux.Maps
         /// <param name="targetedCombatMapUnit">an optional unit that is being affected by the active combat unit</param>
         /// <param name="missedPoint">if the target is empty or missed then this gives the point that the attack landed</param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void ProcessEnemyTurn(TurnResults turnResults, out CombatMapUnit activeCombatMapUnit,
             out CombatMapUnit targetedCombatMapUnit,
             out Point2D missedPoint)
@@ -1687,6 +1701,7 @@ namespace Ultima5Redux.Maps
             AdvanceToNextCombatMapUnit();
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)
         {
             TheInitiativeQueue.SetActivePlayerCharacter(record);
@@ -1728,21 +1743,19 @@ namespace Ultima5Redux.Maps
 
         protected override bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
-            switch (walkableType)
+            return walkableType switch
             {
-                case WalkableType.CombatWater:
-                    return tileReference.IsWaterEnemyPassable;
-                case WalkableType.CombatFlyThroughWalls:
+                WalkableType.CombatWater => tileReference.IsWaterEnemyPassable,
+                WalkableType.CombatFlyThroughWalls =>
                     // if you can fly through walls, then you can fly through anything except people and enemies
-                    return true;
-                case WalkableType.CombatLandAndWater:
-                    return IsWalkingPassable(tileReference) || tileReference.IsWaterEnemyPassable;
-                case WalkableType.CombatLand:
-                    return IsWalkingPassable(tileReference);
-                default:
-                    throw new Ultima5ReduxException(
-                        "Someone is trying to walk to determine they can walk on an unfamiliar WalkableType");
-            }
+                    true,
+                WalkableType.CombatLandAndWater => IsWalkingPassable(tileReference) ||
+                                                   tileReference.IsWaterEnemyPassable,
+                WalkableType.CombatLand => IsWalkingPassable(tileReference),
+                //WalkableType.StandardWalking => expr,
+                _ => throw new Ultima5ReduxException(
+                    "Someone is trying to walk to determine they can walk on an unfamiliar WalkableType")
+            };
         }
     }
 }

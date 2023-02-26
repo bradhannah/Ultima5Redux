@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Ultima5Redux.Maps;
 
@@ -20,6 +21,8 @@ namespace Ultima5Redux.References.Maps
         private readonly SingleDungeonMapFloorReference[] _singleDungeonMapFloorReferences = new
             SingleDungeonMapFloorReference[N_DUNGEON_FLOORS_PER_MAP];
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SmallMapReferences.SingleMapReference.Location DungeonLocation { get; }
 
         public DungeonMapReference(SmallMapReferences.SingleMapReference.Location dungeonLocation,
