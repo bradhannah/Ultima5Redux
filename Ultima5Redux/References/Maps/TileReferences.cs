@@ -273,6 +273,7 @@ namespace Ultima5Redux.References.Maps
             TileReference keyTileReference = GetTileReferenceOfKeyIndex(nSprite);
             if (keyTileReference.TotalAnimationFrames < 2) return keyTileReference;
             double dTotalMilli = DateTime.UtcNow.TimeOfDay.TotalMilliseconds;
+            // ReSharper disable once InvertIf
             if (dTotalMilli - _dLastTime > MILLISECONDS_BETWEEN_FRAMES)
             {
                 _nTick = (_nTick + 1) % int.MaxValue;
@@ -417,11 +418,12 @@ namespace Ultima5Redux.References.Maps
             if (!tileReference.IsPartOfAnimation) return tileReference;
 
             Debug.Assert(tileReference.AnimationIndex >= 0);
-            if (tileReference.AnimationIndex == 0) return tileReference;
-
-            // the AnimationIndex is an offset from the index,so by subtracting it, we get the key frame (initial)
-            // frame which is handy if the visual asset is described by it's key index
-            return GetTileReference(tileReference.Index - tileReference.AnimationIndex);
+            return tileReference.AnimationIndex == 0
+                ? tileReference
+                :
+                // the AnimationIndex is an offset from the index,so by subtracting it, we get the key frame (initial)
+                // frame which is handy if the visual asset is described by it's key index
+                GetTileReference(tileReference.Index - tileReference.AnimationIndex);
         }
 
         public bool IsBurningThing(int nSprite) => _burningThings.ContainsKey((TileReference.SpriteIndex)nSprite);

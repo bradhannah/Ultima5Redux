@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -62,6 +63,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return retStr;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string GetReagentBuyingOutput(Reagent reagent)
         {
             const int nStartReagentBuyStrings = 139;
@@ -77,6 +79,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                        .GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.IS_THIS_THY_NEED_Q_DQ).Trim();
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public List<Reagent> GetReagentsForSale() =>
             _inventory.SpellReagents.GetReagentsForSale(TheShoppeKeeperReference
                 .ShoppeKeeperLocation);

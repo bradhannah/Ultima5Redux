@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits.TurnResults;
@@ -11,6 +12,7 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class Provisions : InventoryItems<ProvisionReferences.SpecificProvisionType, Provision>
     {
         [DataMember]

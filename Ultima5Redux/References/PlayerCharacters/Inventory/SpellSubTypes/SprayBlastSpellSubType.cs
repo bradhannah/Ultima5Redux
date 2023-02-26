@@ -1,4 +1,6 @@
-﻿namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
 {
     public class SprayBlastSpellSubType : SpellSubType
     {
@@ -13,6 +15,7 @@
         {
         }
 
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void CastSpray(SprayType sprayType)
         {
             // placeholder

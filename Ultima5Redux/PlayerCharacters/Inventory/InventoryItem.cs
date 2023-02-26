@@ -12,6 +12,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [DataContract]
+    [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public abstract class InventoryItem
     {
         public const int MAX_INVENTORY_ITEM_QUANTITY = 99;

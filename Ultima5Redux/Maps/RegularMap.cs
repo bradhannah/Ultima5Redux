@@ -112,13 +112,13 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Global
         internal MagicCarpet CreateMagicCarpet(Point2D xy, Point2D.Direction direction, out int nIndex)
         {
-            nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            nIndex = FindNextFreeMapUnitIndex();
 
             if (nIndex == -1) return null;
 
             MagicCarpet magicCarpet = new(MapLocation, direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
 
-            AddNewMapUnit(TheMapType, magicCarpet, nIndex);
+            AddNewMapUnit(magicCarpet, nIndex);
             return magicCarpet;
         }
 
@@ -132,7 +132,7 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Global
         internal Skiff CreateSkiff(Point2D xy, Point2D.Direction direction, out int nIndex)
         {
-            nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            nIndex = FindNextFreeMapUnitIndex();
             if (nIndex == -1) return null;
 
             Skiff skiff = new(
@@ -140,7 +140,7 @@ namespace Ultima5Redux.Maps
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
                 new MapUnitPosition(xy.X, xy.Y, 0));
 
-            AddNewMapUnit(Maps.Overworld, skiff, nIndex);
+            AddNewMapUnit(skiff, nIndex);
             return skiff;
         }
 
@@ -780,7 +780,7 @@ namespace Ultima5Redux.Maps
             return directionList;
         }
 
-        // ReSharper disable once UnusedMethodReturnValue.Local
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
         private Skiff MakeAndBoardSkiff()
         {
             Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().Direction,
@@ -790,18 +790,18 @@ namespace Ultima5Redux.Maps
             return skiff;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
             ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public Horse CreateHorse(MapUnitPosition mapUnitPosition, Maps map, out int nIndex)
         {
-            nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            nIndex = FindNextFreeMapUnitIndex();
             if (nIndex == -1) return null;
 
             Horse horse = new(
                 new MapUnitMovement(nIndex),
-                //importedMovements.GetMovement(nIndex), 
                 MapLocation, Point2D.Direction.Right,
                 null, mapUnitPosition)
             {
@@ -809,7 +809,7 @@ namespace Ultima5Redux.Maps
             };
 
             // set position of frigate in the world
-            AddNewMapUnit(map, horse, nIndex);
+            AddNewMapUnit(horse, nIndex);
             return horse;
         }
 
@@ -959,6 +959,7 @@ namespace Ultima5Redux.Maps
         public bool IsLandNearbyForAvatar() =>
             IsLandNearby(CurrentPosition.XY, false, GetAvatarMapUnit().CurrentAvatarState);
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void MoveAvatar(Point2D newPosition)
         {
             CurrentAvatarPosition =
@@ -1020,7 +1021,7 @@ namespace Ultima5Redux.Maps
         protected MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
             SmallMapReferences.SingleMapReference singleMapReference)
         {
-            int nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            int nIndex = FindNextFreeMapUnitIndex();
             if (nIndex == -1) return null;
 
             MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, singleMapReference.Floor);

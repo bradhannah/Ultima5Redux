@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 
 namespace Ultima5Redux.MapUnits.TurnResults
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class TurnResults
     {
         private readonly Dictionary<TurnResult.TurnResultType, Type> _expectedTurnResults = new()

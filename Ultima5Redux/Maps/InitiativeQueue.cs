@@ -38,11 +38,13 @@ namespace Ultima5Redux.Maps
 
         public int Round { get; private set; }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int TotalTurnsInQueue => _initiativeQueue.Sum(combatMapUnitQueue =>
             combatMapUnitQueue.Count(CombatMapUnitIsPresentAndActive));
 
         public int Turn { get; private set; }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int TurnsLeftsInRound => _initiativeQueue?.Peek()?.Count ?? 0;
 
         public InitiativeQueue(MapUnitCollection combatMapUnits, PlayerCharacterRecords playerCharacterRecords,
@@ -87,7 +89,7 @@ namespace Ultima5Redux.Maps
         ///     true if was able to calculate an initiative queue with minimum number of items, false
         ///     if it is not full (should be zero!)
         /// </returns>
-        internal bool CalculateNextInitiativeQueue()
+        private bool CalculateNextInitiativeQueue()
         {
             while (true)
             {
@@ -331,6 +333,7 @@ namespace Ultima5Redux.Maps
             _combatInitiativeTally.Add(combatMapUnit, 0);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
         {
             int nTally = 0;
@@ -364,12 +367,11 @@ namespace Ultima5Redux.Maps
 
         public void RefreshFutureRounds()
         {
-            if (_initiativeQueue.Count > 1)
-            {
-                Queue<CombatMapUnit> currentRound = _initiativeQueue.Dequeue();
-                _initiativeQueue.Clear();
-                _initiativeQueue.Enqueue(currentRound);
-            }
+            if (_initiativeQueue.Count <= 1) return;
+
+            Queue<CombatMapUnit> currentRound = _initiativeQueue.Dequeue();
+            _initiativeQueue.Clear();
+            _initiativeQueue.Enqueue(currentRound);
         }
 
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)

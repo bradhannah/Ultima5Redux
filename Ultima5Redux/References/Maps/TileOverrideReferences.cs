@@ -83,11 +83,10 @@ namespace Ultima5Redux.References.Maps
             return AllTerritories.Britannia;
         }
 
-        private List<TileOverrideReference> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor)
-        {
-            if (!TileOverrideExists(territory, nMapNumber, nFloor)) return new List<TileOverrideReference>();
-            return _tileOverrideMap[territory][nMapNumber][nFloor].Values.ToList();
-        }
+        private List<TileOverrideReference> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor) =>
+            TileOverrideExists(territory, nMapNumber, nFloor)
+                ? _tileOverrideMap[territory][nMapNumber][nFloor].Values.ToList()
+                : new List<TileOverrideReference>();
 
         /// <summary>
         ///     Gets a full collection of all tile overrides for a particular territory and map

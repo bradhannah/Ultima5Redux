@@ -114,7 +114,13 @@ namespace Ultima5Redux.References.Maps
             LeftDesert2 = 30,
             RightDesert2 = 31,
             StarPattern = 256,
-            Bridge = 106
+            Bridge = 106,
+            WoodenBox = 270,
+            Shard = 436,
+            Crown = 437,
+            Sceptre = 438,
+            Amulet = 439 
+            
         }
 
 
@@ -256,23 +262,16 @@ namespace Ultima5Redux.References.Maps
 
         public bool IsPassable(Avatar.AvatarState avatarState)
         {
-            switch (avatarState)
+            return avatarState switch
             {
-                case Avatar.AvatarState.Horse:
-                    return IsHorse_Passable;
-                case Avatar.AvatarState.Regular:
-                    return IsWalking_Passable;
-                case Avatar.AvatarState.Carpet:
-                    return IsCarpet_Passable;
-                case Avatar.AvatarState.Frigate:
-                    return IsBoat_Passable;
-                case Avatar.AvatarState.Skiff:
-                    return IsSkiff_Passable;
-                case Avatar.AvatarState.Hidden:
-                    return false;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(avatarState), avatarState, null);
-            }
+                Avatar.AvatarState.Horse => IsHorse_Passable,
+                Avatar.AvatarState.Regular => IsWalking_Passable,
+                Avatar.AvatarState.Carpet => IsCarpet_Passable,
+                Avatar.AvatarState.Frigate => IsBoat_Passable,
+                Avatar.AvatarState.Skiff => IsSkiff_Passable,
+                Avatar.AvatarState.Hidden => false,
+                _ => throw new ArgumentOutOfRangeException(nameof(avatarState), avatarState, null)
+            };
         }
     }
 }

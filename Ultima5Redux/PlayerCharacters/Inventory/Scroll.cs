@@ -12,6 +12,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         [JsonConverter(typeof(StringEnumConverter))]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum ScrollSpells
         {
             Vas_Lor = 0x27A,

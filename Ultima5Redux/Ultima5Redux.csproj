@@ -98,6 +98,7 @@
         <Compile Include="Maps\MapOverrides.cs" />
         <Compile Include="Maps\RegularMap.cs" />
         <Compile Include="Maps\SavedMapRefs.cs" />
+        <Compile Include="Maps\SearchItem.cs" />
         <Compile Include="Maps\SearchItems.cs" />
         <Compile Include="Maps\Sign.cs" />
         <Compile Include="Maps\SingleDungeonMapFloorReference.cs" />

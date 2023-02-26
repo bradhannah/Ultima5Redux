@@ -7,13 +7,13 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
-
-// ReSharper disable MemberCanBePrivate.Global
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public sealed class Inventory
     {
         [DataMember] public LordBritishArtifacts Artifacts { get; set; }
@@ -46,7 +46,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public IEnumerable<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems;
 
-        [IgnoreDataMember] public List<InventoryItem> UseItems { get; } = new();
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "CollectionNeverQueried.Global")]
+        public List<InventoryItem> UseItems { get; } = new();
+
         private readonly ImportedGameState _importedGameState;
 
         internal Inventory(ImportedGameState importedGameState)
@@ -214,20 +217,21 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public bool DoIHaveSpecialTileReferenceIndex(int nIndex)
         {
-            switch (nIndex)
+            switch ((TileReference.SpriteIndex)nIndex)
             {
                 // it's a crown, sceptre or amulet
                 // we need to check against our inventory because the map doesn't know if we have it or not
-                case >= 437 and <= 439:
+                case TileReference.SpriteIndex.Crown or TileReference.SpriteIndex.Sceptre
+                    or TileReference.SpriteIndex.Amulet:
                     LordBritishArtifact lordBritishArtifact =
                         Artifacts.Items[(LordBritishArtifact.ArtifactType)nIndex];
                     if (lordBritishArtifact.Quantity > 0) return true;
                     break;
-                // it's a shard
-                case 270:
+                case TileReference.SpriteIndex.WoodenBox:
                     if (SpecializedItems.Items[SpecialItem.SpecificItemType.WoodenBox].Quantity > 0) return true;
                     break;
-                case 436:
+                // it's a shard
+                case TileReference.SpriteIndex.Shard:
                     break;
             }
 
@@ -239,6 +243,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         /// <param name="record">Character record</param>
         /// <returns>amount of total damage</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int GetCharacterTotalAttack(PlayerCharacterRecord record) =>
             GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armour) +
             GetAttack(record.Equipped.Helmet) + GetAttack(record.Equipped.Ring) +
@@ -266,6 +271,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                    throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void GoToJail()
         {
             // if you go to jail then you have to be creative because you have no keys left!

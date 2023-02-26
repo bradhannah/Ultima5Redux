@@ -464,18 +464,18 @@ namespace Ultima5Redux.Maps
         private bool PlaceNonAttackingUnit(NonAttackingUnit nonAttackingUnit, MapUnitPosition mapUnitPosition,
             Maps map)
         {
-            int nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            int nIndex = FindNextFreeMapUnitIndex();
             if (nIndex == -1) return false;
 
             nonAttackingUnit.MapUnitPosition = mapUnitPosition;
 
             // set position of frigate in the world
-            AddNewMapUnit(map, nonAttackingUnit, nIndex);
+            AddNewMapUnit(nonAttackingUnit, nIndex);
             return true;
         }
 
-        // ReSharper disable once SuggestBaseTypeForParameter
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
         private bool RePlaceNonAttackingUnit(NonAttackingUnit originalNonAttackingUnit,
             NonAttackingUnit replacementNonAttackingUnit, MapUnitPosition mapUnitPosition,
             Maps map)
@@ -500,7 +500,7 @@ namespace Ultima5Redux.Maps
             replacementNonAttackingUnit.MapUnitPosition = mapUnitPosition;
 
             // set position of frigate in the world
-            AddNewMapUnit(map, replacementNonAttackingUnit, nIndex);
+            AddNewMapUnit(replacementNonAttackingUnit, nIndex);
             return true;
         }
 
@@ -533,6 +533,7 @@ namespace Ultima5Redux.Maps
                 "You provided a MapUnit to clear, but it is not in the active MapUnit list");
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public int ClosestTileReferenceAround(Point2D midPosition, int nRadius, Func<int, bool> checkTile)
         {
             double nShortestRadius = 255;
@@ -641,7 +642,7 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
         /// <returns>MapUnit or null if non exist at location</returns>
-        public List<MapUnit> GetMapUnitsByPosition(in Point2D xy, int nFloor)
+        protected List<MapUnit> GetMapUnitsByPosition(in Point2D xy, int nFloor)
         {
             List<MapUnit> mapUnits = new();
 
@@ -846,6 +847,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsHorizDoor(in Point2D xy)
         {
             if (xy.X - 1 < 0 || xy.X + 1 >= NumOfXTiles) return false;
@@ -857,6 +859,7 @@ namespace Ultima5Redux.Maps
             return nOpenSpacesHorizOnX == 0;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsHorizTombstone(in Point2D xy)
         {
             if (xy.X - 1 < 0 || xy.X + 1 >= NumOfXTiles) return false;
@@ -974,18 +977,17 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once UnusedMethodReturnValue.Local
         protected bool AddNewMapUnit(Maps map, MapUnit mapUnit)
         {
-            int nIndex = FindNextFreeMapUnitIndex(map);
-            return AddNewMapUnit(map, mapUnit, nIndex);
+            int nIndex = FindNextFreeMapUnitIndex();
+            return AddNewMapUnit(mapUnit, nIndex);
         }
 
         /// <summary>
         ///     Adds a new map unit to a given position
         /// </summary>
-        /// <param name="map"></param>
         /// <param name="mapUnit"></param>
         /// <param name="nIndex"></param>
         /// <returns></returns>
-        protected bool AddNewMapUnit(Maps map, MapUnit mapUnit, int nIndex)
+        protected bool AddNewMapUnit(MapUnit mapUnit, int nIndex)
         {
             if (nIndex == -1) return false;
 
@@ -996,12 +998,13 @@ namespace Ultima5Redux.Maps
             return true;
         }
 
+        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Global")]
         protected Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference,
             SmallMapReferences.SingleMapReference singleMapReference, out int nIndex)
         {
             Debug.Assert(TheMapType != Maps.Combat);
 
-            nIndex = FindNextFreeMapUnitIndex(singleMapReference.MapType);
+            nIndex = FindNextFreeMapUnitIndex();
             if (nIndex == -1) return null;
 
             MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, singleMapReference.Floor);
@@ -1018,9 +1021,8 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Finds the next available index in the available map unit list
         /// </summary>
-        /// <param name="map"></param>
         /// <returns>>= 0 is an index, or -1 means no room found</returns>
-        protected int FindNextFreeMapUnitIndex(Maps map)
+        protected int FindNextFreeMapUnitIndex()
         {
             int nIndex = 0;
             foreach (MapUnit mapUnit in CurrentMapUnits.AllMapUnits)
@@ -1069,6 +1071,7 @@ namespace Ultima5Redux.Maps
             _openDoors.Clear();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
         private bool SetVisibleTile(int x, int y)
         {
             if (x < 0 || x > NumOfXTiles - 1 || y < 0 || y > NumOfYTiles - 1)
@@ -1262,6 +1265,7 @@ namespace Ultima5Redux.Maps
 
         private bool IsOpenDoor(in Point2D xy) => _openDoors.ContainsKey(xy) && _openDoors[xy] > 0;
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void CloseDoor(in Point2D xy)
         {
             TileReference tileReference = GetOriginalTileReference(xy);

@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace Ultima5Redux.Maps
 {
+    [SuppressMessage("ReSharper", "UnusedType.Global")]
     public class GenericTileset
     {
         private readonly byte[] _tilesetByteArray;

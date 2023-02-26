@@ -172,7 +172,7 @@ namespace Ultima5Redux.Maps
 
         public int Turn => TheInitiativeQueue.Turn;
 
-        protected sealed override Dictionary<Point2D, TileOverrideReference> XyOverrides { get; }
+        protected override Dictionary<Point2D, TileOverrideReference> XyOverrides { get; }
 
         /// <summary>
         ///     Creates CombatMap.
@@ -204,7 +204,7 @@ namespace Ultima5Redux.Maps
             {
                 switch (combatMapUnit)
                 {
-                    case ElementalField elementalField:
+                    case ElementalField:
                         //elementalField.TriggerTrap(turnResults, );
                         break;
                     // no default action
@@ -215,7 +215,7 @@ namespace Ultima5Redux.Maps
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
         private int AddCombatMapUnit(CombatMapUnit mapUnit)
         {
-            int nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
+            int nIndex = FindNextFreeMapUnitIndex();
             if (nIndex < 0) return -1;
 
             AddNewMapUnit(Maps.Combat, mapUnit);
@@ -448,7 +448,7 @@ namespace Ultima5Redux.Maps
         private Enemy CreateEnemyOnCombatMap(Point2D xy, EnemyReference enemyReference, out int nIndex)
         {
             Debug.Assert(TheMapType == Maps.Combat);
-            nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex();
             if (nIndex == -1) return null;
 
             Enemy enemy = new(new MapUnitMovement(nIndex), enemyReference, MapLocation, null,
@@ -459,10 +459,11 @@ namespace Ultima5Redux.Maps
             return enemy;
         }
 
+        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Local")]
         private NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)
         {
             Debug.Assert(TheMapType == Maps.Combat);
-            nIndex = FindNextFreeMapUnitIndex(Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex();
             if (nIndex == -1) return null;
 
             MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
@@ -1210,6 +1211,7 @@ namespace Ultima5Redux.Maps
             RecalculatedHash = Utils.Ran.Next();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
         public CombatMapUnit AdvanceToNextCombatMapUnit()
         {
             CombatMapUnit combatMapUnit = TheInitiativeQueue.AdvanceToNextCombatMapUnit();

@@ -32,6 +32,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBarkeeper)
         };
 
+        [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
         public bool BoughtSomethingFromBarKeep { get; set; } = false;
 
         public BarKeeperStockReference.BarKeeperStock TheBarKeeperStock =>

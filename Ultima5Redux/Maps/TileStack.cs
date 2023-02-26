@@ -14,6 +14,7 @@ namespace Ultima5Redux.Maps
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public TileReference MapUnitTileReference { get; private set; }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public ReadOnlyDictionary<int, TileReference> TileReferencesDictionary => new(_tileReferencesDictionary);
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]

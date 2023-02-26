@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
@@ -9,6 +10,8 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux
 {
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     internal static class OddsAndLogic
     {
         private static readonly Dictionary<NonAttackingUnit.TrapType, int> ChestTrapsWeighted = new()
@@ -91,7 +94,7 @@ namespace Ultima5Redux
         public const int ACID_DAMAGE_MAX = 10;
 
         public const int ACID_DAMAGE_MIN = 3;
-        public const int AGGRESSIVE_TRAP_MODIFIER = AGGRESSIVE_TRAPS ? 100 : 0;
+        public const int AGGRESSIVE_TRAP_MODIFIER = 100;
         public const bool AGGRESSIVE_TRAPS = true;
         public const int BOMB_DAMAGE_MAX = 10;
 
@@ -107,6 +110,8 @@ namespace Ultima5Redux
 
         public const int POISON_DAMAGE_MIN = 1;
         public const int TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU = 5;
+
+        public const int GETTING_POISONED_BY_STEPPING_ON_SWAMP = 4;
 
         public static bool DidEnemyStealFood() => Utils.OneInXOdds(ODDS_OF_STEALING_FOOD);
 

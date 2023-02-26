@@ -1390,10 +1390,6 @@ namespace Ultima5Redux
 
                 State.ChangeKarma(2, turnResults);
             }
-            else
-            {
-                throw new Ultima5ReduxException("Tried to Jimmy a door, but ended up with no matching conditions.");
-            }
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }

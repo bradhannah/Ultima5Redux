@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
@@ -19,6 +20,7 @@ namespace Ultima5Redux.Maps
         public SmallMapReferences.SingleMapReference.Location DungeonLocation { get; }
 
         // ReSharper disable once MemberCanBePrivate.Global
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SmallMapReferences.SingleMapReference SingleMapReference { get; }
 
         public SingleDungeonMapFloorReference(SmallMapReferences.SingleMapReference.Location dungeonLocation,
@@ -77,6 +79,7 @@ namespace Ultima5Redux.Maps
             return mapArray;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public DungeonTile GetDungeonTile(in Point2D xy) => _tileData[xy.X, xy.Y];
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.References;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers;
@@ -46,6 +47,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 .GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.YES_N_N_DQ__WE_SELL_COLON_N_N)
                 .Replace("Yes", "").TrimStart();
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string GetProvisionBuyOutput(ProvisionReferences.SpecificProvisionType specificProvision, int nGold)
         {
             return specificProvision switch

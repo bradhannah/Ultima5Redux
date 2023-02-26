@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters;
@@ -120,6 +121,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// </summary>
         /// <param name="tod"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public virtual string GetHelloResponse(TimeOfDay tod = null)
         {
             if (tod == null) throw new Ultima5ReduxException("can't pass null TOD to blacksmith");

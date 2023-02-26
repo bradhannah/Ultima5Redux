@@ -59,7 +59,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override bool IsAttackable => false;
         public override bool IsInvisible => false;
         public override CharacterStats Stats { get; protected set; } = new();
+
+        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public abstract bool ExposeInnerItemsOnOpen { get; }
+
         public abstract bool ExposeInnerItemsOnSearch { get; }
 
         public abstract bool IsOpenable { get; }

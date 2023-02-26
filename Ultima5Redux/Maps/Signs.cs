@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Ultima5Redux.Data;
@@ -63,8 +64,10 @@ namespace Ultima5Redux.Maps
                 shSign.ToArray(), 0x743a));
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public Sign GetSign(int nSign) => _signList[nSign];
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public Sign GetSign(SmallMapReferences.SingleMapReference.Location location, int x, int y)
         {
             return _signList.FirstOrDefault(sign => sign.X == x && sign.Y == y && sign.Location == location);

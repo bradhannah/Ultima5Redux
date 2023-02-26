@@ -121,15 +121,12 @@ namespace Ultima5Redux.References.Maps
             {
                 get
                 {
-                    switch (MapLocation)
+                    return MapLocation switch
                     {
-                        case Location.Britannia_Underworld:
-                            return Floor == 0 ? Map.Maps.Overworld : Map.Maps.Underworld;
-                        case Location.Combat_resting_shrine:
-                            return Map.Maps.Combat;
-                    }
-
-                    return MasterFile == SmallMapMasterFiles.Dungeon ? Map.Maps.Dungeon : Map.Maps.Small;
+                        Location.Britannia_Underworld => Floor == 0 ? Map.Maps.Overworld : Map.Maps.Underworld,
+                        Location.Combat_resting_shrine => Map.Maps.Combat,
+                        _ => MasterFile == SmallMapMasterFiles.Dungeon ? Map.Maps.Dungeon : Map.Maps.Small
+                    };
                 }
             }
 
@@ -235,6 +232,7 @@ namespace Ultima5Redux.References.Maps
             /// <returns>the filename string</returns>
             public static string GetFilenameFromLocation(Location location)
             {
+                // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
                 return GetMapMasterFromLocation(location) switch
                 {
                     SmallMapMasterFiles.Castle => FileConstants.CASTLE_DAT,
@@ -367,9 +365,12 @@ namespace Ultima5Redux.References.Maps
             public override string ToString()
             {
                 string mapStr = MapLocation.ToString().Replace("_", " ") + " - ";
-                if (Floor == -1) mapStr += "Basement";
-                else if (Floor == 0) mapStr += "Main Level";
-                else mapStr += "Floor " + Floor;
+                mapStr += Floor switch
+                {
+                    -1 => "Basement",
+                    0 => "Main Level",
+                    _ => "Floor " + Floor
+                };
                 return mapStr;
             }
 

@@ -308,7 +308,7 @@ namespace Ultima5Redux.PlayerCharacters
             // do some thing that maybe poisons people?
             foreach (PlayerCharacterRecord record in Records)
             {
-                if (!Utils.OneInXOdds(4)) continue;
+                if (!Utils.OneInXOdds(OddsAndLogic.GETTING_POISONED_BY_STEPPING_ON_SWAMP)) continue;
 
                 if (record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned) continue;
                 bWasPoisoned = true;

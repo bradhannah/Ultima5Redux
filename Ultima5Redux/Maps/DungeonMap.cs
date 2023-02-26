@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
@@ -7,7 +8,7 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    public class DungeonMap : RegularMap
+    public sealed class DungeonMap : RegularMap
     {
         [IgnoreDataMember] private SingleDungeonMapFloorReference _singleDungeonMapFloorReference;
 
@@ -36,7 +37,9 @@ namespace Ultima5Redux.Maps
         public override int NumOfYTiles => SingleDungeonMapFloorReference.N_DUNGEON_ROWS_PER_MAP;
 
         public override Maps TheMapType => Maps.Dungeon;
-        public virtual bool ShowOuterSmallMapTiles => false;
+
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public bool ShowOuterSmallMapTiles => false;
 
         [JsonConstructor]
         public DungeonMap()

@@ -221,6 +221,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public int GetEraWeightByTurn(int nTurn)
         {
             if (nTurn >= OddsAndLogic.BeginningOfEras[2]) return _additionalEnemyFlags.Era3Weight;
+            // ReSharper disable once ConvertIfStatementToReturnStatement
             if (nTurn >= OddsAndLogic.BeginningOfEras[1]) return _additionalEnemyFlags.Era2Weight;
             return _additionalEnemyFlags.Era1Weight;
         }

@@ -202,6 +202,7 @@ namespace Ultima5Redux.Maps
         ///     Gets the appropriate out of bounds sprite based on the map
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         internal int GetOutOfBoundsSprite(in Point2D position)
         {
             byte currentSingleMapReferenceId = CurrentSingleMapReference.Id;
@@ -501,8 +502,6 @@ namespace Ultima5Redux.Maps
             return GetSpecificMapUnitByLocation<NonPlayerCharacter>(adjustedPosition2Away,
                 CurrentSingleMapReference.Floor);
         }
-
-        public SmallMaps GetSmallMaps() => _smallMaps;
 
         public bool IsNpcInBed(NonPlayerCharacter npc) =>
             GetTileReference(npc.MapUnitPosition.XY).Is(TileReference.SpriteIndex.LeftBed);

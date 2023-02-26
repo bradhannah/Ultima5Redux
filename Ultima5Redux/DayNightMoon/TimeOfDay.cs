@@ -212,6 +212,7 @@ namespace Ultima5Redux.DayNightMoon
             return tod;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void DeRegisterChangeTracker(Guid changeTrackerId)
         {
             if (!IsTimeChangeTrackerIdValid(changeTrackerId)) return;

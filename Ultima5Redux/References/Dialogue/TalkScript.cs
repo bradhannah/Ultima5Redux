@@ -864,6 +864,7 @@ namespace Ultima5Redux.References.Dialogue
             {
                 string scriptLine = string.Empty;
 
+                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
                 foreach (ScriptItem item in _scriptItems)
                 {
                     scriptLine += item.Command switch

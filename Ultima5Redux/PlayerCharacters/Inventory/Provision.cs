@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.References;
@@ -16,6 +17,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override string InventoryReferenceString => ProvisionType.ToString();
 
         [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int BundleQuantity =>
             GameReferences.Instance.ProvisionReferences.GetBundleQuantity(ProvisionType);
 

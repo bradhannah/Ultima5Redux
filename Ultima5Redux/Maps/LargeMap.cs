@@ -29,7 +29,9 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public override int NumOfXTiles => LargeMapLocationReferences.X_TILES;
         [IgnoreDataMember] public override int NumOfYTiles => LargeMapLocationReferences.Y_TILES;
 
-        [IgnoreDataMember] public bool ShowOuterSmallMapTiles => false;
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public bool ShowOuterSmallMapTiles => false;
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
 
@@ -91,9 +93,10 @@ namespace Ultima5Redux.Maps
         /// <param name="nIndex"></param>
         /// <param name="nSkiffsAboard"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Global")]
         internal Frigate CreateFrigate(Point2D xy, Point2D.Direction direction, out int nIndex, int nSkiffsAboard)
         {
-            nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            nIndex = FindNextFreeMapUnitIndex();
 
             if (nIndex == -1) return null;
 
@@ -107,7 +110,7 @@ namespace Ultima5Redux.Maps
                     GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName("ShipNoSailsLeft")
             };
 
-            AddNewMapUnit(Maps.Overworld, frigate, nIndex);
+            AddNewMapUnit(frigate, nIndex);
             return frigate;
         }
 
@@ -322,6 +325,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public static Maps GetLargeMapTypeToMapType(LargeMapLocationReferences.LargeMapType largeMapType) =>
             largeMapType switch
             {

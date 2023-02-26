@@ -15,6 +15,7 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     [SuppressMessage("ReSharper", "CommentTypo")]
+    [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
     public abstract class CombatMapUnit : MapUnit
     {
         public enum HitState

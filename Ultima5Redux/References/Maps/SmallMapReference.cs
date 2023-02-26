@@ -293,6 +293,7 @@ namespace Ultima5Redux.References.Maps
             if ((int)newLocStrEnum >= 0) return getLocationNameStr(newLocStrEnum);
 
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             return newLocStrEnum switch
             {
                 DataOvlReference.LocationStrings.Suteks_Hut => "SUTEK'S HUT",

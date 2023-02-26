@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
@@ -51,6 +52,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
             public int MonthlyLeaveCost { get; }
             public int RestCost { get; }
 
+            [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+            [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
             public Point2D SleepingPosition { get; }
 
             internal InnKeeperServices(int nOffset, int nDialogueOfferIndex, int nRestCost, int nMonthlyLeaveCost,

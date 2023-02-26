@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Maps;
@@ -58,6 +59,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public int TotalItems => _stackableItems.Count;
 
         [JsonConstructor]

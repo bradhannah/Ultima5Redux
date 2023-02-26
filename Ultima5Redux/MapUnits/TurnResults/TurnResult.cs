@@ -5,6 +5,7 @@ namespace Ultima5Redux.MapUnits.TurnResults
     public abstract class TurnResult
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum TurnResultType
         {
             ActionGetMoonstone,

@@ -51,6 +51,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     do I print Debug output to the Console
         /// </summary>
+        // ReSharper disable once ConvertToConstant.Local
         private readonly bool _bIsDebug = false;
 
         /// <summary>

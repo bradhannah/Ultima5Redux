@@ -430,6 +430,7 @@ namespace Ultima5Redux.Maps
             GetSeaFaringVesselAtDock(location) != null;
 
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference = null, int nPrimaryEnemies = 0,
@@ -520,6 +521,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="largeMapType"></param>
         /// <param name="playerPosition"></param>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void LoadLargeMap(LargeMapLocationReferences.LargeMapType largeMapType, Point2D playerPosition = null)
         {
             // if you are somehow transported between two different small map locations, then the guards

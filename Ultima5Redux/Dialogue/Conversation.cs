@@ -438,6 +438,7 @@ namespace Ultima5Redux.Dialogue
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public static string GetNameForChangeGiveItem(TalkScript.ScriptItem scriptItem)
         {
             return scriptItem.ItemAdditionalData switch
@@ -464,6 +465,7 @@ namespace Ultima5Redux.Dialogue
             };
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public static TileReference.SpriteIndex GetSpriteForChangeGiveItem(TalkScript.ScriptItem scriptItem) =>
             scriptItem.ItemAdditionalData switch
             {
@@ -504,6 +506,7 @@ namespace Ultima5Redux.Dialogue
         ///     Begins the conversation with the NPC.
         ///     Method will block for input if required.
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public async Task BeginConversation()
         {
             if (EnqueuedScriptItemCallback == null)
@@ -700,6 +703,7 @@ namespace Ultima5Redux.Dialogue
         ///     Remove a ScriptItem from the output buffer (typically called by outside process ie. World)
         /// </summary>
         /// <returns>The next ScripItem</returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public TalkScript.ScriptItem DequeueFromOutputBuffer()
         {
             lock (((ICollection)_outputBufferQueue).SyncRoot)
@@ -713,7 +717,8 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         /// <param name="index">index into string array (use DataOvlReference.CHUNK__PHRASES_CONVERSATION)</param>
         /// <returns>associated string</returns>
-        public string GetConversationStr(DataOvlReference.ChunkPhrasesConversation index)
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public static string GetConversationStr(DataOvlReference.ChunkPhrasesConversation index)
         {
             char[] trimChars = { '"' };
             string convStr = GameReferences.Instance.DataOvlRef
@@ -723,6 +728,7 @@ namespace Ultima5Redux.Dialogue
         }
 
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void ProcessScriptItem(TalkScript.ScriptItem scriptItem)
         {
             if (_gameState.TheVirtualMap.CurrentMap is not SmallMap smallMap)

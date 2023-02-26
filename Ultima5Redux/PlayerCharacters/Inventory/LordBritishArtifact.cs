@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -56,6 +57,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             };
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool HasItem() => Quantity != 0;
     }
 }
