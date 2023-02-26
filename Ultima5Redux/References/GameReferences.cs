@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Ultima5Redux.Maps;
 using Ultima5Redux.References.Dialogue;
 using Ultima5Redux.References.Maps;
@@ -87,6 +88,8 @@ namespace Ultima5Redux.References
         ///     A collection of all Sign references
         /// </summary>
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Signs SignRef { get; private set; }
 
         /// <summary>

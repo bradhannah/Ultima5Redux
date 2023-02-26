@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace Ultima5Redux
@@ -5,6 +6,7 @@ namespace Ultima5Redux
     [DataContract]
     public class GameOverrides
     {
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum LockPickingOverrides
         {
             None,

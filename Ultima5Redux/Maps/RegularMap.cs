@@ -515,10 +515,7 @@ namespace Ultima5Redux.Maps
                     break;
                 case > 1:
                     // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
-                    if (mapUnits.Any(m => m is Avatar))
-                    {
-                    }
-                    else
+                    if (!mapUnits.Any(m => m is Avatar))
                     {
                         throw new Ultima5ReduxException($"Did not expect {mapUnits.Count} mapunits on targeted tile");
                     }

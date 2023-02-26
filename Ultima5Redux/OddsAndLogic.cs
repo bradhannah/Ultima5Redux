@@ -145,6 +145,7 @@ namespace Ultima5Redux
         /// <param name="location"></param>
         /// <param name="mapUnitPosition"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static NonAttackingUnit GenerateDropForDeadEnemy(EnemyReference enemyReference,
             TileReference.SpriteIndex dropType, SmallMapReferences.SingleMapReference.Location location,
             MapUnitPosition mapUnitPosition) =>
@@ -236,6 +237,7 @@ namespace Ultima5Redux
         public static NonAttackingUnit.TrapType GetNewDeadBodyTrapType() =>
             DeadBodyTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count];
 
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static bool IsJimmySuccessful(int nDexterity) => !Utils.OneInXOdds(ONE_IN_OF_BROKEN_KEY);
     }
 }

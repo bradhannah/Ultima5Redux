@@ -535,11 +535,11 @@ namespace Ultima5Redux.Maps
                 if (enemy.Stats.Status == PlayerCharacterRecord.CharacterStatus.Dead) continue;
 
                 double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(attackingUnit.MapUnitPosition.XY);
-                if (dDistance < dBestDistanceToAttack)
-                {
-                    dBestDistanceToAttack = dDistance;
-                    bestOpponent = enemy;
-                }
+
+                if (dDistance >= dBestDistanceToAttack) continue;
+
+                dBestDistanceToAttack = dDistance;
+                bestOpponent = enemy;
             }
 
             return bestOpponent;

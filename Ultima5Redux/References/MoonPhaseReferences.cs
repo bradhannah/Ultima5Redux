@@ -166,6 +166,7 @@ namespace Ultima5Redux.References
                                             timeOfDay);
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public MoonPhases GetMoonPhasesByTimeOfDay(TimeOfDay timeOfDay, MoonsAndSun moonsAndSun)
         {
             // the value stored is an offset and needs to be adjusted to a zero based index

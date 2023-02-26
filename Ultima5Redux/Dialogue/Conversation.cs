@@ -494,6 +494,7 @@ namespace Ultima5Redux.Dialogue
         ///     Add a user response to the queue
         /// </summary>
         /// <param name="response">the string response to add</param>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void AddUserResponse(string response)
         {
             lock (((ICollection)_responseQueue).SyncRoot)

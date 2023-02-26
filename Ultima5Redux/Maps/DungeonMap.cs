@@ -30,7 +30,7 @@ namespace Ultima5Redux.Maps
 
         private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
-        public sealed override byte[][] TheMap { get; protected set; }
+        public override byte[][] TheMap { get; protected set; }
 
         public override bool IsRepeatingMap => false;
         public override int NumOfXTiles => SingleDungeonMapFloorReference.N_DUNGEON_COLS_PER_ROW;

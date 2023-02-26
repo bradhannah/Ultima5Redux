@@ -215,7 +215,7 @@ namespace Ultima5Redux.Maps
                 if (nonAttackingUnit is DiscoverableLoot discoverableLoot)
                 {
                     PlaceNonAttackingUnit(discoverableLoot.AlternateNonAttackingUnit,
-                        discoverableLoot.AlternateNonAttackingUnit.MapUnitPosition, TheMapType);
+                        discoverableLoot.AlternateNonAttackingUnit.MapUnitPosition);
 
                     bHasInnerItems = true;
 
@@ -250,8 +250,7 @@ namespace Ultima5Redux.Maps
 
             if (bHasInnerItems)
                 // there were items inside the thing, so we place them 
-                RePlaceNonAttackingUnit(nonAttackingUnit, itemStack, nonAttackingUnit.MapUnitPosition,
-                    TheMapType);
+                RePlaceNonAttackingUnit(nonAttackingUnit, itemStack, nonAttackingUnit.MapUnitPosition);
 
             return bHasInnerItems;
         }
@@ -457,12 +456,10 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="nonAttackingUnit"></param>
         /// <param name="mapUnitPosition"></param>
-        /// <param name="map"></param>
         /// <returns></returns>
         // ReSharper disable once SuggestBaseTypeForParameter
         // ReSharper disable once UnusedMethodReturnValue.Local
-        private bool PlaceNonAttackingUnit(NonAttackingUnit nonAttackingUnit, MapUnitPosition mapUnitPosition,
-            Maps map)
+        private bool PlaceNonAttackingUnit(NonAttackingUnit nonAttackingUnit, MapUnitPosition mapUnitPosition)
         {
             int nIndex = FindNextFreeMapUnitIndex();
             if (nIndex == -1) return false;
@@ -477,8 +474,7 @@ namespace Ultima5Redux.Maps
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
         [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
         private bool RePlaceNonAttackingUnit(NonAttackingUnit originalNonAttackingUnit,
-            NonAttackingUnit replacementNonAttackingUnit, MapUnitPosition mapUnitPosition,
-            Maps map)
+            NonAttackingUnit replacementNonAttackingUnit, MapUnitPosition mapUnitPosition)
         {
             int nIndex = 0;
             bool bFound = false;

@@ -102,6 +102,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     Does the Avatar have a grapple?
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         internal bool HasGrapple => DataChunks.GetDataChunk(DataChunkName.GRAPPLE).GetChunkAsByte() != 0x00;
 
         /// <summary>
@@ -125,12 +126,13 @@ namespace Ultima5Redux
             (SmallMapReferences.SingleMapReference.Location)DataChunks.GetDataChunk(DataChunkName.PARTY_LOC)
                 .GetChunkAsByte();
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         internal DataChunk NonPlayerCharacterKeySprites => DataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES);
 
         internal bool[][] NpcIsDeadArray { get; private set; }
         internal bool[][] NpcIsMetArray { get; private set; }
 
-        internal MapUnitStates OverworldMapUnitStates { get; set; }
+        internal MapUnitStates OverworldMapUnitStates { get; private set; }
 
         internal byte SkullKeys => DataChunks.GetDataChunk(DataChunkName.SKULL_KEYS_QUANTITY).GetChunkAsByte();
         internal SmallMapCharacterStates SmallMapCharacterStates { get; private set; }

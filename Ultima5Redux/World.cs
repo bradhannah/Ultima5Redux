@@ -53,6 +53,7 @@ namespace Ultima5Redux
             GemCrystal
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum TryToAttackResult
         {
             Uninitialized,
@@ -97,7 +98,7 @@ namespace Ultima5Redux
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool IsPendingFall { get; private set; }
 
-        public bool MonsterAi { get; set; } = true;
+        public static bool MonsterAi => true;
 
         /// <summary>
         ///     Ultima 5 data and save files directory

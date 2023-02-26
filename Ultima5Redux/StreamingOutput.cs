@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ultima5Redux
 {
-    // ReSharper disable once UnusedType.Global
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class StreamingOutput
     {
         private static StreamingOutput _instance;
@@ -37,6 +38,7 @@ namespace Ultima5Redux
             PushOutputItem(new StreamingOutputItem(message, bUseArrow, bForceNewline));
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void PushOutputItem(StreamingOutputItem item)
         {
             OutputItems.Enqueue(item);
