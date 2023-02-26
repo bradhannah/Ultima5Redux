@@ -43,17 +43,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public static int GetLegacySaveQuantityIndex(ArtifactType artifactType)
         {
-            switch (artifactType)
+            return artifactType switch
             {
-                case ArtifactType.Amulet:
-                    return 0x20D;
-                case ArtifactType.Crown:
-                    return 0x20E;
-                case ArtifactType.Sceptre:
-                    return 0x20F;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                ArtifactType.Amulet => 0x20D,
+                ArtifactType.Crown => 0x20E,
+                ArtifactType.Sceptre => 0x20F,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         public bool HasItem() => Quantity != 0;

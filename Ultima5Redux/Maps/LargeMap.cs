@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
@@ -20,15 +21,14 @@ namespace Ultima5Redux.Maps
 
         [DataMember(Name = "TopLeftExtent")] private Point2D _topLeftExtent;
 
-
         [DataMember] public LargeMapLocationReferences.LargeMapType TheLargeLheLargeMapType { get; private set; }
 
         [IgnoreDataMember] public override bool IsRepeatingMap => true;
 
-        [IgnoreDataMember] public override int NumOfXTiles => LargeMapLocationReferences.XTiles;
-        [IgnoreDataMember] public override int NumOfYTiles => LargeMapLocationReferences.YTiles;
+        [IgnoreDataMember] public override int NumOfXTiles => LargeMapLocationReferences.X_TILES;
+        [IgnoreDataMember] public override int NumOfYTiles => LargeMapLocationReferences.Y_TILES;
 
-        [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => false;
+        [IgnoreDataMember] public bool ShowOuterSmallMapTiles => false;
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
 
@@ -46,7 +46,6 @@ namespace Ultima5Redux.Maps
 
         [JsonConstructor] private LargeMap()
         {
-            // for now combat maps don't have overrides
         }
 
         /// <summary>
@@ -57,7 +56,6 @@ namespace Ultima5Redux.Maps
             SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, (int)lheLargeMapType)
         {
             TheLargeLheLargeMapType = lheLargeMapType;
-            // for now combat maps don't have overrides
 
             BuildMap(lheLargeMapType);
         }
@@ -86,7 +84,7 @@ namespace Ultima5Redux.Maps
 
             if (nIndex == -1) return null;
 
-            Frigate frigate = new(new MapUnitMovement(nIndex), //importedMovements.GetMovement(nIndex),
+            Frigate frigate = new(new MapUnitMovement(nIndex),
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
                 new MapUnitPosition(xy.X, xy.Y, 0))
             {
@@ -104,17 +102,16 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <returns>true if a monster was created</returns>
         /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
-        internal bool CreateRandomMonster(int nTurn)
+        private bool CreateRandomMonster(int nTurn)
         {
             const int maxTries = 10;
             const int nDistanceAway = 7;
 
             // find a position or give up
             int dX = nDistanceAway;
-            int dY;
             for (int i = 0; i < maxTries; i++)
             {
-                dY = Utils.Ran.Next() % nDistanceAway;
+                int dY = Utils.Ran.Next() % nDistanceAway;
 
                 // this logic borrowed from Xu4 to create some randomness
                 if (Utils.OneInXOdds(2)) dX = -dX;
@@ -159,10 +156,6 @@ namespace Ultima5Redux.Maps
 
         internal bool IsAllowedToBuryMoongate()
         {
-            // if (State.TheVirtualMap.TheTheMapType != Map.Maps.Overworld &&
-            //     State.TheVirtualMap.TheTheMapType != Map.Maps.Underworld)
-            //     return false;
-            //
             // don't bury one on top of the other
             if (GameStateReference.State.TheMoongates.IsMoonstoneBuried(CurrentPosition.XYZ)) return false;
 
@@ -175,27 +168,24 @@ namespace Ultima5Redux.Maps
         {
             // check for moonstones
             // moonstone check
-            if (GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, TheMapType))
-            {
-                MoonPhaseReferences.MoonPhases moonPhase =
-                    GameStateReference.State.TheMoongates.GetMoonPhaseByPosition(xy, TheMapType);
-                Moonstone moonstone =
-                    GameStateReference.State.PlayerInventory.TheMoonstones.Items[moonPhase];
+            if (!GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, TheMapType)) return null;
 
-                CreateMoonstoneNonAttackingUnit(xy, moonstone, _currentSingleMapReference);
+            MoonPhaseReferences.MoonPhases moonPhase =
+                GameStateReference.State.TheMoongates.GetMoonPhaseByPosition(xy, TheMapType);
+            Moonstone moonstone =
+                GameStateReference.State.PlayerInventory.TheMoonstones.Items[moonPhase];
 
-                GameStateReference.State.TheMoongates.SetMoonstoneBuried((int)moonPhase, false);
+            CreateMoonstoneNonAttackingUnit(xy, moonstone, _currentSingleMapReference);
 
-                return moonstone;
-            }
+            GameStateReference.State.TheMoongates.SetMoonstoneBuried((int)moonPhase, false);
 
-            return null;
+            return moonstone;
         }
 
 
         private void BuildMap(LargeMapLocationReferences.LargeMapType largeMapType)
         {
-            TheMap = GameReferences.Instance.LargeMapRef.GetMap(largeMapType);
+            TheMap = LargeMapLocationReferences.GetMap(largeMapType);
         }
 
         /// <summary>
@@ -212,20 +202,16 @@ namespace Ultima5Redux.Maps
             bool bInitialLoad, SearchItems searchItems, ImportedGameState importedGameState)
         {
             // the over and underworld animation states are already loaded and can stick around
-            MapUnitStates currentMapUnitStates;
-            switch (largeMapType)
+            MapUnitStates currentMapUnitStates = largeMapType switch
             {
-                case LargeMapLocationReferences.LargeMapType.Overworld:
-                    currentMapUnitStates =
-                        bInitialLoad ? importedGameState.OverworldMapUnitStates : new MapUnitStates();
-                    break;
-                case LargeMapLocationReferences.LargeMapType.Underworld:
-                    currentMapUnitStates =
-                        bInitialLoad ? importedGameState.UnderworldMapUnitStates : new MapUnitStates();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(largeMapType), largeMapType, null);
-            }
+                LargeMapLocationReferences.LargeMapType.Overworld => bInitialLoad
+                    ? importedGameState.OverworldMapUnitStates
+                    : new MapUnitStates(),
+                LargeMapLocationReferences.LargeMapType.Underworld => bInitialLoad
+                    ? importedGameState.UnderworldMapUnitStates
+                    : new MapUnitStates(),
+                _ => throw new ArgumentOutOfRangeException(nameof(largeMapType), largeMapType, null)
+            };
 
             // populate each of the map characters individually
             for (int i = 0; i < MAX_LEGACY_MAP_CHARACTERS; i++)
@@ -233,7 +219,6 @@ namespace Ultima5Redux.Maps
                 // if this is not the initial load of the map then we can trust character states and
                 // movements that are already loaded into memory
                 var mapUnitMovement =
-                    // (bInitialLoad ? importedMovements.GetMovement(i) : new MapUnitMovement(i)) ??
                     new MapUnitMovement(i);
 
                 // always clear movements because they are not stored in the data for a LargeMap because
@@ -268,6 +253,7 @@ namespace Ultima5Redux.Maps
             int nFloor = largeMapType == LargeMapLocationReferences.LargeMapType.Underworld ? -1 : 0;
             Dictionary<Point2D, List<SearchItem>> searchItemsInMap = searchItems.GetUnDiscoveredSearchItemsByLocation(
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, nFloor);
+            // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
             foreach (KeyValuePair<Point2D, List<SearchItem>> kvp in searchItemsInMap)
             {
                 // at this point we are cycling through the positions
@@ -275,7 +261,6 @@ namespace Ultima5Redux.Maps
                 var discoverableLoot =
                     new DiscoverableLoot(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                         mapUnitPosition, kvp.Value);
-                //discoverableLoot.MapUnitPosition.XY = kvp.Value;
                 CurrentMapUnits.AddMapUnit(discoverableLoot);
             }
 
@@ -288,8 +273,6 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        //public Maps MapType => GetLargeMapTypeToMapType(_mapChoice);
-
         public static Maps GetLargeMapTypeToMapType(LargeMapLocationReferences.LargeMapType largeMapType) =>
             largeMapType switch
             {
@@ -299,6 +282,7 @@ namespace Ultima5Redux.Maps
             };
 
         public static LargeMapLocationReferences.LargeMapType GetMapTypeToLargeMapType(Maps map) =>
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             map switch
             {
                 Maps.Overworld => LargeMapLocationReferences.LargeMapType.Overworld,
@@ -306,18 +290,15 @@ namespace Ultima5Redux.Maps
                 _ => throw new ArgumentOutOfRangeException(nameof(map), map, null)
             };
 
-        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
-        {
-            switch (mapUnit)
+        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) =>
+            mapUnit switch
             {
-                case Enemy enemy:
-                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
-                case CombatPlayer _:
-                    return WalkableType.StandardWalking;
-                default:
-                    return WalkableType.StandardWalking;
-            }
-        }
+                Enemy enemy => enemy.EnemyReference.IsWaterEnemy
+                    ? WalkableType.CombatWater
+                    : WalkableType.StandardWalking,
+                CombatPlayer => WalkableType.StandardWalking,
+                _ => WalkableType.StandardWalking
+            };
 
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
@@ -342,13 +323,13 @@ namespace Ultima5Redux.Maps
             RecalculatedHash = Utils.Ran.Next();
         }
 
-        public void ClearEnemiesIfFarAway()
+        private void ClearEnemiesIfFarAway()
         {
             const float fMaxDiagonalDistance = 22;
             MapUnitPosition avatarPosition = CurrentAvatarPosition;
 
             int nMaxXY = TheMapType is Maps.Overworld or Maps.Underworld
-                ? LargeMapLocationReferences.XTiles
+                ? LargeMapLocationReferences.X_TILES
                 : 32;
 
             List<Enemy> enemiesToClear = null;
@@ -366,6 +347,7 @@ namespace Ultima5Redux.Maps
             enemiesToClear?.ForEach(ClearMapUnit);
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public new TileReference GetTileReference(in Point2D xy, bool bIgnoreMoongate = false)
         {
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
@@ -379,18 +361,13 @@ namespace Ultima5Redux.Maps
             return base.GetTileReference(xy, bIgnoreMoongate);
         }
 
-        // we don't need to "LoadLargeMap" because it being active or inactive is managed in VirtualMap
-        // public void LoadLargeMap(SearchItems searchItems)
-        // {
-        // }
-
-        public void InitializeFromLegacy(SearchItems searchItems, ImportedGameState importedGameState)
+        internal void InitializeFromLegacy(SearchItems searchItems, ImportedGameState importedGameState)
         {
             GenerateMapUnitsForLargeMapForLegacyImport(TheLargeLheLargeMapType, true, searchItems, importedGameState);
         }
 
         // ReSharper disable once UnusedMember.Global
-        public void PrintMap()
+        internal void PrintMap()
         {
             PrintMapSection(TheMap, 0, 0, 160, 80);
         }

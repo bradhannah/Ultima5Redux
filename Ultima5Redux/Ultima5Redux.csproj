@@ -8,7 +8,7 @@
         <OutputType>Library</OutputType>
         <RootNamespace>Ultima5Redux</RootNamespace>
         <AssemblyName>Ultima5Redux</AssemblyName>
-        <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
         <Deterministic>true</Deterministic>
@@ -102,6 +102,7 @@
         <Compile Include="Maps\Sign.cs" />
         <Compile Include="Maps\SingleDungeonMapFloorReference.cs" />
         <Compile Include="Maps\TileStack.cs" />
+        <Compile Include="Maps\TriggerTileData.cs" />
         <Compile Include="Maps\TriggerTiles.cs" />
         <Compile Include="Maps\VirtualMap.AggressiveMapUnitInfo.cs" />
         <Compile Include="MapUnits\Avatar.cs" />
@@ -224,7 +225,6 @@
         <Compile Include="MapUnits\SmallMapCharacterState.cs" />
         <Compile Include="MapUnits\SmallMapCharacterStates.cs" />
         <Compile Include="MapUnits\MapUnit.cs" />
-        <Compile Include="MapUnits\MapUnits.cs" />
         <Compile Include="MapUnits\MapUnitMovement.cs" />
         <Compile Include="Point2D.cs" />
         <Compile Include="Properties\Resources.Designer.cs">

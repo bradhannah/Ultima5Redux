@@ -16,7 +16,7 @@ namespace Ultima5Redux.References
 
         private static GameReferences _gameReferences;
 
-        private static string legacyDataDirectory = "";
+        private static string _legacyDataDirectory = "";
 
         public static GameReferences Instance
         {
@@ -24,7 +24,7 @@ namespace Ultima5Redux.References
             {
                 if (_gameReferences == null)
                 {
-                    _gameReferences = new GameReferences(legacyDataDirectory);
+                    _gameReferences = new GameReferences(_legacyDataDirectory);
                     _gameReferences.Build();
                 }
 
@@ -45,7 +45,6 @@ namespace Ultima5Redux.References
         public DungeonReferences DungeonReferences { get; private set; }
 
         public EnemyReferences EnemyRefs { get; private set; }
-        //get; set; }
 
         /// <summary>
         ///     Detailed inventory information reference
@@ -108,7 +107,7 @@ namespace Ultima5Redux.References
         public TileOverrideReferences TileOverrideRefs { get; private set; }
 
 
-        private GameReferences(string dataDirectory) => legacyDataDirectory = dataDirectory;
+        private GameReferences(string dataDirectory) => _legacyDataDirectory = dataDirectory;
 
         private static string GetU5Directory()
         {
@@ -123,30 +122,30 @@ namespace Ultima5Redux.References
 
         private void Build()
         {
-            LookRef = new Look(legacyDataDirectory);
-            SignRef = new Signs(legacyDataDirectory);
+            LookRef = new Look(_legacyDataDirectory);
+            SignRef = new Signs(_legacyDataDirectory);
             InvRef = new InventoryReferences();
             MagicRefs = new MagicReferences();
             TileOverrideRefs = new TileOverrideReferences();
 
-            DataOvlRef = new DataOvlReference(legacyDataDirectory);
+            DataOvlRef = new DataOvlReference(_legacyDataDirectory);
 
             SmallMapRef = new SmallMapReferences(DataOvlRef);
             LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
             CombatItemRefs = new CombatItemReferences(InvRef);
-            TalkScriptsRef = new TalkScripts(legacyDataDirectory, DataOvlRef);
-            NpcRefs = new NonPlayerCharacterReferences(legacyDataDirectory, SmallMapRef, TalkScriptsRef);
+            TalkScriptsRef = new TalkScripts(_legacyDataDirectory, DataOvlRef);
+            NpcRefs = new NonPlayerCharacterReferences(_legacyDataDirectory, SmallMapRef, TalkScriptsRef);
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
-            CombatMapRefs = new CombatMapReferences(legacyDataDirectory, SpriteTileReferences);
+            CombatMapRefs = new CombatMapReferences(_legacyDataDirectory, SpriteTileReferences);
 
-            ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(legacyDataDirectory, DataOvlRef);
+            ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(_legacyDataDirectory, DataOvlRef);
             ShoppeKeeperRefs = new ShoppeKeeperReferences(DataOvlRef, NpcRefs);
             ReagentReferences = new ReagentReferences();
             ProvisionReferences = new ProvisionReferences();
-            SearchLocationReferences = new SearchLocationReferences(DataOvlRef, SpriteTileReferences);
-            DungeonReferences = new DungeonReferences(legacyDataDirectory);
+            SearchLocationReferences = new SearchLocationReferences(DataOvlRef);
+            DungeonReferences = new DungeonReferences(_legacyDataDirectory);
         }
 
         public static void Initialize(string dataDirectory = "")
@@ -168,10 +167,7 @@ namespace Ultima5Redux.References
                                                 Path.Combine(dataDirectory, FileConstants.DATA_OVL));
             }
 
-            legacyDataDirectory = dataDirectory;
-
-            // Instance = new GameReferences(dataDirectory);
-            // IsInitialized = true;
+            _legacyDataDirectory = dataDirectory;
         }
     }
 }

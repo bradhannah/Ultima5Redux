@@ -18,8 +18,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         {
             get
             {
-                if (NPCRef.Script == null) return false;
-                int nScriptLines = NPCRef.Script.NumberOfScriptLines;
+                if (NpcRef.Script == null) return false;
+                int nScriptLines = NpcRef.Script.NumberOfScriptLines;
 
                 // two steps - first if the NPC Has met flag is flipped in saved.gam then we know they have met the Avatar
                 // secondly, if the AskName command is not present in their entire script, then we can surmise that they must already know the Avatar (from the old days)
@@ -28,7 +28,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
                 for (int i = 0; i < nScriptLines; i++)
                 {
-                    if (NPCRef.Script.GetScriptLine(i).ContainsCommand(TalkScript.TalkCommand.AskName)) return false;
+                    if (NpcRef.Script.GetScriptLine(i).ContainsCommand(TalkScript.TalkCommand.AskName)) return false;
                 }
 
                 return true;
@@ -37,8 +37,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         }
 
         [DataMember] public bool IsDead { get; set; }
-        [DataMember] public SmallMapReferences.SingleMapReference.Location NPCLocation { get; private set; }
-        [DataMember] public int NPCRefIndex { get; private set; }
+        [DataMember] public SmallMapReferences.SingleMapReference.Location NpcLocation { get; private set; }
+        [DataMember] public int NpcRefIndex { get; private set; }
 
         [DataMember]
         public NonPlayerCharacterSchedule.AiType OverridenAiType { get; private set; } =
@@ -47,17 +47,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         [IgnoreDataMember] private bool _bHasMetAvatar;
 
         [IgnoreDataMember]
-        public NonPlayerCharacterReference NPCRef
+        public NonPlayerCharacterReference NpcRef
         {
-            get
-            {
-                if (_npcRefOverride != null) return _npcRefOverride;
-                return GameReferences.Instance.NpcRefs.GetNonPlayerCharactersByLocation(NPCLocation)[NPCRefIndex];
-            }
+            get =>
+                _npcRefOverride ??
+                GameReferences.Instance.NpcRefs.GetNonPlayerCharactersByLocation(NpcLocation)[NpcRefIndex];
             private set
             {
-                NPCRefIndex = value.DialogIndex;
-                NPCLocation = value.MapLocation;
+                NpcRefIndex = value.DialogIndex;
+                NpcLocation = value.MapLocation;
             }
         }
 
@@ -78,7 +76,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
             else
             {
-                NPCRef = npcRef;
+                NpcRef = npcRef;
             }
         }
 

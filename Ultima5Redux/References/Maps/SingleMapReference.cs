@@ -15,7 +15,9 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         public class SingleMapReference
         {
-            [SuppressMessage("ReSharper", "IdentifierTypo")] [JsonConverter(typeof(StringEnumConverter))]
+            [SuppressMessage("ReSharper", "IdentifierTypo")]
+            [JsonConverter(typeof(StringEnumConverter))]
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
             public enum Location
             {
                 Britannia_Underworld = 0x00, Moonglow = 1, Britain = 2, Jhelom = 3, Yew = 4, Minoc = 5, Trinsic = 6,
@@ -214,9 +216,6 @@ namespace Ultima5Redux.References.Maps
                         Location.Britannia_Underworld,
                         largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1, 0);
 
-            // return new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory,
-            //     Location.Britannia_Underworld,
-            //     map == Map.Maps.Overworld ? 0 : -1, 0);
             /// <summary>
             ///     Gets the master file type based on the location
             /// </summary>
@@ -287,21 +286,15 @@ namespace Ultima5Redux.References.Maps
             /// <returns>name of the .NPC file</returns>
             public static string GetNPCFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
             {
-                switch (mapMaster)
+                return mapMaster switch
                 {
-                    case SmallMapMasterFiles.Castle:
-                        return FileConstants.CASTLE_NPC;
-                    case SmallMapMasterFiles.Dwelling:
-                        return FileConstants.DWELLING_NPC;
-                    case SmallMapMasterFiles.Keep:
-                        return FileConstants.KEEP_NPC;
-                    case SmallMapMasterFiles.Towne:
-                        return FileConstants.TOWNE_NPC;
-                    case SmallMapMasterFiles.Dungeon:
-                        break;
-                }
-
-                throw new Ultima5ReduxException("Couldn't map NPC filename");
+                    SmallMapMasterFiles.Castle => FileConstants.CASTLE_NPC,
+                    SmallMapMasterFiles.Dwelling => FileConstants.DWELLING_NPC,
+                    SmallMapMasterFiles.Keep => FileConstants.KEEP_NPC,
+                    SmallMapMasterFiles.Towne => FileConstants.TOWNE_NPC,
+                    SmallMapMasterFiles.Dungeon => throw new Ultima5ReduxException("Couldn't map NPC filename"),
+                    _ => throw new Ultima5ReduxException("Couldn't map NPC filename")
+                };
             }
 
             /// <summary>

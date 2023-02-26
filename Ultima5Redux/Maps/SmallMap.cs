@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -29,9 +31,10 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public override int NumOfXTiles => CurrentSingleMapReference.XTiles;
         [IgnoreDataMember] public override int NumOfYTiles => CurrentSingleMapReference.YTiles;
 
-        [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => true;
+        [IgnoreDataMember] public bool ShowOuterSmallMapTiles => true;
 
         [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsBasement
         {
             get
@@ -39,11 +42,11 @@ namespace Ultima5Redux.Maps
                 if (CurrentSingleMapReference == null) return false;
 
                 return MapFloor == -1;
-                //return CurrentMap is not LargeMap && CurrentMap.CurrentSingleMapReference.Floor == -1;
             }
         }
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
+
         private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
         public override Maps TheMapType => Maps.Small;
@@ -52,7 +55,15 @@ namespace Ultima5Redux.Maps
         {
         }
 
+        internal void SetSmallMaps(SmallMaps smallMaps)
+        {
+            Debug.Assert(smallMaps != null);
+            _smallMaps = smallMaps;
+        }
 
+        public SmallMaps GetSmallMaps() => _smallMaps;
+        
+        
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference
         /// </summary>
@@ -92,8 +103,6 @@ namespace Ultima5Redux.Maps
                 mapUnit.NpcState.UnsetOverridenAi();
             }
 
-            //NPCState.OverrideAi(NonPlayerCharacterSchedule.AiType.DrudgeWorthThing);
-
             // as we exit the Small Map we must make sure we reset the extorted flag 
             // most maps only have one jerky guard, but Blackthorn's is crawling with them
             // and when you give them your password, they tend to leave you alone after unless
@@ -123,6 +132,7 @@ namespace Ultima5Redux.Maps
             List<Point2D> bestChoiceList = new(sortedPoints.Count);
 
             // to make it more familiar, we will transfer to an ordered list
+            // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
             foreach (Point2D xy in sortedPoints.Values)
             {
                 bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy, WalkableType.StandardWalking) > 0;
@@ -141,6 +151,7 @@ namespace Ultima5Redux.Maps
         /// <param name="destinedPosition">the position you are trying to get to</param>
         /// <param name="currentPosition">the current position of the character</param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
         internal List<Point2D> getBestStairsAndLadderLocationBasedOnCurrentPosition(
             VirtualMap.LadderOrStairDirection ladderOrStairDirection, Point2D destinedPosition, Point2D currentPosition)
         {
@@ -184,6 +195,7 @@ namespace Ultima5Redux.Maps
         /// <exception cref="Ultima5ReduxException"></exception>
         internal void HandleSpecialCasesForSmallMapLoad()
         {
+            // ReSharper disable once InvertIf
             if (CurrentSingleMapReference.MapLocation ==
                 SmallMapReferences.SingleMapReference.Location.Iolos_Hut
                 && GameStateReference.State.TheTimeOfDay.IsFirstDay())
@@ -194,13 +206,14 @@ namespace Ultima5Redux.Maps
                 NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
                                                (TileReference.SpriteIndex)m.NpcRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
                                                or TileReference.SpriteIndex.HorseRight) ??
-                                           throw new Ultima5ReduxException("Smith was not in Iolo's hut");
+                                           throw new Ultima5ReduxException("Smith was not in Iolos hut");
 
                 CurrentMapUnits.ClearMapUnit(smith);
                 CurrentMapUnits.AllMapUnits.RemoveAll(m => m is NonPlayerCharacter);
             }
         }
 
+        
 
         // small map
         /// <summary>
@@ -220,7 +233,6 @@ namespace Ultima5Redux.Maps
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
-                // MapUnitMovement mapUnitMovement = importedMovements.GetMovement(i) ?? new MapUnitMovement(i);
                 var mapUnitMovement = new MapUnitMovement(i);
 
                 switch (i)
@@ -274,11 +286,11 @@ namespace Ultima5Redux.Maps
                 // if it's an initial load we use the imported state, otherwise we assume it's fresh and new
                 SmallMapCharacterState smallMapCharacterState = bInitialMapAndSmall
                     ? importedGameState.SmallMapCharacterStates.GetCharacterState(i)
-                    : new SmallMapCharacterState(npcState.NPCRef, i);
+                    : new SmallMapCharacterState(npcState.NpcRef, i);
 
                 MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location, npcState,
                     smallMapCharacterState.TheMapUnitPosition,
-                    GameReferences.Instance.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(npcState.NpcRef.NPCKeySprite),
                     smallMapCharacterState);
 
                 // I want to be able to do this - but if I do then no new map units are created...
@@ -324,24 +336,21 @@ namespace Ultima5Redux.Maps
             for (int i = 1; i < CurrentMapUnits.AllMapUnits.Count; i++)
             {
                 MapUnit mapUnit = CurrentMapUnits.AllMapUnits[i];
-                if (mapUnit is not EmptyMapUnit and not DiscoverableLoot)
-                {
-                    if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
-                        mapUnit.NpcRef == null) continue;
-                    if (mapUnit.NpcRef == null)
-                        throw new Ultima5ReduxException($"Expected NPCRef for MapUnit {mapUnit.GetType()}");
-                    if (mapUnit.NpcRef.DialogIndex != -1)
-                    {
-                        // get the specific NPC reference 
-                        NonPlayerCharacterState npcState =
-                            GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location,
-                                mapUnit.NpcRef.DialogIndex);
+                // ReSharper disable once ConvertIfStatementToSwitchStatement
+                if (mapUnit is EmptyMapUnit or DiscoverableLoot) continue;
 
-                        mapUnit.NpcState = npcState;
-                        // No need to refresh the SmallMapCharacterState because it is saved to the save file 
-                        //new SmallMapCharacterState(npcState.NPCRef, i);
-                    }
-                }
+                if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
+                    mapUnit.NpcRef == null) continue;
+                if (mapUnit.NpcRef == null)
+                    throw new Ultima5ReduxException($"Expected NPCRef for MapUnit {mapUnit.GetType()}");
+                if (mapUnit.NpcRef.DialogIndex == -1) continue;
+
+                // get the specific NPC reference 
+                NonPlayerCharacterState npcState =
+                    GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location,
+                        mapUnit.NpcRef.DialogIndex);
+
+                mapUnit.NpcState = npcState;
             }
         }
 
@@ -387,7 +396,7 @@ namespace Ultima5Redux.Maps
         /// <param name="positionList">list of positions</param>
         /// <param name="destinedPosition">the destination position</param>
         /// <returns>an ordered directory list of paths based on the shortest path (straight line path)</returns>
-        private SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList,
+        private static SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList,
             in Point2D destinedPosition)
         {
             SortedDictionary<double, Point2D> sortedPoints = new();
@@ -407,14 +416,14 @@ namespace Ultima5Redux.Maps
             return sortedPoints;
         }
 
-        public override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             return mapUnit switch
             {
                 Enemy enemy => enemy.EnemyReference.IsWaterEnemy
                     ? WalkableType.CombatWater
                     : WalkableType.StandardWalking,
-                CombatPlayer _ => WalkableType.StandardWalking,
+                CombatPlayer => WalkableType.StandardWalking,
                 _ => WalkableType.StandardWalking
             };
         }
@@ -447,7 +456,7 @@ namespace Ultima5Redux.Maps
         ///     Gets the appropriate out of bounds sprite based on the map
         /// </summary>
         /// <returns></returns>
-        public int GetOutOfBoundsSprite(in Point2D position)
+        internal int GetOutOfBoundsSprite(in Point2D position)
         {
             byte currentSingleMapReferenceId = CurrentSingleMapReference.Id;
             return currentSingleMapReferenceId switch
@@ -469,20 +478,20 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy">position of stairs</param>
         /// <returns>stair sprite</returns>
-        public TileReference GetStairsSprite(in Point2D xy)
+        internal TileReference GetStairsSprite(in Point2D xy)
         {
             bool _ = IsStairGoingUp(xy, out TileReference stairTileReference);
             return stairTileReference;
         }
 
-        public bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
+        internal bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
 
         /// <summary>
         ///     Checks if a tile is in bounds of the actual map and not a border tile
         /// </summary>
         /// <param name="position">position within the virtual map</param>
         /// <returns></returns>
-        public bool IsInBounds(Point2D position)
+        internal static bool IsInBounds(Point2D position)
         {
             // determine if the x or y coordinates are in bounds, if they are out of bounds and the map does not repeat
             // then we are going to draw a default texture on the outside areas.
@@ -493,10 +502,8 @@ namespace Ultima5Redux.Maps
             return xInBounds && yInBounds;
         }
 
-
-        public bool IsNPCInBed(NonPlayerCharacter npc) =>
-            GetTileReference(npc.MapUnitPosition.XY).Index ==
-            GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("LeftBed");
+        public bool IsNpcInBed(NonPlayerCharacter npc) =>
+            GetTileReference(npc.MapUnitPosition.XY).Is(TileReference.SpriteIndex.LeftBed);
 
         /// <summary>
         ///     Are the stairs at the given position going down?
@@ -523,6 +530,7 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <param name="stairTileReference"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool IsStairGoingUp(in Point2D xy, out TileReference stairTileReference)
         {
             stairTileReference = null;
@@ -539,6 +547,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
+        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Global")]
         public bool IsStairGoingUp(out TileReference stairTileReference) =>
             IsStairGoingUp(CurrentPosition.XY, out stairTileReference);
 
@@ -546,6 +555,7 @@ namespace Ultima5Redux.Maps
         ///     Are the stairs at the player characters current position going down?
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsStairsGoingDown(out TileReference stairTileReference) =>
             IsStairGoingDown(CurrentPosition.XY, out stairTileReference);
 

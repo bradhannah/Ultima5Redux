@@ -18,7 +18,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public ArmourReference GetArmourRef()
         {
-            if (TheCombatItemReference is ArmourReference armourRef)
+            if (TheCombatItemReference is ArmourReference)
             {
                 return GameReferences.Instance.CombatItemRefs.GetArmourReferenceFromEquipment(SpecificEquipment);
             }

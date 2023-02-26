@@ -165,11 +165,11 @@ namespace Ultima5Redux.References.Maps
                 justMapRowsAndData.Add(justMapRowChunk);
             }
 
-            byte getCorrectedSprite(byte nSprite)
-            {
-                if (nSprite is >= 217 and <= 219) return 216;
-                return nSprite;
-            }
+            byte getCorrectedSprite(byte nSprite) =>
+                (TileReference.SpriteIndex)nSprite is >= TileReference.SpriteIndex.Fountain_KeyIndex
+                and <= TileReference.SpriteIndex.Fountain_KeyIndex + 4
+                    ? (byte)TileReference.SpriteIndex.Fountain_KeyIndex
+                    : nSprite;
 
             // get and build the map sprites 
             for (int nRow = 0; nRow < XTILES; nRow++)
@@ -272,27 +272,30 @@ namespace Ultima5Redux.References.Maps
             int nEnemyRawSprite = GetRawEnemySprite(nIndex);
             nSpriteIndex = nEnemyRawSprite + 0x100;
 
-            switch (nEnemyRawSprite)
+            switch ((TileReference.SpriteIndex)nSpriteIndex)
             {
                 // enemy sprite of 0 indicates no monster
-                case 0:
+                case TileReference.SpriteIndex.StarPattern:
                     return CombatMapSpriteType.Nothing;
                 // it's a chest or something like it
-                case <= 15:
+                // IOW it's an ITEM
+                case <= TileReference.SpriteIndex.ItemFood:
                     return CombatMapSpriteType.Thing;
                 // it's a dead body or blood spatter
-                case 30:
-                case 31:
+                case TileReference.SpriteIndex.DeadBody:
+                case TileReference.SpriteIndex.BloodSpatter:
                     return CombatMapSpriteType.Thing;
-                case >= 232 and <= 235:
+                case TileReference.SpriteIndex.PoisonField or TileReference.SpriteIndex.MagicField
+                    or TileReference.SpriteIndex.FireField or TileReference.SpriteIndex.ElectricField:
                     return CombatMapSpriteType.Field;
-                case >= 236 and <= 239:
+                case >= TileReference.SpriteIndex.Whirlpool_KeyIndex
+                    and <= TileReference.SpriteIndex.Whirlpool_KeyIndex + 4:
                     return CombatMapSpriteType.Whirlpool;
                 // it's determined by the encounter 
-                case 112:
-                    if (MapTerritory == Territory.Dungeon)
-                        return CombatMapSpriteType.AutoSelected;
-                    return CombatMapSpriteType.EncounterBased;
+                case TileReference.SpriteIndex.Guard_KeyIndex:
+                    return MapTerritory == Territory.Dungeon
+                        ? CombatMapSpriteType.AutoSelected
+                        : CombatMapSpriteType.EncounterBased;
             }
 
             return CombatMapSpriteType.AutoSelected;
@@ -318,13 +321,12 @@ namespace Ultima5Redux.References.Maps
             var location =
                 (SmallMapReferences.SingleMapReference.Location)nLocation;
 
-            //CombatMapNum
             return GameReferences.Instance.DungeonReferences.GetDungeon(location);
         }
 
         public Point2D GetEnemyPosition(int nIndex)
         {
-            Debug.Assert(nIndex < NUM_MAP_UNITS && nIndex >= 0);
+            Debug.Assert(nIndex is < NUM_MAP_UNITS and >= 0);
             return _mapUnitPositions[nIndex];
         }
 

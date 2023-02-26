@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
@@ -67,7 +68,7 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public virtual bool CanStackMapUnitsOnTop => false;
 
-        [IgnoreDataMember] public NonPlayerCharacterReference NpcRef => NpcState?.NPCRef;
+        [IgnoreDataMember] public NonPlayerCharacterReference NpcRef => NpcState?.NpcRef;
 
         [IgnoreDataMember]
         public virtual TileReference KeyTileReference
@@ -117,6 +118,7 @@ namespace Ultima5Redux.MapUnits
         {
             TheSmallMapCharacterState = null;
             Movement = null;
+            // ReSharper disable once VirtualMemberCallInConstructor
             Direction = Point2D.Direction.None;
         }
 
@@ -137,9 +139,10 @@ namespace Ultima5Redux.MapUnits
             MapLocation = location;
             TheSmallMapCharacterState = smallMapTheSmallMapCharacterState;
             Movement = mapUnitMovement;
+            // ReSharper disable once VirtualMemberCallInConstructor
             Direction = direction;
 
-            if (npcState != null) NpcRefIndex = npcState.NPCRef?.DialogIndex ?? -1;
+            if (npcState != null) NpcRefIndex = npcState.NpcRef?.DialogIndex ?? -1;
 
             Debug.Assert(Movement != null);
 
@@ -427,6 +430,7 @@ namespace Ultima5Redux.MapUnits
                     List<Point2D> stairsAndLadderLocations =
                         smallMap.getBestStairsAndLadderLocationBasedOnCurrentPosition(ladderOrStairDirection,
                             npcDestinationPosition.XY, MapUnitPosition.XY);
+                    // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
                     foreach (Point2D xy in stairsAndLadderLocations)
                     {
                         bool bPathBuilt = BuildPath(this, xy,
@@ -463,7 +467,6 @@ namespace Ultima5Redux.MapUnits
                         break;
                     case NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         RunAwayFromAvatar(smallMap,
-                            //aStar, 
                             MapUnitPosition);
                         break;
                     case NonPlayerCharacterSchedule.AiType.CustomAi:
@@ -471,7 +474,7 @@ namespace Ultima5Redux.MapUnits
                         // don't think they move....?
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
-                        GetCloserToAvatar(smallMap); //, aStar);
+                        GetCloserToAvatar(smallMap);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
@@ -495,9 +498,7 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
                         if (smallMap.IsWantedManByThePoPo)
                         {
-                            //BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
                             GetCloserToAvatar(smallMap);
-                            //, aStar);
                         }
 
                         // else they stay where they are
@@ -540,6 +541,7 @@ namespace Ultima5Redux.MapUnits
                             $"An unexpected movement AI was encountered: {aiType} for NPC: {NpcRef?.Name}");
                 }
             else // character not in correct position
+                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                 switch (aiType)
                 {
                     // Horses don't move if they are touching a hitching post
@@ -578,17 +580,14 @@ namespace Ultima5Redux.MapUnits
                             // move to the correct position
                             BuildPath(this, npcDestinationPosition.XY,
                                 CreateAStar(smallMap));
-                        //, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         // if the avatar is close by then move away from him, otherwise return to original path, one move at a time
                         RunAwayFromAvatar(smallMap,
-                            //aStar, 
                             MapUnitPosition);
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
                         GetCloserToAvatar(smallMap);
-                        //, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
@@ -602,14 +601,11 @@ namespace Ultima5Redux.MapUnits
                         if (smallMap.IsWantedManByThePoPo)
                         {
                             GetCloserToAvatar(smallMap);
-                            //, aStar);
-                            //BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
                         }
                         else // get where you are going so you can be stationary
                         {
                             BuildPath(this, npcDestinationPosition.XY,
                                 CreateAStar(smallMap));
-                            //, aStar);
                         }
 
                         break;
@@ -672,7 +668,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="fromPosition"></param>
         /// <param name="toPosition">the position they are trying to get to</param>
         /// <returns></returns>
-        private Point2D GetBestNextPositionToMoveTowardsWalkablePointDumb(RegularMap regularMap, Point2D fromPosition,
+        private Point2D GetBestNextPositionToMoveTowardsWalkablePointDumb(Map regularMap, Point2D fromPosition,
             Point2D toPosition)
         {
             double fShortestPath = 999f;
@@ -685,11 +681,10 @@ namespace Ultima5Redux.MapUnits
             {
                 // keep track of the points we could wander to if we don't find a good path
                 double fDistance = point.DistanceBetween(toPosition);
-                if (fDistance < fShortestPath)
-                {
-                    fShortestPath = fDistance;
-                    bestMovePoint = point;
-                }
+                if (fDistance >= fShortestPath) continue;
+
+                fShortestPath = fDistance;
+                bestMovePoint = point;
             }
 
             return bestMovePoint;
@@ -712,7 +707,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        private Point2D GetValidRandomWanderPointDumb(RegularMap regularMap, Point2D toPosition)
+        private Point2D GetValidRandomWanderPointDumb(Map regularMap, Point2D toPosition)
         {
             List<Point2D> wanderablePoints = GetValidWanderPointsDumb(regularMap, toPosition);
 
@@ -737,16 +732,7 @@ namespace Ultima5Redux.MapUnits
                 MapUnitPosition.XY.GetConstrainedFourDirectionSurroundingPoints(map.NumOfXTiles - 1,
                     map.NumOfYTiles - 1);
 
-            List<Point2D> wanderablePoints = new();
-
-            foreach (Point2D point in surroundingPoints)
-            {
-                // if it isn't walkable then we skip it
-                if (!aStar.GetWalkable(point)) continue;
-                wanderablePoints.Add(point);
-            }
-
-            return wanderablePoints;
+            return surroundingPoints.Where(aStar.GetWalkable).ToList();
         }
 
         /// <summary>
@@ -764,6 +750,7 @@ namespace Ultima5Redux.MapUnits
 
             List<Point2D> wanderablePoints = new();
 
+            // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
             foreach (Point2D point in surroundingPoints)
             {
                 // if it isn't walkable then we skip it
@@ -823,11 +810,10 @@ namespace Ultima5Redux.MapUnits
             }
 
             TimeSpan ts = DateTime.Now.Subtract(_lastAnimationUpdate);
-            if (ts.TotalSeconds > D_TIME_BETWEEN_ANIMATION)
-            {
-                _lastAnimationUpdate = DateTime.Now;
-                _nCurrentAnimationIndex = Utils.Ran.Next() % KeyTileReference.TotalAnimationFrames;
-            }
+            if (ts.TotalSeconds <= D_TIME_BETWEEN_ANIMATION) return;
+
+            _lastAnimationUpdate = DateTime.Now;
+            _nCurrentAnimationIndex = Utils.Ran.Next() % KeyTileReference.TotalAnimationFrames;
         }
 
         private void UpdateScheduleTracking(TimeOfDay tod)
@@ -953,11 +939,11 @@ namespace Ultima5Redux.MapUnits
             {
                 // keep track of the points we could wander to if we don't find a good path
                 double fDistance = point.DistanceBetween(toPosition);
-                if (fDistance < fShortestPath)
-                {
-                    fShortestPath = fDistance;
-                    bestMovePoint = point;
-                }
+
+                if (fDistance >= fShortestPath) continue;
+
+                fShortestPath = fDistance;
+                bestMovePoint = point;
             }
 
             return bestMovePoint;
@@ -968,8 +954,9 @@ namespace Ultima5Redux.MapUnits
         {
             Dictionary<Point2D.Direction, string> tileNameDictionary =
                 UseFourDirections ? FourDirectionToTileNameBoarded : DirectionToTileNameBoarded;
-            if (tileNameDictionary == null) return KeyTileReference;
-            return GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
+            return tileNameDictionary == null
+                ? KeyTileReference
+                : GameReferences.Instance.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
         }
 
         public NonPlayerCharacterSchedule.AiType GetCurrentAiType(TimeOfDay tod) =>
@@ -1058,10 +1045,8 @@ namespace Ultima5Redux.MapUnits
         protected void ProcessNextMoveTowardsMapUnitDumb(RegularMap regularMap, Point2D fromPosition,
             Point2D toPosition)
         {
-            Point2D positionToMoveTo = null;
-
-            // it IS a large map, so we do the less resource intense way of pathfinding
-            positionToMoveTo =
+            Point2D positionToMoveTo =
+                // it IS a large map, so we do the less resource intense way of pathfinding
                 GetBestNextPositionToMoveTowardsWalkablePointDumb(regularMap, fromPosition, toPosition);
 
             if (positionToMoveTo == null)

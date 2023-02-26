@@ -39,9 +39,9 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 possibleEnemies.Where(e => e.CanGoOnTile(tileReference)).ToList();
 
             // no enemies are able to go on that tile
-            if (enemiesThatCanGoOnTile.Count == 0) return null;
-
-            return enemiesThatCanGoOnTile[Utils.GetNumberFromAndTo(0, enemiesThatCanGoOnTile.Count - 1)];
+            return enemiesThatCanGoOnTile.Count == 0
+                ? null
+                : enemiesThatCanGoOnTile[Utils.GetNumberFromAndTo(0, enemiesThatCanGoOnTile.Count - 1)];
         }
 
         public EnemyReference GetEnemyReference(TileReference tileReference)
@@ -52,11 +52,19 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
         public EnemyReference GetEnemyReference(int nSprite)
         {
-            if (nSprite is >= 300 and <= 303) return AllEnemyReferences[EnemyReference.PIRATE_SHIP_NUMBER];
-            // hack to put LB in dungeon 111
-            if (nSprite == 316) return AllEnemyReferences[15];
-            int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
-            return AllEnemyReferences[nIndex];
+            switch (nSprite)
+            {
+                case >= 300 and <= 303:
+                    return AllEnemyReferences[EnemyReference.PIRATE_SHIP_NUMBER];
+                // hack to put LB in dungeon 111
+                case 316:
+                    return AllEnemyReferences[15];
+                default:
+                {
+                    int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
+                    return AllEnemyReferences[nIndex];
+                }
+            }
         }
 
         public EnemyReference GetFriendReference(EnemyReference enemyReference) =>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Ultima5Redux.References.Dialogue;
 using Ultima5Redux.References.Maps;
@@ -8,6 +9,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
     /// <summary>
     ///     A single non player character (NPC)
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class NonPlayerCharacterReference
     {
         /// <summary>
@@ -71,6 +73,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     What type of NPC are they?
         /// </summary>
+        [SuppressMessage("ReSharper", "ConvertIfStatementToSwitchStatement")]
         public SpecificNpcDialogType NpcType
         {
             get
@@ -87,7 +90,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     && MapLocation == SmallMapReferences.SingleMapReference.Location.Windemere)
                     return SpecificNpcDialogType.Guard;
 
-                //if (NPCKeySprite is >= 368 and <= 371) return SpecificNpcDialogType.Guard;
                 // it's the Avatar
                 if (NPCKeySprite == 256) return SpecificNpcDialogType.None;
 
@@ -143,23 +145,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         }
 
         /// <summary>
-        ///     Does the NPC have an empty schedule? If so, then they aren't actually an NPC
-        /// </summary>
-        /// <param name="schedule">daily schedule</param>
-        /// <returns></returns>
-        private static bool IsEmptySchedule(NpcSchedule schedule)
-        {
-            unsafe
-            {
-                if (schedule.times[0] == 0 && schedule.times[1] == 0 && schedule.times[2] == 0 &&
-                    schedule.times[3] == 0 && schedule.times[4] == 0)
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         ///     Return true if the dialog is not part of a standard dialog tree like a guard or shopkeeper
         /// </summary>
         /// <param name="dialogType">The dialog type that yu want to compare</param>
@@ -167,6 +152,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public static bool IsSpecialDialogType(SpecificNpcDialogType dialogType)
         {
             if (dialogType == 0) return true;
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (SpecificNpcDialogType tempDialogType in (SpecificNpcDialogType[])Enum.GetValues(
                          typeof(SpecificNpcDialogType)))
             {

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
@@ -18,6 +19,7 @@ namespace Ultima5Redux.MapUnits
     //6	1	depends on object type
     //7	1	depends on object type
 
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class MapUnitState
     {
         public const int NBYTES = 0x8;

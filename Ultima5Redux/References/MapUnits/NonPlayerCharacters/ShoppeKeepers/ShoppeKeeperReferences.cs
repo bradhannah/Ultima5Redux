@@ -64,14 +64,16 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 _shoppeKeepersByLocationAndType[shoppeKeeper.ShoppeKeeperLocation]
                     .Add(shoppeKeeper.TheShoppeKeeperType, shoppeKeeper);
 
-                // if it's a blacksmith then we load their items for sale
-                if (shoppeKeeper.NpcRef.NpcType == NonPlayerCharacterReference.SpecificNpcDialogType.Blacksmith)
+                // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
+                switch (shoppeKeeper.NpcRef.NpcType)
                 {
-                    shoppeKeeper.EquipmentForSaleList = GetEquipmentList(i);
-                }
-                else if (shoppeKeeper.NpcRef.NpcType == NonPlayerCharacterReference.SpecificNpcDialogType.MagicSeller)
-                {
-                    // do something special for the magic seller?
+                    // if it's a blacksmith then we load their items for sale
+                    case NonPlayerCharacterReference.SpecificNpcDialogType.Blacksmith:
+                        shoppeKeeper.EquipmentForSaleList = GetEquipmentList(i);
+                        break;
+                    case NonPlayerCharacterReference.SpecificNpcDialogType.MagicSeller:
+                        // do something special for the magic seller?
+                        break;
                 }
             }
         }

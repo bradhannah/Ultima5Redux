@@ -74,7 +74,7 @@ namespace Ultima5Redux.Maps
             Offset = nOffset;
         }
 
-        private static string ScrubSignText(byte[] signBytes)
+        private static string ScrubSignText(IEnumerable<byte> signBytes)
         {
             StringBuilder sb = new();
             foreach (byte curByte in signBytes)
@@ -123,7 +123,7 @@ namespace Ultima5Redux.Maps
             foreach (char signChar in signTextArray)
             {
                 // do not translate lowercase because they are often used for drawing the actual signs
-                if ((signChar >= 'A' && signChar <= 'Z') || signChar == ' ')
+                if (signChar is >= 'A' and <= 'Z' or ' ')
                     scrubbedStr += signChar;
                 else if (replacementChars.ContainsKey(signChar))
                     scrubbedStr += replacementChars[signChar];
@@ -144,6 +144,7 @@ namespace Ultima5Redux.Maps
 
             string[] lines = signText.Split('\n');
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string line in lines)
             {
                 trimmedStr += line.Trim() + "\n";
@@ -152,6 +153,7 @@ namespace Ultima5Redux.Maps
             return trimmedStr.Trim();
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static SignType GetSignTypeByIndex(int nIndex)
         {
             switch ((SignType)nIndex)

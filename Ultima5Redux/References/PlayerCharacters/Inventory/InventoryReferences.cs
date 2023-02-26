@@ -48,14 +48,14 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <summary>
         ///     All inventory references separated by item types
         /// </summary>
-        public readonly Dictionary<string, List<InventoryReference>> _invRefsDictionary;
+        public readonly Dictionary<string, List<InventoryReference>> InvRefsDictionary;
 
         /// <summary>
         ///     Constructor builds reference tables from embedded resources
         /// </summary>
         public InventoryReferences()
         {
-            _invRefsDictionary =
+            InvRefsDictionary =
                 JsonConvert.DeserializeObject<Dictionary<string, List<InventoryReference>>>(Resources.InventoryDetails);
 
             // we initialize the highlight text list
@@ -90,7 +90,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 }
             }
 
-            //build spell name highlight table
+            // build spell name highlight table
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Spell))
             {
                 invRef.InvRefType = InventoryReferenceType.Spell;
@@ -122,10 +122,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public InventoryReference GetInventoryReference(InventoryReferenceType inventoryReferenceType, string invItem)
         {
-            foreach (InventoryReference invRef in GetInventoryReferenceList(inventoryReferenceType))
-            {
-                if (invRef.ItemName.Trim() == invItem) return invRef;
-            }
+            InventoryReference invRef = GetInventoryReferenceList(inventoryReferenceType)
+                .FirstOrDefault(invRef => invRef.ItemName.Trim() == invItem);
+            if (invRef != null) return invRef;
 
             throw new Ultima5ReduxException("Asked for an inventory reference : " + invItem + " but it doesn't exist");
         }
@@ -144,10 +143,10 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <param name="inventoryReferenceType"></param>
         /// <returns></returns>
         public List<InventoryReference> GetInventoryReferenceList(InventoryReferenceType inventoryReferenceType) =>
-            _invRefsDictionary[inventoryReferenceType.ToString()];
+            InvRefsDictionary[inventoryReferenceType.ToString()];
 
         public IEnumerable<InventoryReference> GetInventoryReferences(int nSpriteIndex) =>
-            from innerInvRefs in _invRefsDictionary.Values.ToList()
+            from innerInvRefs in InvRefsDictionary.Values.ToList()
             from invRef in innerInvRefs
             where invRef.ItemSpriteExposed == nSpriteIndex
             select invRef;
@@ -155,7 +154,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <summary>
         ///     Returns a string with all available keywords highlighted
         /// </summary>
-        /// <remarks>the string returned is in a richtext format compatible with Unity's TextMeshPro library</remarks>
+        /// <remarks>the string returned is in a rich text format compatible with Unity's TextMeshPro library</remarks>
         /// <param name="description"></param>
         /// <returns>the string with highlight tags</returns>
         public string HighlightKeywords(string description)
@@ -163,10 +162,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             string finalDescription = description;
 
             // highlight all reagents
-            foreach (string highlightKeyword in _reagentKeywordHighlightList)
+            foreach (string highlightKeyword in _reagentKeywordHighlightList.Where(highlightKeyword =>
+                         Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)))
             {
-                if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
-
                 finalDescription = Regex.Replace(finalDescription, highlightKeyword,
                     REAGENT_HIGHLIGHT_COLOR + highlightKeyword + "</color>");
                 string upperCaseStr = char.ToUpper(highlightKeyword[0]) + highlightKeyword.Substring(1);
@@ -175,6 +173,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             }
 
             // highlight all spell names
+            // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
             foreach (string highlightKeyword in _spellKeywordHighlightList)
             {
                 if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;

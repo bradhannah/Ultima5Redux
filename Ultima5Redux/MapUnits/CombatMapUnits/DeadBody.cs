@@ -50,7 +50,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            //GenerateItemStack(MapUnitPosition);
         }
 
         private void GenerateItemStack(MapUnitPosition mapUnitPosition)

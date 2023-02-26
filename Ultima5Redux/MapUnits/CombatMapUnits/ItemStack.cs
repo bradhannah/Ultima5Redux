@@ -59,8 +59,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public int TotalItems => _stackableItems.Count;
 
-        //public enum StackableType { DeadBody, BloodSpatter, }
-
         [JsonConstructor] public ItemStack()
         {
         }
@@ -74,7 +72,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             if (_stackableItems.Count == 0)
                 throw new Ultima5ReduxException("Tried to pop a StackableItem but non were left");
-            //if (_stackableItems.Count == 1) 
             return _stackableItems.Pop();
         }
 

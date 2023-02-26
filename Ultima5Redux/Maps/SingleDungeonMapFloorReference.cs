@@ -17,6 +17,8 @@ namespace Ultima5Redux.Maps
 
         public int DungeonFloor { get; }
         public SmallMapReferences.SingleMapReference.Location DungeonLocation { get; }
+
+        // ReSharper disable once MemberCanBePrivate.Global
         public SmallMapReferences.SingleMapReference SingleMapReference { get; }
 
         public SingleDungeonMapFloorReference(SmallMapReferences.SingleMapReference.Location dungeonLocation,
@@ -48,57 +50,25 @@ namespace Ultima5Redux.Maps
             {
                 for (int nRow = 0; nRow < N_DUNGEON_ROWS_PER_MAP; nRow++)
                 {
-                    TileReference.SpriteIndex spriteIndex;
-                    switch (_tileData[nCol, nRow].TheTileType)
+                    TileReference.SpriteIndex spriteIndex = _tileData[nCol, nRow].TheTileType switch
                     {
-                        case DungeonTile.TileType.Nothing:
-                            spriteIndex = TileReference.SpriteIndex.Grass;
-                            break;
-                        case DungeonTile.TileType.LadderUp:
-                            spriteIndex = TileReference.SpriteIndex.LadderUp;
-                            break;
-                        case DungeonTile.TileType.LadderDown:
-                            spriteIndex = TileReference.SpriteIndex.LadderDown;
-                            break;
-                        case DungeonTile.TileType.LadderUpDown:
-                            spriteIndex = TileReference.SpriteIndex.LadderUp;
-                            break;
-                        case DungeonTile.TileType.Chest:
-                            spriteIndex = TileReference.SpriteIndex.Chest;
-                            break;
-                        case DungeonTile.TileType.Fountain:
-                            spriteIndex = TileReference.SpriteIndex.Fountain_KeyIndex;
-                            break;
-                        case DungeonTile.TileType.Trap:
-                            spriteIndex = TileReference.SpriteIndex.Swamp;
-                            break;
-                        case DungeonTile.TileType.OpenChest:
-                            spriteIndex = TileReference.SpriteIndex.Chest;
-                            break;
-                        case DungeonTile.TileType.MagicField:
-                            spriteIndex = TileReference.SpriteIndex.FireField;
-                            break;
-                        case DungeonTile.TileType.RoomsBroke:
-                            spriteIndex = TileReference.SpriteIndex.Clock1;
-                            break;
-                        case DungeonTile.TileType.Wall:
-                            spriteIndex = TileReference.SpriteIndex.StoneBrickWall;
-                            break;
-                        case DungeonTile.TileType.SecondaryWall:
-                            spriteIndex = TileReference.SpriteIndex.LargeRockWall;
-                            break;
-                        case DungeonTile.TileType.SecretDoor:
-                            spriteIndex = TileReference.SpriteIndex.MagicLockDoor;
-                            break;
-                        case DungeonTile.TileType.NormalDoor:
-                            spriteIndex = TileReference.SpriteIndex.RegularDoor;
-                            break;
-                        case DungeonTile.TileType.Room:
-                            spriteIndex = TileReference.SpriteIndex.Nothing;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        DungeonTile.TileType.Nothing => TileReference.SpriteIndex.Grass,
+                        DungeonTile.TileType.LadderUp => TileReference.SpriteIndex.LadderUp,
+                        DungeonTile.TileType.LadderDown => TileReference.SpriteIndex.LadderDown,
+                        DungeonTile.TileType.LadderUpDown => TileReference.SpriteIndex.LadderUp,
+                        DungeonTile.TileType.Chest => TileReference.SpriteIndex.Chest,
+                        DungeonTile.TileType.Fountain => TileReference.SpriteIndex.Fountain_KeyIndex,
+                        DungeonTile.TileType.Trap => TileReference.SpriteIndex.Swamp,
+                        DungeonTile.TileType.OpenChest => TileReference.SpriteIndex.Chest,
+                        DungeonTile.TileType.MagicField => TileReference.SpriteIndex.FireField,
+                        DungeonTile.TileType.RoomsBroke => TileReference.SpriteIndex.Clock1,
+                        DungeonTile.TileType.Wall => TileReference.SpriteIndex.StoneBrickWall,
+                        DungeonTile.TileType.SecondaryWall => TileReference.SpriteIndex.LargeRockWall,
+                        DungeonTile.TileType.SecretDoor => TileReference.SpriteIndex.MagicLockDoor,
+                        DungeonTile.TileType.NormalDoor => TileReference.SpriteIndex.RegularDoor,
+                        DungeonTile.TileType.Room => TileReference.SpriteIndex.Nothing,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
 
                     mapArray[nCol][nRow] = (byte)spriteIndex;
                 }

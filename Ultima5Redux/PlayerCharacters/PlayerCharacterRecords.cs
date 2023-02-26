@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -66,7 +67,7 @@ namespace Ultima5Redux.PlayerCharacters
         /// <param name="turnResults"></param>
         public void AddMemberToParty(NonPlayerCharacter npc, TurnResults turnResults)
         {
-            PlayerCharacterRecord record = GetCharacterRecordByNPC(npc.NpcRef);
+            PlayerCharacterRecord record = GetCharacterRecordByNpc(npc.NpcRef);
             if (record == null)
                 throw new Ultima5ReduxException("Adding a member to party resulted in no retrieved record");
             record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
@@ -75,14 +76,15 @@ namespace Ultima5Redux.PlayerCharacters
             npc.IsInParty = true;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string ApplyRandomCharacterStatusForMixSpell()
         {
             string retStr = "";
-            const int MAX_INJURE_AMOUNT = 20;
+            const int maxInjureAmount = 20;
 
             void injurePlayer(PlayerCharacterRecord record)
             {
-                record.Stats.CurrentHp -= Utils.Ran.Next() % (MAX_INJURE_AMOUNT + 1);
+                record.Stats.CurrentHp -= Utils.Ran.Next() % (maxInjureAmount + 1);
             }
 
             switch (Utils.Ran.Next() % 4)
@@ -159,12 +161,13 @@ namespace Ultima5Redux.PlayerCharacters
             List<PlayerCharacterRecord> activeCharacterRecords = Records.Where(characterRecord =>
                 characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty).ToList();
 
-            if (activeCharacterRecords.Count == 0)
-                throw new Ultima5ReduxException("Even the Avatar is dead, no records returned in active party");
-            if (activeCharacterRecords.Count > MAX_PARTY_MEMBERS)
-                throw new Ultima5ReduxException("There are too many party members in the party... party...");
-
-            return activeCharacterRecords;
+            return activeCharacterRecords.Count switch
+            {
+                0 => throw new Ultima5ReduxException("Even the Avatar is dead, no records returned in active party"),
+                > MAX_PARTY_MEMBERS => throw new Ultima5ReduxException(
+                    "There are too many party members in the party... party..."),
+                _ => activeCharacterRecords
+            };
         }
 
         /// <summary>
@@ -181,7 +184,7 @@ namespace Ultima5Redux.PlayerCharacters
             return nPosition >= activeRecords.Count ? null : activeRecords[nPosition];
         }
 
-        public int GetCharacterIndexByNPC(NonPlayerCharacterReference npc)
+        public int GetCharacterIndexByNpc(NonPlayerCharacterReference npc)
         {
             for (int i = 0; i < Records.Count; i++)
             {
@@ -191,7 +194,7 @@ namespace Ultima5Redux.PlayerCharacters
             return -1;
         }
 
-        public PlayerCharacterRecord GetCharacterRecordByNPC(NonPlayerCharacterReference npc)
+        public PlayerCharacterRecord GetCharacterRecordByNpc(NonPlayerCharacterReference npc)
         {
             return Records.FirstOrDefault(record => record.Name == npc.Name);
         }
@@ -217,21 +220,22 @@ namespace Ultima5Redux.PlayerCharacters
             return Records.Where(record => record.CurrentInnLocation == location).ToList();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void HealAllPlayers()
         {
-            foreach (PlayerCharacterRecord characterRecord in Records)
+            foreach (PlayerCharacterRecord characterRecord in Records.Where(characterRecord =>
+                         characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty))
             {
-                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty)
-                    characterRecord.Stats.CurrentHp = characterRecord.Stats.MaximumHp;
+                characterRecord.Stats.CurrentHp = characterRecord.Stats.MaximumHp;
             }
         }
 
         public void IncrementStayingAtInnCounters()
         {
-            foreach (PlayerCharacterRecord record in Records)
+            foreach (PlayerCharacterRecord record in Records.Where(record =>
+                         record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.AtTheInn))
             {
-                if (record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.AtTheInn)
-                    record.MonthsSinceStayingAtInn++;
+                record.MonthsSinceStayingAtInn++;
             }
         }
 

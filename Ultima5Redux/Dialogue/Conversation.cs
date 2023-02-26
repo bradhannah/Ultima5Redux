@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Ultima5Redux.Maps;
@@ -20,6 +21,7 @@ namespace Ultima5Redux.Dialogue
     ///     A conversation with an NPC.
     ///     An instantiated object of class Conversation holds and controls all aspects of a conversation.
     /// </summary>
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public class Conversation
     {
         /// <summary>
@@ -94,7 +96,7 @@ namespace Ultima5Redux.Dialogue
         /// <param name="npcState"></param>
         public Conversation(GameState state, NonPlayerCharacterState npcState)
         {
-            _script = npcState.NPCRef.Script;
+            _script = npcState.NpcRef.Script;
             _gameState = state;
             TheNonPlayerCharacterState = npcState;
         }
@@ -134,7 +136,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     Loops and waits for a response (response added to responseQueue)
         /// </summary>
-        /// <returns>Users resonse</returns>
+        /// <returns>Users response</returns>
         private string GetResponse()
         {
             lock (((ICollection)_responseQueue).SyncRoot)
@@ -288,7 +290,6 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.Pause:
                         EnqueueToOutputBuffer(item);
-                        //await Task.Delay(TimeSpan.FromSeconds(0.5f)).ConfigureAwait(false);
                         break;
                     case TalkScript.TalkCommand.PlainString:
                         // we put it through the processor to change the text around if we are wrapped in a rune tag
@@ -398,6 +399,8 @@ namespace Ultima5Redux.Dialogue
                     case SkipInstruction.DontSkip:
                         // do nothing
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -409,6 +412,7 @@ namespace Ultima5Redux.Dialogue
         /// <returns>string equivalent of the ScriptItem</returns>
         private string TextProcessItem(TalkScript.ScriptItem item)
         {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (item.Command)
             {
                 case TalkScript.TalkCommand.ExtortionAmount:
@@ -593,19 +597,19 @@ namespace Ultima5Redux.Dialogue
                     if (Utils.OneInXOdds(2))
                         // okay, tell them who you are
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
-                            "\nI am called " + TheNonPlayerCharacterState.NPCRef.Name));
+                            "\nI am called " + TheNonPlayerCharacterState.NpcRef.Name));
 
                 // if in label && next line include <AvatarName>, then skip label
-                const int StartingIndexForLabel = 0;
+                const int startingIndexForLabel = 0;
 
                 ///// IT'S A LABEL
                 // if we have just begun a label section, then let's handle it slightly difference then the normal conversation
-                if (splitLines[StartingIndexForLabel].IsLabelDefinition())
+                if (splitLines[startingIndexForLabel].IsLabelDefinition())
                 {
-                    Debug.Assert(splitLines[StartingIndexForLabel].NumberOfScriptItems == 2,
+                    Debug.Assert(splitLines[startingIndexForLabel].NumberOfScriptItems == 2,
                         "If it is a label definition, then it must have only 2 items defined in it");
-                    int nLabel = splitLines[StartingIndexForLabel].GetScriptItem(1).LabelNum;
-                    Debug.Assert(nLabel >= 0 && nLabel <= TalkScript.TOTAL_LABELS - 1,
+                    int nLabel = splitLines[startingIndexForLabel].GetScriptItem(1).LabelNum;
+                    Debug.Assert(nLabel is >= 0 and <= TalkScript.TOTAL_LABELS - 1,
                         "Label number must be between 0 and 9");
 
                     // get the label object
@@ -756,7 +760,7 @@ namespace Ultima5Redux.Dialogue
                     smallMap.IsWantedManByThePoPo = true;
                     CallForGuardsAfterConversation = true;
                     // if it's a guard that calls guards then they will attack you immediately, you had your chance!
-                    if (TheNonPlayerCharacterState.NPCRef.IsGuard) smallMap.DeclinedExtortion = true;
+                    if (TheNonPlayerCharacterState.NpcRef.IsGuard) smallMap.DeclinedExtortion = true;
                     break;
                 case TalkScript.TalkCommand.Gold:
                     _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
@@ -765,11 +769,11 @@ namespace Ultima5Redux.Dialogue
                 case TalkScript.TalkCommand.JoinParty:
                     NonPlayerCharacter npc =
                         _gameState.TheVirtualMap.CurrentMap.CurrentMapUnits.NonPlayerCharacters.First(m =>
-                            m.NpcRefIndex == TheNonPlayerCharacterState.NPCRef.DialogIndex);
+                            m.NpcRefIndex == TheNonPlayerCharacterState.NpcRef.DialogIndex);
                     if (npc == null)
                     {
                         throw new Ultima5ReduxException(
-                            $"Tried to get the Npc on the map so they could join but couldn't find dialog #{TheNonPlayerCharacterState.NPCRef.DialogIndex}");
+                            $"Tried to get the Npc on the map so they could join but couldn't find dialog #{TheNonPlayerCharacterState.NpcRef.DialogIndex}");
                     }
 
                     _gameState.CharacterRecords.AddMemberToParty(npc, TheTurnResults);

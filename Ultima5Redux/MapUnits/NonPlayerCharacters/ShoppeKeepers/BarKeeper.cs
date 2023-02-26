@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
@@ -11,6 +12,7 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public class BarKeeper : ShoppeKeeper
     {
         private readonly BarKeeperStockReference _barKeeperStockReference = new();

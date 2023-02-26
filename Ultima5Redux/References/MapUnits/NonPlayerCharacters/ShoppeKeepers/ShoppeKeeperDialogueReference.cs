@@ -202,44 +202,35 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
             NonPlayerCharacterReference.SpecificNpcDialogType specificNpcType,
             PlayerCharacterRecords playerCharacterRecords, Inventory inventory)
         {
-            switch (specificNpcType)
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+            return specificNpcType switch
             {
-                case NonPlayerCharacterReference.SpecificNpcDialogType.Blacksmith:
-                    return new BlackSmith(this, inventory,
-                        GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
-                        _dataOvlReference);
-                case NonPlayerCharacterReference.SpecificNpcDialogType.Barkeeper:
-                    return new BarKeeper(this,
-                        GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
-                        _dataOvlReference);
-                case NonPlayerCharacterReference.SpecificNpcDialogType.HorseSeller:
-                    return new HorseSeller(this,
-                        GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
-                        _dataOvlReference,
-                        playerCharacterRecords);
-                case NonPlayerCharacterReference.SpecificNpcDialogType.Shipwright:
-                    return new Shipwright(this,
-                        GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
-                        _dataOvlReference);
-                case NonPlayerCharacterReference.SpecificNpcDialogType.Healer:
-                    return new Healer(this,
-                        GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
-                        _dataOvlReference);
-                case NonPlayerCharacterReference.SpecificNpcDialogType.InnKeeper:
-                    return new Innkeeper(this,
-                        GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
-                        _dataOvlReference);
-                case NonPlayerCharacterReference.SpecificNpcDialogType.MagicSeller:
-                    return new MagicSeller(this, inventory,
-                        GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
-                        _dataOvlReference);
-                case NonPlayerCharacterReference.SpecificNpcDialogType.GuildMaster:
-                    return new GuildMaster(this,
-                        GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
-                        _dataOvlReference);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(specificNpcType), specificNpcType, null);
-            }
+                NonPlayerCharacterReference.SpecificNpcDialogType.Blacksmith => new BlackSmith(this, inventory,
+                    GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
+                    _dataOvlReference),
+                NonPlayerCharacterReference.SpecificNpcDialogType.Barkeeper => new BarKeeper(this,
+                    GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
+                    _dataOvlReference),
+                NonPlayerCharacterReference.SpecificNpcDialogType.HorseSeller => new HorseSeller(this,
+                    GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
+                    _dataOvlReference, playerCharacterRecords),
+                NonPlayerCharacterReference.SpecificNpcDialogType.Shipwright => new Shipwright(this,
+                    GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
+                    _dataOvlReference),
+                NonPlayerCharacterReference.SpecificNpcDialogType.Healer => new Healer(this,
+                    GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
+                    _dataOvlReference),
+                NonPlayerCharacterReference.SpecificNpcDialogType.InnKeeper => new Innkeeper(this,
+                    GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
+                    _dataOvlReference),
+                NonPlayerCharacterReference.SpecificNpcDialogType.MagicSeller => new MagicSeller(this, inventory,
+                    GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
+                    _dataOvlReference),
+                NonPlayerCharacterReference.SpecificNpcDialogType.GuildMaster => new GuildMaster(this,
+                    GameReferences.Instance.ShoppeKeeperRefs.GetShoppeKeeperReference(location, specificNpcType),
+                    _dataOvlReference),
+                _ => throw new ArgumentOutOfRangeException(nameof(specificNpcType), specificNpcType, null)
+            };
         }
     }
 }

@@ -80,10 +80,10 @@ namespace Ultima5Redux.MapUnits
                 var direction = (MovementCommandDirection)loadedData[nIndex + 1];
 
                 // if we have hit 0xFF then there is nothing else in the list and we can just return
-                if (nIterations == 0xFF || nIterations == 0) return;
+                if (nIterations is 0xFF or 0) return;
 
-                if (!(direction == MovementCommandDirection.East || direction == MovementCommandDirection.West ||
-                      direction == MovementCommandDirection.North || direction == MovementCommandDirection.South))
+                if (direction is not (MovementCommandDirection.East or MovementCommandDirection.West
+                    or MovementCommandDirection.North or MovementCommandDirection.South))
                     throw new Ultima5ReduxException("a bad direction was set: " + direction);
 
                 // we have a proper movement instruction so let's add it to the queue

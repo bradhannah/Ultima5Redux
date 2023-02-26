@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.References.Maps;
@@ -233,6 +234,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// </summary>
         /// <param name="location"></param>
         /// <param name="nonPlayerCharacterReference"></param>
+        [SuppressMessage("ReSharper", "CommentTypo")]
         public void AdaptAiTypesByNpcRef(SmallMapReferences.SingleMapReference.Location location,
             NonPlayerCharacterReference nonPlayerCharacterReference)
         {
@@ -241,33 +243,35 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 var aiType = (AiType)AiTypeList[nIndex];
 
                 // These are all FULL overrides, that override every AI behaviour in the schedule
-                const int STILLWELT_DIALOG_INDEX = 27;
+                const int stillweltDialogIndex = 27;
                 if (location == SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle
-                    && nonPlayerCharacterReference.DialogIndex == STILLWELT_DIALOG_INDEX)
+                    && nonPlayerCharacterReference.DialogIndex == stillweltDialogIndex)
                 {
                     // this is Stillwelt, the mean guard
                     AiTypeList[nIndex] = (int)AiType.SmallWanderWantsToChat;
                     continue;
                 }
 
+                TileReference npcTileReference =
+                    GameReferences.Instance.SpriteTileReferences.GetTileReference(nonPlayerCharacterReference
+                        .NPCKeySprite);
                 // some Rats in smalls maps have what I consider the guards AI, so we override it so they are 
                 // aggressive and attack
-                if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Rat_KeyIndex
+                if (npcTileReference.Is(TileReference.SpriteIndex.Rat_KeyIndex)
                     && aiType is AiType.ExtortOrAttackOrFollow)
                 {
                     AiTypeList[nIndex] = (int)AiType.DrudgeWorthThing;
                     continue;
                 }
 
-                if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.StoneGargoyle_KeyIndex)
+                if (npcTileReference.Is(TileReference.SpriteIndex.StoneGargoyle_KeyIndex))
                 {
                     AiTypeList[nIndex] = (int)AiType.StoneGargoyleTrigger;
                     continue;
                 }
 
                 // the daemon's at Windemere are really like guards
-                if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Daemon1_KeyIndex)
-
+                if (npcTileReference.Is(TileReference.SpriteIndex.Daemon1_KeyIndex))
                 {
                     if (location == SmallMapReferences.SingleMapReference.Location.Windemere)
                     {
@@ -280,64 +284,49 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 if (location == SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn
                     && nonPlayerCharacterReference.IsGuard)
                 {
-                    if (aiType == AiType.Fixed) AiTypeList[nIndex] = (int)AiType.BlackthornGuardFixed;
-                    else if (aiType == AiType.CustomAi) AiTypeList[nIndex] = (int)AiType.BlackthornGuardWander;
-                    else throw new Ultima5ReduxException($"Blackthorn Guard has odd aitype: {aiType}");
+                    // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+                    AiTypeList[nIndex] = aiType switch
+                    {
+                        AiType.Fixed => (int)AiType.BlackthornGuardFixed,
+                        AiType.CustomAi => (int)AiType.BlackthornGuardWander,
+                        _ => throw new Ultima5ReduxException($"Blackthorn Guard has odd aiType: {aiType}")
+                    };
 
                     continue;
                 }
-
-                // THIS was intended for better handling of attacks from guards after you turn down
-                // their extortion
-                // if (nonPlayerCharacterReference.IsGuard && aiType != AiType.CustomAi)
-                // {
-                //     if (aiType == AiType.Fixed) AiTypeList[nIndex] = (int)AiType.FixedExceptAttackWhenIsWantedByThePoPo;
-                //     else if (aiType == AiType.BigWander) AiTypeList[nIndex] = (int)AiType.BigWander;
-                //     else if (aiType == AiType.Wander) AiTypeList[nIndex] = (int)AiType.Wander;
-                //     else if (aiType == AiType.ExtortOrAttackOrFollow) break;
-                //     else throw new Ultima5ReduxException("DERP");
-                //     continue;
-                // }
 
                 // In the future, such as Blackthorne's castle, this is where we will
                 // will override AIs to have more specific 
-
-                // Merchants always work on their 1 and 3 schedules, even though they are marked as 
-                // Fixed (0)
-                if (nonPlayerCharacterReference.IsShoppeKeeper && aiType == AiType.Fixed && nIndex is 1 or 3)
+                switch (nonPlayerCharacterReference.IsShoppeKeeper)
                 {
-                    AiTypeList[nIndex] = (int)AiType.MerchantBuyingSelling;
-                    continue;
-                }
-
-                if (nonPlayerCharacterReference.IsShoppeKeeper && aiType == AiType.Wander && nIndex is 1 or 3)
-                {
-                    AiTypeList[nIndex] = (int)AiType.MerchantBuyingSellingWander;
-                    continue;
-                }
-
-                if (nonPlayerCharacterReference.IsShoppeKeeper)
-                {
-                    Debug.Assert(aiType is AiType.Fixed or AiType.Wander or AiType.CustomAi);
+                    // Merchants always work on their 1 and 3 schedules, even though they are marked as 
+                    // Fixed (0)
+                    case true when aiType == AiType.Fixed && nIndex is 1 or 3:
+                        AiTypeList[nIndex] = (int)AiType.MerchantBuyingSelling;
+                        continue;
+                    case true when aiType == AiType.Wander && nIndex is 1 or 3:
+                        AiTypeList[nIndex] = (int)AiType.MerchantBuyingSellingWander;
+                        continue;
+                    case true:
+                        Debug.Assert(aiType is AiType.Fixed or AiType.Wander or AiType.CustomAi);
+                        break;
                 }
 
                 if (aiType != AiType.CustomAi) continue;
 
-                if (nonPlayerCharacterReference.IsGuard &&
-                    location == SmallMapReferences.SingleMapReference.Location.Minoc)
+                switch (nonPlayerCharacterReference.IsGuard)
                 {
-                    // the guard at Minoc doesn't take the regular amount - instead he wants HALF!
-                    AiTypeList[nIndex] = (int)AiType.HalfYourGoldExtortingGuard;
-                    continue;
+                    case true when
+                        location == SmallMapReferences.SingleMapReference.Location.Minoc:
+                        // the guard at Minoc doesn't take the regular amount - instead he wants HALF!
+                        AiTypeList[nIndex] = (int)AiType.HalfYourGoldExtortingGuard;
+                        continue;
+                    case true:
+                        AiTypeList[nIndex] = (int)AiType.GenericExtortingGuard;
+                        continue;
                 }
 
-                if (nonPlayerCharacterReference.IsGuard)
-                {
-                    AiTypeList[nIndex] = (int)AiType.GenericExtortingGuard;
-                    continue;
-                }
-
-                if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Beggar_KeyIndex)
+                if (npcTileReference.Is(TileReference.SpriteIndex.Beggar_KeyIndex))
                 {
                     AiTypeList[nIndex] = (int)AiType.Begging;
                     continue;
@@ -394,10 +383,14 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             MapUnitPosition mapUnitPosition = new();
             int nIndex = GetRawScheduleIndex(timeOfDay);
 
-            if (nIndex == 0) nIndex = 1;
-            else if (nIndex == 1) nIndex = 0;
-            else if (nIndex == 2) nIndex = 1;
-            else if (nIndex == 3) nIndex = 2;
+            nIndex = nIndex switch
+            {
+                0 => 1,
+                1 => 0,
+                2 => 1,
+                3 => 2,
+                _ => nIndex
+            };
 
             mapUnitPosition.Floor = GetFloor(nIndex);
             mapUnitPosition.XY = GetXY(nIndex);

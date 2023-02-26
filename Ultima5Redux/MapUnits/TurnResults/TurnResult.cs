@@ -1,7 +1,10 @@
-﻿namespace Ultima5Redux.MapUnits.TurnResults
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Ultima5Redux.MapUnits.TurnResults
 {
     public abstract class TurnResult
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum TurnResultType
         {
             ActionGetMoonstone, OverworldAvatarAttacking, EnemyAttacksOverworldOrSmallMap, DamageOverTimePoisoned,
@@ -42,6 +45,8 @@
             OpenPortcullis, OverrideCombatMapTile, FoodStolenByEnemy
         }
 
+        [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool IsSuccessfulMovement
         {
             get
@@ -73,6 +78,8 @@
 IsNewMapTurnResult: {IsNewMapTurnResult()}";
         // Combat_Category_Action_Who_Details
 
+        [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool IsNewMapTurnResult()
         {
             switch (TheTurnResultType)

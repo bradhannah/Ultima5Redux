@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.References;
@@ -16,11 +17,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         internal NonPlayerCharacterStates(ImportedGameState importedGameState)
         {
-            Debug.Assert(importedGameState.NPCIsDeadArray.Length == importedGameState.NPCIsMetArray.Length);
+            Debug.Assert(importedGameState.NpcIsDeadArray.Length == importedGameState.NpcIsMetArray.Length);
 
-            int nLocations = importedGameState.NPCIsMetArray[0].Length;
+            int nLocations = importedGameState.NpcIsMetArray[0].Length;
 
-            int nNpcsPerLocation = importedGameState.NPCIsMetArray[0].Length;
+            int nNpcsPerLocation = importedGameState.NpcIsMetArray[0].Length;
 
             for (int locationIndex = 1; locationIndex < nLocations + 1; locationIndex++)
             {
@@ -34,8 +35,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                         new(
                             GameReferences.Instance.NpcRefs.GetNonPlayerCharactersByLocation(location)[npcIndex])
                         {
-                            IsDead = importedGameState.NPCIsDeadArray[locationIndex - 1][npcIndex],
-                            HasMetAvatar = importedGameState.NPCIsMetArray[locationIndex - 1][npcIndex]
+                            IsDead = importedGameState.NpcIsDeadArray[locationIndex - 1][npcIndex],
+                            HasMetAvatar = importedGameState.NpcIsMetArray[locationIndex - 1][npcIndex]
                         };
 
                     _npcMap[location].Add(npcState);
@@ -51,7 +52,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             SmallMapReferences.SingleMapReference.Location location, int nIndex) =>
             _npcMap[location][nIndex];
 
-        public NonPlayerCharacterState GetStateByNPCRef(NonPlayerCharacterReference npcRef) =>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public NonPlayerCharacterState GetStateByNpcRef(NonPlayerCharacterReference npcRef) =>
             _npcMap[npcRef.MapLocation][npcRef.DialogIndex];
     }
 }

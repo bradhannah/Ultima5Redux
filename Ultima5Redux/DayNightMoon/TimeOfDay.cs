@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
@@ -9,8 +10,8 @@ namespace Ultima5Redux.DayNightMoon
 {
     public class TimeOfDay
     {
-        public const int N_DAYS_IN_MONTH = 28;
-        public const int N_MONTHS_PER_YEAR = 13;
+        private const int N_DAYS_IN_MONTH = 28;
+        private const int N_MONTHS_PER_YEAR = 13;
 
         /// <summary>
         ///     Dictionary of all change trackers and if time has changed since last check
@@ -76,7 +77,7 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
-        [IgnoreDataMember] public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
+        [IgnoreDataMember] public bool IsDayLight => Hour is >= 5 and < 8 + 12;
 
         [IgnoreDataMember]
         public int MinutesSinceBeginning => Minute + Hour * 60 + Day * N_DAYS_IN_MONTH +
@@ -88,15 +89,13 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <returns></returns>
         [IgnoreDataMember]
-        public string TimeOfDayName
-        {
-            get
+        public string TimeOfDayName =>
+            Hour switch
             {
-                if (Hour is > 5 and < 12) return "morning";
-                if (Hour is >= 12 and < 17) return "afternoon";
-                return "evening";
-            }
-        }
+                > 5 and < 12 => "morning",
+                >= 12 and < 17 => "afternoon",
+                _ => "evening"
+            };
 
         [JsonConstructor] private TimeOfDay()
         {
@@ -198,6 +197,7 @@ namespace Ultima5Redux.DayNightMoon
             SetAllChangeTrackers();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] 
         public TimeOfDay Copy()
         {
             var tod = new TimeOfDay

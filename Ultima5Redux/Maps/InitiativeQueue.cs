@@ -24,7 +24,6 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private readonly Queue<Queue<CombatMapUnit>> _initiativeQueue = new();
 
-        // private readonly MapUnits.MapUnits _combatMapUnits;
         private readonly MapUnitCollection _mapUnitCollection;
 
         private readonly PlayerCharacterRecords _playerCharacterRecords;

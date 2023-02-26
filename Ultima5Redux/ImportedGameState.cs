@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -24,6 +25,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     Data chunks for each of the save game sections
         /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         private enum DataChunkName
         {
             Unused, CHARACTER_RECORDS, NPC_ISDEAD_TABLE, NPC_ISMET_TABLE, N_PEOPLE_PARTY, FOOD_QUANTITY, GOLD_QUANTITY,
@@ -34,7 +36,7 @@ namespace Ultima5Redux
             KARMA, TURNS_SINCE_START, SEARCH_OBJECT_STILL_THERE
         }
 
-        private enum OverlayChunkName { Unused, CHARACTER_ANIMATION_STATES }
+        private enum OverlayChunkName { Unused, CharacterAnimationStates }
 
         // ReSharper disable once UnusedMember.Local
         [IgnoreDataMember] public MapUnitStates MapUnitStatesByInitialMap => GetMapUnitStatesByMap(InitialMap);
@@ -43,8 +45,6 @@ namespace Ultima5Redux
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
 
         internal byte ActivePlayerNumber => DataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
-
-        internal MapUnitMovements CharacterMovements { get; private set; }
 
         internal PlayerCharacterRecords CharacterRecords { get; private set; }
 
@@ -94,8 +94,8 @@ namespace Ultima5Redux
 
         internal DataChunk NonPlayerCharacterKeySprites => DataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES);
 
-        internal bool[][] NPCIsDeadArray { get; private set; }
-        internal bool[][] NPCIsMetArray { get; private set; }
+        internal bool[][] NpcIsDeadArray { get; private set; }
+        internal bool[][] NpcIsMetArray { get; private set; }
 
         internal MapUnitStates OverworldMapUnitStates { get; set; }
 
@@ -141,6 +141,10 @@ namespace Ultima5Redux
         private DataChunk ActiveOverlayDataChunks =>
             DataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES);
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        // This is kept as a demonstration of how they saved movements - but we do not use it
+        private MapUnitMovements CharacterMovements { get; set; }
+
         private DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
 
         private DataChunks<DataChunkName> DataChunks { get; }
@@ -154,12 +158,12 @@ namespace Ultima5Redux
             DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
 
         private DataChunk OverworldOverlayDataChunks =>
-            _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CharacterAnimationStates);
 
         private MapUnitStates SmallMapUnitStates { get; set; }
 
         private DataChunk UnderworldOverlayDataChunks =>
-            _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CharacterAnimationStates);
 
         /// <summary>
         ///     Load the default starting save game
@@ -176,10 +180,10 @@ namespace Ultima5Redux
 
             _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "Character Animation States - Overworld", 0x00, 0x100, 0x00,
-                OverlayChunkName.CHARACTER_ANIMATION_STATES);
+                OverlayChunkName.CharacterAnimationStates);
             _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "Character Animation States - Underworld", 0x00, 0x100, 0x00,
-                OverlayChunkName.CHARACTER_ANIMATION_STATES);
+                OverlayChunkName.CharacterAnimationStates);
 
             Initialize(true);
         }
@@ -198,10 +202,10 @@ namespace Ultima5Redux
 
             _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "Character Animation States - Overworld", 0x00, 0x100, 0x00,
-                OverlayChunkName.CHARACTER_ANIMATION_STATES);
+                OverlayChunkName.CharacterAnimationStates);
             _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "Character Animation States - Underworld", 0x100, 0x100, 0x00,
-                OverlayChunkName.CHARACTER_ANIMATION_STATES);
+                OverlayChunkName.CharacterAnimationStates);
 
             Initialize(true);
         }
@@ -210,8 +214,8 @@ namespace Ultima5Redux
         {
             // can't remember why I return 262..?
             if (equipment == DataOvlReference.Equipment.BareHands) return 262;
-            const int OFFSET = 0x21A;
-            int nIndex = OFFSET + (int)equipment;
+            const int offset = 0x21A;
+            int nIndex = offset + (int)equipment;
             return GetByteAsIntFromGameStateByteArray(nIndex);
         }
 
@@ -228,8 +232,6 @@ namespace Ultima5Redux
         {
             var scrollSpell =
                 (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
-            // const int offset = 0x27A;
-            // int nIndex = offset + (int)scrollSpell;
             return GetByteAsIntFromGameStateByteArray(Scroll.GetLegacySaveQuantityIndex(scrollSpell));
         }
 
@@ -335,7 +337,7 @@ namespace Ultima5Redux
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Dead Bitmap", 0x5B4, 0x80, 0x00,
                 DataChunkName.NPC_ISDEAD_TABLE);
             List<bool> npcAlive = DataChunks.GetDataChunk(DataChunkName.NPC_ISDEAD_TABLE).GetAsBitmapBoolList();
-            NPCIsDeadArray = Utils.ListTo2DArray(npcAlive, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00,
+            NpcIsDeadArray = Utils.ListTo2DArray(npcAlive, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00,
                 NonPlayerCharacterReferences.NPCS_PER_TOWN *
                 SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
@@ -343,7 +345,7 @@ namespace Ultima5Redux
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", 0x634, 0x80, 0x00,
                 DataChunkName.NPC_ISMET_TABLE);
             List<bool> npcMet = DataChunks.GetDataChunk(DataChunkName.NPC_ISMET_TABLE).GetAsBitmapBoolList();
-            NPCIsMetArray = Utils.ListTo2DArray(npcMet, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00,
+            NpcIsMetArray = Utils.ListTo2DArray(npcMet, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00,
                 NonPlayerCharacterReferences.NPCS_PER_TOWN *
                 SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 

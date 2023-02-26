@@ -23,9 +23,7 @@ namespace Ultima5Redux.MapUnits
 
         public SmallMapCharacterStates(DataChunk charStatesDataChunk)
         {
-            DataChunk dataChunk = charStatesDataChunk;
-
-            List<ushort> characterStateBytes = dataChunk.GetChunkAsUint16List();
+            List<ushort> characterStateBytes = charStatesDataChunk.GetChunkAsUint16List();
 
             for (int nIndex = 0; nIndex < MAX_CHARACTER_STATES; nIndex++)
             {
@@ -36,16 +34,11 @@ namespace Ultima5Redux.MapUnits
 
         public SmallMapCharacterState GetCharacterState(int nIndex) => CharacterStates[nIndex];
 
-        public SmallMapCharacterState GetCharacterStateByPosition(Point2D xy, int nFloor)
-        {
-            foreach (SmallMapCharacterState characterState in CharacterStates)
-            {
-                if (characterState.TheMapUnitPosition.X == xy.X && characterState.TheMapUnitPosition.Y == xy.Y &&
-                    characterState.TheMapUnitPosition.Floor == nFloor)
-                    return characterState;
-            }
-
-            return null;
-        }
+        // public SmallMapCharacterState GetCharacterStateByPosition(Point2D xy, int nFloor)
+        // {
+        //     return CharacterStates.FirstOrDefault(characterState =>
+        //         characterState.TheMapUnitPosition.X == xy.X && characterState.TheMapUnitPosition.Y == xy.Y &&
+        //         characterState.TheMapUnitPosition.Floor == nFloor);
+        // }
     }
 }

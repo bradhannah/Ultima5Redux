@@ -14,7 +14,7 @@ namespace Ultima5Redux.References.Dialogue
     /// <summary>
     ///     TalkScripts represents all of the in game talking scripts for all NPCs
     /// </summary>
-    [DataContract] public class TalkScripts
+    [DataContract] public sealed class TalkScripts
     {
         /// <summary>
         ///     a null byte signifies the end of the script line
@@ -166,6 +166,8 @@ namespace Ultima5Redux.References.Dialogue
                     if ((char)tempByte == '@')
                         continue;
                     buildAWord += (char)tempByte;
+
+                    // ReSharper disable once InvertIf
                     if (nGoldCharsLeft > 0 && --nGoldCharsLeft == 0)
                     {
                         talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, buildAWord);
@@ -320,13 +322,12 @@ namespace Ultima5Redux.References.Dialogue
             throw new Ultima5ReduxException($"Requested custom talk script \"{talkScriptKey}\" but it doesn't exists");
         }
 
-        public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
-        {
-            if (NonPlayerCharacterReference.IsSpecialDialogType(
-                    (NonPlayerCharacterReference.SpecificNpcDialogType)nNPC))
-                return null;
-            return _talkScriptRefs[smallMapRef][nNPC];
-        }
+        public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef,
+            int nNpc) =>
+            NonPlayerCharacterReference.IsSpecialDialogType(
+                (NonPlayerCharacterReference.SpecificNpcDialogType)nNpc)
+                ? null
+                : _talkScriptRefs[smallMapRef][nNpc];
 
         public string Serialize()
         {

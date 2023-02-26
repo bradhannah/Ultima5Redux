@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -10,12 +11,12 @@ using Newtonsoft.Json.Converters;
 
 namespace Ultima5Redux.References.Dialogue
 {
-    [DataContract] public class TalkScript
+    [DataContract] public sealed class TalkScript
     {
         /// <summary>
         ///     Specific talk command
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum TalkCommand
         {
             PlainString = 0x00, AvatarsName = 0x81, EndConversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85,
@@ -40,32 +41,22 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     the maximum talk code for labels (in .tlk files)
         /// </summary>
-        public const byte MAX_LABEL = 0x91 + 0x0A;
+        internal const byte MAX_LABEL = 0x91 + 0x0A;
 
         /// <summary>
         ///     the minimum talk code for labels (in .tlk files)
         /// </summary>
-        public const byte MIN_LABEL = 0x91;
+        internal const byte MIN_LABEL = 0x91;
 
         /// <summary>
         ///     total number of labels that are allowed to be defined
         /// </summary>
-        public const int TOTAL_LABELS = 0x0A;
+        internal const int TOTAL_LABELS = 0x0A;
 
         /// <summary>
         ///     All of the ScriptLines
         /// </summary>
         [DataMember(Name = "ScriptLines")] private readonly List<ScriptLine> _scriptLines = new();
-
-        /// <summary>
-        ///     Non label specific Q & A
-        /// </summary>
-        [IgnoreDataMember] private readonly ScriptQuestionAnswers _scriptQuestionAnswers = new();
-
-        /// <summary>
-        ///     Script talk labels contain all the labels, their Q & A and default responses
-        /// </summary>
-        [IgnoreDataMember] private readonly ScriptTalkLabels _scriptTalkLabels = new();
 
         // tracking the current script line
         [IgnoreDataMember] private ScriptLine _currentScriptLine; //= new();
@@ -74,26 +65,25 @@ namespace Ultima5Redux.References.Dialogue
         ///     The number of ScriptLines in the Script
         /// </summary>
         [IgnoreDataMember]
-        public int NumberOfScriptLines => _scriptLines.Count;
+        internal int NumberOfScriptLines => _scriptLines.Count;
 
         /// <summary>
         ///     All associated questions and answers for the Script
         /// </summary>
-        protected internal ScriptQuestionAnswers QuestionAnswers => _scriptQuestionAnswers;
+        [field: IgnoreDataMember]
+        internal ScriptQuestionAnswers QuestionAnswers { get; } = new();
 
         /// <summary>
         ///     All associated labels with the Script
         /// </summary>
-        protected internal ScriptTalkLabels TalkLabels => _scriptTalkLabels;
+        [field: IgnoreDataMember]
+        internal ScriptTalkLabels TalkLabels { get; } = new();
 
         /// <summary>
         ///     Build the initial TalkScript
         /// </summary>
         public TalkScript()
         {
-            // let's add it immediately instead of waiting for someone to commit it
-            // note; this will fail if the currentScriptLine is not a reference - but I'm pretty sure it is
-            //_scriptLines.Add(_currentScriptLine);
         }
 
         public TalkScript(IEnumerable<ScriptItem> name, IEnumerable<ScriptItem> description,
@@ -127,21 +117,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <param name="context"></param>
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            //_currentScriptLine = _scriptLines[0];
             InitScript();
-        }
-
-        /// <summary>
-        ///     Add to the current script line, but no string associated
-        ///     For example: STRING
-        ///     <NEWLINE>
-        ///         <AVATARNAME>
-        /// </summary>
-        /// <param name="talkCommand"></param>
-        public void AddTalkCommand(TalkCommand talkCommand)
-        {
-            _currentScriptLine ??= new ScriptLine();
-            _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
         }
 
         /// <summary>
@@ -220,11 +196,11 @@ namespace Ultima5Redux.References.Dialogue
 
             // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
             List<string> nameQuestion = new(1) { "name" };
-            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, _scriptLines[(int)TalkConstants.Name]));
+            QuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, _scriptLines[(int)TalkConstants.Name]));
             List<string> jobQuestion = new(2) { "job", "work" };
-            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, _scriptLines[(int)TalkConstants.Job]));
+            QuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, _scriptLines[(int)TalkConstants.Job]));
             List<string> byeQuestion = new(1) { "bye" };
-            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, _scriptLines[(int)TalkConstants.Bye]));
+            QuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, _scriptLines[(int)TalkConstants.Bye]));
 
             // repeat through the question/answer components until we hit a label - then we know to move onto the label section
             do
@@ -241,7 +217,7 @@ namespace Ultima5Redux.References.Dialogue
 
                 // dumb little thing - there are some scripts that have the same keyword multiple times
                 // the game favours the one it sees first (see "Camile" in West Brittany as an example)
-                if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                if (!QuestionAnswers.QuestionAnswers.ContainsKey(question))
                     currQuestions.Add(question);
 
                 // if we peek ahead and the next command is an <or> then we will just skip it and continue to add to the questions list
@@ -251,11 +227,11 @@ namespace Ultima5Redux.References.Dialogue
                     line = _scriptLines[nIndex];
                     question = line.GetScriptItem(0).StringData;
                     // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
-                    if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question)) currQuestions.Add(question);
+                    if (!QuestionAnswers.QuestionAnswers.ContainsKey(question)) currQuestions.Add(question);
                 }
 
                 ScriptLine nextLine = _scriptLines[nIndex + 1];
-                _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(currQuestions, nextLine));
+                QuestionAnswers.Add(new ScriptQuestionAnswer(currQuestions, nextLine));
                 nIndex += 2;
             } while (true);
 
@@ -303,7 +279,7 @@ namespace Ultima5Redux.References.Dialogue
                     ScriptTalkLabel scriptTalkLabel = new(line.GetScriptItem(1).LabelNum, line);
 
                     // save the new label to the label collection
-                    _scriptTalkLabels.AddLabel(scriptTalkLabel);
+                    TalkLabels.AddLabel(scriptTalkLabel);
 
                     // it's a single line only, so we skip this tom foolery below
                     if (_scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
@@ -339,7 +315,7 @@ namespace Ultima5Redux.References.Dialogue
                                 question = line.GetScriptItem(0).StringData;
                                 // just in case they try to add the same question twice - this is kind of a
                                 // bug in the data since the game just favours the first question it sees
-                                if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                                if (!QuestionAnswers.QuestionAnswers.ContainsKey(question))
                                     currQuestions.Add(question);
                                 nIndex += 2;
                             }
@@ -349,7 +325,7 @@ namespace Ultima5Redux.References.Dialogue
                             question = line.GetScriptItem(0).StringData;
                             // just in case they try to add the same question twice - this is kind of a
                             // bug in the data since the game just favours the first question it sees
-                            if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                            if (!QuestionAnswers.QuestionAnswers.ContainsKey(question))
                                 currQuestions.Add(question);
                         }
                         // is this a question that the player would ask an NPC?
@@ -422,23 +398,22 @@ namespace Ultima5Redux.References.Dialogue
             Console.WriteLine(@"Bye: " + GetScriptLine(TalkConstants.Bye));
             Console.WriteLine("");
 
-            _scriptQuestionAnswers.Print();
+            QuestionAnswers.Print();
             Console.WriteLine("");
 
             // enumerate the labels and print their scripts
-            foreach (ScriptTalkLabel label in _scriptTalkLabels.Labels)
+            foreach (ScriptTalkLabel label in TalkLabels.Labels)
             {
                 Console.WriteLine(@"Label #: " + label.LabelNum);
                 Console.WriteLine(@"Initial Line: " + label.InitialLine);
-                if (label.DefaultAnswers.Count > 0)
-                {
-                    foreach (ScriptLine line in label.DefaultAnswers)
-                    {
-                        Console.WriteLine(@"Default Line(s): " + line);
-                    }
+                if (label.DefaultAnswers.Count <= 0) continue;
 
-                    label.QuestionAnswers.Print();
+                foreach (ScriptLine line in label.DefaultAnswers)
+                {
+                    Console.WriteLine(@"Default Line(s): " + line);
                 }
+
+                label.QuestionAnswers.Print();
             }
         }
 
@@ -454,6 +429,7 @@ namespace Ultima5Redux.References.Dialogue
                 {
                     ScriptItem item = line.GetScriptItem(nItem);
 
+                    // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                     switch (item.Command)
                     {
                         case TalkCommand.PlainString:
@@ -477,26 +453,26 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         /// <param name="talkConst">name, job etc.</param>
         /// <returns>The corresponding single ScriptLine</returns>
-        protected internal ScriptLine GetScriptLine(TalkConstants talkConst) => _scriptLines[(int)talkConst];
+        internal ScriptLine GetScriptLine(TalkConstants talkConst) => _scriptLines[(int)talkConst];
 
         /// <summary>
         ///     Gets a script line based on its index in the overall Script
         /// </summary>
         /// <param name="index">index into Script</param>
         /// <returns>The requested ScriptLine</returns>
-        protected internal ScriptLine GetScriptLine(int index) => _scriptLines[index];
+        internal ScriptLine GetScriptLine(int index) => _scriptLines[index];
 
         /// <summary>
         ///     Gets a scriptline based on the label index
         /// </summary>
         /// <param name="nLabel">0 based index of label</param>
         /// <returns>The corresponding script line</returns>
-        protected internal ScriptLine GetScriptLineLabel(int nLabel) => _scriptLines[GetScriptLineLabelIndex(nLabel)];
+        internal ScriptLine GetScriptLineLabel(int nLabel) => _scriptLines[GetScriptLineLabelIndex(nLabel)];
 
         /// <summary>
         ///     Move to the next line in the script (for adding new content)
         /// </summary>
-        protected internal void NextLine()
+        internal void NextLine()
         {
             _currentScriptLine = new ScriptLine();
             _scriptLines.Add(_currentScriptLine);
@@ -505,7 +481,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     This is a collection of all an NPCs ScriptTalkLabel(s)
         /// </summary>
-        protected internal class ScriptTalkLabels
+        internal class ScriptTalkLabels
         {
             /// <summary>
             ///     A simple list of all the labels
@@ -528,9 +504,9 @@ namespace Ultima5Redux.References.Dialogue
 
             public ScriptTalkLabel GetScriptLabel(int nLabel)
             {
-                foreach (ScriptTalkLabel scriptLabel in Labels)
+                foreach (ScriptTalkLabel scriptLabel in Labels.Where(scriptLabel => scriptLabel.LabelNum == nLabel))
                 {
-                    if (scriptLabel.LabelNum == nLabel) return scriptLabel;
+                    return scriptLabel;
                 }
 
                 throw new Ultima5ReduxException("Asked for a label " + nLabel + " that doesn't exist...");
@@ -541,7 +517,7 @@ namespace Ultima5Redux.References.Dialogue
         ///     A single label for an NPC
         ///     Includes all dialog components need for label
         /// </summary>
-        protected internal class ScriptTalkLabel
+        internal class ScriptTalkLabel
         {
             /// <summary>
             ///     The default answer if non of the QuestionAnswers are satisfied
@@ -605,7 +581,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     Collection of questions and answers, makes accessing them much easier
         /// </summary>
-        protected internal class ScriptQuestionAnswers
+        internal class ScriptQuestionAnswers
         {
             /// <summary>
             ///     All the NPCs question strings and associated answers
@@ -699,7 +675,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     A single instance of a question and answer for dialog
         /// </summary>
-        [DataContract] protected internal class ScriptQuestionAnswer
+        [DataContract] internal class ScriptQuestionAnswer
         {
             [DataMember] public ScriptLine Answer { get; }
 
@@ -804,7 +780,7 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     Special scriptline that identifies that it has been split in sections
         /// </summary>
-        [DataContract] protected internal class SplitScriptLine : ScriptLine
+        [DataContract] internal class SplitScriptLine : ScriptLine
         {
         }
 
@@ -812,7 +788,7 @@ namespace Ultima5Redux.References.Dialogue
         ///     Represents a single line of a script
         ///     This script line can be in a "split mode" or non-splitmode
         /// </summary>
-        [DataContract] protected internal class ScriptLine
+        [DataContract] internal class ScriptLine
         {
             /// <summary>
             ///     a list of all associated ScriptItems, in a particular order
@@ -944,9 +920,7 @@ namespace Ultima5Redux.References.Dialogue
                             item.ItemAdditionalData =
                                 OddsAndLogic.GetGuardExtortionAmount(
                                     OddsAndLogic.GetEraByTurn(GameStateReference.State.TurnsSinceStart));
-                            //var splitScriptLine = new SplitScriptLine();
                             lines[nSection].AddScriptItem(item);
-                            //lines.Add();
                             break;
                         case TalkCommand.Change:
                             // advance to next section

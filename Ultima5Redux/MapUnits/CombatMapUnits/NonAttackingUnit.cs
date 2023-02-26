@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
@@ -13,6 +14,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     {
         public enum TrapComplexity { Simple, Complex }
 
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum TrapType { NONE, ACID, SLEEP, POISON, BOMB, SLEEP_ALL, ELECTRIC_ALL, POISON_ALL }
 
         [DataMember] public bool IsTrapped => Trap != TrapType.NONE;

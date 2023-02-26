@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -13,6 +14,7 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public abstract class CombatMapUnit : MapUnit
     {
         public enum HitState
@@ -23,34 +25,32 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
 
         [IgnoreDataMember]
-        internal HitState CurrentHitState
+        private HitState CurrentHitState
         {
             get
             {
                 int nCriticalThreshold = Stats.MaximumHp >> 2; /* (MaximumHp / 4) */
                 int nHeavyThreshold = Stats.MaximumHp >> 1; /* (MaximumHp / 2) */
                 int nLightThreshold = nCriticalThreshold + nHeavyThreshold;
-
-                if (Stats.CurrentHp <= 0)
+                const int nFleeingThreshold = 24;
+                switch (Stats.CurrentHp)
                 {
-                    return HitState.Dead;
-                }
-
-                if (Stats.CurrentHp < 24)
-                {
-                    return HitState.Fleeing;
+                    case <= 0:
+                        return HitState.Dead;
+                    case < nFleeingThreshold:
+                        return HitState.Fleeing;
                 }
 
                 if (Stats.CurrentHp < nCriticalThreshold)
                 {
                     return HitState.CriticallyWounded;
                 }
-
                 if (Stats.CurrentHp < nHeavyThreshold)
                 {
                     return HitState.HeavilyWounded;
                 }
 
+                // ReSharper disable once ConvertIfStatementToReturnStatement
                 if (Stats.CurrentHp < nLightThreshold)
                 {
                     return HitState.LightlyWounded;
@@ -192,7 +192,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             bool bIsEnemyAttacking, bool bForceHit = false)
         {
             // is it a portcullis in a combat map? When you attack they go away
-            //bool bIsPortcullis = nonA
 
             bool bIsHit = IsHit(opposingCombatMapUnit, out string debugStr) || bForceHit;
 
@@ -315,7 +314,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     OddsAndLogic.GetIsDropAfterKillingEnemy(enemy.EnemyReference);
 
                 nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference,
-                    /// TEMP force to generate chests
+                    // TEMP force to generate chests
                     //NonAttackingUnitFactory.DropSprites.Chest,
                     dropped, opposingCombatMapUnit.MapLocation, opposingCombatMapUnit.MapUnitPosition);
 

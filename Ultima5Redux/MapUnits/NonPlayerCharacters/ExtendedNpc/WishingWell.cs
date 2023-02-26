@@ -27,7 +27,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ExtendedNpc
             var npcState = new NonPlayerCharacterState(npcRef, true);
 
             var theWell = new WishingWell(
-                new MapUnitMovement(npcState.NPCRef.DialogIndex),
+                new MapUnitMovement(npcState.NpcRef.DialogIndex),
                 location,
                 new MapUnitPosition(xy.X, xy.Y, nFloor),
                 npcState

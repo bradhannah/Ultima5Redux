@@ -139,10 +139,11 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             }
 
             int nKeySpriteIndex = N_FIRST_SPRITE + nMonsterIndex * N_FRAMES_PER_SPRITE;
+            // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
             if (nMonsterIndex == PIRATE_SHIP_NUMBER) // pirates!
             {
                 // force a pirate ship when referring to an enemy (otherwise it will be person in stocks)
-                KeyTileReference = tileReferences.GetTileReference(300);
+                KeyTileReference = tileReferences.GetTileReference(TileReference.SpriteIndex.PirateShip_Up);
             }
             else
             {
@@ -151,11 +152,11 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             }
         }
 
-        private int GetStat(DefaultStats stat, DataOvlReference dataOvlReference, int nMonsterIndex)
+        private static int GetStat(DefaultStats stat, DataOvlReference dataOvlReference, int nMonsterIndex)
         {
-            const int TotalBytesPerRecord = 8;
+            const int totalBytesPerRecord = 8;
             return dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_STATS)
-                .GetByte(nMonsterIndex * TotalBytesPerRecord + (int)stat);
+                .GetByte(nMonsterIndex * totalBytesPerRecord + (int)stat);
         }
 
         public override string ToString() => AllCapsPluralName + "-" + MixedCaseSingularName;

@@ -38,19 +38,15 @@ namespace Ultima5Redux.Maps
             MapUnitPosition.Floor = Floor;
         }
 
-        public SmallMapReferences.SingleMapReference GetSingleMapReference()
-        {
-            if (Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
-                return SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(Floor == 0
-                    ? LargeMapLocationReferences.LargeMapType.Overworld
-                    : LargeMapLocationReferences.LargeMapType.Underworld);
-            if (Location == SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
+        public SmallMapReferences.SingleMapReference GetSingleMapReference() =>
+            Location switch
             {
-                return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
-            }
-
-            return GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor);
-        }
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(Floor == 0
+                        ? LargeMapLocationReferences.LargeMapType.Overworld
+                        : LargeMapLocationReferences.LargeMapType.Underworld),
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(),
+                _ => GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor)
+            };
 
         public void SetByLargeMapType(LargeMapLocationReferences.LargeMapType largeMapType, Point2D playerPosition)
         {
@@ -86,7 +82,8 @@ namespace Ultima5Redux.Maps
             Location = singleMapReference.MapLocation;
             Floor = singleMapReference.Floor;
             MapType = singleMapReference.MapType;
-            SetMapUnitPosition(playerPosition);
+            SetMapUnitPosition(playerPosition ?? Point2D.Zero);
+            MapUnitPosition.Floor = singleMapReference.Floor;
         }
     }
 }

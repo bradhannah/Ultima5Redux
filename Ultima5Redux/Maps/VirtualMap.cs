@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -14,9 +15,7 @@ using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 // ReSharper disable UnusedMember.Global
-
 // ReSharper disable IdentifierTypo
-
 namespace Ultima5Redux.Maps
 {
     [DataContract] public partial class VirtualMap
@@ -60,18 +59,17 @@ namespace Ultima5Redux.Maps
 
                 if (singleMapReference.IsDungeon) return TheMapHolder.TheDungeonMap;
 
-                switch (SavedMapRefs.Location)
+                return SavedMapRefs.Location switch
                 {
-                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
-                        when SavedMapRefs.MapType == Map.Maps.Combat:
-                        return TheMapHolder.TheCombatMap;
-                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
-                        throw new Ultima5ReduxException("Resting and Shrines have not been implemented yet");
-                    case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
-                        return SavedMapRefs.Floor == 0 ? TheMapHolder.OverworldMap : TheMapHolder.UnderworldMap;
-                    default:
-                        return TheMapHolder.GetSmallMap(singleMapReference);
-                }
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine when SavedMapRefs.MapType ==
+                                                                           Map.Maps.Combat => TheMapHolder.TheCombatMap,
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => throw
+                        new Ultima5ReduxException("Resting and Shrines have not been implemented yet"),
+                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => SavedMapRefs.Floor == 0
+                        ? TheMapHolder.OverworldMap
+                        : TheMapHolder.UnderworldMap,
+                    _ => TheMapHolder.GetSmallMap(singleMapReference)
+                };
             }
         }
 
@@ -100,7 +98,7 @@ namespace Ultima5Redux.Maps
                 case Map.Maps.Small:
                     LoadSmallMap(currentSmallMapReference, null, !importedGameState.IsInitialSaveFile,
                         importedGameState);
-                    if (CurrentMap is not SmallMap smallMap)
+                    if (CurrentMap is not SmallMap)
                         throw new Ultima5ReduxException("Tried to load Small Map initially but wasn't set correctly");
                     break;
                 case Map.Maps.Overworld:
@@ -109,6 +107,9 @@ namespace Ultima5Redux.Maps
                     break;
                 case Map.Maps.Combat:
                     throw new Ultima5ReduxException("Can't load a Combat Map on the initialization of a virtual map");
+                case Map.Maps.Dungeon:
+                    throw new Ultima5ReduxException(
+                        "Can't load a Dungeon Map on the initialization of a virtual map (yet?)");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }
@@ -120,12 +121,8 @@ namespace Ultima5Redux.Maps
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            // // this is so we don't break old save games
-            // if (TheSearchItems == null)
-            // {
             TheSearchItems = new SearchItems();
             TheSearchItems.Initialize();
-            // }
         }
 
 
@@ -231,7 +228,7 @@ namespace Ultima5Redux.Maps
             TheMapHolder.OverworldMap.CreateSkiff(LargeMapLocationReferences.GetLocationOfDock(location),
                 Point2D.Direction.Right, out _);
 
-        public int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
+        private int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
             bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, MapUnit mapUnit, out bool bDrawCharacterOnTile)
         {
             int nSprite = tileReference.Index;
@@ -330,7 +327,7 @@ namespace Ultima5Redux.Maps
 
             // this checks to see if you are on the outer bounds of a small map, and if the flood fill touched it
             // if it has touched it then we draw the outer tiles
-            if (CurrentMap is SmallMap smallMap && !smallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
+            if (CurrentMap is SmallMap smallMap && !SmallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
             {
                 TileReference outerTileReference = GameReferences.Instance.SpriteTileReferences.GetTileReference(
                     smallMap.GetOutOfBoundsSprite(xy));
@@ -446,6 +443,7 @@ namespace Ultima5Redux.Maps
         /// <param name="records"></param>
         /// <param name="primaryEnemyReference"></param>
         /// <param name="npcRef"></param>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] 
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
@@ -480,20 +478,20 @@ namespace Ultima5Redux.Maps
         /// <param name="entryDirection"></param>
         /// <param name="records"></param>
         /// <param name="enemyReference"></param>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] 
         public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference enemyReference)
         {
-            int nPrimaryEnemies = 1;
+            const int nPrimaryEnemies = 1;
             int nSecondaryEnemies = 1;
 
             if (enemyReference.IsNpc) nSecondaryEnemies = 0;
 
-            EnemyReference primaryEnemyReference = enemyReference;
             EnemyReference secondaryEnemyReference =
-                GameReferences.Instance.EnemyRefs.GetFriendReference(primaryEnemyReference);
+                GameReferences.Instance.EnemyRefs.GetFriendReference(enemyReference);
 
-            LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, nPrimaryEnemies,
+            LoadCombatMap(singleCombatMapReference, entryDirection, records, enemyReference, nPrimaryEnemies,
                 secondaryEnemyReference, nSecondaryEnemies);
         }
 
@@ -553,8 +551,12 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException("CurrentMap did not switch to SmallMap on load");
 
             smallMap.InitializeFromLegacy(TheMapHolder.SmallMaps, singleMapReference.MapLocation,
-                importedGameState, bLoadFromDisk,
-                TheSearchItems);
+                importedGameState, bLoadFromDisk, TheSearchItems);
+
+            // smallMap.CurrentPosition.Floor = singleMapReference.Floor;
+            smallMap.CurrentPosition = xy == null
+                ? new MapUnitPosition(0, 0, singleMapReference.Floor)
+                : new MapUnitPosition(xy.X, xy.Y, singleMapReference.Floor);
 
             smallMap.HandleSpecialCasesForSmallMapLoad();
         }

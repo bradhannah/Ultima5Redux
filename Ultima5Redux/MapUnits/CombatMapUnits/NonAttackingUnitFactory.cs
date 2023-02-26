@@ -82,8 +82,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             //int nChosenRef = Utils.Ran.Next() % nInvRefs;
 
             ///// NOTE: it is looking for a high weapon index BECAUSE it wants the Equipment #, not the index of the weapon within
-            /// it's own array. I will need to do some sort of Equipment lookup for weapons, armour
-            /// I think these represent all the tile types that should index into Equipment #
+            // it's own array. I will need to do some sort of Equipment lookup for weapons, armour
+            // I think these represent all the tile types that should index into Equipment #
             InventoryItem invItem;
             switch ((TileReference.SpriteIndex)nSprite)
             {

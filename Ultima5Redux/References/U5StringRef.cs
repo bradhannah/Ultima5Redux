@@ -217,21 +217,15 @@ namespace Ultima5Redux.References
 
         public string GetDirectionString(Point2D.Direction direction)
         {
-            switch (direction)
+            return direction switch
             {
-                case Point2D.Direction.Up:
-                    return GetString(DataOvlReference.TravelStrings.NORTH);
-                case Point2D.Direction.Down:
-                    return GetString(DataOvlReference.TravelStrings.SOUTH);
-                case Point2D.Direction.Left:
-                    return GetString(DataOvlReference.TravelStrings.WEST);
-                case Point2D.Direction.Right:
-                    return GetString(DataOvlReference.TravelStrings.EAST);
-                case Point2D.Direction.None:
-                    return "";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-            }
+                Point2D.Direction.Up => GetString(DataOvlReference.TravelStrings.NORTH),
+                Point2D.Direction.Down => GetString(DataOvlReference.TravelStrings.SOUTH),
+                Point2D.Direction.Left => GetString(DataOvlReference.TravelStrings.WEST),
+                Point2D.Direction.Right => GetString(DataOvlReference.TravelStrings.EAST),
+                Point2D.Direction.None => "",
+                _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+            };
         }
 
         /// <summary>

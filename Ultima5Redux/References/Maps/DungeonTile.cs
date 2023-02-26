@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Ultima5Redux.References
+namespace Ultima5Redux.References.Maps
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     public class DungeonTile
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum ChestType { Normal = 0, Trapped_1 = 1, Trapped_2 = 2, Poisoned = 4 }
 
         //char fountStr[3][7] = { "Heal", "Poison", "Hurt" };
@@ -27,17 +32,17 @@ namespace Ultima5Redux.References
 
         public enum TrapType { LowerTrapVisible, BombTrap, InvisibleTrap, UpperTrapVisible }
 
+        private readonly int[] _messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
+
         private readonly byte _subTileType;
 
-        private readonly List<string> messages = new()
+        private readonly List<string> _messages = new()
         {
             "BOTTOMLESS PIT", "THE MAZE OF LOST SOULS",
             // floor 0 Wrong
             "THE PRISON WRONG", "THE CRYPT", "UPPER CRYPTS", "LOWER CRYPTS",
             "DEBTORS ALLY", "DEEP", "DEEPER", "DEEPEST", "MOTHER LODE MAZE"
         };
-
-        private readonly int[] messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
 
         public int RoomNumber { get; }
         public ChestType TheChestType { get; }
@@ -54,12 +59,11 @@ namespace Ultima5Redux.References
         {
             get
             {
-                if (messageStarts.Contains(_subTileType))
-                {
-                    for (int i = 0; i < messageStarts.Length; i++)
-                        if (messageStarts[i] == _subTileType)
-                            return messages[i];
-                }
+                if (!_messageStarts.Contains(_subTileType)) return "";
+
+                for (int i = 0; i < _messageStarts.Length; i++)
+                    if (_messageStarts[i] == _subTileType)
+                        return _messages[i];
 
                 return "";
             }

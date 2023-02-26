@@ -165,6 +165,7 @@ namespace Ultima5Redux.Data
         /// <summary>
         ///     The encoding of the data
         /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum DataFormatType
         {
             Unknown, FixedString, SimpleString, StringList, UINT16List, UINT16, ByteList, Bitmap, Byte,
@@ -235,7 +236,7 @@ namespace Ultima5Redux.Data
             RawData = new byte[dataLength];
             rawData.CopyTo(offset, RawData, 0, dataLength);
             ValueModifier = addToValue;
-            if (dataFormat == DataFormatType.StringListFromIndexes || dataFormat == DataFormatType.UINT16List)
+            if (dataFormat is DataFormatType.StringListFromIndexes or DataFormatType.UINT16List)
                 _fullRawData = rawData;
         }
 
@@ -243,12 +244,12 @@ namespace Ultima5Redux.Data
             List<byte> rawByteList)
         {
             List<string> strList = new(indexList.Count);
-            const int MaxStrLength = 20;
+            const int maxStrLength = 20;
 
             foreach (ushort index in indexList)
             {
                 // we grab the strings from the fullRawData because it is the entire file
-                strList.Add(CreateDataChunk(DataFormatType.SimpleString, string.Empty, rawByteList, index, MaxStrLength)
+                strList.Add(CreateDataChunk(DataFormatType.SimpleString, string.Empty, rawByteList, index, maxStrLength)
                     .GetChunkAsString());
             }
 

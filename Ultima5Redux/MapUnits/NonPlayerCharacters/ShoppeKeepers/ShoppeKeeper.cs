@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
@@ -87,16 +88,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public static IEnumerable<SmallMapReferences.SingleMapReference.Location> GetLocations(
             DataOvlReference dataOvlReference, DataOvlReference.DataChunkName chunkName)
         {
-            List<SmallMapReferences.SingleMapReference.Location> locations = new();
-
-            foreach (byte b in dataOvlReference.GetDataChunk(chunkName).GetAsByteList())
-            {
-                var location =
-                    (SmallMapReferences.SingleMapReference.Location)b;
-                locations.Add(location);
-            }
-
-            return locations;
+            return dataOvlReference.GetDataChunk(chunkName).GetAsByteList()
+                .Select(b => (SmallMapReferences.SingleMapReference.Location)b).ToList();
         }
 
         public abstract string GetForSaleList();
@@ -190,15 +183,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         protected string FlattenStr(string str) => str.Trim().Replace("\n", " ");
 
-        protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender)
-        {
-            if (gender == PlayerCharacterRecord.CharacterGender.Male)
-                return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.SIR);
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.MILADY);
-        }
+        protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender) =>
+            DataOvlReference.StringReferences.GetString(gender == PlayerCharacterRecord.CharacterGender.Male
+                ? DataOvlReference.ShoppeKeeperBarKeepStrings2.SIR
+                : DataOvlReference.ShoppeKeeperBarKeepStrings2.MILADY);
 
         protected string GetNumberInPartyAsStringWord(int nNum)
         {
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (nNum > 6) return "many";
             if (nNum == 1) return "one";
             Debug.Assert(nNum > 0);

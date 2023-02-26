@@ -66,7 +66,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         private string GetEquipmentBuyingOutput(int nEquipmentIndex, int nGold)
         {
             int nDialogueIndex = _equipmentMapToMerchantStrings[nEquipmentIndex];
-            Debug.Assert(nEquipmentIndex >= 0 && nEquipmentIndex <= (int)DataOvlReference.Equipment.SpikedCollar);
+            Debug.Assert(nEquipmentIndex is >= 0 and <= (int)DataOvlReference.Equipment.SpikedCollar);
             Debug.Assert(ShoppeKeeperDialogueReference.CountReplacementVariables(nDialogueIndex) == 1);
             return ShoppeKeeperDialogueReference.GetMerchantString(nDialogueIndex, nGold);
         }

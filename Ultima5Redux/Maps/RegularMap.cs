@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -36,7 +37,7 @@ namespace Ultima5Redux.Maps
         internal MapUnitPosition CurrentAvatarPosition
         {
             get => GetAvatarMapUnit().MapUnitPosition;
-            set => GetAvatarMapUnit().MapUnitPosition = value;
+            private set => GetAvatarMapUnit().MapUnitPosition = value;
         }
 
         [IgnoreDataMember]
@@ -60,7 +61,7 @@ namespace Ultima5Redux.Maps
 
 
         [IgnoreDataMember]
-        public int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
+        protected int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
 
         [IgnoreDataMember]
         public override MapUnitPosition CurrentPosition
@@ -68,8 +69,6 @@ namespace Ultima5Redux.Maps
             get => CurrentAvatarPosition;
             set => CurrentAvatarPosition = value;
         }
-        //[DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; private set; }
-
 
         [IgnoreDataMember]
         protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides =>
@@ -109,6 +108,7 @@ namespace Ultima5Redux.Maps
         /// <param name="nIndex"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Local
+        // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Global
         internal MagicCarpet CreateMagicCarpet(Point2D xy, Point2D.Direction direction, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(TheMapType);
@@ -128,6 +128,7 @@ namespace Ultima5Redux.Maps
         /// <param name="direction"></param>
         /// <param name="nIndex"></param>
         /// <returns></returns>
+        // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Global
         internal Skiff CreateSkiff(Point2D xy, Point2D.Direction direction, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(TheMapType);
@@ -135,19 +136,12 @@ namespace Ultima5Redux.Maps
 
             Skiff skiff = new(
                 new MapUnitMovement(nIndex),
-                //importedMovements.GetMovement(nIndex),
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
                 new MapUnitPosition(xy.X, xy.Y, 0));
 
             AddNewMapUnit(Maps.Overworld, skiff, nIndex);
             return skiff;
         }
-
-        //[IgnoreDataMember] protected Avatar MasterAvatarMapUnit { get; set; }
-        //[IgnoreDataMember] protected readonly ImportedGameState importedGameState;
-
-        //[IgnoreDataMember] protected readonly MapUnitMovements importedMovements;
-
 
         internal void DamageShip(Point2D.Direction windDirection, TurnResults turnResults)
         {
@@ -208,9 +202,6 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException(
                     "Tried to GetAggressiveMapUnitInfo but CurrentMap.CurrentSingleMapReference was null");
 
-            // if (CurrentMap is not RegularMap regularMap)
-            //     throw new Ultima5ReduxException("Tried to call GetNonCombatMapAggressiveMapUnitInfo on combat map");
-            //
             foreach (MapUnit mapUnit in CurrentMapUnits.AllActiveMapUnits)
             {
                 // we don't calculate any special movement or events for map units on different floors
@@ -535,10 +526,6 @@ namespace Ultima5Redux.Maps
 
             VirtualMap.AggressiveMapUnitInfo mapUnitInfo = new(aggressorMapUnit);
 
-            // if they are not Enemy type (probably NPC) then we are certain they don't have a range attack
-            // UNLESS you are a wanted man - then the guards will try to attack you!
-            //bool isWantedManByThePoPo = IsWantedManByThePoPo;
-            //bool declinedExtortion = CurrentMap is SmallMap { DeclinedExtortion: true };
             bool bIsMadGuard = false;
             if (aggressorMapUnit is NonPlayerCharacter npc) bIsMadGuard = IsWantedManByThePoPo && npc.NpcRef.IsGuard;
 
@@ -719,6 +706,7 @@ namespace Ultima5Redux.Maps
                 }
             }
             // if the enemy is a water enemy and we know the avatar is on a frigate, then we fight on the ocean
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
             else if (enemy.EnemyReference.IsWaterEnemy)
             {
                 // we are on a frigate AND we are fighting a pirate ship
@@ -729,6 +717,7 @@ namespace Ultima5Redux.Maps
             else
             {
                 if (!enemy.EnemyReference.IsWaterEnemy)
+                    // NOTE: this looks like unreachable code
                     mapUnitInfo.CombatMapReference =
                         getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
                 else
@@ -773,6 +762,7 @@ namespace Ultima5Redux.Maps
 
             // gets an adjusted position OR returns null if the position is not valid
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (MapUnitMovement.MovementCommandDirection direction in Enum.GetValues(
                          typeof(MapUnitMovement.MovementCommandDirection)))
             {
@@ -791,6 +781,7 @@ namespace Ultima5Redux.Maps
         public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
             ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public Horse CreateHorse(MapUnitPosition mapUnitPosition, Maps map, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(TheMapType);
@@ -832,7 +823,8 @@ namespace Ultima5Redux.Maps
             return horse;
         }
 
-        public MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
+        // ReSharper disable once UnusedMethodReturnValue.Global
+        protected MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
             SmallMapReferences.SingleMapReference singleMapReference)
         {
             int nIndex = FindNextFreeMapUnitIndex(TheMapType);
@@ -912,15 +904,17 @@ namespace Ultima5Redux.Maps
             {
                 // last second check for water enemy - they can occasionally appear on a "land" tile like bridges
                 // so we take the chance to force a Bay map just in case
-                if (targetedMapUnit is Enemy waterCheckEnemy)
-                {
-                    if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
-                        return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
-                            SingleCombatMapReference.BritanniaCombatMaps.Bay, territory);
-                    // if the enemy is on bay but is not a water creature then we cannot attack them
-                    if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
-                        return null;
-                }
+                if (targetedMapUnit is not Enemy waterCheckEnemy)
+                    return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                        attackToTileReference.CombatMapIndex, territory);
+
+                if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
+                    return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
+                        SingleCombatMapReference.BritanniaCombatMaps.Bay, territory);
+
+                // if the enemy is on bay but is not a water creature then we cannot attack them
+                if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
+                    return null;
 
                 return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
                     attackToTileReference.CombatMapIndex, territory);
@@ -929,6 +923,7 @@ namespace Ultima5Redux.Maps
             // BoatCalc indicates it is a water tile and requires special consideration
             if (attackToTileReference.CombatMapIndex != SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
             {
+                // ReSharper disable once ConvertIfStatementToReturnStatement
                 if (attackToTileReference.IsWaterEnemyPassable)
                     return GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(
                         SingleCombatMapReference.BritanniaCombatMaps.BoatOcean,
@@ -966,14 +961,8 @@ namespace Ultima5Redux.Maps
         public bool IsLandNearbyForAvatar() =>
             IsLandNearby(CurrentPosition.XY, false, GetAvatarMapUnit().CurrentAvatarState);
 
-
-        /// <summary>
-        ///     Gets a map unit if it's on the current tile
-        /// </summary>
-        /// <returns>true if there is a map unit of on the tile</returns>
-        public bool IsMapUnitOccupiedTile() => IsMapUnitOccupiedTile(CurrentPosition.XY);
-
-        public Skiff MakeAndBoardSkiff()
+        // ReSharper disable once UnusedMethodReturnValue.Local
+        private Skiff MakeAndBoardSkiff()
         {
             Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().Direction,
                 out int _);
@@ -1063,7 +1052,7 @@ namespace Ultima5Redux.Maps
                 newUnit = new EmptyMapUnit();
             }
             else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active &&
-                     npcState.NPCRef.NormalNPC)
+                     npcState.NpcRef.NormalNPC)
             {
                 newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
                     mapUnitPosition, npcState);
@@ -1096,8 +1085,8 @@ namespace Ultima5Redux.Maps
             else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active)
             {
                 // This is where we will do custom stuff for special NPS
-                // guard or daemon or stone gargoyle or fighter or bard or townesperson or rat or bat or shadowlord
-                if ((TileReference.SpriteIndex)npcState.NPCRef.NPCKeySprite is
+                // guard or daemon or stone gargoyle or fighter or bard or townes person or rat or bat or shadowlord
+                if ((TileReference.SpriteIndex)npcState.NpcRef.NPCKeySprite is
                     TileReference.SpriteIndex.Guard_KeyIndex
                     or TileReference.SpriteIndex.Daemon1_KeyIndex
                     or TileReference.SpriteIndex.StoneGargoyle_KeyIndex
@@ -1113,7 +1102,7 @@ namespace Ultima5Redux.Maps
                 }
                 else
                 {
-                    newUnit = NonAttackingUnitFactory.Create(npcState.NPCRef.NPCKeySprite, location, mapUnitPosition);
+                    newUnit = NonAttackingUnitFactory.Create(npcState.NpcRef.NPCKeySprite, location, mapUnitPosition);
                     newUnit.MapLocation = location;
                 }
             }
