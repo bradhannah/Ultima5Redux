@@ -148,7 +148,7 @@ namespace Ultima5Redux.External
 
         public bool GetWalkable(Point2D position) => GetNode(position).Walkable;
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")] 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string GetWalkableDebug()
         {
             string debugOut = "";
@@ -164,6 +164,5 @@ namespace Ultima5Redux.External
 
             return debugOut;
         }
-
     }
 }

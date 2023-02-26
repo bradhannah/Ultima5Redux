@@ -8,7 +8,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.SeaFaringVessels
 {
-    [DataContract] public class Frigate : SeaFaringVessel
+    [DataContract]
+    public class Frigate : SeaFaringVessel
     {
         private readonly Dictionary<Point2D.Direction, string> _sailsFurledTiles =
             new()
@@ -63,7 +64,8 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
 
-        [JsonConstructor] private Frigate()
+        [JsonConstructor]
+        private Frigate()
         {
         }
 

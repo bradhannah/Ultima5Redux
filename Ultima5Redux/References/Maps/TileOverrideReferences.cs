@@ -7,7 +7,13 @@ namespace Ultima5Redux.References.Maps
 {
     public class TileOverrideReferences
     {
-        private enum AllTerritories { Britannia, Underworld, CombatBritannia, CombatDungeon }
+        private enum AllTerritories
+        {
+            Britannia,
+            Underworld,
+            CombatBritannia,
+            CombatDungeon
+        }
 
         private readonly Dictionary<AllTerritories,
                 Dictionary<int, Dictionary<int, Dictionary<Point2D, TileOverrideReference>>>>

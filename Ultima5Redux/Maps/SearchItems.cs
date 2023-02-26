@@ -6,7 +6,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] public class SearchItem
+    [DataContract]
+    public class SearchItem
     {
         [DataMember] public bool IsDiscovered { get; set; }
         [DataMember] public int SearchItemIndex { get; private set; }
@@ -19,14 +20,16 @@ namespace Ultima5Redux.Maps
             TheSearchItemReference = theSearchItemReference;
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             TheSearchItemReference =
                 GameReferences.Instance.SearchLocationReferences.GetSearchItemReferenceByIndex(SearchItemIndex);
         }
     }
 
-    [DataContract] public class SearchItems
+    [DataContract]
+    public class SearchItems
     {
         public const int MAX_TOTAL_SEARCH_ITEMS = 0x72;
         [DataMember] private readonly List<SearchItem> _searchItems = new();

@@ -12,7 +12,8 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
     {
         public override bool IsActive => true;
 
-        [JsonConstructor] protected SeaFaringVessel()
+        [JsonConstructor]
+        protected SeaFaringVessel()
         {
         }
 

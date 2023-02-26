@@ -6,7 +6,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    [DataContract] public sealed class DeadBody : NonAttackingUnit
+    [DataContract]
+    public sealed class DeadBody : NonAttackingUnit
     {
         [DataMember] public override ItemStack InnerItemStack { get; protected set; }
 
@@ -32,7 +33,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
 
-        [JsonConstructor] public DeadBody()
+        [JsonConstructor]
+        public DeadBody()
         {
         }
 
@@ -48,7 +50,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             MapLocation = location;
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
         }
 

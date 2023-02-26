@@ -8,7 +8,14 @@ namespace Ultima5Redux.Maps
 {
     public class Sign
     {
-        public enum SignType { SmallSign = 164, BigSign = 160, Tombstone = 138, Cross = 137, Warning = 248 }
+        public enum SignType
+        {
+            SmallSign = 164,
+            BigSign = 160,
+            Tombstone = 138,
+            Cross = 137,
+            Warning = 248
+        }
 
         private const int CHARS_PER_LINE = 16;
 

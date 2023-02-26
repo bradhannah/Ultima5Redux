@@ -6,7 +6,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    [DataContract] public sealed class StackableItem
+    [DataContract]
+    public sealed class StackableItem
     {
         [DataMember] private readonly string _inventoryItemName;
         [DataMember] private readonly InventoryReferences.InventoryReferenceType _inventoryReferenceType;
@@ -14,7 +15,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember] public InventoryItem InvItem { get; private set; }
 
 
-        [JsonConstructor] public StackableItem()
+        [JsonConstructor]
+        public StackableItem()
         {
         }
 
@@ -26,7 +28,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             _nQuantity = item.Quantity;
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext streamingContext)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext streamingContext)
         {
             InventoryReference inventoryReference =
                 GameReferences.Instance.InvRef.GetInventoryReference(_inventoryReferenceType, _inventoryItemName);

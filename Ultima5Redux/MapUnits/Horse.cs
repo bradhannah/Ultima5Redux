@@ -9,7 +9,8 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract] public sealed class Horse : MapUnit
+    [DataContract]
+    public sealed class Horse : MapUnit
     {
         [IgnoreDataMember]
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
@@ -70,7 +71,8 @@ namespace Ultima5Redux.MapUnits
         protected override NonPlayerCharacterSchedule.AiType OverridenAiType =>
             NonPlayerCharacterSchedule.AiType.HorseWander;
 
-        [JsonConstructor] private Horse()
+        [JsonConstructor]
+        private Horse()
         {
         }
 

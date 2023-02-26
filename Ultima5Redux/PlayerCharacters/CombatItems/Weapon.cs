@@ -7,7 +7,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract] public sealed class Weapon : CombatItem
+    [DataContract]
+    public sealed class Weapon : CombatItem
     {
         [IgnoreDataMember]
         public override CharacterEquipped.EquippableSlot EquippableSlot =>
@@ -17,7 +18,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         [IgnoreDataMember] public override bool HideQuantity => false;
 
-        [JsonConstructor] private Weapon()
+        [JsonConstructor]
+        private Weapon()
         {
         }
 

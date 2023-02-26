@@ -65,13 +65,21 @@ namespace Ultima5Redux
         }
     }
 
-    [DataContract] public sealed class Point2D
+    [DataContract]
+    public sealed class Point2D
     {
         /// <summary>
         ///     4 way direction
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum Direction { Up, Down, Left, Right, None }
+        public enum Direction
+        {
+            Up,
+            Down,
+            Left,
+            Right,
+            None
+        }
 
         [DataMember] public int X { get; set; }
         [DataMember] public int Y { get; set; }

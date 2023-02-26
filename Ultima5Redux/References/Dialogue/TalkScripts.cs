@@ -14,7 +14,8 @@ namespace Ultima5Redux.References.Dialogue
     /// <summary>
     ///     TalkScripts represents all of the in game talking scripts for all NPCs
     /// </summary>
-    [DataContract] public sealed class TalkScripts
+    [DataContract]
+    public sealed class TalkScripts
     {
         /// <summary>
         ///     a null byte signifies the end of the script line

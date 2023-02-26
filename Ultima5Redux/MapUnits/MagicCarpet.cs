@@ -9,7 +9,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract] public sealed class MagicCarpet : MapUnit
+    [DataContract]
+    public sealed class MagicCarpet : MapUnit
     {
         private const string REGULAR_CARPET_STR = "Carpet2";
 
@@ -58,7 +59,8 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Up, REGULAR_CARPET_STR }
             };
 
-        [JsonConstructor] private MagicCarpet()
+        [JsonConstructor]
+        private MagicCarpet()
         {
         }
 

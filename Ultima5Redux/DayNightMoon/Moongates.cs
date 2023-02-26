@@ -9,7 +9,8 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.DayNightMoon
 {
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")] [DataContract]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+    [DataContract]
     public class Moongates
     {
         /// <summary>
@@ -30,7 +31,8 @@ namespace Ultima5Redux.DayNightMoon
 
         private readonly Dictionary<Point3D, bool> _moongatePositionsDictionary = new(TOTAL_MOONSTONES);
 
-        [JsonConstructor] private Moongates()
+        [JsonConstructor]
+        private Moongates()
         {
         }
 
@@ -62,7 +64,8 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext streamingContext)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext streamingContext)
         {
             for (int i = 0; i < TOTAL_MOONSTONES; i++)
             {

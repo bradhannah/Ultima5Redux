@@ -9,7 +9,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract] public class Armours : CombatItems<ArmourReference.ArmourType, List<Armour>>
+    [DataContract]
+    public class Armours : CombatItems<ArmourReference.ArmourType, List<Armour>>
     {
         [DataMember] public List<Amulet> Amulets { get; private set; } = new();
         [DataMember] public List<ChestArmour> ChestArmours { get; private set; } = new();
@@ -40,7 +41,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private Dictionary<ArmourReference.ArmourType, List<Armour>> _savedItems;
 
-        [JsonConstructor] private Armours()
+        [JsonConstructor]
+        private Armours()
         {
         }
 
@@ -52,7 +54,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             foreach (Armour armour in AllCombatItems.OfType<Armour>())
             {
@@ -67,12 +70,14 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
         }
 
-        [OnSerialized] private void PostSerialize(StreamingContext context)
+        [OnSerialized]
+        private void PostSerialize(StreamingContext context)
         {
             Items = _savedItems;
         }
 
-        [OnSerializing] private void PreSerialize(StreamingContext context)
+        [OnSerializing]
+        private void PreSerialize(StreamingContext context)
         {
             _savedItems = Items;
             Items = new Dictionary<ArmourReference.ArmourType, List<Armour>>();

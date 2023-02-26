@@ -7,7 +7,12 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class GuardExtortion : TurnResult, INonPlayerCharacterInteraction
     {
-        public enum ExtortionType { Generic, HalfGold, BlackthornPassword }
+        public enum ExtortionType
+        {
+            Generic,
+            HalfGold,
+            BlackthornPassword
+        }
 
         public int ExtortionAmount { get; }
         public ExtortionType TheExtortionType { get; }

@@ -16,7 +16,8 @@ namespace Ultima5Redux.MapUnits
 
         private List<SmallMapCharacterState> CharacterStates { get; } = new(MAX_CHARACTER_STATES);
 
-        [JsonConstructor] private SmallMapCharacterStates()
+        [JsonConstructor]
+        private SmallMapCharacterStates()
         {
             Debug.Assert(true, "If you are deserializing then a mistake was made");
         }

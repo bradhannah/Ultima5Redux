@@ -29,16 +29,17 @@ namespace Ultima5Redux.Maps
 
         private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
+        public sealed override byte[][] TheMap { get; protected set; }
+
         public override bool IsRepeatingMap => false;
         public override int NumOfXTiles => SingleDungeonMapFloorReference.N_DUNGEON_COLS_PER_ROW;
         public override int NumOfYTiles => SingleDungeonMapFloorReference.N_DUNGEON_ROWS_PER_MAP;
-        public virtual bool ShowOuterSmallMapTiles => false;
-
-        public sealed override byte[][] TheMap { get; protected set; }
 
         public override Maps TheMapType => Maps.Dungeon;
+        public virtual bool ShowOuterSmallMapTiles => false;
 
-        [JsonConstructor] public DungeonMap()
+        [JsonConstructor]
+        public DungeonMap()
         {
         }
 
@@ -57,18 +58,19 @@ namespace Ultima5Redux.Maps
             CurrentMapUnits.Add(theAvatar);
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             SingleDungeonMapFloorReference = GameReferences.Instance.DungeonReferences.GetDungeon(MapLocation)
                 .GetSingleDungeonMapFloorReferenceByFloor(MapFloor);
             TheMap = SingleDungeonMapFloorReference.GetDefaultDungeonMap();
         }
 
+        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => WalkableType.StandardWalking;
+
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
         {
         }
-
-        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => WalkableType.StandardWalking;
 
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {

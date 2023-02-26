@@ -4,7 +4,8 @@ using System.Runtime.Serialization;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    [DataContract] public class CharacterStats
+    [DataContract]
+    public class CharacterStats
     {
         [DataMember]
         public int CurrentHp

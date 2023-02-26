@@ -13,7 +13,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class Healer : ShoppeKeeper
     {
-        public enum RemedyTypes { Cure, Heal, Resurrect }
+        public enum RemedyTypes
+        {
+            Cure,
+            Heal,
+            Resurrect
+        }
 
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new()
         {
@@ -65,15 +70,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             string offerStr = remedy switch
             {
-                RemedyTypes.Cure => DataOvlReference.StringReferences.GetString(DataOvlReference
-                    .ShoppeKeeperHealerStrings.I_CAN_CURE_THY_POISONED_BODY),
+                RemedyTypes.Cure => DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings.I_CAN_CURE_THY_POISONED_BODY),
                 RemedyTypes.Heal => "\"" +
-                                    DataOvlReference.StringReferences.GetString(DataOvlReference
-                                        .ShoppeKeeperHealerStrings.I_CAN_HEAL_THEE),
-                RemedyTypes.Resurrect => DataOvlReference.StringReferences.GetString(DataOvlReference
-                                             .ShoppeKeeperHealerStrings.I_CAN_RAISE_THIS_UNFORTUNATE_PERSON_FROM) +
-                                         DataOvlReference.StringReferences.GetString(DataOvlReference
-                                             .ShoppeKeeperHealerStrings.THE_DEAD),
+                                    DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings.I_CAN_HEAL_THEE),
+                RemedyTypes.Resurrect => DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings.I_CAN_RAISE_THIS_UNFORTUNATE_PERSON_FROM) +
+                                         DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings.THE_DEAD),
                 _ => throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null)
             };
 
@@ -96,12 +97,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             return remedy switch
             {
-                RemedyTypes.Cure => DataOvlReference.StringReferences.GetString(DataOvlReference
-                    .ShoppeKeeperHealerStrings.CURING),
-                RemedyTypes.Heal => DataOvlReference.StringReferences.GetString(DataOvlReference
-                    .ShoppeKeeperHealerStrings.HEALING),
-                RemedyTypes.Resurrect => DataOvlReference.StringReferences.GetString(DataOvlReference
-                    .ShoppeKeeperHealerStrings.RESURRECT),
+                RemedyTypes.Cure => DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings.CURING),
+                RemedyTypes.Heal => DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings.HEALING),
+                RemedyTypes.Resurrect => DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings.RESURRECT),
                 _ => throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null)
             };
         }

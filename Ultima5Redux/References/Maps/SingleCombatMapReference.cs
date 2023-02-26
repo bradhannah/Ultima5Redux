@@ -13,24 +13,66 @@ namespace Ultima5Redux.References.Maps
     {
         public enum BritanniaCombatMaps
         {
-            None = -2, BoatCalc = -1, CampFire = 0, Swamp = 1, Glade = 2, Treed = 3, Desert = 4, CleanTree = 5,
-            Mountains = 6, BigBridge = 7, Brick = 8, Basement = 9, Psychedelic = 10, BoatOcean = 11, BoatNorth = 12,
-            BoatSouth = 13, BoatBoat = 14, Bay = 15
+            None = -2,
+            BoatCalc = -1,
+            CampFire = 0,
+            Swamp = 1,
+            Glade = 2,
+            Treed = 3,
+            Desert = 4,
+            CleanTree = 5,
+            Mountains = 6,
+            BigBridge = 7,
+            Brick = 8,
+            Basement = 9,
+            Psychedelic = 10,
+            BoatOcean = 11,
+            BoatNorth = 12,
+            BoatSouth = 13,
+            BoatBoat = 14,
+            Bay = 15
         }
 
-        public enum CombatMapSpriteType { Nothing, Thing, AutoSelected, EncounterBased, Field, Whirlpool }
+        public enum CombatMapSpriteType
+        {
+            Nothing,
+            Thing,
+            AutoSelected,
+            EncounterBased,
+            Field,
+            Whirlpool
+        }
 
         public enum Dungeon
         {
-            Deceit = 27, Despise = 28, Destard = 29, Wrong = 30, Covetous = 31, Shame = 32, Hythloth = 33, Doom = 34
+            Deceit = 27,
+            Despise = 28,
+            Destard = 29,
+            Wrong = 30,
+            Covetous = 31,
+            Shame = 32,
+            Hythloth = 33,
+            Doom = 34
         }
 
-        public enum EntryDirection { East = 0, West = 1, South = 2, North = 3, UpLadder, DownLadder }
+        public enum EntryDirection
+        {
+            East = 0,
+            West = 1,
+            South = 2,
+            North = 3,
+            UpLadder,
+            DownLadder
+        }
 
         /// <summary>
         ///     The territory that the combat map is in. This matters most for determining data files.
         /// </summary>
-        public enum Territory { Britannia = 0, Dungeon }
+        public enum Territory
+        {
+            Britannia = 0,
+            Dungeon
+        }
 
         /// <summary>
         ///     How many bytes for each combat map entry in data file

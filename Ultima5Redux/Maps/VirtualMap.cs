@@ -18,7 +18,8 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 // ReSharper disable IdentifierTypo
 namespace Ultima5Redux.Maps
 {
-    [DataContract] public partial class VirtualMap
+    [DataContract]
+    public partial class VirtualMap
     {
         [DataMember] public int OneInXOddsOfNewMonster { get; set; } = 16;
 
@@ -116,11 +117,13 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        [JsonConstructor] private VirtualMap()
+        [JsonConstructor]
+        private VirtualMap()
         {
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             TheSearchItems = new SearchItems();
             TheSearchItems.Initialize();
@@ -140,6 +143,65 @@ namespace Ultima5Redux.Maps
                     GameStateReference.State.CharacterRecords.ClearCombatStatuses();
                     break;
             }
+        }
+
+        private int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
+            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, MapUnit mapUnit, out bool bDrawCharacterOnTile)
+        {
+            int nSprite = tileReference.Index;
+            bool bIsMirror = TileReferences.IsUnbrokenMirror(nSprite);
+            bDrawCharacterOnTile = false;
+
+            if (bIsMirror)
+            {
+                // if the avatar is south of the mirror then show his image
+                Point2D expectedAvatarPos = new(tilePosInMap.X, tilePosInMap.Y + 1);
+                if (expectedAvatarPos == CurrentMap.CurrentPosition.XY)
+                    return GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("MirrorAvatar");
+            }
+
+            // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
+            bool bIsChair = TileReferences.IsChair(nSprite);
+            // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite
+            bool bIsLadder = TileReferences.IsLadder(nSprite);
+            // is it the human sleeping side of the bed?
+            bool bIsHeadOfBed = TileReferences.IsHeadOfBed(nSprite);
+            // we need to check these before they get "corrected"
+            // is it the stocks
+            bool bIsStocks = TileReferences.IsStocks(nSprite);
+            bool bIsManacles = TileReferences.IsManacles(nSprite); // is it shackles/manacles
+
+            // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this
+            bool bIsFoodNearby = TileReferences.IsChair(nSprite) && CurrentMap.IsFoodNearby(tilePosInMap);
+
+            bool bIsStaircase = TileReferences.IsStaircase(nSprite); // is it a staircase
+
+            int nNewSpriteIndex;
+
+            if (bIsStaircase && CurrentMap is SmallMap smallMap)
+                nNewSpriteIndex = smallMap.GetStairsSprite(tilePosInMap).Index;
+            else
+            {
+                // kinda hacky - but check if it's a minstrel because when they are on a chair, they play!
+                if (bIsMapUnitOccupiedTile && mapUnit is NonPlayerCharacter { IsMinstrel: true } npc
+                                           && nSprite == (int)TileReference.SpriteIndex.ChairBackBack && !bIsFoodNearby)
+                {
+                    nNewSpriteIndex = npc.AlternateSittingTileReference.Index;
+                }
+                else
+                {
+                    nNewSpriteIndex = GameReferences.Instance.SpriteTileReferences.GetCorrectSprite(nSprite,
+                        bIsMapUnitOccupiedTile,
+                        bIsAvatarTile, bIsFoodNearby, GameStateReference.State.TheTimeOfDay.IsDayLight);
+                }
+            }
+
+            if (nNewSpriteIndex == -2) nNewSpriteIndex = CurrentMap.GuessTile(tilePosInMap);
+
+            bDrawCharacterOnTile = !bIsChair && !bIsLadder && !bIsHeadOfBed && !bIsStocks && !bIsManacles &&
+                                   bIsMapUnitOccupiedTile;
+
+            return nNewSpriteIndex;
         }
 
 
@@ -228,65 +290,6 @@ namespace Ultima5Redux.Maps
         public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location) =>
             TheMapHolder.OverworldMap.CreateSkiff(LargeMapLocationReferences.GetLocationOfDock(location),
                 Point2D.Direction.Right, out _);
-
-        private int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
-            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, MapUnit mapUnit, out bool bDrawCharacterOnTile)
-        {
-            int nSprite = tileReference.Index;
-            bool bIsMirror = TileReferences.IsUnbrokenMirror(nSprite);
-            bDrawCharacterOnTile = false;
-
-            if (bIsMirror)
-            {
-                // if the avatar is south of the mirror then show his image
-                Point2D expectedAvatarPos = new(tilePosInMap.X, tilePosInMap.Y + 1);
-                if (expectedAvatarPos == CurrentMap.CurrentPosition.XY)
-                    return GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("MirrorAvatar");
-            }
-
-            // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
-            bool bIsChair = TileReferences.IsChair(nSprite);
-            // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite
-            bool bIsLadder = TileReferences.IsLadder(nSprite);
-            // is it the human sleeping side of the bed?
-            bool bIsHeadOfBed = TileReferences.IsHeadOfBed(nSprite);
-            // we need to check these before they get "corrected"
-            // is it the stocks
-            bool bIsStocks = TileReferences.IsStocks(nSprite);
-            bool bIsManacles = TileReferences.IsManacles(nSprite); // is it shackles/manacles
-
-            // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this
-            bool bIsFoodNearby = TileReferences.IsChair(nSprite) && CurrentMap.IsFoodNearby(tilePosInMap);
-
-            bool bIsStaircase = TileReferences.IsStaircase(nSprite); // is it a staircase
-
-            int nNewSpriteIndex;
-
-            if (bIsStaircase && CurrentMap is SmallMap smallMap)
-                nNewSpriteIndex = smallMap.GetStairsSprite(tilePosInMap).Index;
-            else
-            {
-                // kinda hacky - but check if it's a minstrel because when they are on a chair, they play!
-                if (bIsMapUnitOccupiedTile && mapUnit is NonPlayerCharacter { IsMinstrel: true } npc
-                                           && nSprite == (int)TileReference.SpriteIndex.ChairBackBack && !bIsFoodNearby)
-                {
-                    nNewSpriteIndex = npc.AlternateSittingTileReference.Index;
-                }
-                else
-                {
-                    nNewSpriteIndex = GameReferences.Instance.SpriteTileReferences.GetCorrectSprite(nSprite,
-                        bIsMapUnitOccupiedTile,
-                        bIsAvatarTile, bIsFoodNearby, GameStateReference.State.TheTimeOfDay.IsDayLight);
-                }
-            }
-
-            if (nNewSpriteIndex == -2) nNewSpriteIndex = CurrentMap.GuessTile(tilePosInMap);
-
-            bDrawCharacterOnTile = !bIsChair && !bIsLadder && !bIsHeadOfBed && !bIsStocks && !bIsManacles &&
-                                   bIsMapUnitOccupiedTile;
-
-            return nNewSpriteIndex;
-        }
 
         public Point2D GetCameraCenter() =>
             CurrentMap is CombatMap
@@ -444,7 +447,7 @@ namespace Ultima5Redux.Maps
         /// <param name="records"></param>
         /// <param name="primaryEnemyReference"></param>
         /// <param name="npcRef"></param>
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
@@ -479,7 +482,7 @@ namespace Ultima5Redux.Maps
         /// <param name="entryDirection"></param>
         /// <param name="records"></param>
         /// <param name="enemyReference"></param>
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference enemyReference)

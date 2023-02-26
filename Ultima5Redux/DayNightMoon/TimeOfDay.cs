@@ -97,7 +97,8 @@ namespace Ultima5Redux.DayNightMoon
                 _ => "evening"
             };
 
-        [JsonConstructor] private TimeOfDay()
+        [JsonConstructor]
+        private TimeOfDay()
         {
         }
 
@@ -197,7 +198,7 @@ namespace Ultima5Redux.DayNightMoon
             SetAllChangeTrackers();
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")] 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public TimeOfDay Copy()
         {
             var tod = new TimeOfDay

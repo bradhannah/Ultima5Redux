@@ -5,7 +5,8 @@ using Newtonsoft.Json;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public abstract class InventoryItems<TEnumType, T>
+    [DataContract]
+    public abstract class InventoryItems<TEnumType, T>
     {
         [DataMember] public abstract Dictionary<TEnumType, T> Items { get; internal set; }
 
@@ -13,7 +14,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public virtual IEnumerable<InventoryItem> GenericItemList =>
             Items.Values.Cast<InventoryItem>();
 
-        [JsonConstructor] protected InventoryItems()
+        [JsonConstructor]
+        protected InventoryItems()
         {
         }
     }

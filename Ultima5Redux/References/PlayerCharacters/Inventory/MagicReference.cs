@@ -10,11 +10,19 @@ using Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")] [DataContract]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [DataContract]
     public class MagicReference
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum SpecificMagicType { Peace, Support, Attack, Debuff, None }
+        public enum SpecificMagicType
+        {
+            Peace,
+            Support,
+            Attack,
+            Debuff,
+            None
+        }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public enum SpecificSpellSubType
@@ -73,23 +81,79 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [JsonConverter(typeof(StringEnumConverter))]
         public enum SpecificSpellTargetType
         {
-            NoSelection, CastingCombatPlayer, SelectedCombatPlayer, SelectedMapUnit, Direction,
-            SelectedCombatMapPosition, SelectedMapPosition
+            NoSelection,
+            CastingCombatPlayer,
+            SelectedCombatPlayer,
+            SelectedMapUnit,
+            Direction,
+            SelectedCombatMapPosition,
+            SelectedMapPosition
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum SpecificTimePermitted { Peace, Combat, Anytime, Combat_Dungeon, Dungeon, Never }
+        public enum SpecificTimePermitted
+        {
+            Peace,
+            Combat,
+            Anytime,
+            Combat_Dungeon,
+            Dungeon,
+            Never
+        }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public enum SpellWords
         {
             // taking a bit of a risk and just let the subsequent values be assigned since they should be in order
-            In_Lor = 0x24A, Grav_Por, An_Zu, An_Nox, Mani, An_Ylem, An_Sanct, An_Xen_Corp, Rel_Hur, In_Wis, Kal_Xen,
-            In_Xen_Mani, Vas_Lor, Vas_Flam, In_Flam_Grav, In_Nox_Grav, In_Zu_Grav, In_Por, An_Grav, In_Sanct,
-            In_Sanct_Grav, Uus_Por, Des_Por, Wis_Quas, In_Bet_Xen, An_Ex_Por, In_Ex_Por, Vas_Mani, In_Zu, Rel_Tym,
-            In_Vas_Por_Ylem, Quas_An_Wis, In_An, Wis_An_Ylem, An_Xen_Ex, Rel_Xen_Bet, Sanct_Lor, Xen_Corp, In_Quas_Xen,
-            In_Quas_Wis, In_Nox_Hur, In_Quas_Corp, In_Mani_Corp, Kal_Xen_Corp, In_Vas_Grav_Corp, In_Flam_Hur,
-            Vas_Rel_Por, An_Tym, Nox
+            In_Lor = 0x24A,
+            Grav_Por,
+            An_Zu,
+            An_Nox,
+            Mani,
+            An_Ylem,
+            An_Sanct,
+            An_Xen_Corp,
+            Rel_Hur,
+            In_Wis,
+            Kal_Xen,
+            In_Xen_Mani,
+            Vas_Lor,
+            Vas_Flam,
+            In_Flam_Grav,
+            In_Nox_Grav,
+            In_Zu_Grav,
+            In_Por,
+            An_Grav,
+            In_Sanct,
+            In_Sanct_Grav,
+            Uus_Por,
+            Des_Por,
+            Wis_Quas,
+            In_Bet_Xen,
+            An_Ex_Por,
+            In_Ex_Por,
+            Vas_Mani,
+            In_Zu,
+            Rel_Tym,
+            In_Vas_Por_Ylem,
+            Quas_An_Wis,
+            In_An,
+            Wis_An_Ylem,
+            An_Xen_Ex,
+            Rel_Xen_Bet,
+            Sanct_Lor,
+            Xen_Corp,
+            In_Quas_Xen,
+            In_Quas_Wis,
+            In_Nox_Hur,
+            In_Quas_Corp,
+            In_Mani_Corp,
+            Kal_Xen_Corp,
+            In_Vas_Grav_Corp,
+            In_Flam_Hur,
+            Vas_Rel_Por,
+            An_Tym,
+            Nox
         }
 
         [DataMember]

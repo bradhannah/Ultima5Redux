@@ -174,6 +174,13 @@ namespace Ultima5Redux.References.Maps
                 or (int)TileReference.SpriteIndex.StoneHeadstone;
 
         /// <summary>
+        ///     is the sprite an up or a down ladder?
+        /// </summary>
+        /// <param name="nSprite"></param>
+        /// <returns></returns>
+        public static bool IsLadder(int nSprite) => IsLadderDown(nSprite) || IsLadderUp(nSprite);
+
+        /// <summary>
         ///     Is the sprite a down ladder?
         /// </summary>
         /// <param name="nSprite"></param>
@@ -206,6 +213,9 @@ namespace Ultima5Redux.References.Maps
         public static bool IsMirror(int nSprite) =>
             (TileReference.SpriteIndex)nSprite is TileReference.SpriteIndex.Mirror
             or TileReference.SpriteIndex.MirrorAvatar or TileReference.SpriteIndex.MirrorBroken;
+
+        // a bit a rough cut right now, this will need to be refined as the monsters are assigned actual behaviours
+        public static bool IsMonster(int nSprite) => nSprite is >= 384 and <= 511;
 
         /// <summary>
         ///     Is the sprite a staircase sprite
@@ -417,16 +427,6 @@ namespace Ultima5Redux.References.Maps
         public bool IsFrigate(int nSprite) =>
             GetTileReference(nSprite).Name.StartsWith("Ship") ||
             GetTileReference(nSprite).Name.StartsWith("Pirate");
-
-        /// <summary>
-        ///     is the sprite an up or a down ladder?
-        /// </summary>
-        /// <param name="nSprite"></param>
-        /// <returns></returns>
-        public static bool IsLadder(int nSprite) => IsLadderDown(nSprite) || IsLadderUp(nSprite);
-
-        // a bit a rough cut right now, this will need to be refined as the monsters are assigned actual behaviours
-        public static bool IsMonster(int nSprite) => nSprite is >= 384 and <= 511;
 
         /// <summary>
         ///     Can you typically bury a moonstone on the tile type?

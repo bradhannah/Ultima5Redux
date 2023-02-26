@@ -11,30 +11,66 @@ namespace Ultima5Redux.References.Maps
     public class DungeonTile
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum ChestType { Normal = 0, Trapped_1 = 1, Trapped_2 = 2, Poisoned = 4 }
+        public enum ChestType
+        {
+            Normal = 0,
+            Trapped_1 = 1,
+            Trapped_2 = 2,
+            Poisoned = 4
+        }
 
         //char fountStr[3][7] = { "Heal", "Poison", "Hurt" };
-        public enum FountainType { CurePoison = 0, Heal = 1, PoisonFountain = 2, BadTasteDamage = 3 }
+        public enum FountainType
+        {
+            CurePoison = 0,
+            Heal = 1,
+            PoisonFountain = 2,
+            BadTasteDamage = 3
+        }
 
-        public enum LadderTrap { NoTrap = 0, IsTrapped = 8 }
+        public enum LadderTrap
+        {
+            NoTrap = 0,
+            IsTrapped = 8
+        }
 
         //char fieldStr[4][10] = { "Sleep", "Poison", "Fire", "Lightning" };
-        public enum MagicFieldType { Poison = 0, Sleep = 1, Fire = 2, Energy = 3 }
+        public enum MagicFieldType
+        {
+            Poison = 0,
+            Sleep = 1,
+            Fire = 2,
+            Energy = 3
+        }
 
         public enum TileType
         {
-            Nothing = 0, LadderUp = 1, LadderDown = 2, LadderUpDown = 3, Chest = 4, Fountain = 5, Trap = 6,
-            OpenChest = 7, MagicField = 8, RoomsBroke = 0xA, Wall = 0xB,
+            Nothing = 0,
+            LadderUp = 1,
+            LadderDown = 2,
+            LadderUpDown = 3,
+            Chest = 4,
+            Fountain = 5,
+            Trap = 6,
+            OpenChest = 7,
+            MagicField = 8,
+            RoomsBroke = 0xA,
+            Wall = 0xB,
 
             // secondary wall is the kind with skeletons on
-            SecondaryWall = 0xC, SecretDoor = 0xD, NormalDoor = 0xE, Room = 0xF
+            SecondaryWall = 0xC,
+            SecretDoor = 0xD,
+            NormalDoor = 0xE,
+            Room = 0xF
         }
 
-        public enum TrapType { LowerTrapVisible, BombTrap, InvisibleTrap, UpperTrapVisible }
-
-        private readonly int[] _messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
-
-        private readonly byte _subTileType;
+        public enum TrapType
+        {
+            LowerTrapVisible,
+            BombTrap,
+            InvisibleTrap,
+            UpperTrapVisible
+        }
 
         private readonly List<string> _messages = new()
         {
@@ -43,6 +79,10 @@ namespace Ultima5Redux.References.Maps
             "THE PRISON WRONG", "THE CRYPT", "UPPER CRYPTS", "LOWER CRYPTS",
             "DEBTORS ALLY", "DEEP", "DEEPER", "DEEPEST", "MOTHER LODE MAZE"
         };
+
+        private readonly int[] _messageStarts = { 0, 1, -1, 2, 3, 7, 10, -1 };
+
+        private readonly byte _subTileType;
 
         public int RoomNumber { get; }
         public ChestType TheChestType { get; }

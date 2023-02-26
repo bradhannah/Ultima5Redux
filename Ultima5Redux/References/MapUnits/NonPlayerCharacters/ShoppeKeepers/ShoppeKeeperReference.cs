@@ -8,7 +8,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
     /// <summary>
     ///     Describes individual Shoppe Keepers
     /// </summary>
-    [DataContract] public class ShoppeKeeperReference
+    [DataContract]
+    public class ShoppeKeeperReference
     {
         public List<DataOvlReference.Equipment> EquipmentForSaleList { get; set; }
 

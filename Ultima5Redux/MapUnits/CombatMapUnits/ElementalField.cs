@@ -7,7 +7,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public class ElementalField : NonAttackingUnit
     {
-        public enum FieldType { Poison = 488, Sleep = 489, Fire = 490, Electric = 491 }
+        public enum FieldType
+        {
+            Poison = 488,
+            Sleep = 489,
+            Fire = 490,
+            Electric = 491
+        }
 
         public override bool ExposeInnerItemsOnOpen => false;
         public override bool ExposeInnerItemsOnSearch => false;

@@ -7,7 +7,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public sealed class Provision : InventoryItem
+    [DataContract]
+    public sealed class Provision : InventoryItem
     {
         [DataMember] public ProvisionReferences.SpecificProvisionType ProvisionType { get; private set; }
         [IgnoreDataMember] public override bool HideQuantity => false;
@@ -47,7 +48,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
         }
 
-        [JsonConstructor] private Provision()
+        [JsonConstructor]
+        private Provision()
         {
         }
 

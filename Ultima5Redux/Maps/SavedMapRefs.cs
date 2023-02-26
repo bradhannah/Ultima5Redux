@@ -5,7 +5,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] public class SavedMapRefs
+    [DataContract]
+    public class SavedMapRefs
     {
         [DataMember] public int Floor { get; private set; }
         [DataMember] public SmallMapReferences.SingleMapReference.Location Location { get; private set; }

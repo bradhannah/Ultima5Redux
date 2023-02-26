@@ -18,15 +18,33 @@ namespace Ultima5Redux.References
     {
         public enum AdditionalStrings
         {
-            THE_SCEPTRE_IS_RECLAIMED_BANG_N, A_RING_HAS_VANISHED_BANG_N, STARS_CONFLICT_STARS_N_N
+            THE_SCEPTRE_IS_RECLAIMED_BANG_N,
+            A_RING_HAS_VANISHED_BANG_N,
+            STARS_CONFLICT_STARS_N_N
         }
 
 
         public enum Battle2Strings
         {
-            N_BATTLE_IS_LOST_BANG, N_VICTORY_BANG_N, _TELEPORTS_BANG_N, THY_SWORD_HATH_SHATTERED_BANG_N, _VANISHES_BANG,
-            _DIVIDES_BANG_N, _IS_POISONED_BANG_N, _REGURGITATED_BANG_N, Q_DQ, Q_DQ2, Q_DQ3, N_N_YOUR_RESPONSE_Q_N_COLON,
-            N_N, N_N2, _IS_SLICED_IN_HALF_BANG_, _DIE_BANG_DQ_, N_N3, N_N4, N_THOU_ART_SUBDUED_AND_BLINDFOLDED_BANG,
+            N_BATTLE_IS_LOST_BANG,
+            N_VICTORY_BANG_N,
+            _TELEPORTS_BANG_N,
+            THY_SWORD_HATH_SHATTERED_BANG_N,
+            _VANISHES_BANG,
+            _DIVIDES_BANG_N,
+            _IS_POISONED_BANG_N,
+            _REGURGITATED_BANG_N,
+            Q_DQ,
+            Q_DQ2,
+            Q_DQ3,
+            N_N_YOUR_RESPONSE_Q_N_COLON,
+            N_N,
+            N_N2,
+            _IS_SLICED_IN_HALF_BANG_,
+            _DIE_BANG_DQ_,
+            N_N3,
+            N_N4,
+            N_THOU_ART_SUBDUED_AND_BLINDFOLDED_BANG,
 
             N_N_STRONG_GUARDS_DRAG_THEE_AWAY_BANG
             //     [0] = {string} "\nBATTLE IS LOST!"
@@ -54,10 +72,29 @@ namespace Ultima5Redux.References
 
         public enum BattleStrings
         {
-            _FAILED_BANG_N, _MISSED_BANG_N, _POSSESSED_BANG_N, _REAPPEARS_BANG, _DISAPPEARS_BANG,
-            _GATES_IN_A_DAEMON_BANG_N, _GRAZED_BANG_N, _KILLED_BANG_N, _SLEPT_BANG_N, _DRAGGED_UNDER_BANG_N,
-            _HIT_BANG_N, _BARELY_WOUNDED_BANG_N, _LIGHTLY_WOUNDED_BANG_N, HEAVILY_WOUNDED_BANG_N, _CRITICAL_BANG_N,
-            _INTERFERES_BANG_N, AIM_BANG_, AIM_BANG_2, NOTHING_BANG_N, COLON_N, ATTACK_DASH, ATTACK_DASH_2
+            _FAILED_BANG_N,
+            _MISSED_BANG_N,
+            _POSSESSED_BANG_N,
+            _REAPPEARS_BANG,
+            _DISAPPEARS_BANG,
+            _GATES_IN_A_DAEMON_BANG_N,
+            _GRAZED_BANG_N,
+            _KILLED_BANG_N,
+            _SLEPT_BANG_N,
+            _DRAGGED_UNDER_BANG_N,
+            _HIT_BANG_N,
+            _BARELY_WOUNDED_BANG_N,
+            _LIGHTLY_WOUNDED_BANG_N,
+            HEAVILY_WOUNDED_BANG_N,
+            _CRITICAL_BANG_N,
+            _INTERFERES_BANG_N,
+            AIM_BANG_,
+            AIM_BANG_2,
+            NOTHING_BANG_N,
+            COLON_N,
+            ATTACK_DASH,
+
+            ATTACK_DASH_2
             //     [0] = {string} "Failed!\n"
             // [1] = {string} " missed!\n"
             // [2] = {string} " possessed!\n"
@@ -84,9 +121,25 @@ namespace Ultima5Redux.References
 
         public enum ChitChatStrings
         {
-            DOST_THOU_PAY, YES_BANG, NO_BANG, GET_HORSE_OUTTA_HERE, HALF_TO_CHARITY, GUARD_DEMANDS, XX_GP_TRIBUTE,
-            GIVE_PASSWORD_BADGE, YOUR_RESPONSE_Q, PASS_FRIEND, GUARD_NO_RESPONSE, NO_RESPONSE, DONT_HURT_ME,
-            MERCH_SEE_ME_AT_SHOP1, MERCH_SEE_ME_AT_SHOP2, NOBODY_HERE, ZZZ, N_NO_RESPONSE_N
+            DOST_THOU_PAY,
+            YES_BANG,
+            NO_BANG,
+            GET_HORSE_OUTTA_HERE,
+            HALF_TO_CHARITY,
+            GUARD_DEMANDS,
+            XX_GP_TRIBUTE,
+            GIVE_PASSWORD_BADGE,
+            YOUR_RESPONSE_Q,
+            PASS_FRIEND,
+            GUARD_NO_RESPONSE,
+            NO_RESPONSE,
+            DONT_HURT_ME,
+            MERCH_SEE_ME_AT_SHOP1,
+            MERCH_SEE_ME_AT_SHOP2,
+            NOBODY_HERE,
+            ZZZ,
+
+            N_NO_RESPONSE_N
             // [0] = {string} "\n\nDost thou pay?\n\n:"
             // [1] = {string} "Yes\n"
             // [2] = {string} "No!\n"
@@ -112,9 +165,18 @@ namespace Ultima5Redux.References
         /// </summary>
         public enum ChunkPhrasesConversation
         {
-            CANT_JOIN_1 = 0x02, CANT_JOIN_2 = 0x03, MY_NAME_IS = 0x05, YOUR_INTEREST = 0x07, CANNOT_HELP = 0x09,
-            YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F,
-            YOU_SEE = 0x11, I_AM_CALLED = 0x12
+            CANT_JOIN_1 = 0x02,
+            CANT_JOIN_2 = 0x03,
+            MY_NAME_IS = 0x05,
+            YOUR_INTEREST = 0x07,
+            CANNOT_HELP = 0x09,
+            YOU_RESPOND = 0x0A,
+            WHAT_YOU_SAY = 0x0B,
+            WHATS_YOUR_NAME = 0x0C,
+            IF_SAY_SO = 0x0E,
+            PLEASURE = 0x0F,
+            YOU_SEE = 0x11,
+            I_AM_CALLED = 0x12
         }
 
         /// <summary>
@@ -123,36 +185,154 @@ namespace Ultima5Redux.References
         [SuppressMessage("ReSharper", "IdentifierTypo")]
         public enum DataChunkName
         {
-            Unused = -1, TALK_COMPRESSED_WORDS, LOCATION_NAME_INDEXES, LOCATION_NAMES, PHRASES_CONVERSATION,
-            LOCATIONS_X, LOCATIONS_Y, TRAVEL, WORLD, CHIT_CHAT, KEYPRESS_COMMANDS, VISION2, OPENING_THINGS_STUFF,
-            KLIMBING, GET_THINGS, SPECIAL_ITEM_NAMES, SPECIAL_ITEM_NAMES2, WEAR_USE_ITEM, SHARDS, WORDS_OF_POWER,
-            POTIONS, SPELLS, LONG_ARMOUR, SHORT_ARMOUR, DEFENSE_VALUES, ATTACK_VALUES, ATTACK_RANGE_VALUES,
-            SPELL_ATTACK_RANGE, EQUIP_INDEXES, REQ_STRENGTH_EQUIP, EQUIPPING, ZSTATS, SLEEP_TRANSPORT, REAGENTS,
-            EXCLAIMS, MOON_PHASES, THINGS_I_FIND, STORE_NAMES, SHOPPE_KEEPER_NAMES, EQUIPMENT_BASE_PRICE,
-            WEAPONS_SOLD_BY_MERCHANTS, SHOPPE_KEEPER_NOT_ENOUGH_MONEY, SHOPPE_KEEPER_DO_YOU_WANT,
-            SHOPPE_KEEPER_WHATS_FOR_SALE, SHOPPE_KEEPER_SELLING, SHOPPE_KEEPER_BLACKSMITH_WE_HAVE,
-            SHOPPE_KEEPER_BLACKSMITH_HELLO, SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM, SHOPPE_KEEPER_GENERAL,
-            SHOPPE_KEEPER_INNKEEPER, SHOPPE_KEEPER_INNKEEPER_2, REAGENT_QUANTITES, REAGENT_BASE_PRICES,
-            SHOPPE_KEEPER_GENERAL_2, SHOPPE_KEEPER_REAGENTS, SHOPPE_KEEPER_TOWNES_PROVISIONS,
-            SHOPPE_KEEPER_TOWNES_REAGENTS, SHOPPE_KEEPER_TOWNES_HEALING, SHOPPE_KEEPER_TOWNES_TAVERN,
-            SHOPPE_KEEPER_TOWNES_INN, SHOPPE_KEEPER_TOWNES_SHIPS, SHOPPE_KEEPER_TOWNES_HORSES, SHOPPE_KEEPER_HEALER,
-            SHOPPE_KEEPER_HEALER2, HEALER_HEAL_PRICES, HEALER_CURE_PRICES, HEALER_RESURRECT_PRICES, X_DOCKS, Y_DOCKS,
-            BAR_KEEP_GOSSIP_WORDS, BAR_KEEP_GOSSIP_PEOPLE, BAR_KEEP_GOSSIP_PLACES, SHOPPE_KEEPER_BAR_KEEP,
-            BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
-            YELLING, WORLD2, MONSTER_NAMES_MIXED, MONSTER_NAMES_UPPER, ENEMY_FLAGS, ENEMY_ATTACK_RANGE,
-            ENEMY_RANGE_THING, ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS, BATTLE, ADDITIONAL, BATTLE2, SEARCH_OBJECT_ID,
-            SEARCH_OBJECT_QUALITY, SEARCH_OBJECT_LOCATION, SEARCH_OBJECT_FLOOR, SEARCH_OBJECT_X, SEARCH_OBJECT_Y,
+            Unused = -1,
+            TALK_COMPRESSED_WORDS,
+            LOCATION_NAME_INDEXES,
+            LOCATION_NAMES,
+            PHRASES_CONVERSATION,
+            LOCATIONS_X,
+            LOCATIONS_Y,
+            TRAVEL,
+            WORLD,
+            CHIT_CHAT,
+            KEYPRESS_COMMANDS,
+            VISION2,
+            OPENING_THINGS_STUFF,
+            KLIMBING,
+            GET_THINGS,
+            SPECIAL_ITEM_NAMES,
+            SPECIAL_ITEM_NAMES2,
+            WEAR_USE_ITEM,
+            SHARDS,
+            WORDS_OF_POWER,
+            POTIONS,
+            SPELLS,
+            LONG_ARMOUR,
+            SHORT_ARMOUR,
+            DEFENSE_VALUES,
+            ATTACK_VALUES,
+            ATTACK_RANGE_VALUES,
+            SPELL_ATTACK_RANGE,
+            EQUIP_INDEXES,
+            REQ_STRENGTH_EQUIP,
+            EQUIPPING,
+            ZSTATS,
+            SLEEP_TRANSPORT,
+            REAGENTS,
+            EXCLAIMS,
+            MOON_PHASES,
+            THINGS_I_FIND,
+            STORE_NAMES,
+            SHOPPE_KEEPER_NAMES,
+            EQUIPMENT_BASE_PRICE,
+            WEAPONS_SOLD_BY_MERCHANTS,
+            SHOPPE_KEEPER_NOT_ENOUGH_MONEY,
+            SHOPPE_KEEPER_DO_YOU_WANT,
+            SHOPPE_KEEPER_WHATS_FOR_SALE,
+            SHOPPE_KEEPER_SELLING,
+            SHOPPE_KEEPER_BLACKSMITH_WE_HAVE,
+            SHOPPE_KEEPER_BLACKSMITH_HELLO,
+            SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM,
+            SHOPPE_KEEPER_GENERAL,
+            SHOPPE_KEEPER_INNKEEPER,
+            SHOPPE_KEEPER_INNKEEPER_2,
+            REAGENT_QUANTITES,
+            REAGENT_BASE_PRICES,
+            SHOPPE_KEEPER_GENERAL_2,
+            SHOPPE_KEEPER_REAGENTS,
+            SHOPPE_KEEPER_TOWNES_PROVISIONS,
+            SHOPPE_KEEPER_TOWNES_REAGENTS,
+            SHOPPE_KEEPER_TOWNES_HEALING,
+            SHOPPE_KEEPER_TOWNES_TAVERN,
+            SHOPPE_KEEPER_TOWNES_INN,
+            SHOPPE_KEEPER_TOWNES_SHIPS,
+            SHOPPE_KEEPER_TOWNES_HORSES,
+            SHOPPE_KEEPER_HEALER,
+            SHOPPE_KEEPER_HEALER2,
+            HEALER_HEAL_PRICES,
+            HEALER_CURE_PRICES,
+            HEALER_RESURRECT_PRICES,
+            X_DOCKS,
+            Y_DOCKS,
+            BAR_KEEP_GOSSIP_WORDS,
+            BAR_KEEP_GOSSIP_PEOPLE,
+            BAR_KEEP_GOSSIP_PLACES,
+            SHOPPE_KEEPER_BAR_KEEP,
+            BAR_KEEP_GOSSIP_MAP,
+            SHOPPE_KEEPER_BAR_KEEP_2,
+            INN_DESCRIPTION_INDEXES,
+            INN_BED_X_COORDS,
+            INN_BED_Y_COORDS,
+            YELLING,
+            WORLD2,
+            MONSTER_NAMES_MIXED,
+            MONSTER_NAMES_UPPER,
+            ENEMY_FLAGS,
+            ENEMY_ATTACK_RANGE,
+            ENEMY_RANGE_THING,
+            ENEMY_THING,
+            ENEMY_STATS,
+            ENEMY_FRIENDS,
+            BATTLE,
+            ADDITIONAL,
+            BATTLE2,
+            SEARCH_OBJECT_ID,
+            SEARCH_OBJECT_QUALITY,
+            SEARCH_OBJECT_LOCATION,
+            SEARCH_OBJECT_FLOOR,
+            SEARCH_OBJECT_X,
+            SEARCH_OBJECT_Y,
             RESPONSE_TO_KEYSTROKE
         }
 
 
         public enum EnemyIndividualNamesMixed
         {
-            MAGE, BARD, FIGHTER, AVATAR, VILLAGER, MERCHANT, JESTER, BARD_2, CHILD, BEGGAR, GUARD, WANDERER,
-            BLACKTHORNE, LORD_BRITISH, SEA_HORSE, SQUID, SEA_SERPENT, SHARK, GIANT_RAT, BAT, GIANT_SPIDER, GHOST, SLIME,
-            GREMLIN, MIMIC, REAPER, GAZER, CRAWLER, // appears to be unused asset, replaced by quest items 
-            GARGOYLE, INSECT_SWARM, ORC, SKELETON, PYTHON, ETTIN, HEADLESS, WISP, DAEMON, DRAGON, SAND_TRAP, TROLL,
-            MONGBAT, CORPSER, ROT_WORM, SHADOW_LORD
+            MAGE,
+            BARD,
+            FIGHTER,
+            AVATAR,
+            VILLAGER,
+            MERCHANT,
+            JESTER,
+            BARD_2,
+            CHILD,
+            BEGGAR,
+            GUARD,
+            WANDERER,
+            BLACKTHORNE,
+            LORD_BRITISH,
+            SEA_HORSE,
+            SQUID,
+            SEA_SERPENT,
+            SHARK,
+            GIANT_RAT,
+            BAT,
+            GIANT_SPIDER,
+            GHOST,
+            SLIME,
+            GREMLIN,
+            MIMIC,
+            REAPER,
+            GAZER,
+            CRAWLER, // appears to be unused asset, replaced by quest items 
+            GARGOYLE,
+            INSECT_SWARM,
+            ORC,
+            SKELETON,
+            PYTHON,
+            ETTIN,
+            HEADLESS,
+            WISP,
+            DAEMON,
+            DRAGON,
+            SAND_TRAP,
+            TROLL,
+            MONGBAT,
+            CORPSER,
+            ROT_WORM,
+
+            SHADOW_LORD
             //     [0] = {string} "Mage"
             // [1] = {string} "Bard"
             // [2] = {string} "Fighter"
@@ -206,11 +386,55 @@ namespace Ultima5Redux.References
 
         public enum EnemyOutOfCombatNamesUpper
         {
-            WIZARDS = 0, BARD, FIGHTER, X_AVATAR, VILLAGER, MERCHANT, JESTER, BARD_2, PIRATES, X, CHILD, BEGGAR, GUARD,
-            X_WANDERER, BLACKTHORNE, LORD_BRITISH, SEA_HORSES, SQUIDS, SEA_SERPENTS, SHARKS, GIANT_RATS, BATS, SPIDERS,
-            GHOSTS, SLIME, GREMLINS, MIMICS, REAPERS, GAZERS, X_QUEST_ITEMS, GARGOYLE, INSECTS, ORCS, SKELETONS, SNAKES,
-            ETTINS, HEADLESSES, WISPS, DAEMONS, DRAGONS, SAND_TRAPS, TROLLS, X_FIELDS, X_WHIRLPOOL, MONGBATS, CORPSERS,
-            ROT_WORMS, SHADOW_LORD
+            WIZARDS = 0,
+            BARD,
+            FIGHTER,
+            X_AVATAR,
+            VILLAGER,
+            MERCHANT,
+            JESTER,
+            BARD_2,
+            PIRATES,
+            X,
+            CHILD,
+            BEGGAR,
+            GUARD,
+            X_WANDERER,
+            BLACKTHORNE,
+            LORD_BRITISH,
+            SEA_HORSES,
+            SQUIDS,
+            SEA_SERPENTS,
+            SHARKS,
+            GIANT_RATS,
+            BATS,
+            SPIDERS,
+            GHOSTS,
+            SLIME,
+            GREMLINS,
+            MIMICS,
+            REAPERS,
+            GAZERS,
+            X_QUEST_ITEMS,
+            GARGOYLE,
+            INSECTS,
+            ORCS,
+            SKELETONS,
+            SNAKES,
+            ETTINS,
+            HEADLESSES,
+            WISPS,
+            DAEMONS,
+            DRAGONS,
+            SAND_TRAPS,
+            TROLLS,
+            X_FIELDS,
+            X_WHIRLPOOL,
+            MONGBATS,
+            CORPSERS,
+            ROT_WORMS,
+
+            SHADOW_LORD
             //     [0] = {string} "WIZARDS"
             // [1] = {string} "BARD"
             // [2] = {string} "FIGHTER"
@@ -264,24 +488,84 @@ namespace Ultima5Redux.References
         [JsonConverter(typeof(StringEnumConverter))]
         public enum Equipment
         {
-            BareHands = -2, LeatherHelm = 0, ChainCoif = 1, IronHelm = 2, SpikedHelm = 3, SmallShield = 4,
-            LargeShield = 5, SpikedShield = 6, MagicShield = 7, JewelShield = 8, ClothArmour = 9, LeatherArmour = 10,
-            Ringmail = 11, ScaleMail = 12, ChainMail = 13, PlateMail = 14, MysticArmour = 15, Dagger = 16, Sling = 17,
-            Club = 18, FlamingOil = 19, MainGauche = 20, Spear = 21, ThrowingAxe = 22, ShortSword = 23, Mace = 24,
-            MorningStar = 25, Bow = 26, Arrows = 27, Crossbow = 28, Quarrels = 29, LongSword = 30, TwoHHammer = 31,
-            TwoHAxe = 32, TwoHSword = 33, Halberd = 34, SwordofChaos = 35, MagicBow = 36, SilverSword = 37,
-            MagicAxe = 38, GlassSword = 39, JeweledSword = 40, MysticSword = 41, RingInvisibility = 42,
-            RingProtection = 43, RingRegeneration = 44, AmuletOfTurning = 45, SpikedCollar = 46, Ankh = 47,
-            FlamPor = 48, VasFlam = 49, InCorp = 50, UusNox = 51, UusZu = 52, UusFlam = 53, UusSanct = 54,
+            BareHands = -2,
+            LeatherHelm = 0,
+            ChainCoif = 1,
+            IronHelm = 2,
+            SpikedHelm = 3,
+            SmallShield = 4,
+            LargeShield = 5,
+            SpikedShield = 6,
+            MagicShield = 7,
+            JewelShield = 8,
+            ClothArmour = 9,
+            LeatherArmour = 10,
+            Ringmail = 11,
+            ScaleMail = 12,
+            ChainMail = 13,
+            PlateMail = 14,
+            MysticArmour = 15,
+            Dagger = 16,
+            Sling = 17,
+            Club = 18,
+            FlamingOil = 19,
+            MainGauche = 20,
+            Spear = 21,
+            ThrowingAxe = 22,
+            ShortSword = 23,
+            Mace = 24,
+            MorningStar = 25,
+            Bow = 26,
+            Arrows = 27,
+            Crossbow = 28,
+            Quarrels = 29,
+            LongSword = 30,
+            TwoHHammer = 31,
+            TwoHAxe = 32,
+            TwoHSword = 33,
+            Halberd = 34,
+            SwordofChaos = 35,
+            MagicBow = 36,
+            SilverSword = 37,
+            MagicAxe = 38,
+            GlassSword = 39,
+            JeweledSword = 40,
+            MysticSword = 41,
+            RingInvisibility = 42,
+            RingProtection = 43,
+            RingRegeneration = 44,
+            AmuletOfTurning = 45,
+            SpikedCollar = 46,
+            Ankh = 47,
+            FlamPor = 48,
+            VasFlam = 49,
+            InCorp = 50,
+            UusNox = 51,
+            UusZu = 52,
+            UusFlam = 53,
+            UusSanct = 54,
             Nothing = 0xFF
         }
 
         public enum EquippingStrings
         {
-            ITEM_COLON, CANT_CHANGE_IN_BATTLE, AMBFDTPRS, NO_AMMO_BANG, REMOVE_HELM_FIRST_BANG,
-            REMOVE_ARMOUR_FIRST_BANG, FREE_ONE_HAND_BANG, FREE_BOTH_HANDS_FIRST_BANG, REMOVE_THY_AMULET_BANG,
-            ONLY_ONE_RING_BANG, NOT_STRONG_ENOUGH_BANG, N_N_RING_VANISHES_N, DONE_N, NONE_BANG_N,
-            THOU_ART_EMPTY_N_HANDED_BANG_N, ITEM_COLON2
+            ITEM_COLON,
+            CANT_CHANGE_IN_BATTLE,
+            AMBFDTPRS,
+            NO_AMMO_BANG,
+            REMOVE_HELM_FIRST_BANG,
+            REMOVE_ARMOUR_FIRST_BANG,
+            FREE_ONE_HAND_BANG,
+            FREE_BOTH_HANDS_FIRST_BANG,
+            REMOVE_THY_AMULET_BANG,
+            ONLY_ONE_RING_BANG,
+            NOT_STRONG_ENOUGH_BANG,
+            N_N_RING_VANISHES_N,
+            DONE_N,
+            NONE_BANG_N,
+            THOU_ART_EMPTY_N_HANDED_BANG_N,
+
+            ITEM_COLON2
             //            [0] "Item: "	string
             //[1]	"Thou canst not change armour in heated battle!"	string
             //[2]	"AMBFDTPRS"	string
@@ -302,16 +586,58 @@ namespace Ultima5Redux.References
 
         public enum ExclaimStrings
         {
-            NO_EFFECT_BANG_N, PUSHED_BANG_N, PULLED_BANG_N, WONT_BUDGE_BANG_N, WONT_BUDGE_BANG_N_2, ESCAPE,
-            DASH_NOT_HERE_BANG_N, DASH_NOT_YET_BANG_N, GOO_POOF_BANG_N, DISARMED_BANG_N, CHEST_OPENED_BANG_N,
-            CREATURE_COLON, SPACE_CHARMED_BANG_N, CREATURE_COLON_2, CREATURE_COLON_3, TO_PHASE_COLON,
-            MAGIC_ABSORBED_BANG_N, SPELL_NAME_COLON_N_COLON, NONE_BANG, NO_EFFECT_BANG, ABSORBED_BANG_N,
-            NOT_HERE_BANG_N, NON_MIXED_BANG_N, MP_TOO_LOW_BANG_N, SUCCESS_BANG_N, FAILED_BANG_N, SCROLL_N_N,
-            LIGHT_BANG_N, WIND_CHANGE_BANG_N, PROTECTION_BANG_N, NEGATE_MAGIC_BANG_N, VIEW_BANG_N, NOT_HERE_BANG_N_2,
-            SUMMON_DAEMON_BANG_N, NOT_HERE_BANG_N_3, RESURRECTION_BANG_N, NOT_HERE_BANG, NO_EFFECT_BANG_N_2,
-            NEGATE_TIME_BANG_N, POTION_N, HEALED_BANG_N, POISON_CURED_BANG_N, POISONED_BANG_N, SLEPT_BANG_N,
-            POOF_BANG_N, INVISIBLE_BANG_N, N_NO_NOTICEABLE_EFFECT_NOW_BANG_N, MOONSTONE_SPACE, BURIED_BANG_N,
-            CANNOT_BE_BURIED_HERE_BANG_N, GEM_SHARD_N_N_THOU_DOES_HOLD
+            NO_EFFECT_BANG_N,
+            PUSHED_BANG_N,
+            PULLED_BANG_N,
+            WONT_BUDGE_BANG_N,
+            WONT_BUDGE_BANG_N_2,
+            ESCAPE,
+            DASH_NOT_HERE_BANG_N,
+            DASH_NOT_YET_BANG_N,
+            GOO_POOF_BANG_N,
+            DISARMED_BANG_N,
+            CHEST_OPENED_BANG_N,
+            CREATURE_COLON,
+            SPACE_CHARMED_BANG_N,
+            CREATURE_COLON_2,
+            CREATURE_COLON_3,
+            TO_PHASE_COLON,
+            MAGIC_ABSORBED_BANG_N,
+            SPELL_NAME_COLON_N_COLON,
+            NONE_BANG,
+            NO_EFFECT_BANG,
+            ABSORBED_BANG_N,
+            NOT_HERE_BANG_N,
+            NON_MIXED_BANG_N,
+            MP_TOO_LOW_BANG_N,
+            SUCCESS_BANG_N,
+            FAILED_BANG_N,
+            SCROLL_N_N,
+            LIGHT_BANG_N,
+            WIND_CHANGE_BANG_N,
+            PROTECTION_BANG_N,
+            NEGATE_MAGIC_BANG_N,
+            VIEW_BANG_N,
+            NOT_HERE_BANG_N_2,
+            SUMMON_DAEMON_BANG_N,
+            NOT_HERE_BANG_N_3,
+            RESURRECTION_BANG_N,
+            NOT_HERE_BANG,
+            NO_EFFECT_BANG_N_2,
+            NEGATE_TIME_BANG_N,
+            POTION_N,
+            HEALED_BANG_N,
+            POISON_CURED_BANG_N,
+            POISONED_BANG_N,
+            SLEPT_BANG_N,
+            POOF_BANG_N,
+            INVISIBLE_BANG_N,
+            N_NO_NOTICEABLE_EFFECT_NOW_BANG_N,
+            MOONSTONE_SPACE,
+            BURIED_BANG_N,
+            CANNOT_BE_BURIED_HERE_BANG_N,
+
+            GEM_SHARD_N_N_THOU_DOES_HOLD
             // [43] = {string} "Slept!\n"
             // [44] = {string} "Poof!\n"
             // [45] = {string} "Invisible!\n"
@@ -367,21 +693,114 @@ namespace Ultima5Redux.References
 
         public enum GetThingsStrings
         {
-            OPEN_IT_FIRST = 0, A_MOONSTONE, A_MAGIC_CARPET, S_FOOD, A_SANDLEWOOD_BOX, S_TORCH, BANG, ES_BANG, S_GEM,
-            BANG2, S_BANG3, S_ODD_KEY, S_KEY, BANG4, S_BANG, PLANS_FOR_HMS_CAPE, A_SCROLL_COLON, BANG5, S_GOLD, A_SPACE,
-            S_POTION, BANG6, THE_SHARD_OF, FALSEHOOD, HATRED, COWARDICE, CROWN_OF_LB, SCEPTRE_OF_LB, AMULET_OF_LB,
-            NOTHING_TO_GET, GET, MUST_OPEN_FIRST, CONTENTS_OF_CHEST_YOU_FIND, NOT_HER, NEWLINE, BORROWED, CROPS_PICKED,
-            MMMM_DOT, CANT_REACH_PLATE, MMM_DOT2, CANT_REACH_PLATE2, CANT_REACH_PLATE3, MMM_DOT3, NOTHING_TO_GET2
+            OPEN_IT_FIRST = 0,
+            A_MOONSTONE,
+            A_MAGIC_CARPET,
+            S_FOOD,
+            A_SANDLEWOOD_BOX,
+            S_TORCH,
+            BANG,
+            ES_BANG,
+            S_GEM,
+            BANG2,
+            S_BANG3,
+            S_ODD_KEY,
+            S_KEY,
+            BANG4,
+            S_BANG,
+            PLANS_FOR_HMS_CAPE,
+            A_SCROLL_COLON,
+            BANG5,
+            S_GOLD,
+            A_SPACE,
+            S_POTION,
+            BANG6,
+            THE_SHARD_OF,
+            FALSEHOOD,
+            HATRED,
+            COWARDICE,
+            CROWN_OF_LB,
+            SCEPTRE_OF_LB,
+            AMULET_OF_LB,
+            NOTHING_TO_GET,
+            GET,
+            MUST_OPEN_FIRST,
+            CONTENTS_OF_CHEST_YOU_FIND,
+            NOT_HER,
+            NEWLINE,
+            BORROWED,
+            CROPS_PICKED,
+            MMMM_DOT,
+            CANT_REACH_PLATE,
+            MMM_DOT2,
+            CANT_REACH_PLATE2,
+            CANT_REACH_PLATE3,
+            MMM_DOT3,
+            NOTHING_TO_GET2
         }
 
         public enum KeypressCommandsStrings
         {
-            BUFFER_O = 0, BUFFER_FF, BUFFER_N, SHEETS_IN_IRONS, PASS, BOARD, CAST_DOT, D_WHAT, ENTER_WHAT, FIRE, GET,
-            HOLE_UP, ONLY_IN_BED, IGNITE_TORCH, JIMMY, KLIMB, LOOK, DOT_DOT_DOT, MIX_REAGENTS, NEW_ORDER, OPEN,
-            PUSH_NOT_HER, PUSH, QUIT, READY, SEARCH, SEARCH_DOR, TALK, FUNNY_NO_RESPONSE, TALK_FUNNY_NO_RESPONSE, TALK2,
-            USE_ITEM, VIEW_GEM, YOU_HAVE_NONE, WWHAT, XIT, YELL, ZSTATS_DOT, WHAT_Q, PASS_N, NORTH_N, SOUTH_N, WEST_N,
-            EAST_N, HOLE_UP_AND, N_REPAIR_DOT, SAILS_MUST_BE, LOWERED, HULL_NOW, BANG_N_N, CAMP_N_N, ON_LAND_OR_SHIP,
-            ON_FOOT, HOW_MANY_HOURS, WILT_THOU_WATCH, NO_N_N, YES_N_N, WHO_WILL_GUARD, NONE_POSTED, SET_ACTIVE_PLR,
+            BUFFER_O = 0,
+            BUFFER_FF,
+            BUFFER_N,
+            SHEETS_IN_IRONS,
+            PASS,
+            BOARD,
+            CAST_DOT,
+            D_WHAT,
+            ENTER_WHAT,
+            FIRE,
+            GET,
+            HOLE_UP,
+            ONLY_IN_BED,
+            IGNITE_TORCH,
+            JIMMY,
+            KLIMB,
+            LOOK,
+            DOT_DOT_DOT,
+            MIX_REAGENTS,
+            NEW_ORDER,
+            OPEN,
+            PUSH_NOT_HER,
+            PUSH,
+            QUIT,
+            READY,
+            SEARCH,
+            SEARCH_DOR,
+            TALK,
+            FUNNY_NO_RESPONSE,
+            TALK_FUNNY_NO_RESPONSE,
+            TALK2,
+            USE_ITEM,
+            VIEW_GEM,
+            YOU_HAVE_NONE,
+            WWHAT,
+            XIT,
+            YELL,
+            ZSTATS_DOT,
+            WHAT_Q,
+            PASS_N,
+            NORTH_N,
+            SOUTH_N,
+            WEST_N,
+            EAST_N,
+            HOLE_UP_AND,
+            N_REPAIR_DOT,
+            SAILS_MUST_BE,
+            LOWERED,
+            HULL_NOW,
+            BANG_N_N,
+            CAMP_N_N,
+            ON_LAND_OR_SHIP,
+            ON_FOOT,
+            HOW_MANY_HOURS,
+            WILT_THOU_WATCH,
+            NO_N_N,
+            YES_N_N,
+            WHO_WILL_GUARD,
+            NONE_POSTED,
+            SET_ACTIVE_PLR,
             NONE_BANG
         }
 
@@ -416,51 +835,190 @@ namespace Ultima5Redux.References
         // [28] = {string} "a wall.\n"
         // [29] = {string} "a heavy door.\n"
         // [30] = {string} "a heavy door.\n"
-        public enum KlimbingStrings { WITH_WHAT = 0, ON_FOOT, IMPASSABLE, NOT_CLIMABLE, FELL }
+        public enum KlimbingStrings
+        {
+            WITH_WHAT = 0,
+            ON_FOOT,
+            IMPASSABLE,
+            NOT_CLIMABLE,
+            FELL
+        }
 
 
         public enum LocationStrings
         {
-            Moonglow = 0, Britain = 1, Jhelom = 2, Yew = 3, Minoc = 4, Trinsic = 5, Skara_Brae = 6, New_Magincia = 7,
-            Fogsbane = 8, Stormcrow = 9, Greyhaven = 10, Waveguide = 11, Iolos_Hut = 12, Suteks_Hut = -1,
-            SinVraals_Hut = -2, Grendels_Hut = -3, Lord_Britishs_Castle = -4, Palace_of_Blackthorn = -5,
-            West_Britanny = 13, North_Britanny = 14, East_Britanny = 15, Paws = 16, Cove = 17, Buccaneers_Den = 18,
-            Ararat = 19, Bordermarch = 20, Farthing = 21, Windemere = 22, Stonegate = 23, Lycaeum = 24,
-            Empath_Abbey = 25, Serpents_Hold = 26, Deceit = 27, Despise = 28, Destard = 29, Wrong = 30, Covetous = 31,
-            Shame = 32, Hythloth = 33, Doom = 34
+            Moonglow = 0,
+            Britain = 1,
+            Jhelom = 2,
+            Yew = 3,
+            Minoc = 4,
+            Trinsic = 5,
+            Skara_Brae = 6,
+            New_Magincia = 7,
+            Fogsbane = 8,
+            Stormcrow = 9,
+            Greyhaven = 10,
+            Waveguide = 11,
+            Iolos_Hut = 12,
+            Suteks_Hut = -1,
+            SinVraals_Hut = -2,
+            Grendels_Hut = -3,
+            Lord_Britishs_Castle = -4,
+            Palace_of_Blackthorn = -5,
+            West_Britanny = 13,
+            North_Britanny = 14,
+            East_Britanny = 15,
+            Paws = 16,
+            Cove = 17,
+            Buccaneers_Den = 18,
+            Ararat = 19,
+            Bordermarch = 20,
+            Farthing = 21,
+            Windemere = 22,
+            Stonegate = 23,
+            Lycaeum = 24,
+            Empath_Abbey = 25,
+            Serpents_Hold = 26,
+            Deceit = 27,
+            Despise = 28,
+            Destard = 29,
+            Wrong = 30,
+            Covetous = 31,
+            Shame = 32,
+            Hythloth = 33,
+            Doom = 34
         }
 
 
         public enum LongArmourString
         {
-            LEATHER_HELM, SPIKED_HELM, SMALL_SHIELD, LARGE_SHIELD, SPIKED_SHIELD, MAGIC_SHIELD, JEWEL_SHIELD,
-            CLOTH_ARMOUR, LEATHER_ARMOUR, SCALE_MAIL, CHAIN_MAIL, PLATE_MAIL, MYSTIC_ARMOUR
+            LEATHER_HELM,
+            SPIKED_HELM,
+            SMALL_SHIELD,
+            LARGE_SHIELD,
+            SPIKED_SHIELD,
+            MAGIC_SHIELD,
+            JEWEL_SHIELD,
+            CLOTH_ARMOUR,
+            LEATHER_ARMOUR,
+            SCALE_MAIL,
+            CHAIN_MAIL,
+            PLATE_MAIL,
+            MYSTIC_ARMOUR
         }
 
         public enum OpeningThingsStrings
         {
-            T = 0, HOU_DOST_FIND, A_HIDDEN_DOOR, KEY_BROKE, SUCCESS, KEY_BROKE2, NEWLINE, NO_KEYS, KEY_BROKE3, NO_KEYS2,
-            CHEST_UNLOCKED, KEY_BROKE4, ALREADY_OPEN, WHAT, NO_KEYS3, KEY_BROKE6, UNLOCKED, KEY_BROKE5, NO_ONE_IS_THERE,
-            KEY_BROKE7, COULDNT_FIND_NPC, N_N_I_THANK_THEE_N, UNLOCKED2, NO_LOCK, FOUND, CANT, NOTHING_TO_OPEN, TRAPPED,
-            CHEST_EMPTY, CHEST_OPENED, ALREADY_OPEN2, WHAT2, ITS_OPEN, TOO_HEAVY, LOCKED_N, OPENED
+            T = 0,
+            HOU_DOST_FIND,
+            A_HIDDEN_DOOR,
+            KEY_BROKE,
+            SUCCESS,
+            KEY_BROKE2,
+            NEWLINE,
+            NO_KEYS,
+            KEY_BROKE3,
+            NO_KEYS2,
+            CHEST_UNLOCKED,
+            KEY_BROKE4,
+            ALREADY_OPEN,
+            WHAT,
+            NO_KEYS3,
+            KEY_BROKE6,
+            UNLOCKED,
+            KEY_BROKE5,
+            NO_ONE_IS_THERE,
+            KEY_BROKE7,
+            COULDNT_FIND_NPC,
+            N_N_I_THANK_THEE_N,
+            UNLOCKED2,
+            NO_LOCK,
+            FOUND,
+            CANT,
+            NOTHING_TO_OPEN,
+            TRAPPED,
+            CHEST_EMPTY,
+            CHEST_OPENED,
+            ALREADY_OPEN2,
+            WHAT2,
+            ITS_OPEN,
+            TOO_HEAVY,
+            LOCKED_N,
+            OPENED
         }
 
-        public enum PotionsStrings { BLUE, YELLOW, RED, GREEN, ORANGE, PURPLE, BLACK, WHITE }
+        public enum PotionsStrings
+        {
+            BLUE,
+            YELLOW,
+            RED,
+            GREEN,
+            ORANGE,
+            PURPLE,
+            BLACK,
+            WHITE
+        }
 
         public enum ReagentStrings
         {
-            SULFUR_ASH, GINSENG, GARLIC, SPIDER_SILK, BLOOD_MOSS, BLACK_PEARL, NIGHTSHADE, MANDRAKE_ROOT
+            SULFUR_ASH,
+            GINSENG,
+            GARLIC,
+            SPIDER_SILK,
+            BLOOD_MOSS,
+            BLACK_PEARL,
+            NIGHTSHADE,
+            MANDRAKE_ROOT
         }
 
 
         public enum ResponseToKeystroke
         {
-            N_A_, _STOLE_SOME_FOOD_BANG_N, _ESCAPES_BANG_N, CANT_BANG_N, COMMA_, COMMA_ARMED_WITH_, BARE_HANDS, COLON,
-            ARGH_BANG_N, ZZZZZ_DOT_DOT_DOT_N, BUFFER_0, FF_N, N_N, SOUNDS_, OFF_N, ON_N, CAST_DOT_DOT_DOT_N,
-            ABSORBED_BANG_N, CANT_BANG_N2, GET_DASH, JIMMY_DASH, OPEN_DASH, PUSH_DASH, READY_DOT_DOT_DOT_N_N,
-            SEARCH_DASH, USE_ITEM_N_N, YELL_, Z_DASH_STATS_DOT_DOT_DOT_N, PASS_N, SET_ACTIVE_PLR_COLON_N_NONE_BANG_N,
-            BOARD, D_DASH_WHAT_Q_N, ENTER, FIRE, HOLE_UP, IGNITE_TORCH, LOOK, MIX, NEW_ORDER, QUIT, TALK, VIEW,
-            W_DASH_WHAT_Q_N, X_DASH_IT, WHAT_Q_N
+            N_A_,
+            _STOLE_SOME_FOOD_BANG_N,
+            _ESCAPES_BANG_N,
+            CANT_BANG_N,
+            COMMA_,
+            COMMA_ARMED_WITH_,
+            BARE_HANDS,
+            COLON,
+            ARGH_BANG_N,
+            ZZZZZ_DOT_DOT_DOT_N,
+            BUFFER_0,
+            FF_N,
+            N_N,
+            SOUNDS_,
+            OFF_N,
+            ON_N,
+            CAST_DOT_DOT_DOT_N,
+            ABSORBED_BANG_N,
+            CANT_BANG_N2,
+            GET_DASH,
+            JIMMY_DASH,
+            OPEN_DASH,
+            PUSH_DASH,
+            READY_DOT_DOT_DOT_N_N,
+            SEARCH_DASH,
+            USE_ITEM_N_N,
+            YELL_,
+            Z_DASH_STATS_DOT_DOT_DOT_N,
+            PASS_N,
+            SET_ACTIVE_PLR_COLON_N_NONE_BANG_N,
+            BOARD,
+            D_DASH_WHAT_Q_N,
+            ENTER,
+            FIRE,
+            HOLE_UP,
+            IGNITE_TORCH,
+            LOOK,
+            MIX,
+            NEW_ORDER,
+            QUIT,
+            TALK,
+            VIEW,
+            W_DASH_WHAT_Q_N,
+            X_DASH_IT,
+            WHAT_Q_N
 
 
             // [0] = {string} "\nA "
@@ -512,19 +1070,51 @@ namespace Ultima5Redux.References
 
         public enum ShadowlordStrings
         {
-            GEM_SHARD_THOU_HOLD_EVIL_SHARD, FALSEHOOD_DOT, HATRED_DOT, COWARDICE_DOT, N_N_NO_EFFECT,
-            N_N_AND_CAST_INTO_FLAME, TRUTH, LOVE, COURAGE, THE_DOOM_OF_SHADOWLORD, FALSEHOOD_WORD, HATRED_WORD,
-            COWARDICE_WORD, IS_WROUGHT_N
+            GEM_SHARD_THOU_HOLD_EVIL_SHARD,
+            FALSEHOOD_DOT,
+            HATRED_DOT,
+            COWARDICE_DOT,
+            N_N_NO_EFFECT,
+            N_N_AND_CAST_INTO_FLAME,
+            TRUTH,
+            LOVE,
+            COURAGE,
+            THE_DOOM_OF_SHADOWLORD,
+            FALSEHOOD_WORD,
+            HATRED_WORD,
+            COWARDICE_WORD,
+            IS_WROUGHT_N
         }
 
-        public enum ShardsStrings { FALSEHOOD, HATRED, COWARDICE }
+        public enum ShardsStrings
+        {
+            FALSEHOOD,
+            HATRED,
+            COWARDICE
+        }
 
 
         public enum ShoppeKeeperBarKeepStrings
         {
-            DQ, OF_WHAT_WOULDST_N_THOU_HEAD_MY_N_LORE_COMMA_SP, Q_DQ_N_N_YOU_RESPOND_COLON_N, N_N,
-            THAT_I_CANNOT_HELP_THEE_WITH_DOT_N_N, N_N_FAIR_NUFF_Q_DQ, NO_N_N, YES_N_N, SORRY_COMMA_SP, N_SAYS_SP,
-            DOT_N_N, NO, YES_N_N_2, DQ_ANYTHING_ELSE_N_FOR_THEE_Q_DQ, NO_2, YES_N_N_3, YELLS_NPC_DOT_N, MILADY, SIR,
+            DQ,
+            OF_WHAT_WOULDST_N_THOU_HEAD_MY_N_LORE_COMMA_SP,
+            Q_DQ_N_N_YOU_RESPOND_COLON_N,
+            N_N,
+            THAT_I_CANNOT_HELP_THEE_WITH_DOT_N_N,
+            N_N_FAIR_NUFF_Q_DQ,
+            NO_N_N,
+            YES_N_N,
+            SORRY_COMMA_SP,
+            N_SAYS_SP,
+            DOT_N_N,
+            NO,
+            YES_N_N_2,
+            DQ_ANYTHING_ELSE_N_FOR_THEE_Q_DQ,
+            NO_2,
+            YES_N_N_3,
+            YELLS_NPC_DOT_N,
+            MILADY,
+            SIR,
 
             Q_DQ
             // from 0x9f0e-9feb
@@ -562,30 +1152,66 @@ namespace Ultima5Redux.References
             // [31] = {string} "No"        
         }
 
-        [SuppressMessage("ReSharper", "IdentifierTypo")] 
+        [SuppressMessage("ReSharper", "IdentifierTypo")]
         public enum ShoppeKeeperBarKeepStrings2
         {
-            TWO, THREE, FOUR, FIVE, SIX, SIR, MILADY, THAT_WILL_BE_SP, SP_GOLD_FOR_THE_SP, S_OF_YE_COMMA_N,
-            DQ_N_N_CANT_PAY_Q_B_BEAT_IT_BANG_DQ_N_YELLS_SP, N_ENJOY_BANG_DQ_N_N, N_N_DQ_I_BEG_THY_N_PARDON_COMMA_SP,
-            COMMA_DQ_N_SAYS_SP, DOT_N_DQ_BUT_HAVENT_N_THY_HAD_ENOUGH_N_TO_DRINK_Q_DQ, YES_N_N, NO_BANG,
-            OUR_WINE_LIST_COMMA_N, DOT_N_N, A_WINE_1_N, B_WINE_2_N, C_WINE_3_N, D_WINE_4_N, E_WINE_5_N, F_WINE_6_N,
-            THY_CHOICE_Q_DQ, N_N_DQ_AH_A_FINE_CHOICE_COMMA_SP, DQ_N_N_DQ_CANT_PAY_Q_BEAT_IT_BANG_DQ_N_YELLS_SP,
-            N_ENJOY_BANG_DQ, N_N_HOW_MANY_WOULDST_N_THOU_LIKE_Q_DQ_SP, N_N_DQ_HRUMPH_DOT_DQ, N_N,
-            THOU_HAST_N_HEITHER_GOLD_NOR_N_NEED_BANG_OUT_BANG_DQ_N, YELLS_SP, DOT_N, DQ_THOU_CANST_AFFORD_ONLY_SP,
-            BANG_DQ_N_N, N_N_2
+            TWO,
+            THREE,
+            FOUR,
+            FIVE,
+            SIX,
+            SIR,
+            MILADY,
+            THAT_WILL_BE_SP,
+            SP_GOLD_FOR_THE_SP,
+            S_OF_YE_COMMA_N,
+            DQ_N_N_CANT_PAY_Q_B_BEAT_IT_BANG_DQ_N_YELLS_SP,
+            N_ENJOY_BANG_DQ_N_N,
+            N_N_DQ_I_BEG_THY_N_PARDON_COMMA_SP,
+            COMMA_DQ_N_SAYS_SP,
+            DOT_N_DQ_BUT_HAVENT_N_THY_HAD_ENOUGH_N_TO_DRINK_Q_DQ,
+            YES_N_N,
+            NO_BANG,
+            OUR_WINE_LIST_COMMA_N,
+            DOT_N_N,
+            A_WINE_1_N,
+            B_WINE_2_N,
+            C_WINE_3_N,
+            D_WINE_4_N,
+            E_WINE_5_N,
+            F_WINE_6_N,
+            THY_CHOICE_Q_DQ,
+            N_N_DQ_AH_A_FINE_CHOICE_COMMA_SP,
+            DQ_N_N_DQ_CANT_PAY_Q_BEAT_IT_BANG_DQ_N_YELLS_SP,
+            N_ENJOY_BANG_DQ,
+            N_N_HOW_MANY_WOULDST_N_THOU_LIKE_Q_DQ_SP,
+            N_N_DQ_HRUMPH_DOT_DQ,
+            N_N,
+            THOU_HAST_N_HEITHER_GOLD_NOR_N_NEED_BANG_OUT_BANG_DQ_N,
+            YELLS_SP,
+            DOT_N,
+            DQ_THOU_CANST_AFFORD_ONLY_SP,
+            BANG_DQ_N_N,
+            N_N_2
         }
 
 
         public enum ShoppeKeeperBlacksmithHello
         {
-            HAIL_FRIEND_BANG_BUY_OR_SELL_Q, GREETINGS_TRAVELLER_BUY_OR_SELL_Q
+            HAIL_FRIEND_BANG_BUY_OR_SELL_Q,
+
+            GREETINGS_TRAVELLER_BUY_OR_SELL_Q
             // [0] = {string} "Hail, friend! Wouldst thou Buy or Sell?"
             // [1] = {string} "Greetings, traveller! Wish ye to Buy, or hast thou wares to Sell?"
         }
 
         public enum ShoppeKeeperBlacksmithPositiveExclamation
         {
-            VERY_GOOD_BANG_N, EXCELLENT_BANG_N, FINE_FINE_BANG_N, BUT_OF_COURSE_BANG_N
+            VERY_GOOD_BANG_N,
+            EXCELLENT_BANG_N,
+            FINE_FINE_BANG_N,
+
+            BUT_OF_COURSE_BANG_N
             // [2] = {string} "Very good!\n"
             // [3] = {string} "Excellent!\n"
             // [4] = {string} "Fine, fine!\n"
@@ -594,7 +1220,11 @@ namespace Ultima5Redux.References
 
         public enum ShoppeKeeperBlacksmithWeHave
         {
-            WE_HAVE_COLON, WE_STOCK_COLON, THOU_CANST_BUY_COLON, WEVE_GOT_COLON
+            WE_HAVE_COLON,
+            WE_STOCK_COLON,
+            THOU_CANST_BUY_COLON,
+
+            WEVE_GOT_COLON
             // [6] = {string} "We have:"
             // [7] = {string} "We stock:"
             // [8] = {string} "Thou canst buy:"
@@ -604,11 +1234,36 @@ namespace Ultima5Redux.References
 
         public enum ShoppeKeeperGeneral2Strings
         {
-            N_N_COLON, N_COLON, N_N_DQ, N_N_DQ_2, SAYS_NAME_DOT_N, NO, YES, N_N_DQ_3, N_N_INTERESTED_Q_DQ,
-            NO_N_N_DQ_WHAT_ELSE_Q_N_N, YES_N, N_DQ_SOLID_BANG_N_SAYS_NAME_N_N_DQ_WHAT_ELSE_N, M_LADY, M_LORD, Q_N_N,
-            A_DOTS_KEYS_N, B_DOTS_GEMS_N, C_DOTS_TORCHES_N_N, THY_CONCERN_Q_DQ, YES_N_N_DQ__WE_SELL_COLON_N_N, NO_2,
-            N_N_DQ_THOU_CANST_CARRY_BANG_DQ_N_N, N_N_DQ_4, IS_THIS_THY_NEED_Q_DQ, N_COLON_2,
-            NO_N_N_DQ_WHAT_ELSE_Q_N_N_2, YES_N_2, N_DQ_I_THANK_THEE_BANG_DQ_N_SAYS_NAME__N, DQ_ANYTHING_ELSE_Q_N_N
+            N_N_COLON,
+            N_COLON,
+            N_N_DQ,
+            N_N_DQ_2,
+            SAYS_NAME_DOT_N,
+            NO,
+            YES,
+            N_N_DQ_3,
+            N_N_INTERESTED_Q_DQ,
+            NO_N_N_DQ_WHAT_ELSE_Q_N_N,
+            YES_N,
+            N_DQ_SOLID_BANG_N_SAYS_NAME_N_N_DQ_WHAT_ELSE_N,
+            M_LADY,
+            M_LORD,
+            Q_N_N,
+            A_DOTS_KEYS_N,
+            B_DOTS_GEMS_N,
+            C_DOTS_TORCHES_N_N,
+            THY_CONCERN_Q_DQ,
+            YES_N_N_DQ__WE_SELL_COLON_N_N,
+            NO_2,
+            N_N_DQ_THOU_CANST_CARRY_BANG_DQ_N_N,
+            N_N_DQ_4,
+            IS_THIS_THY_NEED_Q_DQ,
+            N_COLON_2,
+            NO_N_N_DQ_WHAT_ELSE_Q_N_N_2,
+            YES_N_2,
+            N_DQ_I_THANK_THEE_BANG_DQ_N_SAYS_NAME__N,
+
+            DQ_ANYTHING_ELSE_Q_N_N
             // [0] = {string} "\n\n:"
             // [1] = {string} "\n:"
             // [2] = {string} "\n\n""
@@ -642,9 +1297,19 @@ namespace Ultima5Redux.References
 
         public enum ShoppeKeeperGeneralStrings
         {
-            DOT_DOT_DOT, N_THY_INTEREST_Q_QUOTE, YES_N_N_FINE_BANG_WE_SELL_COLON, NO, THE_STABLES_ARE_CLOSED_DOT_N,
-            YES_N_N, N_N_DEAL_Q_QUOTE, NO_2, YES_BANG, N_N_QUOTE_THOU_COULDST_NOT_AFFORD_TO,
-            FEED_IT_BANG_QUOTE_N_YELLS_SK_N, NO_3
+            DOT_DOT_DOT,
+            N_THY_INTEREST_Q_QUOTE,
+            YES_N_N_FINE_BANG_WE_SELL_COLON,
+            NO,
+            THE_STABLES_ARE_CLOSED_DOT_N,
+            YES_N_N,
+            N_N_DEAL_Q_QUOTE,
+            NO_2,
+            YES_BANG,
+            N_N_QUOTE_THOU_COULDST_NOT_AFFORD_TO,
+            FEED_IT_BANG_QUOTE_N_YELLS_SK_N,
+
+            NO_3
             // [0] = {string} "..."
             // [1] = {string} "\nThy interest?" "
             // [2] = {string} "Yes\n\n"Fine! We sell:\n\n"
@@ -661,11 +1326,29 @@ namespace Ultima5Redux.References
 
         public enum ShoppeKeeperHealerStrings
         {
-            N_N_DQ_WHO_NEEDS_MY_AID_Q_DQ, NO_ONE, FOR_GOLD_GOLD_DO_N_N_WILT_THO_N_PAY_Q_DQ, YES, NO, NO_2, YES_N_N,
-            DQ_WE_HAVE_POWERS_TO_CURE_HEAL_RESURRECT_DOT_DQ_N, SAYS_NAME_DOT_N_N_DQ_WHAT_IS_THE_NATURE_OF_THY_NEED_Q_DQ,
-            CURING, N_N, RECEIVE_NOW_THE_LIGHT_BANG_DQ, I_CAN_CURE_THY_POISONED_BODY, HEALING, N_N_2,
-            RECEIVE_NOW_THE_LIGHT_BANG_DQ_2, I_CAN_HEAL_THEE, RESURRECT, N_N_3,
-            I_CAN_RAISE_THIS_UNFORTUNATE_PERSON_FROM, THE_DEAD, NOTHING, N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N,
+            N_N_DQ_WHO_NEEDS_MY_AID_Q_DQ,
+            NO_ONE,
+            FOR_GOLD_GOLD_DO_N_N_WILT_THO_N_PAY_Q_DQ,
+            YES,
+            NO,
+            NO_2,
+            YES_N_N,
+            DQ_WE_HAVE_POWERS_TO_CURE_HEAL_RESURRECT_DOT_DQ_N,
+            SAYS_NAME_DOT_N_N_DQ_WHAT_IS_THE_NATURE_OF_THY_NEED_Q_DQ,
+            CURING,
+            N_N,
+            RECEIVE_NOW_THE_LIGHT_BANG_DQ,
+            I_CAN_CURE_THY_POISONED_BODY,
+            HEALING,
+            N_N_2,
+            RECEIVE_NOW_THE_LIGHT_BANG_DQ_2,
+            I_CAN_HEAL_THEE,
+            RESURRECT,
+            N_N_3,
+            I_CAN_RAISE_THIS_UNFORTUNATE_PERSON_FROM,
+            THE_DEAD,
+            NOTHING,
+            N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N,
 
             AID_THEE_Q
             // [22] = {string} "\n\n"Who needs my aid?" "
@@ -695,19 +1378,38 @@ namespace Ultima5Redux.References
         }
 
 
-        public enum ShoppeKeeperHealerStrings2 { DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME }
+        public enum ShoppeKeeperHealerStrings2
+        {
+            DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME
+        }
 
 
         public enum ShoppeKeeperInnkeeper2Strings
         {
-            ASKS_N_WHO_WILL_STAY_Q, NOBODY_N_N, N_N, THY_FRIEND, _WILL_NOT_LEAVE_THEE_BANG_N_N,
-            DQ_THE_RATE_FOR_OUR_MOST_COMFORTABLE_ROOM_WILL_BE_, GLD_GOLD_PER_MONTH_DUE_AT_CHECKOUT_DOT,
-            N_WILT_THOU_TAKE_IT_Q_DQ, N_N_2, I_THANK_THEE_DQ_N_SAYS_NAME_DOT_N_N,
+            ASKS_N_WHO_WILL_STAY_Q,
+            NOBODY_N_N,
+            N_N,
+            THY_FRIEND,
+            _WILL_NOT_LEAVE_THEE_BANG_N_N,
+            DQ_THE_RATE_FOR_OUR_MOST_COMFORTABLE_ROOM_WILL_BE_,
+            GLD_GOLD_PER_MONTH_DUE_AT_CHECKOUT_DOT,
+            N_WILT_THOU_TAKE_IT_Q_DQ,
+            N_N_2,
+            I_THANK_THEE_DQ_N_SAYS_NAME_DOT_N_N,
             N_N_ONE_MUST_FIRST_BE_LEFT_BEHIND_BANG_N_N,
-            N_N_DQ_NO_ONE_HERE_IS_FROM_THY_PARTY_BANG_DQ_N_SAYS_NAME_DOT_N_N, N_N_DQ_WHO_WILL_N_CHECK_OUT_Q_DQ,
-            ___GUEST, __REGISTER_COLON_N_N, NO_ONE_N_N, N_N_DQ_THAT_WILL_BE_GLD_GOLD_PLEASE_DOT_DQ_N_N,
-            THY_FRIEND_HAS_DIED_BY_THE_WAY_DOT_N, I_HOPE_THOU_HAST_THY_STAY_ENJOYABLE_COMMA_N, SAYS_NAME_DOT_N_N, NO,
-            YES, N_N_NAME_ASKS_N_ART_THOU_HERE_TO_PICKUP_OR_N, LEAVE_A_COMPANION_OR_TO_REST_FOR_NIGHT_Q_DQ,
+            N_N_DQ_NO_ONE_HERE_IS_FROM_THY_PARTY_BANG_DQ_N_SAYS_NAME_DOT_N_N,
+            N_N_DQ_WHO_WILL_N_CHECK_OUT_Q_DQ,
+            ___GUEST,
+            __REGISTER_COLON_N_N,
+            NO_ONE_N_N,
+            N_N_DQ_THAT_WILL_BE_GLD_GOLD_PLEASE_DOT_DQ_N_N,
+            THY_FRIEND_HAS_DIED_BY_THE_WAY_DOT_N,
+            I_HOPE_THOU_HAST_THY_STAY_ENJOYABLE_COMMA_N,
+            SAYS_NAME_DOT_N_N,
+            NO,
+            YES,
+            N_N_NAME_ASKS_N_ART_THOU_HERE_TO_PICKUP_OR_N,
+            LEAVE_A_COMPANION_OR_TO_REST_FOR_NIGHT_Q_DQ,
 
             IS_THERE_N_ANYTHING_MORE_N_I_CAN_DO_FOR_N_THEE_Q_DQ
             // [0] = {string} "$ asks,\n"Who will\nstay?" "
@@ -740,9 +1442,22 @@ namespace Ultima5Redux.References
 
         public enum ShoppeKeeperInnkeeperStrings
         {
-            I_AM_SORRY_COMMA_N, MILADY, SIR, COMMA_BUT_WE_HAVE_NO_ROOM_N_N, XXX_N_WILT_THOU_TAKE_N_IT_Q_DQ, N_N,
-            HIGHWAYMAN_BANG_CHEAP_OUT_BANG, SCREAMS_N_NAME_N, HAVE_A_PLEASENT_NIGHT_COMMA, MILADY_2, SIR_2,
-            BANG_N_SAYS_NAME_DOT_N_N, ZZZZ_DOTS_N_N, MORNING_BANG_N, _HAS_N_PASSED_AWAY_DOT_N
+            I_AM_SORRY_COMMA_N,
+            MILADY,
+            SIR,
+            COMMA_BUT_WE_HAVE_NO_ROOM_N_N,
+            XXX_N_WILT_THOU_TAKE_N_IT_Q_DQ,
+            N_N,
+            HIGHWAYMAN_BANG_CHEAP_OUT_BANG,
+            SCREAMS_N_NAME_N,
+            HAVE_A_PLEASENT_NIGHT_COMMA,
+            MILADY_2,
+            SIR_2,
+            BANG_N_SAYS_NAME_DOT_N_N,
+            ZZZZ_DOTS_N_N,
+            MORNING_BANG_N,
+
+            _HAS_N_PASSED_AWAY_DOT_N
             // [0] = {string} ""I am sorry,\n"
             // [1] = {string} "milady"
             // [2] = {string} "sir"
@@ -763,7 +1478,15 @@ namespace Ultima5Redux.References
 
         public enum ShoppeKeeperReagentStrings
         {
-            SULFUR_ASH, GINSENG, GARLIC, SPIDER_SILK, BLOOD_MOSS, BLACK_PEARL, NIGHTSAHDE, MANDRAKE
+            SULFUR_ASH,
+            GINSENG,
+            GARLIC,
+            SPIDER_SILK,
+            BLOOD_MOSS,
+            BLACK_PEARL,
+            NIGHTSAHDE,
+
+            MANDRAKE
             // [0] = {string} "Sulfur Ash"
             // [1] = {string} "Ginseng"
             // [2] = {string} "Garlic"
@@ -777,25 +1500,81 @@ namespace Ultima5Redux.References
 
         public enum ShoppeKeeperSellingStrings
         {
-            DONT_DEAL_AMMO_GROWL_NAME, N_N, N_NDEAL_Q, NO, YES_DONE_SAYS_NAME, I_CANNOT_BUY_FROM_THEE_NAME
+            DONT_DEAL_AMMO_GROWL_NAME,
+            N_N,
+            N_NDEAL_Q,
+            NO,
+            YES_DONE_SAYS_NAME,
+            I_CANNOT_BUY_FROM_THEE_NAME
         }
 
         public enum ShortArmourString
         {
-            LEATHER_HELM, SPIKED_HELM, SMALL_SHIELD, LARGE_SHIELD, SPIKED_SHIELD, MAGIC_SHIELD, JEWEL_SHIELD,
-            CLOTH_ARMOUR, LEATHER_ARMOUR, SCALE_MAIL, CHAIN_MAIL, PLATE_MAIL, MYSTIC_ARMOUR
+            LEATHER_HELM,
+            SPIKED_HELM,
+            SMALL_SHIELD,
+            LARGE_SHIELD,
+            SPIKED_SHIELD,
+            MAGIC_SHIELD,
+            JEWEL_SHIELD,
+            CLOTH_ARMOUR,
+            LEATHER_ARMOUR,
+            SCALE_MAIL,
+            CHAIN_MAIL,
+            PLATE_MAIL,
+            MYSTIC_ARMOUR
         }
 
         public enum SleepTransportStrings
         {
-            ZZZZZ_N_N, AMBUSHED_BANG_N, PARTY_RESTED_BANG_N, NO_EFFECT_DOTS_N, FOR_HOW_MANY_HOURS, ZZZZZZ_DOTS_N,
-            THROWN_OUT_OF_BED_N, N_ON_FOOT_N, N_ON_FOOT_N_2, N_NOT_HER_BANG_N, NAY_BANG_N, HORSE_N, CARPET_N, SKIFF_N,
-            SHIP_N, N_DANGER_SHIP_BADLY_DAMAGED_N, M_WARNING_NO_SKIFFS_N, WHAT_N, WHAT_N_2, FIRE_BROADSIDE_ONLY_BANG_N,
-            WHAT_N_3, WHAT_N_4, BOOM_BANG_N, DOOR_DESTROYED_BANG_N, NONE_OWNED_BANG_N, N_N_SWAP_SPACE, NOBODY_BANG_N,
-            N_N, SPACE_MUST_LEAD_BANG_N, N_WITH_SPACE, NOBODY_BANG_N_2, N_N_2, SPACE_MUST_LEAD_BANG_N_2, BANG_N,
-            N_NOT_HERE_BANG_N, WHAT_N_LOWERCASE, N_UNDER_SAIL_BANG_N, CARPET_BANG_N, N_NO_LAND_NEARBY_BANG_N,
-            N_NOT_HERE_BANG_N_3, HORSE_BANG_N, N_NO_LAND_NEARBY_BANG_N_3, N_NOT_HERE_BANG_N_4, HORSE_N_2,
-            N_NO_LAND_NEARBY_BANG_N_5, N_NOT_HERE_BANG_N_6, SKIFF_BANG_N_LOWERCASE, SHIP_BANG_N_LOWERCASE,
+            ZZZZZ_N_N,
+            AMBUSHED_BANG_N,
+            PARTY_RESTED_BANG_N,
+            NO_EFFECT_DOTS_N,
+            FOR_HOW_MANY_HOURS,
+            ZZZZZZ_DOTS_N,
+            THROWN_OUT_OF_BED_N,
+            N_ON_FOOT_N,
+            N_ON_FOOT_N_2,
+            N_NOT_HER_BANG_N,
+            NAY_BANG_N,
+            HORSE_N,
+            CARPET_N,
+            SKIFF_N,
+            SHIP_N,
+            N_DANGER_SHIP_BADLY_DAMAGED_N,
+            M_WARNING_NO_SKIFFS_N,
+            WHAT_N,
+            WHAT_N_2,
+            FIRE_BROADSIDE_ONLY_BANG_N,
+            WHAT_N_3,
+            WHAT_N_4,
+            BOOM_BANG_N,
+            DOOR_DESTROYED_BANG_N,
+            NONE_OWNED_BANG_N,
+            N_N_SWAP_SPACE,
+            NOBODY_BANG_N,
+            N_N,
+            SPACE_MUST_LEAD_BANG_N,
+            N_WITH_SPACE,
+            NOBODY_BANG_N_2,
+            N_N_2,
+            SPACE_MUST_LEAD_BANG_N_2,
+            BANG_N,
+            N_NOT_HERE_BANG_N,
+            WHAT_N_LOWERCASE,
+            N_UNDER_SAIL_BANG_N,
+            CARPET_BANG_N,
+            N_NO_LAND_NEARBY_BANG_N,
+            N_NOT_HERE_BANG_N_3,
+            HORSE_BANG_N,
+            N_NO_LAND_NEARBY_BANG_N_3,
+            N_NOT_HERE_BANG_N_4,
+            HORSE_N_2,
+            N_NO_LAND_NEARBY_BANG_N_5,
+            N_NOT_HERE_BANG_N_6,
+            SKIFF_BANG_N_LOWERCASE,
+            SHIP_BANG_N_LOWERCASE,
 
             N_NO_SKIFFS_ON_BOARD_BANG_N_2
             //        [0]	"Zzzzzz...\n\n"	string
@@ -846,36 +1625,146 @@ namespace Ultima5Redux.References
             //[45]	"\nNo skiffs on board!\n"	string
         }
 
-        public enum SpecialItemNames2Strings { SPYGLASS, HMS_CAPE_PLAN, SEXTANT, POCKET_WATCH, BLACK_BADGE, WOODEN_BOX }
+        public enum SpecialItemNames2Strings
+        {
+            SPYGLASS,
+            HMS_CAPE_PLAN,
+            SEXTANT,
+            POCKET_WATCH,
+            BLACK_BADGE,
+            WOODEN_BOX
+        }
 
-        public enum SpecialItemNamesStrings { MAGIC_CRPT, SKULL_KEYS, AMULET, CROWN, SCEPTRE }
+        public enum SpecialItemNamesStrings
+        {
+            MAGIC_CRPT,
+            SKULL_KEYS,
+            AMULET,
+            CROWN,
+            SCEPTRE
+        }
 
         public enum SpellStrings
         {
-            IN_LOR, GRAV_POR, AN_ZU, AN_NOX, MANI, AN_YLEM, AN_SANCT, AN_XEN_CORP, REL_HUR, IN_WIS, KAL_XEN,
-            IN_XEN_MANI, VAS_LOR, VAS_FLAM, IN_FLAM_GRAV, IN_NOX_GRAV, IN_ZU_GRAV, IN_POR, AN_GRAV, IN_SANCT,
-            IN_SANCT_GRAV, UUS_POR, DES_POR, WIS_QUAS, IN_BET_XEN, AN_EX_POR, IN_EX_POR, VAS_MANI, IN_ZU, REL_TYM,
-            IN_VAS_POR_YLEM, QUAS_AN_WIS, IN_AN, WIS_AN_YLEM, AN_XEN_EX, REL_XEN_BET, SANCT_LOR, XEN_CORP, IN_QUAS_XEN,
-            IN_QUAS_WIS, IN_NOX_HUR, IN_QUAS_CORP, IN_MANI_CORP, KAL_XEN_CORP, IN_VAS_GRAV_CORP, IN_FLAM_HUR,
-            VAS_REL_POR, AN_TYM
+            IN_LOR,
+            GRAV_POR,
+            AN_ZU,
+            AN_NOX,
+            MANI,
+            AN_YLEM,
+            AN_SANCT,
+            AN_XEN_CORP,
+            REL_HUR,
+            IN_WIS,
+            KAL_XEN,
+            IN_XEN_MANI,
+            VAS_LOR,
+            VAS_FLAM,
+            IN_FLAM_GRAV,
+            IN_NOX_GRAV,
+            IN_ZU_GRAV,
+            IN_POR,
+            AN_GRAV,
+            IN_SANCT,
+            IN_SANCT_GRAV,
+            UUS_POR,
+            DES_POR,
+            WIS_QUAS,
+            IN_BET_XEN,
+            AN_EX_POR,
+            IN_EX_POR,
+            VAS_MANI,
+            IN_ZU,
+            REL_TYM,
+            IN_VAS_POR_YLEM,
+            QUAS_AN_WIS,
+            IN_AN,
+            WIS_AN_YLEM,
+            AN_XEN_EX,
+            REL_XEN_BET,
+            SANCT_LOR,
+            XEN_CORP,
+            IN_QUAS_XEN,
+            IN_QUAS_WIS,
+            IN_NOX_HUR,
+            IN_QUAS_CORP,
+            IN_MANI_CORP,
+            KAL_XEN_CORP,
+            IN_VAS_GRAV_CORP,
+            IN_FLAM_HUR,
+            VAS_REL_POR,
+            AN_TYM
         }
 
         public enum ThingsIFindStrings
         {
-            A_CHEST_BANG_N, A_SACK_OF_GOLD_BANG_N, A_POTION_BANG_N, A_SCROLL_BANG_N, A_WEAPON_BANG_N, A_SHIELD_BANG_N,
-            A_RING_OF_KEYS_BANG_N, A_GEM_BANG_N, A_HELM_BANG_N, A_RING_BANG_N, SOME_ARMOUR_BANG_N, AN_AMULET_BANG_N,
-            SOME_TORCHES_BANG_N, SOME_FOOD_BANG_N, A_STRANGE_ROCK_BANG_N, A_ROTTING_BODY_BANG_N, A_MOULDY_CORPSE_BANG_N,
-            NOTHING_OF_NOTE_BANG_N, PLAGUE_BANG_N, NOTHING_BANG_N, WORMS_BANG_N, GUTS_BANG_N, A_BLOOD_PULP_BANG_N,
-            FOOD_BANG_N, GOLD_BANG_N, NO_TRAP_BANG_N, A_SIMPLE_TRAP_BANG_N, A_COMPLEX_TRAP_BANG_N, A_TRAP_BANG_N,
-            A_STRANGE_ROCK_BANG_N_2, MANDRAKE_ROOT_BANG_N, MANDRAKE_ROOT_BANG_N_2, NIGHTSHADE_BANG_N, SPACE_SPRIGS_OF_N,
-            NEWLINE, NOTHING_OF_NOTE_BANG_N_2, N_YOU_FIND_COLON_N_DARKNESS_DOT_N, YOU_FIND_COLON_N,
-            NOTHING_OF_NOTE_DOT_N, NOTHING_HIDDEN_ON_THE_LADDER_DOT_N, NOT_TRAP_N, A_SIMPLE_TRAP_N, A_COMPLEX_TRAP_N,
-            A_TRAP_N, NOTHING_HIDDEN_ON_THE_FOUNTAIN_DOT_N, NOTHING_HIDDEN_N_IN_THE_PIT_DOT_N, A_PIT_BANG_N,
-            A_BOMB_TRAP_BANG_N, NOTHING_OF_NOTE_DOT_N_2, TREASURE_BANG_N, A_SLEEP_FIELD_DOT_N, A_POISON_GAS_FIELD_DOT_N,
-            A_WALL_OF_FIRE_DOT_N, AN_ELECTRIC_FIELD_DOT_N, AN_ENERGY_FIELD_DOT_N, THIS_TILE_IS_IMPOSSIBLE_DOT_N,
-            NOTHING_HIDDEN_ON_THE_DOOR_DOT_N_2, NOTHING_HIDDEN_ON_THE_WALL_DOT_N, NOTHING_IN_THE_CAVED_IN_PASSAGE_DOT_N,
-            NOTHING_OF_THE_STALACTITE_DOT_N, NOTHING_HIDDEN_ON_THE_SKELETON_DOT_N, IT_CRUMBLES_AWAY_DOT_N,
-            A_HIDDEN_DOOR_BANG_N, NOTHING_HIDDEN_ON_THE_DOOR_DOT_N_3, N_THOU_DOST_FIND_N, N_THOU_DOST_FIND_N_2
+            A_CHEST_BANG_N,
+            A_SACK_OF_GOLD_BANG_N,
+            A_POTION_BANG_N,
+            A_SCROLL_BANG_N,
+            A_WEAPON_BANG_N,
+            A_SHIELD_BANG_N,
+            A_RING_OF_KEYS_BANG_N,
+            A_GEM_BANG_N,
+            A_HELM_BANG_N,
+            A_RING_BANG_N,
+            SOME_ARMOUR_BANG_N,
+            AN_AMULET_BANG_N,
+            SOME_TORCHES_BANG_N,
+            SOME_FOOD_BANG_N,
+            A_STRANGE_ROCK_BANG_N,
+            A_ROTTING_BODY_BANG_N,
+            A_MOULDY_CORPSE_BANG_N,
+            NOTHING_OF_NOTE_BANG_N,
+            PLAGUE_BANG_N,
+            NOTHING_BANG_N,
+            WORMS_BANG_N,
+            GUTS_BANG_N,
+            A_BLOOD_PULP_BANG_N,
+            FOOD_BANG_N,
+            GOLD_BANG_N,
+            NO_TRAP_BANG_N,
+            A_SIMPLE_TRAP_BANG_N,
+            A_COMPLEX_TRAP_BANG_N,
+            A_TRAP_BANG_N,
+            A_STRANGE_ROCK_BANG_N_2,
+            MANDRAKE_ROOT_BANG_N,
+            MANDRAKE_ROOT_BANG_N_2,
+            NIGHTSHADE_BANG_N,
+            SPACE_SPRIGS_OF_N,
+            NEWLINE,
+            NOTHING_OF_NOTE_BANG_N_2,
+            N_YOU_FIND_COLON_N_DARKNESS_DOT_N,
+            YOU_FIND_COLON_N,
+            NOTHING_OF_NOTE_DOT_N,
+            NOTHING_HIDDEN_ON_THE_LADDER_DOT_N,
+            NOT_TRAP_N,
+            A_SIMPLE_TRAP_N,
+            A_COMPLEX_TRAP_N,
+            A_TRAP_N,
+            NOTHING_HIDDEN_ON_THE_FOUNTAIN_DOT_N,
+            NOTHING_HIDDEN_N_IN_THE_PIT_DOT_N,
+            A_PIT_BANG_N,
+            A_BOMB_TRAP_BANG_N,
+            NOTHING_OF_NOTE_DOT_N_2,
+            TREASURE_BANG_N,
+            A_SLEEP_FIELD_DOT_N,
+            A_POISON_GAS_FIELD_DOT_N,
+            A_WALL_OF_FIRE_DOT_N,
+            AN_ELECTRIC_FIELD_DOT_N,
+            AN_ENERGY_FIELD_DOT_N,
+            THIS_TILE_IS_IMPOSSIBLE_DOT_N,
+            NOTHING_HIDDEN_ON_THE_DOOR_DOT_N_2,
+            NOTHING_HIDDEN_ON_THE_WALL_DOT_N,
+            NOTHING_IN_THE_CAVED_IN_PASSAGE_DOT_N,
+            NOTHING_OF_THE_STALACTITE_DOT_N,
+            NOTHING_HIDDEN_ON_THE_SKELETON_DOT_N,
+            IT_CRUMBLES_AWAY_DOT_N,
+            A_HIDDEN_DOOR_BANG_N,
+            NOTHING_HIDDEN_ON_THE_DOOR_DOT_N_3,
+            N_THOU_DOST_FIND_N,
+
+            N_THOU_DOST_FIND_N_2
             // [0] = {string} "a chest!\n"
             // [1] = {string} "a sack of gold!\n"
             // [2] = {string} "a potion!\n"
@@ -946,34 +1835,120 @@ namespace Ultima5Redux.References
 
         public enum TravelStrings
         {
-            UP = 0, DOWN, RIDE, FLY, ROW, NORTH, SOUTH, EAST, WEST, WISH_TO_LEAVE, EXIT_TO, UNDERWORLD, BRITANNIA, NO,
-            BLOCKED, ATTACK, ON_FOOT, BROKEN, NOTHING_TO_ATTACK, MISSED, MURDERED, KLIMB, DASH_ON_FOOT, WHAT
+            UP = 0,
+            DOWN,
+            RIDE,
+            FLY,
+            ROW,
+            NORTH,
+            SOUTH,
+            EAST,
+            WEST,
+            WISH_TO_LEAVE,
+            EXIT_TO,
+            UNDERWORLD,
+            BRITANNIA,
+            NO,
+            BLOCKED,
+            ATTACK,
+            ON_FOOT,
+            BROKEN,
+            NOTHING_TO_ATTACK,
+            MISSED,
+            MURDERED,
+            KLIMB,
+            DASH_ON_FOOT,
+            WHAT
         }
 
         public enum Vision2Strings
         {
-            DEATH_VISION, STRANGE_VISION, THOU_DOST_SEE, NEWLINE, YOU_SEE_COLON_DARKNESS_DOT_N, YOU_SEE_COLON_N,
-            A_SLEEP_FIELD_DOT_N, A_POISON_GAS_FIELD_DOT_N, A_WALL_OF_FIRE_DOT_N, AN_ELECTRIC_FIELD_DOT_N,
-            AN_ENERGY_FIELD_DOT_N, A_DRIPPING_STALACTITE_DOT_N, A_CAVED_IN_PASSAGE_DOT_N,
-            AN_UNFORTUNATE_SOFTWARE_PIRATE_DOT_N, A_LESS_FORTUNATE_ADVENTURER_DOT_N, A_PASSAGE_DOT_N, AN_UP_LADDER_DOT,
-            A_DOWN_LADDER_DOT_N, A_LADDER_DOT_N, A_WOODEN_CHEST_DOT_N, A_FOUNTAIN_DOT_N, A_PIT_DOT_N,
-            AN_OPEN_CHEST_DOT_N, AN_ENERGY_FIELD_DOT_N_2, NOTHING_OF_NOTE_DOT_N, A_HEAVY_DOOR_DOT_N, A_WALL_DOT_N,
-            SPEC_WALL_ERR_DOT_N, A_WALL_DOT_N_2, A_HEAVY_DOOR_DOT_N_2, A_HEAVY_DOOR_DOT_N_3
+            DEATH_VISION,
+            STRANGE_VISION,
+            THOU_DOST_SEE,
+            NEWLINE,
+            YOU_SEE_COLON_DARKNESS_DOT_N,
+            YOU_SEE_COLON_N,
+            A_SLEEP_FIELD_DOT_N,
+            A_POISON_GAS_FIELD_DOT_N,
+            A_WALL_OF_FIRE_DOT_N,
+            AN_ELECTRIC_FIELD_DOT_N,
+            AN_ENERGY_FIELD_DOT_N,
+            A_DRIPPING_STALACTITE_DOT_N,
+            A_CAVED_IN_PASSAGE_DOT_N,
+            AN_UNFORTUNATE_SOFTWARE_PIRATE_DOT_N,
+            A_LESS_FORTUNATE_ADVENTURER_DOT_N,
+            A_PASSAGE_DOT_N,
+            AN_UP_LADDER_DOT,
+            A_DOWN_LADDER_DOT_N,
+            A_LADDER_DOT_N,
+            A_WOODEN_CHEST_DOT_N,
+            A_FOUNTAIN_DOT_N,
+            A_PIT_DOT_N,
+            AN_OPEN_CHEST_DOT_N,
+            AN_ENERGY_FIELD_DOT_N_2,
+            NOTHING_OF_NOTE_DOT_N,
+            A_HEAVY_DOOR_DOT_N,
+            A_WALL_DOT_N,
+            SPEC_WALL_ERR_DOT_N,
+            A_WALL_DOT_N_2,
+            A_HEAVY_DOOR_DOT_N_2,
+            A_HEAVY_DOOR_DOT_N_3
         }
 
         public enum WearUseItemStrings
         {
-            REMOVED, NO_USEABLE_ITEMS, ITEM_COLON, ITEMS_COLON, CARPET_BANG, BOARDED_BANG, XIT_SHIP_FIRST, ONLY_ON_FOOT,
-            NOT_HERE_BANG, SKULL_KEY_BANG, NOT_HERE_BANG_2, AMULET_N_N, WEARING_AMULET, CROWN_N_N, DON_THE_CROWN,
-            SCEPTRE_N_N, WIELD_SCEPTRE, FIELD_DISSOLVED, NO_EFFECT_BANG, SPYGLASS_N_N, LOOKING_DOT_DOT_DOT, NO_STARS,
-            NOT_HERE_BANG_3, PLANS_N_N, SHIP_RIGGED_DOUBLE_SPEED, ONLY_USE_ON_SHIPBOARD, SEXTANT_N_N,
-            ONLY_OUTDOORS_BANG, ONLY_AT_NIGHT_BANG, POSITION_COLON, WATCH_N_N_THE_POCKET_W_READS, SPACE_PM, SPACE_AM,
-            BADGE_N_N, BADGE_WORN_BANG_N, BOX_N_HOW_N, FAILED_BANG_N, SPACE_OF_LORD_BRITISH_DOT_N
+            REMOVED,
+            NO_USEABLE_ITEMS,
+            ITEM_COLON,
+            ITEMS_COLON,
+            CARPET_BANG,
+            BOARDED_BANG,
+            XIT_SHIP_FIRST,
+            ONLY_ON_FOOT,
+            NOT_HERE_BANG,
+            SKULL_KEY_BANG,
+            NOT_HERE_BANG_2,
+            AMULET_N_N,
+            WEARING_AMULET,
+            CROWN_N_N,
+            DON_THE_CROWN,
+            SCEPTRE_N_N,
+            WIELD_SCEPTRE,
+            FIELD_DISSOLVED,
+            NO_EFFECT_BANG,
+            SPYGLASS_N_N,
+            LOOKING_DOT_DOT_DOT,
+            NO_STARS,
+            NOT_HERE_BANG_3,
+            PLANS_N_N,
+            SHIP_RIGGED_DOUBLE_SPEED,
+            ONLY_USE_ON_SHIPBOARD,
+            SEXTANT_N_N,
+            ONLY_OUTDOORS_BANG,
+            ONLY_AT_NIGHT_BANG,
+            POSITION_COLON,
+            WATCH_N_N_THE_POCKET_W_READS,
+            SPACE_PM,
+            SPACE_AM,
+            BADGE_N_N,
+            BADGE_WORN_BANG_N,
+            BOX_N_HOW_N,
+            FAILED_BANG_N,
+            SPACE_OF_LORD_BRITISH_DOT_N
         }
 
         public enum WordsOfPower
         {
-            FALLAX, VILIS, INOPIA, MALUM, AVIDUS, INFAMA, IGANVUS, VERAMOCOR
+            FALLAX,
+            VILIS,
+            INOPIA,
+            MALUM,
+            AVIDUS,
+            INFAMA,
+            IGANVUS,
+
+            VERAMOCOR
             // [0] = {string} "FALLAX"
             // [1] = {string} "VILIS"
             // [2] = {string} "INOPIA"
@@ -987,21 +1962,83 @@ namespace Ultima5Redux.References
 
         public enum WorldStrings
         {
-            RIDE = 0, FLY, ROW, HEAD, NORTH, SOUTH, EAST, WEST, HULL_WEAK, ROWING, BREAKING_UP, COLISSION, DOCKED,
-            BLOCKED, OUCH, SLOW_PROG, VERY_SLOW, NORTH_2, SOUTH_2, EAST_2, WEST_2, JUNK_1, ATTACK_DASH, ON_FOOT,
-            NOTHING_TO_ATTACK, NEW_ON_FOOT_NEW, ATTACKED_ENTRANCE, TWO_NEWLINES, BRIT_DAT, DUNGEON_DAT,
-            NEW_WHAT_DUNGEON_NEW, ENTER_SPACE, to_enter_THE_SHRINE_OF, to_enter_HUT, to_enter_SHRINE_CODEX,
-            to_enter_KEEP, to_enter_VILLAGE, to_enter_TOWNE, to_enter_CASTLE, to_enter_CAVE, to_enter_MINE,
-            to_enter_DUNGEON, to_enter_RUINS, to_enter_LIGHTHOUSE, to_enter_PALACE_B, to_enter_CASTLE_LB, WHAT,
-            EARTHQUAKE, ZZZ, BRIT_DAT_2, EXIT_TO_DOS, N, V1_16, SOUND, OFF, ON, WHAT_2, NEW_DQUOTE, PASS_SEEKER,
-            NOT_SACRED_QUEST, PASSAGE_DENIED, ROUGH_SEAS
+            RIDE = 0,
+            FLY,
+            ROW,
+            HEAD,
+            NORTH,
+            SOUTH,
+            EAST,
+            WEST,
+            HULL_WEAK,
+            ROWING,
+            BREAKING_UP,
+            COLISSION,
+            DOCKED,
+            BLOCKED,
+            OUCH,
+            SLOW_PROG,
+            VERY_SLOW,
+            NORTH_2,
+            SOUTH_2,
+            EAST_2,
+            WEST_2,
+            JUNK_1,
+            ATTACK_DASH,
+            ON_FOOT,
+            NOTHING_TO_ATTACK,
+            NEW_ON_FOOT_NEW,
+            ATTACKED_ENTRANCE,
+            TWO_NEWLINES,
+            BRIT_DAT,
+            DUNGEON_DAT,
+            NEW_WHAT_DUNGEON_NEW,
+            ENTER_SPACE,
+            to_enter_THE_SHRINE_OF,
+            to_enter_HUT,
+            to_enter_SHRINE_CODEX,
+            to_enter_KEEP,
+            to_enter_VILLAGE,
+            to_enter_TOWNE,
+            to_enter_CASTLE,
+            to_enter_CAVE,
+            to_enter_MINE,
+            to_enter_DUNGEON,
+            to_enter_RUINS,
+            to_enter_LIGHTHOUSE,
+            to_enter_PALACE_B,
+            to_enter_CASTLE_LB,
+            WHAT,
+            EARTHQUAKE,
+            ZZZ,
+            BRIT_DAT_2,
+            EXIT_TO_DOS,
+            N,
+            V1_16,
+            SOUND,
+            OFF,
+            ON,
+            WHAT_2,
+            NEW_DQUOTE,
+            PASS_SEEKER,
+            NOT_SACRED_QUEST,
+            PASSAGE_DENIED,
+            ROUGH_SEAS
         }
 
         public enum WorldStrings2
         {
-            SHIP_SUNK_BANG_N, ABANDON_SHIP_BANG_N, DROWNING_BANGS_N, N_WHIRLPOOL_BANG_N, STAR_BOOM_BANG_STAR_N_N,
-            CAUGHT_BANG_N_N_THE_TROLLS_DEMAND_A_SP, SP_GP_TOLL_BANG_N_N_DOST_THOU_PAY_Q,
-            N_THOU_SPIETH_TROLLS_UNDER_THE_BRIDGE_BANG_N_N, SP_SNEAKS_ACROSS, N_N, TROLLS_EVADED_BANG_N,
+            SHIP_SUNK_BANG_N,
+            ABANDON_SHIP_BANG_N,
+            DROWNING_BANGS_N,
+            N_WHIRLPOOL_BANG_N,
+            STAR_BOOM_BANG_STAR_N_N,
+            CAUGHT_BANG_N_N_THE_TROLLS_DEMAND_A_SP,
+            SP_GP_TOLL_BANG_N_N_DOST_THOU_PAY_Q,
+            N_THOU_SPIETH_TROLLS_UNDER_THE_BRIDGE_BANG_N_N,
+            SP_SNEAKS_ACROSS,
+            N_N,
+            TROLLS_EVADED_BANG_N,
 
             BOTTOMLESS_N_SP_PIT_SP
             // [0] = {string} "Ship sunk!\n"
@@ -1021,7 +2058,11 @@ namespace Ultima5Redux.References
 
         public enum YellingStrings
         {
-            FURL_BANG_N, HOIST_BANG_N, WHAT_Q_N_COLON, NOTHING_N
+            FURL_BANG_N,
+            HOIST_BANG_N,
+            WHAT_Q_N_COLON,
+
+            NOTHING_N
             // FURL!\n"
             // [3] = {string} "HOIST!\n"
             // [4] = {string} "what?\n:"
@@ -1031,11 +2072,40 @@ namespace Ultima5Redux.References
 
         public enum ZstatsStrings
         {
-            DONE_DOT_N, PLAYER_COLON, NONE_BANG_N, AMBFDTPRS, GPDSC, SPACE_LV_DASH, STR_EQUALS, _SPACE2_HP_COLON,
-            N_INT_EQUALS, SPACE2_HM_COLON, N_DEX_EQUALS, SPACE2_EX_COLON, N_N_SPACE4_MAGIC_COLON, ARMS_N_N, NON_READY,
-            EQUIPMENT, N_SPACE_FOOD_COLON, N_SPACE_GOLD_COLON, N_N_SPACE_KEYS_DOTS, N_SPACE_GEMS_DOTS, N_TORCHES_DOTS,
-            N_SPACE_GRAPPLE, DASH_DASH, CODE1, CODE2, MOONSTONE_SPACE, NONE_OWNED_BANG, N_STATUS_COLON, REAGENTS,
-            SPELLS, ITEMS, ARMAMENTS, DONE_N, N_N
+            DONE_DOT_N,
+            PLAYER_COLON,
+            NONE_BANG_N,
+            AMBFDTPRS,
+            GPDSC,
+            SPACE_LV_DASH,
+            STR_EQUALS,
+            _SPACE2_HP_COLON,
+            N_INT_EQUALS,
+            SPACE2_HM_COLON,
+            N_DEX_EQUALS,
+            SPACE2_EX_COLON,
+            N_N_SPACE4_MAGIC_COLON,
+            ARMS_N_N,
+            NON_READY,
+            EQUIPMENT,
+            N_SPACE_FOOD_COLON,
+            N_SPACE_GOLD_COLON,
+            N_N_SPACE_KEYS_DOTS,
+            N_SPACE_GEMS_DOTS,
+            N_TORCHES_DOTS,
+            N_SPACE_GRAPPLE,
+            DASH_DASH,
+            CODE1,
+            CODE2,
+            MOONSTONE_SPACE,
+            NONE_OWNED_BANG,
+            N_STATUS_COLON,
+            REAGENTS,
+            SPELLS,
+            ITEMS,
+            ARMAMENTS,
+            DONE_N,
+            N_N
 
             //[0] "Done.\n"	string
             //[1]	"Player: "	string

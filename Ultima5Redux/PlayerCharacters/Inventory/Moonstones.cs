@@ -6,13 +6,15 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public sealed class Moonstones : InventoryItems<MoonPhaseReferences.MoonPhases, Moonstone>
+    [DataContract]
+    public sealed class Moonstones : InventoryItems<MoonPhaseReferences.MoonPhases, Moonstone>
     {
         [DataMember]
         public override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; internal set; } =
             new();
 
-        [JsonConstructor] public Moonstones()
+        [JsonConstructor]
+        public Moonstones()
         {
             // if Items is already loaded then we likely built from JSON Deserialize
             if (Items.Count > 0) return;

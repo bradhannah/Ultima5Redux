@@ -4,13 +4,15 @@ using Newtonsoft.Json;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public sealed class SpecialItems : InventoryItems<SpecialItem.SpecificItemType, SpecialItem>
+    [DataContract]
+    public sealed class SpecialItems : InventoryItems<SpecialItem.SpecificItemType, SpecialItem>
     {
         [DataMember]
         public override Dictionary<SpecialItem.SpecificItemType, SpecialItem> Items { get; internal set; } =
             new();
 
-        [JsonConstructor] private SpecialItems()
+        [JsonConstructor]
+        private SpecialItems()
         {
         }
 

@@ -3,7 +3,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract] public abstract class MapUnitDetails
+    [DataContract]
+    public abstract class MapUnitDetails
     {
         /// <summary>
         ///     How many iterations will I force the character to wander?

@@ -6,7 +6,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract] public sealed class Weapons : CombatItems<WeaponReference.SpecificWeaponType, Weapon>
+    [DataContract]
+    public sealed class Weapons : CombatItems<WeaponReference.SpecificWeaponType, Weapon>
     {
         [DataMember]
         public override Dictionary<WeaponReference.SpecificWeaponType, Weapon> Items { get; internal set; } =
@@ -14,7 +15,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } = new();
 
-        [JsonConstructor] private Weapons()
+        [JsonConstructor]
+        private Weapons()
         {
         }
 
@@ -31,7 +33,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             if (ItemsFromEquipment.Count > 0) return;
             foreach (Weapon weapon in Items.Values)

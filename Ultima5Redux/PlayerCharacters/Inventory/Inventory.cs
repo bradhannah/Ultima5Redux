@@ -13,7 +13,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public sealed class Inventory
+    [DataContract]
+    public sealed class Inventory
     {
         [DataMember] public LordBritishArtifacts Artifacts { get; set; }
         [DataMember] public Potions MagicPotions { get; set; }
@@ -26,9 +27,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public Moonstones TheMoonstones { get; set; }
         [DataMember] public Provisions TheProvisions { get; set; }
         [DataMember] public Weapons TheWeapons { get; set; }
+
         [IgnoreDataMember]
         [SuppressMessage("ReSharper", "CollectionNeverQueried.Global")]
         public List<InventoryItem> AllItems { get; } = new();
+
         [IgnoreDataMember]
         [SuppressMessage("ReSharper", "CollectionNeverQueried.Global")]
         public List<CombatItem> CombatItems { get; } = new();
@@ -53,11 +56,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             RefreshInventoryFromLegacySave();
         }
 
-        [JsonConstructor] private Inventory()
+        [JsonConstructor]
+        private Inventory()
         {
         }
 
-        [OnDeserialized] internal void OnDeserializedMethod(StreamingContext context)
+        [OnDeserialized]
+        internal void OnDeserializedMethod(StreamingContext context)
         {
             // update the statically cached lists 
             RefreshRollupInventory();
@@ -266,6 +271,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // if you go to jail then you have to be creative because you have no keys left!
             TheProvisions.Keys = 0;
         }
-
     }
 }

@@ -11,10 +11,19 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract] public sealed class Avatar : MapUnit
+    [DataContract]
+    public sealed class Avatar : MapUnit
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
+        public enum AvatarState
+        {
+            Regular,
+            Carpet,
+            Horse,
+            Frigate,
+            Skiff,
+            Hidden
+        }
 
         [DataMember] internal AvatarState CurrentAvatarState { get; private set; }
 
@@ -42,7 +51,7 @@ namespace Ultima5Redux.MapUnits
 
                 if (CurrentBoardedMapUnit == null)
                     throw new Ultima5ReduxException($"Expected to have boarded a unit as {CurrentAvatarState}");
-                
+
                 CurrentBoardedMapUnit.Direction = value;
             }
         }
@@ -139,7 +148,8 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        [JsonConstructor] private Avatar()
+        [JsonConstructor]
+        private Avatar()
         {
         }
 
@@ -158,7 +168,8 @@ namespace Ultima5Redux.MapUnits
             Movement = movement;
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             BoardMapUnitFromAvatarState(CurrentAvatarState);
         }

@@ -22,16 +22,35 @@ namespace Ultima5Redux.Maps
 {
     public partial class VirtualMap
     {
-        internal enum LadderOrStairDirection { Up, Down }
+        internal enum LadderOrStairDirection
+        {
+            Up,
+            Down
+        }
     }
 
-    [DataContract] public abstract class Map
+    [DataContract]
+    public abstract class Map
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum Maps { Small = -1, Overworld, Underworld, Combat, Dungeon }
+        public enum Maps
+        {
+            Small = -1,
+            Overworld,
+            Underworld,
+            Combat,
+            Dungeon
+        }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }
+        public enum WalkableType
+        {
+            StandardWalking,
+            CombatLand,
+            CombatWater,
+            CombatFlyThroughWalls,
+            CombatLandAndWater
+        }
 
         public const int MAX_MAP_CHARACTERS = 64;
         protected const int MAX_LEGACY_MAP_CHARACTERS = 32;
@@ -53,6 +72,14 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public bool XRayMode { get; set; }
 
+        [IgnoreDataMember] private readonly List<Type> _visiblePriorityOrder = new()
+        {
+            typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
+            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(MoonstoneNonAttackingUnit), typeof(ItemStack),
+            typeof(StackableItem), typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField),
+            typeof(Whirlpool)
+        };
+
 
         /// <summary>
         ///     Detailed reference of current small map
@@ -61,14 +88,6 @@ namespace Ultima5Redux.Maps
         public abstract SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
 
         [IgnoreDataMember] public abstract MapUnitPosition CurrentPosition { get; set; }
-
-        [IgnoreDataMember] private readonly List<Type> _visiblePriorityOrder = new()
-        {
-            typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(MoonstoneNonAttackingUnit), typeof(ItemStack),
-            typeof(StackableItem), typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField),
-            typeof(Whirlpool)
-        };
 
         private readonly List<Type> _searchOrderPriority = new()
         {
@@ -94,12 +113,17 @@ namespace Ultima5Redux.Maps
             MapFloor = mapFloor;
         }
 
-        [JsonConstructor] protected Map() => TheMapOverrides = new MapOverrides(this);
+        [JsonConstructor]
+        protected Map() => TheMapOverrides = new MapOverrides(this);
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             TheMapOverrides.TheMap = this;
         }
+
+
+        internal abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
 
         // ReSharper disable once UnusedMemberInSuper.Global
         internal abstract void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit);
@@ -478,9 +502,6 @@ namespace Ultima5Redux.Maps
             AddNewMapUnit(map, replacementNonAttackingUnit, nIndex);
             return true;
         }
-
-
-        internal abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
 
         public bool AreAnyTilesWithinFourDirections(Point2D position, IEnumerable<TileReference> tileReferences)
         {

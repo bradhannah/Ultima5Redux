@@ -12,10 +12,24 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public abstract class NonAttackingUnit : CombatMapUnit
     {
-        public enum TrapComplexity { Simple, Complex }
+        public enum TrapComplexity
+        {
+            Simple,
+            Complex
+        }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum TrapType { NONE, ACID, SLEEP, POISON, BOMB, SLEEP_ALL, ELECTRIC_ALL, POISON_ALL }
+        public enum TrapType
+        {
+            NONE,
+            ACID,
+            SLEEP,
+            POISON,
+            BOMB,
+            SLEEP_ALL,
+            ELECTRIC_ALL,
+            POISON_ALL
+        }
 
         [DataMember] public bool IsTrapped => Trap != TrapType.NONE;
 
@@ -94,7 +108,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     foreach (PlayerCharacterRecord record in records.Records)
                     {
                         turnResult =
-                            new SinglePlayerCharacterAffected(TurnResult.TurnResultType.PlayerCharacterPoisoned, record, stats);
+                            new SinglePlayerCharacterAffected(TurnResult.TurnResultType.PlayerCharacterPoisoned, record,
+                                stats);
                         turnResults.PushTurnResult(turnResult);
                     }
 

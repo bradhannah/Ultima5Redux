@@ -14,7 +14,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] public sealed class SmallMap : RegularMap
+    [DataContract]
+    public sealed class SmallMap : RegularMap
     {
         public const int X_TILES = 32;
         public const int Y_TILES = 32;
@@ -31,8 +32,6 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public override int NumOfXTiles => CurrentSingleMapReference.XTiles;
         [IgnoreDataMember] public override int NumOfYTiles => CurrentSingleMapReference.YTiles;
 
-        [IgnoreDataMember] public bool ShowOuterSmallMapTiles => true;
-
         [IgnoreDataMember]
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool IsBasement
@@ -45,25 +44,20 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        [IgnoreDataMember] public bool ShowOuterSmallMapTiles => true;
+
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
 
         private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
         public override Maps TheMapType => Maps.Small;
 
-        [JsonConstructor] private SmallMap()
+        [JsonConstructor]
+        private SmallMap()
         {
         }
 
-        internal void SetSmallMaps(SmallMaps smallMaps)
-        {
-            Debug.Assert(smallMaps != null);
-            _smallMaps = smallMaps;
-        }
 
-        public SmallMaps GetSmallMaps() => _smallMaps;
-        
-        
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference
         /// </summary>
@@ -73,9 +67,38 @@ namespace Ultima5Redux.Maps
             // load the map into memory
             TheMap = CurrentSingleMapReference.GetDefaultMap();
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             TheMap = CurrentSingleMapReference.GetDefaultMap();
+        }
+
+        /// <summary>
+        ///     Checks if a tile is in bounds of the actual map and not a border tile
+        /// </summary>
+        /// <param name="position">position within the virtual map</param>
+        /// <returns></returns>
+        internal static bool IsInBounds(Point2D position)
+        {
+            // determine if the x or y coordinates are in bounds, if they are out of bounds and the map does not repeat
+            // then we are going to draw a default texture on the outside areas.
+            bool xInBounds = position.X is >= 0 and < X_TILES;
+            bool yInBounds = position.Y is >= 0 and < Y_TILES;
+
+            // fill outside of the bounds with a default tile
+            return xInBounds && yInBounds;
+        }
+
+        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        {
+            return mapUnit switch
+            {
+                Enemy enemy => enemy.EnemyReference.IsWaterEnemy
+                    ? WalkableType.CombatWater
+                    : WalkableType.StandardWalking,
+                CombatPlayer => WalkableType.StandardWalking,
+                _ => WalkableType.StandardWalking
+            };
         }
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
@@ -176,6 +199,38 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
+        ///     Gets the appropriate out of bounds sprite based on the map
+        /// </summary>
+        /// <returns></returns>
+        internal int GetOutOfBoundsSprite(in Point2D position)
+        {
+            byte currentSingleMapReferenceId = CurrentSingleMapReference.Id;
+            return currentSingleMapReferenceId switch
+            {
+                // sin vraal - desert
+                (int)SmallMapReferences.SingleMapReference.Location.SinVraals_Hut => (int)TileReference.SpriteIndex
+                    .Desert1,
+                // sutek or grendal
+                (int)SmallMapReferences.SingleMapReference.Location.Suteks_Hut
+                    or (int)SmallMapReferences.SingleMapReference.Location.Grendels_Hut => (int)TileReference.SpriteIndex.Swamp,
+                // stonegate
+                (int)SmallMapReferences.SingleMapReference.Location.Stonegate => 11,
+                _ => (int)TileReference.SpriteIndex.Grass
+            };
+        }
+
+        /// <summary>
+        ///     Given the orientation of the stairs, it returns the correct sprite to display
+        /// </summary>
+        /// <param name="xy">position of stairs</param>
+        /// <returns>stair sprite</returns>
+        internal TileReference GetStairsSprite(in Point2D xy)
+        {
+            bool _ = IsStairGoingUp(xy, out TileReference stairTileReference);
+            return stairTileReference;
+        }
+
+        /// <summary>
         ///     Returns the total number of moves to the number of moves for the character to reach a point
         /// </summary>
         /// <param name="currentXy"></param>
@@ -213,7 +268,6 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        
 
         // small map
         /// <summary>
@@ -325,6 +379,8 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        internal bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
+
         /// <summary>
         ///     This is a lightweight LoadSmallMap. It is used specifically when re-populating the NPCStates after
         ///     a deserialize.
@@ -352,6 +408,38 @@ namespace Ultima5Redux.Maps
 
                 mapUnit.NpcState = npcState;
             }
+        }
+
+        internal void SetSmallMaps(SmallMaps smallMaps)
+        {
+            Debug.Assert(smallMaps != null);
+            _smallMaps = smallMaps;
+        }
+
+        /// <summary>
+        ///     Gets the shortest path between a list of
+        /// </summary>
+        /// <param name="positionList">list of positions</param>
+        /// <param name="destinedPosition">the destination position</param>
+        /// <returns>an ordered directory list of paths based on the shortest path (straight line path)</returns>
+        private static SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList,
+            in Point2D destinedPosition)
+        {
+            SortedDictionary<double, Point2D> sortedPoints = new();
+
+            // get the distances and add to the sorted dictionary
+            foreach (Point2D xy in positionList)
+            {
+                double dDistance = destinedPosition.DistanceBetween(xy);
+                // make them negative so they sort backwards
+
+                // if the distance is the same then we just add a bit to make sure there is no conflict
+                while (sortedPoints.ContainsKey(dDistance)) dDistance += 0.0000001;
+
+                sortedPoints.Add(dDistance, xy);
+            }
+
+            return sortedPoints;
         }
 
         /// <summary>
@@ -391,44 +479,6 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        ///     Gets the shortest path between a list of
-        /// </summary>
-        /// <param name="positionList">list of positions</param>
-        /// <param name="destinedPosition">the destination position</param>
-        /// <returns>an ordered directory list of paths based on the shortest path (straight line path)</returns>
-        private static SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList,
-            in Point2D destinedPosition)
-        {
-            SortedDictionary<double, Point2D> sortedPoints = new();
-
-            // get the distances and add to the sorted dictionary
-            foreach (Point2D xy in positionList)
-            {
-                double dDistance = destinedPosition.DistanceBetween(xy);
-                // make them negative so they sort backwards
-
-                // if the distance is the same then we just add a bit to make sure there is no conflict
-                while (sortedPoints.ContainsKey(dDistance)) dDistance += 0.0000001;
-
-                sortedPoints.Add(dDistance, xy);
-            }
-
-            return sortedPoints;
-        }
-
-        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
-        {
-            return mapUnit switch
-            {
-                Enemy enemy => enemy.EnemyReference.IsWaterEnemy
-                    ? WalkableType.CombatWater
-                    : WalkableType.StandardWalking,
-                CombatPlayer => WalkableType.StandardWalking,
-                _ => WalkableType.StandardWalking
-            };
-        }
-
-        /// <summary>
         ///     Gets the NPC you want to talk to in the given direction
         ///     If you are in front of a table then you can talk over top of it too
         /// </summary>
@@ -452,55 +502,7 @@ namespace Ultima5Redux.Maps
                 CurrentSingleMapReference.Floor);
         }
 
-        /// <summary>
-        ///     Gets the appropriate out of bounds sprite based on the map
-        /// </summary>
-        /// <returns></returns>
-        internal int GetOutOfBoundsSprite(in Point2D position)
-        {
-            byte currentSingleMapReferenceId = CurrentSingleMapReference.Id;
-            return currentSingleMapReferenceId switch
-            {
-                // sin vraal - desert
-                (int)SmallMapReferences.SingleMapReference.Location.SinVraals_Hut => (int)TileReference.SpriteIndex
-                    .Desert1,
-                // sutek or grendal
-                (int)SmallMapReferences.SingleMapReference.Location.Suteks_Hut
-                    or (int)SmallMapReferences.SingleMapReference.Location.Grendels_Hut => (int)TileReference.SpriteIndex.Swamp,
-                // stonegate
-                (int)SmallMapReferences.SingleMapReference.Location.Stonegate => 11,
-                _ => (int)TileReference.SpriteIndex.Grass
-            };
-        }
-
-        /// <summary>
-        ///     Given the orientation of the stairs, it returns the correct sprite to display
-        /// </summary>
-        /// <param name="xy">position of stairs</param>
-        /// <returns>stair sprite</returns>
-        internal TileReference GetStairsSprite(in Point2D xy)
-        {
-            bool _ = IsStairGoingUp(xy, out TileReference stairTileReference);
-            return stairTileReference;
-        }
-
-        internal bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
-
-        /// <summary>
-        ///     Checks if a tile is in bounds of the actual map and not a border tile
-        /// </summary>
-        /// <param name="position">position within the virtual map</param>
-        /// <returns></returns>
-        internal static bool IsInBounds(Point2D position)
-        {
-            // determine if the x or y coordinates are in bounds, if they are out of bounds and the map does not repeat
-            // then we are going to draw a default texture on the outside areas.
-            bool xInBounds = position.X is >= 0 and < X_TILES;
-            bool yInBounds = position.Y is >= 0 and < Y_TILES;
-
-            // fill outside of the bounds with a default tile
-            return xInBounds && yInBounds;
-        }
+        public SmallMaps GetSmallMaps() => _smallMaps;
 
         public bool IsNpcInBed(NonPlayerCharacter npc) =>
             GetTileReference(npc.MapUnitPosition.XY).Is(TileReference.SpriteIndex.LeftBed);

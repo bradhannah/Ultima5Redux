@@ -15,7 +15,11 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class ShoppeKeeperDialogueReference
     {
-        private enum ShoppeKeeperChunkNames { Unused, AllData }
+        private enum ShoppeKeeperChunkNames
+        {
+            Unused,
+            AllData
+        }
 
         private readonly DataChunks<ShoppeKeeperChunkNames> _dataChunks;
         private readonly DataOvlReference _dataOvlReference;

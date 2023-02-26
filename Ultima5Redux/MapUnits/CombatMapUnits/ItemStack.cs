@@ -12,7 +12,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     /// <summary>
     ///     Represents a stack of items that can be picked up
     /// </summary>
-    [DataContract] public sealed class ItemStack : NonAttackingUnit
+    [DataContract]
+    public sealed class ItemStack : NonAttackingUnit
     {
         [DataMember] private readonly Stack<StackableItem> _stackableItems = new();
         public override bool ExposeInnerItemsOnOpen => false;
@@ -59,7 +60,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public int TotalItems => _stackableItems.Count;
 
-        [JsonConstructor] public ItemStack()
+        [JsonConstructor]
+        public ItemStack()
         {
         }
 

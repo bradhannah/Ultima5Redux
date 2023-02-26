@@ -9,7 +9,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.SeaFaringVessels
 {
-    [DataContract] public sealed class Skiff : SeaFaringVessel
+    [DataContract]
+    public sealed class Skiff : SeaFaringVessel
     {
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
             new()
@@ -42,7 +43,8 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 { Point2D.Direction.Up, "SkiffUp" }
             };
 
-        [JsonConstructor] private Skiff()
+        [JsonConstructor]
+        private Skiff()
         {
         }
 

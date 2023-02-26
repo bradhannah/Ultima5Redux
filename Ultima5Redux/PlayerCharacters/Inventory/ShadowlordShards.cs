@@ -4,13 +4,15 @@ using Newtonsoft.Json;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public sealed class ShadowlordShards : InventoryItems<ShadowlordShard.ShardType, ShadowlordShard>
+    [DataContract]
+    public sealed class ShadowlordShards : InventoryItems<ShadowlordShard.ShardType, ShadowlordShard>
     {
         [DataMember]
         public override Dictionary<ShadowlordShard.ShardType, ShadowlordShard> Items { get; internal set; } =
             new(3);
 
-        [JsonConstructor] private ShadowlordShards()
+        [JsonConstructor]
+        private ShadowlordShards()
         {
         }
 

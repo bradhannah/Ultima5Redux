@@ -10,7 +10,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract] public abstract class CombatItem : InventoryItem
+    [DataContract]
+    public abstract class CombatItem : InventoryItem
     {
         [DataMember] public DataOvlReference.Equipment SpecificEquipment { get; private set; }
 
@@ -32,7 +33,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             private set => SpecificEquipment = value.SpecificEquipment;
         }
 
-        [JsonConstructor] protected CombatItem()
+        [JsonConstructor]
+        protected CombatItem()
         {
         }
 

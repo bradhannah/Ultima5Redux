@@ -59,10 +59,6 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember] public bool IsAvatarRidingSomething => GetAvatarMapUnit().IsAvatarOnBoardedThing;
 
-
-        [IgnoreDataMember]
-        protected int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
-
         [IgnoreDataMember]
         public override MapUnitPosition CurrentPosition
         {
@@ -74,9 +70,14 @@ namespace Ultima5Redux.Maps
         protected sealed override Dictionary<Point2D, TileOverrideReference> XyOverrides =>
             _xyOverrides ??= GameReferences.Instance.TileOverrideRefs.GetTileXyOverrides(CurrentSingleMapReference);
 
+
+        [IgnoreDataMember]
+        protected int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
+
         private Dictionary<Point2D, TileOverrideReference> _xyOverrides;
 
-        [JsonConstructor] protected RegularMap()
+        [JsonConstructor]
+        protected RegularMap()
         {
         }
 
@@ -451,7 +452,8 @@ namespace Ultima5Redux.Maps
         }
 
 
-        private static void ForceAttack(VirtualMap.AggressiveMapUnitInfo mapUnitInfo, TileReference attackFromTileReference)
+        private static void ForceAttack(VirtualMap.AggressiveMapUnitInfo mapUnitInfo,
+            TileReference attackFromTileReference)
         {
             mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction.EnemyAttackCombatMap);
             SingleCombatMapReference singleCombatMapReference =
@@ -778,6 +780,16 @@ namespace Ultima5Redux.Maps
             return directionList;
         }
 
+        // ReSharper disable once UnusedMethodReturnValue.Local
+        private Skiff MakeAndBoardSkiff()
+        {
+            Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().Direction,
+                out int _);
+            GetAvatarMapUnit().BoardMapUnit(skiff);
+            ClearAndSetEmptyMapUnits(skiff);
+            return skiff;
+        }
+
         public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
             ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
 
@@ -821,22 +833,6 @@ namespace Ultima5Redux.Maps
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.PoofHorse));
 
             return horse;
-        }
-
-        // ReSharper disable once UnusedMethodReturnValue.Global
-        protected MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
-            SmallMapReferences.SingleMapReference singleMapReference)
-        {
-            int nIndex = FindNextFreeMapUnitIndex(TheMapType);
-            if (nIndex == -1) return null;
-
-            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, singleMapReference.Floor);
-            var moonstoneNonAttackingUnit =
-                new MoonstoneNonAttackingUnit(moonstone, mapUnitPosition);
-
-            // set position of frigate in the world
-            CurrentMapUnits.AddMapUnit(moonstoneNonAttackingUnit);
-            return moonstoneNonAttackingUnit;
         }
 
         public Avatar GetAvatarMapUnit()
@@ -963,16 +959,6 @@ namespace Ultima5Redux.Maps
         public bool IsLandNearbyForAvatar() =>
             IsLandNearby(CurrentPosition.XY, false, GetAvatarMapUnit().CurrentAvatarState);
 
-        // ReSharper disable once UnusedMethodReturnValue.Local
-        private Skiff MakeAndBoardSkiff()
-        {
-            Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().Direction,
-                out int _);
-            GetAvatarMapUnit().BoardMapUnit(skiff);
-            ClearAndSetEmptyMapUnits(skiff);
-            return skiff;
-        }
-
         public void MoveAvatar(Point2D newPosition)
         {
             CurrentAvatarPosition =
@@ -1028,6 +1014,22 @@ namespace Ultima5Redux.Maps
             avatarFrigate.SkiffsAboard--;
 
             return unboardedMapUnit;
+        }
+
+        // ReSharper disable once UnusedMethodReturnValue.Global
+        protected MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
+            SmallMapReferences.SingleMapReference singleMapReference)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(TheMapType);
+            if (nIndex == -1) return null;
+
+            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, singleMapReference.Floor);
+            var moonstoneNonAttackingUnit =
+                new MoonstoneNonAttackingUnit(moonstone, mapUnitPosition);
+
+            // set position of frigate in the world
+            CurrentMapUnits.AddMapUnit(moonstoneNonAttackingUnit);
+            return moonstoneNonAttackingUnit;
         }
 
         /// <summary>

@@ -67,7 +67,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             BlackthornGuardWander = 110,
 
             // Blackthorn guard stays put, but will ask password if prompted
-            BlackthornGuardFixed = 111, StoneGargoyleTrigger = 112
+            BlackthornGuardFixed = 111,
+            StoneGargoyleTrigger = 112
         }
 
 

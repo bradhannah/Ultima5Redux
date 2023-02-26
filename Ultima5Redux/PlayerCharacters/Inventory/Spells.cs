@@ -7,7 +7,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public class Spells : InventoryItems<MagicReference.SpellWords, Spell>
+    [DataContract]
+    public class Spells : InventoryItems<MagicReference.SpellWords, Spell>
     {
         [IgnoreDataMember] private static readonly Dictionary<string, string> LiteralTranslationDictionary = new()
         {
@@ -45,7 +46,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             get { return Items.Values.OrderBy(s => s.MinCircle).ThenBy(s => s.LongName); }
         }
 
-        [JsonConstructor] private Spells()
+        [JsonConstructor]
+        private Spells()
         {
         }
 

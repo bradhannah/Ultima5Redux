@@ -14,7 +14,8 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract] public abstract class MapUnit : MapUnitDetails
+    [DataContract]
+    public abstract class MapUnit : MapUnitDetails
     {
         /// <summary>
         ///     Default number of seconds between animation frames
@@ -114,7 +115,8 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
         /// </summary>
-        [JsonConstructor] protected MapUnit()
+        [JsonConstructor]
+        protected MapUnit()
         {
             TheSmallMapCharacterState = null;
             Movement = null;

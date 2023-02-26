@@ -6,7 +6,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract] public sealed class EmptyMapUnit : MapUnit
+    [DataContract]
+    public sealed class EmptyMapUnit : MapUnit
     {
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 

@@ -6,12 +6,14 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public class Scrolls : InventoryItems<MagicReference.SpellWords, Scroll>
+    [DataContract]
+    public class Scrolls : InventoryItems<MagicReference.SpellWords, Scroll>
     {
         [DataMember]
         public override Dictionary<MagicReference.SpellWords, Scroll> Items { get; internal set; } = new(8);
 
-        [JsonConstructor] private Scrolls()
+        [JsonConstructor]
+        private Scrolls()
         {
         }
 

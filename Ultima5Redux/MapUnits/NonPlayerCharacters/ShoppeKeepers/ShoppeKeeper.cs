@@ -24,8 +24,19 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         public enum DialogueType
         {
-            None, OkGoodbye, BuyBlacksmith, SellBlacksmith, BuyMagicSeller, BuyShipwright, BuyBarkeeper, BuyHealer,
-            BuyGuildMaster, RestInnkeeper, GossipInnkeeper, BuyHorses, DropOffPartyMemberInnkeeper
+            None,
+            OkGoodbye,
+            BuyBlacksmith,
+            SellBlacksmith,
+            BuyMagicSeller,
+            BuyShipwright,
+            BuyBarkeeper,
+            BuyHealer,
+            BuyGuildMaster,
+            RestInnkeeper,
+            GossipInnkeeper,
+            BuyHorses,
+            DropOffPartyMemberInnkeeper
         }
 
         public string ButtonName { get; }
@@ -166,6 +177,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return nScheduleIndex is 1 or 3;
         }
 
+        protected static string FlattenStr(string str) => str.Trim().Replace("\n", " ");
+
         /// <summary>
         ///     Quotes the string and adds "says shoppekeeper"
         /// </summary>
@@ -180,8 +193,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             str += " " + saysStr + " " + TheShoppeKeeperReference.ShoppeKeeperName;
             return str;
         }
-
-        protected static string FlattenStr(string str) => str.Trim().Replace("\n", " ");
 
         protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender) =>
             DataOvlReference.StringReferences.GetString(gender == PlayerCharacterRecord.CharacterGender.Male

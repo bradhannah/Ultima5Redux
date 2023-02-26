@@ -17,8 +17,18 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// </summary>
         public enum SpecificNpcDialogType
         {
-            Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87, InnKeeper = 0x88,
-            MagicSeller = 0x85, GuildMaster = 0x86, None = 0xFF, Guard = 0xFE, WishingWell = 0xFD
+            Blacksmith = 0x81,
+            Barkeeper = 0x82,
+            HorseSeller = 0x83,
+            Shipwright = 0x84,
+            Healer = 0x87,
+            InnKeeper = 0x88,
+            MagicSeller = 0x85,
+            GuildMaster = 0x86,
+            None = 0xFF,
+            Guard = 0xFE,
+
+            WishingWell = 0xFD
             // unknowns may be crown and sandlewood box
         }
 

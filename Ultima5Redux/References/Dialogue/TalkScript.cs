@@ -11,32 +11,59 @@ using Newtonsoft.Json.Converters;
 
 namespace Ultima5Redux.References.Dialogue
 {
-    [DataContract] public sealed class TalkScript
+    [DataContract]
+    public sealed class TalkScript
     {
         /// <summary>
         ///     Specific talk command
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum TalkCommand
         {
-            PlainString = 0x00, AvatarsName = 0x81, EndConversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85,
-            Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89, KarmaMinusOne = 0x8A, CallGuards = 0x8B,
-            IfElseKnowsName = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, StartLabelDefinition = 0x90,
-            StartNewSection = 0xA2, EndScript = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE, DoNothingSection = 0xFF,
-            PromptUserForInput_NPCQuestion = 0x80, PromptUserForInput_UserInterest = 0x7F,
-            UserInputNotRecognized = 0x7E, ExtortionAmount = 0x100, GoToJail = 0x101, PayGenericExtortion = 0x102,
-            PayHalfGoldExtortion = 0x103, MakeAHorse = 0x104
+            PlainString = 0x00,
+            AvatarsName = 0x81,
+            EndConversation = 0x82,
+            Pause = 0x83,
+            JoinParty = 0x84,
+            Gold = 0x85,
+            Change = 0x86,
+            Or = 0x87,
+            AskName = 0x88,
+            KarmaPlusOne = 0x89,
+            KarmaMinusOne = 0x8A,
+            CallGuards = 0x8B,
+            IfElseKnowsName = 0x8C,
+            NewLine = 0x8D,
+            Rune = 0x8E,
+            KeyWait = 0x8F,
+            StartLabelDefinition = 0x90,
+            StartNewSection = 0xA2,
+            EndScript = 0x9F,
+            GotoLabel = 0xFD,
+            DefineLabel = 0xFE,
+            DoNothingSection = 0xFF,
+            PromptUserForInput_NPCQuestion = 0x80,
+            PromptUserForInput_UserInterest = 0x7F,
+            UserInputNotRecognized = 0x7E,
+            ExtortionAmount = 0x100,
+            GoToJail = 0x101,
+            PayGenericExtortion = 0x102,
+            PayHalfGoldExtortion = 0x103,
+            MakeAHorse = 0x104
         }
 
         /// <summary>
         ///     The default script line offsets for the static responses
         /// </summary>
-        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
-
-        /// <summary>
-        ///     the end Index for the default script lines (ie. name, job etc.)
-        /// </summary>
-        private const int END_BASE_INDEXES = (int)TalkConstants.Bye;
+        public enum TalkConstants
+        {
+            Name = 0,
+            Description,
+            Greeting,
+            Job,
+            Bye
+        }
 
         /// <summary>
         ///     the maximum talk code for labels (in .tlk files)
@@ -54,18 +81,23 @@ namespace Ultima5Redux.References.Dialogue
         internal const int TOTAL_LABELS = 0x0A;
 
         /// <summary>
+        ///     the end Index for the default script lines (ie. name, job etc.)
+        /// </summary>
+        private const int END_BASE_INDEXES = (int)TalkConstants.Bye;
+
+        /// <summary>
         ///     All of the ScriptLines
         /// </summary>
         [DataMember(Name = "ScriptLines")] private readonly List<ScriptLine> _scriptLines = new();
-
-        // tracking the current script line
-        [IgnoreDataMember] private ScriptLine _currentScriptLine; //= new();
 
         /// <summary>
         ///     The number of ScriptLines in the Script
         /// </summary>
         [IgnoreDataMember]
         internal int NumberOfScriptLines => _scriptLines.Count;
+
+        // tracking the current script line
+        [IgnoreDataMember] private ScriptLine _currentScriptLine; //= new();
 
         /// <summary>
         ///     All associated questions and answers for the Script
@@ -115,9 +147,41 @@ namespace Ultima5Redux.References.Dialogue
         ///     Just like when we load from the raw file
         /// </summary>
         /// <param name="context"></param>
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             InitScript();
+        }
+
+        /// <summary>
+        ///     Get the script line based on the specified Talk Constant allowing to quickly access "name", "job" etc.
+        ///     This is not compatible with Labels
+        /// </summary>
+        /// <param name="talkConst">name, job etc.</param>
+        /// <returns>The corresponding single ScriptLine</returns>
+        internal ScriptLine GetScriptLine(TalkConstants talkConst) => _scriptLines[(int)talkConst];
+
+        /// <summary>
+        ///     Gets a script line based on its index in the overall Script
+        /// </summary>
+        /// <param name="index">index into Script</param>
+        /// <returns>The requested ScriptLine</returns>
+        internal ScriptLine GetScriptLine(int index) => _scriptLines[index];
+
+        /// <summary>
+        ///     Gets a scriptline based on the label index
+        /// </summary>
+        /// <param name="nLabel">0 based index of label</param>
+        /// <returns>The corresponding script line</returns>
+        internal ScriptLine GetScriptLineLabel(int nLabel) => _scriptLines[GetScriptLineLabelIndex(nLabel)];
+
+        /// <summary>
+        ///     Move to the next line in the script (for adding new content)
+        /// </summary>
+        internal void NextLine()
+        {
+            _currentScriptLine = new ScriptLine();
+            _scriptLines.Add(_currentScriptLine);
         }
 
         /// <summary>
@@ -448,37 +512,6 @@ namespace Ultima5Redux.References.Dialogue
         }
 
         /// <summary>
-        ///     Get the script line based on the specified Talk Constant allowing to quickly access "name", "job" etc.
-        ///     This is not compatible with Labels
-        /// </summary>
-        /// <param name="talkConst">name, job etc.</param>
-        /// <returns>The corresponding single ScriptLine</returns>
-        internal ScriptLine GetScriptLine(TalkConstants talkConst) => _scriptLines[(int)talkConst];
-
-        /// <summary>
-        ///     Gets a script line based on its index in the overall Script
-        /// </summary>
-        /// <param name="index">index into Script</param>
-        /// <returns>The requested ScriptLine</returns>
-        internal ScriptLine GetScriptLine(int index) => _scriptLines[index];
-
-        /// <summary>
-        ///     Gets a scriptline based on the label index
-        /// </summary>
-        /// <param name="nLabel">0 based index of label</param>
-        /// <returns>The corresponding script line</returns>
-        internal ScriptLine GetScriptLineLabel(int nLabel) => _scriptLines[GetScriptLineLabelIndex(nLabel)];
-
-        /// <summary>
-        ///     Move to the next line in the script (for adding new content)
-        /// </summary>
-        internal void NextLine()
-        {
-            _currentScriptLine = new ScriptLine();
-            _scriptLines.Add(_currentScriptLine);
-        }
-
-        /// <summary>
         ///     This is a collection of all an NPCs ScriptTalkLabel(s)
         /// </summary>
         internal class ScriptTalkLabels
@@ -677,7 +710,8 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     A single instance of a question and answer for dialog
         /// </summary>
-        [DataContract] internal class ScriptQuestionAnswer
+        [DataContract]
+        internal class ScriptQuestionAnswer
         {
             [DataMember] public ScriptLine Answer { get; }
 
@@ -693,7 +727,8 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     Represents a single script component
         /// </summary>
-        [DataContract] public class ScriptItem
+        [DataContract]
+        public class ScriptItem
         {
             [DataMember(Name = "StringData", EmitDefaultValue = false)]
             private string _str;
@@ -782,7 +817,8 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     Special scriptline that identifies that it has been split in sections
         /// </summary>
-        [DataContract] internal class SplitScriptLine : ScriptLine
+        [DataContract]
+        internal class SplitScriptLine : ScriptLine
         {
         }
 
@@ -790,7 +826,8 @@ namespace Ultima5Redux.References.Dialogue
         ///     Represents a single line of a script
         ///     This script line can be in a "split mode" or non-splitmode
         /// </summary>
-        [DataContract] internal class ScriptLine
+        [DataContract]
+        internal class ScriptLine
         {
             /// <summary>
             ///     a list of all associated ScriptItems, in a particular order

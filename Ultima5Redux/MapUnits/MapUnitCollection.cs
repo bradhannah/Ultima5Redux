@@ -9,7 +9,8 @@ using Ultima5Redux.MapUnits.SeaFaringVessels;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract] public class MapUnitCollection
+    [DataContract]
+    public class MapUnitCollection
     {
         [DataMember(Name = "Avatars")]
         private Avatar[] SaveAvatars
@@ -158,11 +159,13 @@ namespace Ultima5Redux.MapUnits
 
         public Dictionary<Point2D, List<MapUnit>> CachedActiveDictionary { get; private set; }
 
-        [JsonConstructor] public MapUnitCollection()
+        [JsonConstructor]
+        public MapUnitCollection()
         {
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             _bForceNewAvatar = true;
             RefreshActiveDictionaryCache();

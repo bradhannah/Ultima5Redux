@@ -6,10 +6,20 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    [DataContract] public class CharacterEquipped
+    [DataContract]
+    public class CharacterEquipped
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum EquippableSlot { None, Helm, Amulet, LeftHand, RightHand, Ring, Armour }
+        public enum EquippableSlot
+        {
+            None,
+            Helm,
+            Amulet,
+            LeftHand,
+            RightHand,
+            Ring,
+            Armour
+        }
 
         [DataMember] public DataOvlReference.Equipment Amulet { get; set; }
         [DataMember] public DataOvlReference.Equipment Armour { get; set; }

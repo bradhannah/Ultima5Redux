@@ -13,9 +13,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     ///     Represents an invisible mapunit that includes inner items
     ///     This a secret that can be found by searching - such as the axe in Jhelom
     /// </summary>
-    [DataContract] public sealed class DiscoverableLoot : NonAttackingUnit
+    [DataContract]
+    public sealed class DiscoverableLoot : NonAttackingUnit
     {
-        private enum LootType { SearchItems, InventoryItems }
+        private enum LootType
+        {
+            SearchItems,
+            InventoryItems
+        }
 
         [DataMember] private List<InventoryItem> _inventoryItems;
 
@@ -93,7 +98,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             InitializeSearchItems();
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             InitializeSearchItems();
         }

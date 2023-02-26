@@ -8,13 +8,21 @@ using Ultima5Redux.Data;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract] public class MapUnitMovement
+    [DataContract]
+    public class MapUnitMovement
     {
         /// <summary>
         ///     The direction of the movement as defined in saved.gam
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum MovementCommandDirection { None = 0, East = 1, North = 2, West = 3, South = 4 }
+        public enum MovementCommandDirection
+        {
+            None = 0,
+            East = 1,
+            North = 2,
+            West = 3,
+            South = 4
+        }
 
         /// <summary>
         ///     Maximum number of movement commands per map character
@@ -38,7 +46,8 @@ namespace Ultima5Redux.MapUnits
         // ReSharper disable once NotAccessedField.Local
         [DataMember(Name = "DialogIndex")] private int _nDialogIndex;
 
-        [JsonConstructor] private MapUnitMovement()
+        [JsonConstructor]
+        private MapUnitMovement()
         {
         }
 

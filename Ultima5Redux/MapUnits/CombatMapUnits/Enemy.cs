@@ -13,7 +13,8 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    [DataContract] public class Enemy : CombatMapUnit
+    [DataContract]
+    public class Enemy : CombatMapUnit
     {
         [DataMember(Name = "EnemyReferenceIndex")]
         private int _enemyReferenceIndex = -1;
@@ -60,7 +61,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember]
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
 
-        [JsonConstructor] private Enemy()
+        [JsonConstructor]
+        private Enemy()
         {
         }
 

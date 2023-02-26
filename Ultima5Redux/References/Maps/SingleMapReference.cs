@@ -20,15 +20,46 @@ namespace Ultima5Redux.References.Maps
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public enum Location
             {
-                Britannia_Underworld = 0x00, Moonglow = 1, Britain = 2, Jhelom = 3, Yew = 4, Minoc = 5, Trinsic = 6,
-                Skara_Brae = 7, New_Magincia = 8, // Town
-                Fogsbane = 9, Stormcrow = 10, Greyhaven = 11, Waveguide = 12, Iolos_Hut = 13, Suteks_Hut = 14,
-                SinVraals_Hut = 15, Grendels_Hut = 16, // Dwelling
-                Lord_Britishs_Castle = 17, Palace_of_Blackthorn = 18, West_Britanny = 19, North_Britanny = 20,
-                East_Britanny = 21, Paws = 22, Cove = 23, // Castle
-                Buccaneers_Den = 24, Ararat = 25, Bordermarch = 26, Farthing = 27, Windemere = 28, Stonegate = 29,
-                Lycaeum = 30, Empath_Abbey = 31, Serpents_Hold = 32, // Keep
-                Deceit = 33, Despise = 34, Destard = 35, Wrong = 36, Covetous = 37, Shame = 38, Hythloth = 39,
+                Britannia_Underworld = 0x00,
+                Moonglow = 1,
+                Britain = 2,
+                Jhelom = 3,
+                Yew = 4,
+                Minoc = 5,
+                Trinsic = 6,
+                Skara_Brae = 7,
+                New_Magincia = 8, // Town
+                Fogsbane = 9,
+                Stormcrow = 10,
+                Greyhaven = 11,
+                Waveguide = 12,
+                Iolos_Hut = 13,
+                Suteks_Hut = 14,
+                SinVraals_Hut = 15,
+                Grendels_Hut = 16, // Dwelling
+                Lord_Britishs_Castle = 17,
+                Palace_of_Blackthorn = 18,
+                West_Britanny = 19,
+                North_Britanny = 20,
+                East_Britanny = 21,
+                Paws = 22,
+                Cove = 23, // Castle
+                Buccaneers_Den = 24,
+                Ararat = 25,
+                Bordermarch = 26,
+                Farthing = 27,
+                Windemere = 28,
+                Stonegate = 29,
+                Lycaeum = 30,
+                Empath_Abbey = 31,
+                Serpents_Hold = 32, // Keep
+                Deceit = 33,
+                Despise = 34,
+                Destard = 35,
+                Wrong = 36,
+                Covetous = 37,
+                Shame = 38,
+                Hythloth = 39,
                 Doom = 40, // Dungeons
                 Combat_resting_shrine = 41
             }
@@ -37,7 +68,15 @@ namespace Ultima5Redux.References.Maps
             ///     Map master files. These represent .DAT, .NPC and .TLK files
             /// </summary>
             [JsonConverter(typeof(StringEnumConverter))]
-            public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep, Dungeon, None }
+            public enum SmallMapMasterFiles
+            {
+                Castle,
+                Towne,
+                Dwelling,
+                Keep,
+                Dungeon,
+                None
+            }
 
             /// <summary>
             ///     Total number of small map locations

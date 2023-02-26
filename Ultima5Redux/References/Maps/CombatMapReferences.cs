@@ -10,7 +10,10 @@ namespace Ultima5Redux.References.Maps
 {
     public class CombatMapReferences
     {
-        public enum DataChunkName { Unused = -1 }
+        public enum DataChunkName
+        {
+            Unused = -1
+        }
 
         private const int TOTAL_DUNGEON_MAPS = 112;
 

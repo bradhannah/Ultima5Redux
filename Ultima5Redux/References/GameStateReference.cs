@@ -7,6 +7,7 @@ namespace Ultima5Redux.References
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public static GameState PreviousState { get; private set; }
+
         public static GameState State { get; private set; }
 
         public static void SetState(GameState state)

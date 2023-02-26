@@ -8,21 +8,24 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public sealed class LordBritishArtifact : InventoryItem
+    [DataContract]
+    public sealed class LordBritishArtifact : InventoryItem
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum ArtifactType { Amulet = 439, Crown = 437, Sceptre = 438 }
+        public enum ArtifactType
+        {
+            Amulet = 439,
+            Crown = 437,
+            Sceptre = 438
+        }
 
         [DataMember]
         public string EquipMessage =>
             Artifact switch
             {
-                ArtifactType.Amulet => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                    .WearUseItemStrings.WEARING_AMULET),
-                ArtifactType.Crown => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                    .WearUseItemStrings.DON_THE_CROWN),
-                ArtifactType.Sceptre => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                    .WearUseItemStrings.WIELD_SCEPTRE),
+                ArtifactType.Amulet => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WEARING_AMULET),
+                ArtifactType.Crown => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.DON_THE_CROWN),
+                ArtifactType.Sceptre => GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WIELD_SCEPTRE),
                 _ => throw new InvalidEnumArgumentException(((int)Artifact).ToString())
             };
 
@@ -33,7 +36,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override string InventoryReferenceString => Artifact.ToString();
 
-        [JsonConstructor] private LordBritishArtifact()
+        [JsonConstructor]
+        private LordBritishArtifact()
         {
         }
 

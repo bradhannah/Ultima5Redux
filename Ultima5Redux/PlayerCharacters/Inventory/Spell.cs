@@ -9,9 +9,11 @@ using Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public sealed class Spell : InventoryItem
+    [DataContract]
+    public sealed class Spell : InventoryItem
     {
-        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum UnpublishedSpells
         {
             An_Ylem, // negate matter 
@@ -42,7 +44,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public MagicReference SpellMagicReference =>
             GameReferences.Instance.MagicRefs.GetMagicReference(SpellIncantation);
 
-        [JsonConstructor] public Spell()
+        [JsonConstructor]
+        public Spell()
         {
         }
 
@@ -53,7 +56,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             if (Quantity > 0) LearnSpell();
         }
 
-        [OnDeserialized] private void PostDeserialized(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialized(StreamingContext context)
         {
             if (Quantity > 0) LearnSpell();
         }

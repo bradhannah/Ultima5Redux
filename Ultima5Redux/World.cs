@@ -28,19 +28,40 @@ namespace Ultima5Redux
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public class World
     {
-        private enum SpecialSearchLocation { None, GlassSwords }
+        private enum SpecialSearchLocation
+        {
+            None,
+            GlassSwords
+        }
 
-        public enum KlimbResult { Success, SuccessFell, CantKlimb, RequiresDirection }
+        public enum KlimbResult
+        {
+            Success,
+            SuccessFell,
+            CantKlimb,
+            RequiresDirection
+        }
 
         /// <summary>
         ///     Special things that can be looked at in the world that will require special consideration
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public enum SpecialLookCommand { None, Sign, GemCrystal }
+        public enum SpecialLookCommand
+        {
+            None,
+            Sign,
+            GemCrystal
+        }
 
         public enum TryToAttackResult
         {
-            Uninitialized, NothingToAttack, BrokenMirror, CombatMapEnemy, CombatMapNpc, NpcMurder, OnlyOnFoot,
+            Uninitialized,
+            NothingToAttack,
+            BrokenMirror,
+            CombatMapEnemy,
+            CombatMapNpc,
+            NpcMurder,
+            OnlyOnFoot,
             ShootAProjectile
         }
 
@@ -122,7 +143,7 @@ namespace Ultima5Redux
             }
         }
 
-        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Local")] 
+        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Local")]
         private static void CastSleep(TurnResults turnResults, PlayerCharacterRecord record, out bool bWasPutToSleep)
         {
             bWasPutToSleep = record.Stats.Sleep();
@@ -248,6 +269,12 @@ namespace Ultima5Redux
             }
         }
 
+        private static string GetOnFootResponse() =>
+            GameReferences.Instance.DataOvlRef.StringReferences
+                .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + "\n" + GameReferences.Instance
+                .DataOvlRef
+                .StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.ON_FOOT).Trim();
+
         private static SpecialSearchLocation GetSpecialSearchLocation(
             SmallMapReferences.SingleMapReference.Location location,
             int nFloor, Point2D position)
@@ -343,12 +370,6 @@ namespace Ultima5Redux
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireWhat));
             return false;
         }
-
-        private static string GetOnFootResponse() =>
-            GameReferences.Instance.DataOvlRef.StringReferences
-                .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + "\n" + GameReferences.Instance
-                .DataOvlRef
-                .StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.ON_FOOT).Trim();
 
 
         private bool IsLeavingMap(Point2D xyProposedPosition) =>
@@ -1848,7 +1869,6 @@ namespace Ultima5Redux
                 AdvanceClockNoComputation(nTimeToPass);
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.AdvanceClockNoComputation));
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
-
             }
 
             // WE are DEFINITELY on a large map at this time
@@ -1917,7 +1937,6 @@ namespace Ultima5Redux
             AdvanceClockNoComputation(nTimeToPass);
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.AdvanceClockNoComputation));
             return new List<VirtualMap.AggressiveMapUnitInfo>();
-
         }
 
         /// <summary>

@@ -23,8 +23,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [JsonConverter(typeof(StringEnumConverter))]
         public enum SpecificReagentType
         {
-            SulfurAsh = 0x2AA, Ginseng = 0x2AB, Garlic = 0x2AC, SpiderSilk = 0x2AD, BloodMoss = 0x2AE,
-            BlackPearl = 0x2AF, NightShade = 0x2B0, MandrakeRoot = 0x2B1
+            SulfurAsh = 0x2AA,
+            Ginseng = 0x2AB,
+            Garlic = 0x2AC,
+            SpiderSilk = 0x2AD,
+            BloodMoss = 0x2AE,
+            BlackPearl = 0x2AF,
+            NightShade = 0x2B0,
+            MandrakeRoot = 0x2B1
         }
 
         private const int REAGENT_SPRITE = 259;
@@ -52,7 +58,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember]
         public int ReagentIndex => (int)ReagentType - (int)SpecificReagentType.SulfurAsh;
 
-        [JsonConstructor] private Reagent()
+        [JsonConstructor]
+        private Reagent()
         {
         }
 

@@ -6,9 +6,14 @@ namespace Ultima5Redux.References.Maps
     /// <summary>
     ///     A single overriden tile
     /// </summary>
-    [DataContract] public class TileOverrideReference
+    [DataContract]
+    public class TileOverrideReference
     {
-        public enum TileType { Flat = 1, Primary = 2 }
+        public enum TileType
+        {
+            Flat = 1,
+            Primary = 2
+        }
 
         [DataMember] public string Comment { get; set; }
         [DataMember] public int MapNumber { get; private set; }

@@ -6,7 +6,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] internal class MapOverrides
+    [DataContract]
+    internal class MapOverrides
     {
         /// <summary>
         ///     override map is responsible for overriding tiles that would otherwise be static
@@ -15,7 +16,8 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember] internal Map TheMap { get; set; }
 
-        [JsonConstructor] private MapOverrides()
+        [JsonConstructor]
+        private MapOverrides()
         {
         }
 
@@ -38,16 +40,6 @@ namespace Ultima5Redux.Maps
             return _overrideMap[xy];
         }
 
-        public TileReference GetOverrideTileReference(int x, int y) => GetOverrideTileReference(new Point2D(x, y));
-
-        public TileReference GetOverrideTileReference(in Point2D xy)
-        {
-            int nIndex = GetOverrideTileIndex(xy);
-            return nIndex == -1 ? null : GameReferences.Instance.SpriteTileReferences.GetTileReference(nIndex);
-        }
-
-        public bool HasOverrideTile(in Point2D xy) => _overrideMap.ContainsKey(xy);
-
         private void SetOverrideTile(in Point2D xy, int nIndex)
         {
             if (!_overrideMap.ContainsKey(xy))
@@ -57,6 +49,16 @@ namespace Ultima5Redux.Maps
                 _overrideMap[xy] = nIndex;
             }
         }
+
+        public TileReference GetOverrideTileReference(int x, int y) => GetOverrideTileReference(new Point2D(x, y));
+
+        public TileReference GetOverrideTileReference(in Point2D xy)
+        {
+            int nIndex = GetOverrideTileIndex(xy);
+            return nIndex == -1 ? null : GameReferences.Instance.SpriteTileReferences.GetTileReference(nIndex);
+        }
+
+        public bool HasOverrideTile(in Point2D xy) => _overrideMap.ContainsKey(xy);
 
         public void SetOverrideTile(in Point2D xy, TileReference tileReference)
         {

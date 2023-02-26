@@ -7,7 +7,8 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux
 {
-    [DataContract] public class GameSummary
+    [DataContract]
+    public class GameSummary
     {
         [DataMember]
         public string GameDescription
@@ -49,7 +50,8 @@ namespace Ultima5Redux
             return stateJson;
         }
 
-        [DataContract] public class ExtraSaveData
+        [DataContract]
+        public class ExtraSaveData
         {
             [DataMember] public MapUnitPosition CurrentMapPosition { get; internal set; }
             [DataMember] public string FriendlyLocationName { get; internal set; }

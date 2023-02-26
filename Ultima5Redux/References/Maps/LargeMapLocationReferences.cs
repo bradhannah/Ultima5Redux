@@ -7,7 +7,11 @@ namespace Ultima5Redux.References.Maps
 {
     public class LargeMapLocationReferences
     {
-        public enum LargeMapType { Underworld = -1, Overworld }
+        public enum LargeMapType
+        {
+            Underworld = -1,
+            Overworld
+        }
 
         private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
         private const int N_TOTAL_LOCATIONS = 0x28;
@@ -159,14 +163,6 @@ namespace Ultima5Redux.References.Maps
             return docks[location];
         }
 
-        /// <summary>
-        ///     Gets the location at a particular xy
-        /// </summary>
-        /// <param name="mapXy"></param>
-        /// <returns></returns>
-        public SmallMapReferences.SingleMapReference.Location GetLocationByMapXy(Point2D mapXy) =>
-            LocationXyLocations[mapXy];
-
         public static byte[][] GetMap(LargeMapType largeMapType)
         {
             return largeMapType switch
@@ -179,6 +175,14 @@ namespace Ultima5Redux.References.Maps
                 _ => throw new Ultima5ReduxException($"Tried to get a large map with: {largeMapType}")
             };
         }
+
+        /// <summary>
+        ///     Gets the location at a particular xy
+        /// </summary>
+        /// <param name="mapXy"></param>
+        /// <returns></returns>
+        public SmallMapReferences.SingleMapReference.Location GetLocationByMapXy(Point2D mapXy) =>
+            LocationXyLocations[mapXy];
 
         /// <summary>
         ///     Tells you if an xy is enterable (command key E)

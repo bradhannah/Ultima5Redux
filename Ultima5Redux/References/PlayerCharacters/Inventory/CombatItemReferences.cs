@@ -7,7 +7,12 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
     public sealed class CombatItemReferences
     {
-        private enum CombatItemType { Armour, Weapon, Other }
+        private enum CombatItemType
+        {
+            Armour,
+            Weapon,
+            Other
+        }
 
         private readonly List<ArmourReference> _allArmour = new();
         private readonly List<ArmourReference> _amulets = new();

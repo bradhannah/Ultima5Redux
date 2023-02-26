@@ -8,10 +8,16 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public class ShadowlordShard : InventoryItem
+    [DataContract]
+    public class ShadowlordShard : InventoryItem
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum ShardType { Falsehood = 0x210, Hatred = 0x211, Cowardice = 0x212 }
+        public enum ShardType
+        {
+            Falsehood = 0x210,
+            Hatred = 0x211,
+            Cowardice = 0x212
+        }
 
         private const int SHARD_SPRITE = 436;
 
@@ -33,7 +39,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override string InventoryReferenceString => Shard.ToString();
 
-        [JsonConstructor] private ShadowlordShard()
+        [JsonConstructor]
+        private ShadowlordShard()
         {
         }
 

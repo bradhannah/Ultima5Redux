@@ -11,13 +11,23 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [JsonConverter(typeof(StringEnumConverter))]
         public enum SpecificProvisionSpritesType
         {
-            Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263, Food = 271, Gold = 258
+            Torches = 269,
+            Gems = 264,
+            Keys = 263,
+            SkullKeys = 263,
+            Food = 271,
+            Gold = 258
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public enum SpecificProvisionType
         {
-            Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204
+            Torches = 0x208,
+            Gems = 0x207,
+            Keys = 0x206,
+            SkullKeys = 0x20B,
+            Food = 0x202,
+            Gold = 0x204
         }
 
         private static readonly Dictionary<SpecificProvisionType, int> BundleQuantity =

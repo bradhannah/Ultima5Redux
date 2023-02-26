@@ -19,9 +19,21 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     {
         public enum HitState
         {
-            Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead, None,
-            Blocked, HitTrigger, HitNothingOfNote
+            Grazed,
+            Missed,
+            BarelyWounded,
+            LightlyWounded,
+            HeavilyWounded,
+            CriticallyWounded,
+            Fleeing,
+            Dead,
+            None,
+            Blocked,
+            HitTrigger,
+            HitNothingOfNote
         }
+
+        [IgnoreDataMember] private readonly Random _random = new(Guid.NewGuid().GetHashCode());
 
 
         [IgnoreDataMember]
@@ -45,6 +57,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 {
                     return HitState.CriticallyWounded;
                 }
+
                 if (Stats.CurrentHp < nHeavyThreshold)
                 {
                     return HitState.HeavilyWounded;
@@ -59,8 +72,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 return HitState.BarelyWounded;
             }
         }
-
-        [IgnoreDataMember] private readonly Random _random = new(Guid.NewGuid().GetHashCode());
 
         [IgnoreDataMember] public abstract int ClosestAttackRange { get; }
 
@@ -87,7 +98,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public abstract CharacterStats Stats { get; protected set; }
 
-        [JsonConstructor] protected CombatMapUnit()
+        [JsonConstructor]
+        protected CombatMapUnit()
         {
         }
 

@@ -79,7 +79,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     JsonConvert.DeserializeObject<List<AdditionalEnemyFlags>>(Resources.AdditionalEnemyFlags);
         }
 
-        [DataContract] public class AdditionalEnemyFlags
+        [DataContract]
+        public class AdditionalEnemyFlags
         {
             [DataMember] public bool ActivelyAttacks { get; set; }
             [DataMember] public bool CanFlyOverWater { get; set; }

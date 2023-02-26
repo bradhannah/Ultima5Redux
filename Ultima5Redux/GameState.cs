@@ -20,7 +20,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux
 {
-    [DataContract] public class GameState
+    [DataContract]
+    public class GameState
     {
         [DataMember(Name = "InitialMap")] private readonly Map.Maps _initialMap;
 
@@ -123,7 +124,8 @@ namespace Ultima5Redux
 
         public GameOverrides TheGameOverrides { get; set; } = new();
 
-        [JsonConstructor] private GameState()
+        [JsonConstructor]
+        private GameState()
         {
             GameStateReference.SetState(this);
         }
@@ -170,7 +172,8 @@ namespace Ultima5Redux
                 ImportedGameState.TheSearchItems);
         }
 
-        [OnDeserialized] private void PostDeserialized(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialized(StreamingContext context)
         {
             // we do this because we need to load the NPC information from the main state - not a copy in  
             // the JSON. If we don't do this then it creates two sets of NPCs
@@ -301,7 +304,8 @@ namespace Ultima5Redux
                 GameSummary gameSummary = CreateGameSummary(currentSaveGamePath);
                 string gameSummaryJsonStr = gameSummary.SerializeGameSummary();
                 File.WriteAllText(currentSaveGameSummaryPathAndFile, gameSummaryJsonStr);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 errorStr = e.Message;
                 return false;

@@ -28,15 +28,49 @@ namespace Ultima5Redux
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         private enum DataChunkName
         {
-            Unused, CHARACTER_RECORDS, NPC_ISDEAD_TABLE, NPC_ISMET_TABLE, N_PEOPLE_PARTY, FOOD_QUANTITY, GOLD_QUANTITY,
-            KEYS_QUANTITY, GEMS_QUANTITY, TORCHES_QUANTITY, TORCHES_TURNS, CURRENT_YEAR, CURRENT_MONTH, CURRENT_DAY,
-            CURRENT_HOUR, CURRENT_MINUTE, NPC_TYPES, NPC_MOVEMENT_LISTS, NPC_MOVEMENT_OFFSETS, NPC_SPRITE_INDEXES,
-            PARTY_LOC, Z_COORD, X_COORD, Y_COORD, CHARACTER_ANIMATION_STATES, CHARACTER_STATES, MOONSTONE_X_COORDS,
-            MOONSTONE_Y_COORDS, MOONSTONE_BURIED, MOONSTONE_Z_COORDS, ACTIVE_CHARACTER, GRAPPLE, SKULL_KEYS_QUANTITY,
-            KARMA, TURNS_SINCE_START, SEARCH_OBJECT_STILL_THERE
+            Unused,
+            CHARACTER_RECORDS,
+            NPC_ISDEAD_TABLE,
+            NPC_ISMET_TABLE,
+            N_PEOPLE_PARTY,
+            FOOD_QUANTITY,
+            GOLD_QUANTITY,
+            KEYS_QUANTITY,
+            GEMS_QUANTITY,
+            TORCHES_QUANTITY,
+            TORCHES_TURNS,
+            CURRENT_YEAR,
+            CURRENT_MONTH,
+            CURRENT_DAY,
+            CURRENT_HOUR,
+            CURRENT_MINUTE,
+            NPC_TYPES,
+            NPC_MOVEMENT_LISTS,
+            NPC_MOVEMENT_OFFSETS,
+            NPC_SPRITE_INDEXES,
+            PARTY_LOC,
+            Z_COORD,
+            X_COORD,
+            Y_COORD,
+            CHARACTER_ANIMATION_STATES,
+            CHARACTER_STATES,
+            MOONSTONE_X_COORDS,
+            MOONSTONE_Y_COORDS,
+            MOONSTONE_BURIED,
+            MOONSTONE_Z_COORDS,
+            ACTIVE_CHARACTER,
+            GRAPPLE,
+            SKULL_KEYS_QUANTITY,
+            KARMA,
+            TURNS_SINCE_START,
+            SEARCH_OBJECT_STILL_THERE
         }
 
-        private enum OverlayChunkName { Unused, CharacterAnimationStates }
+        private enum OverlayChunkName
+        {
+            Unused,
+            CharacterAnimationStates
+        }
 
         // ReSharper disable once UnusedMember.Local
         [IgnoreDataMember] public MapUnitStates MapUnitStatesByInitialMap => GetMapUnitStatesByMap(InitialMap);

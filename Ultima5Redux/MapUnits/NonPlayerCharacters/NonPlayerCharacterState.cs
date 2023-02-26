@@ -7,7 +7,8 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
-    [DataContract] public sealed class NonPlayerCharacterState
+    [DataContract]
+    public sealed class NonPlayerCharacterState
     {
         [DataMember] internal bool HasExtortedAvatar { get; set; }
         [DataMember] internal bool OverrideAiType { get; private set; }
@@ -61,7 +62,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         private readonly NonPlayerCharacterReference _npcRefOverride;
 
-        [JsonConstructor] private NonPlayerCharacterState()
+        [JsonConstructor]
+        private NonPlayerCharacterState()
         {
         }
 

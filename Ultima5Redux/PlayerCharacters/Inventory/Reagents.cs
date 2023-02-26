@@ -10,12 +10,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     /// <summary>
     ///     All reagents collection
     /// </summary>
-    [DataContract] public class Reagents : InventoryItems<Reagent.SpecificReagentType, Reagent>
+    [DataContract]
+    public class Reagents : InventoryItems<Reagent.SpecificReagentType, Reagent>
     {
         [DataMember]
         public override Dictionary<Reagent.SpecificReagentType, Reagent> Items { get; internal set; } = new();
 
-        [JsonConstructor] private Reagents()
+        [JsonConstructor]
+        private Reagents()
         {
         }
 

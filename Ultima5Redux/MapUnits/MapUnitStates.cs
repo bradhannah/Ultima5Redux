@@ -13,7 +13,12 @@ namespace Ultima5Redux.MapUnits
     public class MapUnitStates
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum MapUnitStatesFiles { SAVED_GAM, BRIT_OOL, UNDER_OOL }
+        public enum MapUnitStatesFiles
+        {
+            SAVED_GAM,
+            BRIT_OOL,
+            UNDER_OOL
+        }
 
         private const int MAX_CHARACTER_STATES = 0x20;
 

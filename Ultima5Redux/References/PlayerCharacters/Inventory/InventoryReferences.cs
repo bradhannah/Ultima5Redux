@@ -18,7 +18,13 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         ///     Inventory reference types
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum InventoryReferenceType { Reagent, Armament, Spell, Item }
+        public enum InventoryReferenceType
+        {
+            Reagent,
+            Armament,
+            Spell,
+            Item
+        }
 
         /// <summary>
         ///     reagents are highlighted green

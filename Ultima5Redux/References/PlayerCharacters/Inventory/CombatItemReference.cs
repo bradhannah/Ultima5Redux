@@ -6,11 +6,23 @@ using Newtonsoft.Json.Converters;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")] [DataContract]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+    [DataContract]
     public class CombatItemReference
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum MissileType { None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock }
+        public enum MissileType
+        {
+            None = -1,
+            Arrow = 0,
+            CannonBall,
+            Axe,
+            Red,
+            Blue,
+            Green,
+            Violet,
+            Rock
+        }
 
         [IgnoreDataMember] public const int BARE_HANDS_INDEX = -2;
 
@@ -66,7 +78,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             InitializePrices();
         }
 
-        [JsonConstructor] protected CombatItemReference()
+        [JsonConstructor]
+        protected CombatItemReference()
         {
         }
 

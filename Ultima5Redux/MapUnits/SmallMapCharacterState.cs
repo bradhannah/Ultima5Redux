@@ -10,7 +10,8 @@ namespace Ultima5Redux.MapUnits
     ///     Based on original U5 data structure
     ///     tracks the position and state of the map character
     /// </summary>
-    [DataContract] public class SmallMapCharacterState
+    [DataContract]
+    public class SmallMapCharacterState
     {
         [DataMember] private int NpcIndex { get; set; }
         [DataMember] public bool Active { get; private set; }
@@ -39,7 +40,8 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Create a blank SmallMapCharacterState indicating no character
         /// </summary>
-        [JsonConstructor] public SmallMapCharacterState() => Active = false;
+        [JsonConstructor]
+        public SmallMapCharacterState() => Active = false;
 
         /// <summary>
         ///     Build the character state from data retrieved from disk

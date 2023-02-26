@@ -10,7 +10,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    [DataContract] public sealed class CombatPlayer : CombatMapUnit
+    [DataContract]
+    public sealed class CombatPlayer : CombatMapUnit
     {
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         public override string BoardXitName => "GET OFF ME YOU BRUTE!";
@@ -79,7 +80,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
         }
 
-        [JsonConstructor] public CombatPlayer()
+        [JsonConstructor]
+        public CombatPlayer()
         {
         }
 

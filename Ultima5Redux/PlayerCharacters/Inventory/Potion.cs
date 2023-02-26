@@ -5,12 +5,19 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public class Potion : InventoryItem
+    [DataContract]
+    public class Potion : InventoryItem
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public enum PotionColor
         {
-            Blue = 0x282, Yellow = 0x283, Red = 0x284, Green = 0x285, Orange = 0x286, Purple = 0x287, Black = 0x288,
+            Blue = 0x282,
+            Yellow = 0x283,
+            Red = 0x284,
+            Green = 0x285,
+            Orange = 0x286,
+            Purple = 0x287,
+            Black = 0x288,
             White = 0x289
         }
 
@@ -24,7 +31,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override string InventoryReferenceString => Color.ToString();
 
-        [JsonConstructor] private Potion()
+        [JsonConstructor]
+        private Potion()
         {
         }
 

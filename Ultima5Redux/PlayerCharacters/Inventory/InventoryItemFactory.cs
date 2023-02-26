@@ -25,8 +25,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private enum SpriteRefs
         {
-            Potion = 259, Scroll = 260, Weapon = 251, Shield = 262, Helm = 265, Ring = 266, Armour = 267, Ankh = 268,
-            SandalwoodBox = 270, Shard = 436, Crown = 437, Sceptre = 438, Amulet = 439
+            Potion = 259,
+            Scroll = 260,
+            Weapon = 251,
+            Shield = 262,
+            Helm = 265,
+            Ring = 266,
+            Armour = 267,
+            Ankh = 268,
+            SandalwoodBox = 270,
+            Shard = 436,
+            Crown = 437,
+            Sceptre = 438,
+            Amulet = 439
         }
 
         private static CombatItem CreateArmament(InventoryReference itemReference)

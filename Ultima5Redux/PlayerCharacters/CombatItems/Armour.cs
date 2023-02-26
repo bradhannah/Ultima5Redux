@@ -5,9 +5,11 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract] public abstract class Armour : CombatItem
+    [DataContract]
+    public abstract class Armour : CombatItem
     {
-        [JsonConstructor] protected Armour()
+        [JsonConstructor]
+        protected Armour()
         {
         }
 

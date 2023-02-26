@@ -95,11 +95,13 @@ namespace Ultima5Redux.References.Dialogue
             try
             {
                 return _compressedWords.StringList[_compressWordLookupMap[index]];
-            } catch (KeyNotFoundException)
+            }
+            catch (KeyNotFoundException)
             {
                 throw new NoTalkingWordException("Couldn't find TalkWord mapping in compressed word file at index " +
                                                  index);
-            } catch (ArgumentOutOfRangeException)
+            }
+            catch (ArgumentOutOfRangeException)
             {
                 throw new NoTalkingWordException("Couldn't find TalkWord at index " + index);
             }

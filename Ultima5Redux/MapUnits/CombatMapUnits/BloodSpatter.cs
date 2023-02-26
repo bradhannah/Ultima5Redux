@@ -6,7 +6,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    [DataContract] public sealed class BloodSpatter : NonAttackingUnit
+    [DataContract]
+    public sealed class BloodSpatter : NonAttackingUnit
     {
         public override bool CanStackMapUnitsOnTop => true;
 
@@ -33,7 +34,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string SingularName => FriendlyName;
 
 
-        [JsonConstructor] public BloodSpatter()
+        [JsonConstructor]
+        public BloodSpatter()
         {
         }
 
@@ -48,7 +50,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             MapUnitPosition = mapUnitPosition;
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             GenerateItemStack(MapUnitPosition);
         }

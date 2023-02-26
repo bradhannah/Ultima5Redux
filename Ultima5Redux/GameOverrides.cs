@@ -2,9 +2,15 @@ using System.Runtime.Serialization;
 
 namespace Ultima5Redux
 {
-    [DataContract] public class GameOverrides
+    [DataContract]
+    public class GameOverrides
     {
-        public enum LockPickingOverrides { None, AlwaysSucceed, AlwaysFail }
+        public enum LockPickingOverrides
+        {
+            None,
+            AlwaysSucceed,
+            AlwaysFail
+        }
 
         /// <summary>
         ///     Force lock picking overrides

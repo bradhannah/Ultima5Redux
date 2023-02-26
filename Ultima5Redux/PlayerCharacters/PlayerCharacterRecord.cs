@@ -23,28 +23,71 @@ namespace Ultima5Redux.PlayerCharacters
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         private enum CharacterRecordOffsets
         {
-            Name = 0x00, Gender = 0x09, Class = 0x0A, Status = 0x0B, Strength = 0x0C, Dexterity = 0x0D,
-            Intelligence = 0x0E, CurrentMP = 0x0F, CurrentHP = 0x10, MaximumHP = 0x12, ExperiencePoints = 0x14,
-            Level = 0x16, MonthsSinceStayingAtInn = 0x17, Unknown2 = 0x18, Helmet = 0x19, Armor = 0x1A, Weapon = 0x1B,
-            Shield = 0x1C, Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F
+            Name = 0x00,
+            Gender = 0x09,
+            Class = 0x0A,
+            Status = 0x0B,
+            Strength = 0x0C,
+            Dexterity = 0x0D,
+            Intelligence = 0x0E,
+            CurrentMP = 0x0F,
+            CurrentHP = 0x10,
+            MaximumHP = 0x12,
+            ExperiencePoints = 0x14,
+            Level = 0x16,
+            MonthsSinceStayingAtInn = 0x17,
+            Unknown2 = 0x18,
+            Helmet = 0x19,
+            Armor = 0x1A,
+            Weapon = 0x1B,
+            Shield = 0x1C,
+            Ring = 0x1D,
+            Amulet = 0x1E,
+            InnParty = 0x1F
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M' }
+        public enum CharacterClass
+        {
+            Avatar = 'A',
+            Bard = 'B',
+            Fighter = 'F',
+            Mage = 'M'
+        }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum CharacterGender { Male = 0x0B, Female = 0x0C }
+        public enum CharacterGender
+        {
+            Male = 0x0B,
+            Female = 0x0C
+        }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public enum CharacterPartyStatus
         {
-            InTheParty = 0x00, HasntJoinedYet = 0xFF, AtTheInn = 0x01
+            InTheParty = 0x00,
+            HasntJoinedYet = 0xFF,
+            AtTheInn = 0x01
         } // otherwise it is at an inn at Settlement # in byte value
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum CharacterStatus { Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D' }
+        public enum CharacterStatus
+        {
+            Good = 'G',
+            Poisoned = 'P',
+            Charmed = 'C',
+            Asleep = 'S',
+            Dead = 'D'
+        }
 
-        public enum EquipResult { Success, SuccessUnequipRight, SuccessUnequipLeft, TooHeavy, Error }
+        public enum EquipResult
+        {
+            Success,
+            SuccessUnequipRight,
+            SuccessUnequipLeft,
+            TooHeavy,
+            Error
+        }
 
         internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
         [DataMember] private byte InnOrParty { get; set; }
@@ -99,7 +142,8 @@ namespace Ultima5Redux.PlayerCharacters
                 _ => throw new InvalidEnumArgumentException(((int)Class).ToString())
             };
 
-        [JsonConstructor] private PlayerCharacterRecord()
+        [JsonConstructor]
+        private PlayerCharacterRecord()
         {
         }
 

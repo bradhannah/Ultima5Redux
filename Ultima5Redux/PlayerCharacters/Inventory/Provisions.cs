@@ -10,7 +10,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public class Provisions : InventoryItems<ProvisionReferences.SpecificProvisionType, Provision>
+    [DataContract]
+    public class Provisions : InventoryItems<ProvisionReferences.SpecificProvisionType, Provision>
     {
         [DataMember]
         public sealed override Dictionary<ProvisionReferences.SpecificProvisionType, Provision> Items
@@ -61,7 +62,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             internal set => Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity = value;
         }
 
-        [JsonConstructor] private Provisions()
+        [JsonConstructor]
+        private Provisions()
         {
         }
 

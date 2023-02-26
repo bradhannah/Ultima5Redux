@@ -9,9 +9,22 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class BarKeeperStockReference
     {
-        public enum DrinkType { Ale, Rum, Stout, Wine }
+        public enum DrinkType
+        {
+            Ale,
+            Rum,
+            Stout,
+            Wine
+        }
 
-        public enum FoodType { Mutton, Boar, Fruit, Cheese, Rations }
+        public enum FoodType
+        {
+            Mutton,
+            Boar,
+            Fruit,
+            Cheese,
+            Rations
+        }
 
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, BarKeeperStock>
             _barKeeperStockByLocation = new()

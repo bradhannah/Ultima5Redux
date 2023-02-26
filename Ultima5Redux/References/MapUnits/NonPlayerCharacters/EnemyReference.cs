@@ -12,7 +12,14 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         private enum DefaultStats
         {
             // ReSharper disable once UnusedMember.Local
-            Strength = 0, Dexterity, Intelligence, Armour, Damage, Hitpoints, MaxPerMap, Treasure
+            Strength = 0,
+            Dexterity,
+            Intelligence,
+            Armour,
+            Damage,
+            Hitpoints,
+            MaxPerMap,
+            Treasure
         }
 
         // 0x8000 - Bludgeons (I)
@@ -33,8 +40,21 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         // 0x0001 - Infect with Plague (H) - poison melee? 
         public enum EnemyAbility
         {
-            Bludgeons = 0, PossessCharm, Undead, DivideOnHit, Immortal, PoisonAtRange, StealsFood, NoCorpse,
-            RangedMagic, Teleport, DisappearsOnDeath, Invisibility, GatesInDaemon, Poison, InfectWithPlague
+            Bludgeons = 0,
+            PossessCharm,
+            Undead,
+            DivideOnHit,
+            Immortal,
+            PoisonAtRange,
+            StealsFood,
+            NoCorpse,
+            RangedMagic,
+            Teleport,
+            DisappearsOnDeath,
+            Invisibility,
+            GatesInDaemon,
+            Poison,
+            InfectWithPlague
         }
 
         internal const int N_FIRST_SPRITE = 320;

@@ -9,7 +9,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
-    [DataContract] public class NonPlayerCharacter : MapUnit
+    [DataContract]
+    public class NonPlayerCharacter : MapUnit
     {
         [DataMember(Name = "PlayerCharacterRecordIndex")]
         private int _playerCharacterRecordIndex;
@@ -76,7 +77,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         public bool IsMinstrel => NpcRef.NPCKeySprite == (int)TileReference.SpriteIndex.BardPlaying_KeyIndex;
 
-        [JsonConstructor] public NonPlayerCharacter()
+        [JsonConstructor]
+        public NonPlayerCharacter()
         {
         }
 

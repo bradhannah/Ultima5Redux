@@ -6,7 +6,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     /// <summary>
     ///     Specific inventory item reference
     /// </summary>
-    [DataContract] public class InventoryReference
+    [DataContract]
+    public class InventoryReference
     {
         [DataMember] public InventoryReferences.InventoryReferenceType InvRefType { get; internal set; }
         [DataMember] public string ItemDescription { get; set; }

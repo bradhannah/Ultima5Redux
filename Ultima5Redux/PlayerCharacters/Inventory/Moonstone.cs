@@ -5,7 +5,8 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public sealed class Moonstone : InventoryItem
+    [DataContract]
+    public sealed class Moonstone : InventoryItem
     {
         public const int MOONSTONE_SPRITE = 281;
 
@@ -37,7 +38,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             set => GameStateReference.State?.TheMoongates?.SetMoonstoneBuried((int)Phase, value <= 0);
         }
 
-        [JsonConstructor] private Moonstone()
+        [JsonConstructor]
+        private Moonstone()
         {
         }
 

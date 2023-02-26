@@ -13,7 +13,8 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    [DataContract] public class PlayerCharacterRecords
+    [DataContract]
+    public class PlayerCharacterRecords
     {
         private const byte CHARACTER_OFFSET = 0x20;
 
@@ -44,7 +45,8 @@ namespace Ultima5Redux.PlayerCharacters
 
         public int MaxCharactersInParty => MAX_PARTY_MEMBERS;
 
-        [JsonConstructor] private PlayerCharacterRecords()
+        [JsonConstructor]
+        private PlayerCharacterRecords()
         {
         }
 

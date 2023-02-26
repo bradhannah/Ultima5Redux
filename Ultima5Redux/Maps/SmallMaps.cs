@@ -8,7 +8,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] public class SmallMaps
+    [DataContract]
+    public class SmallMaps
     {
         [DataMember(Name = "MapLocationDictionary")]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>
@@ -19,7 +20,8 @@ namespace Ultima5Redux.Maps
                 Dictionary<int, SmallMap>>
             MapLocationDictionary => _mapLocationDictionary;
 
-        [JsonConstructor] public SmallMaps()
+        [JsonConstructor]
+        public SmallMaps()
         {
             // if the _mapLocationDictionary already has elements, then we assume it was deserialized and skip this step
             if (_mapLocationDictionary.Count > 0) return;

@@ -22,7 +22,8 @@ namespace Ultima5Redux.References.Maps
             try
             {
                 dungeonDatContents = File.ReadAllBytes(dungeonDatFilePath);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new Ultima5ReduxException("Error opening and reading dungeon.dat\n" + e);
             }

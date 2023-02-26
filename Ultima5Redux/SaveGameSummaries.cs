@@ -41,7 +41,8 @@ namespace Ultima5Redux
                         var gameStateSummary = GameSummary.DeserializeGameSummary(summaryJson);
                         _gameStates.Add(gameStateSummary);
                     }
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     // we don't load it, and simply skip it
                     Debug.WriteLine($"Error: Couldn't load {summaryFileAndPath}");

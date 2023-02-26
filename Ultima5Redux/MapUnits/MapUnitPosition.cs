@@ -7,7 +7,8 @@ namespace Ultima5Redux.MapUnits
     /// <summary>
     ///     Tracks the position of any character on the screen
     /// </summary>
-    [DataContract] public class MapUnitPosition
+    [DataContract]
+    public class MapUnitPosition
     {
         [DataMember]
         public int Floor
@@ -40,7 +41,8 @@ namespace Ultima5Redux.MapUnits
 
         public string FriendlyString => $"{X},{Y} ({GetFriendlyFloorString(Floor)})";
 
-        [JsonConstructor] public MapUnitPosition()
+        [JsonConstructor]
+        public MapUnitPosition()
         {
         }
 
@@ -50,6 +52,18 @@ namespace Ultima5Redux.MapUnits
             Y = y;
             Floor = floor;
         }
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static string GetFriendlyFloorString(int nFloor) =>
+            nFloor switch
+            {
+                -1 => "Basement",
+                0 => "Main Floor",
+                1 => "First Floor",
+                2 => "Second Floor",
+                3 => "Third Floor",
+                _ => "Unknown Floor"
+            };
 
         public static bool operator ==(MapUnitPosition pos1, MapUnitPosition pos2) =>
             pos1?.Equals(pos2) ?? ReferenceEquals(pos2, null);
@@ -75,18 +89,6 @@ namespace Ultima5Redux.MapUnits
         }
 
         public override string ToString() => "X=" + X + ",Y=" + Y + ", Floor=" + Floor;
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static string GetFriendlyFloorString(int nFloor) =>
-            nFloor switch
-            {
-                -1 => "Basement",
-                0 => "Main Floor",
-                1 => "First Floor",
-                2 => "Second Floor",
-                3 => "Third Floor",
-                _ => "Unknown Floor"
-            };
 
         public bool IsSameAs(int x, int y, int nFloor) => x == X && y == Y && _floor == nFloor;
     }

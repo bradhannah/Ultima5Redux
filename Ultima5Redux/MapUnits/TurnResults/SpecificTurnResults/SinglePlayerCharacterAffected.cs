@@ -5,7 +5,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
     public sealed class SinglePlayerCharacterAffected : TurnResult, ISinglePlayerCharacterAffected
     {
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public PlayerCharacterRecord PlayerRecord { get; }
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public PlayerCharacterRecord PlayerRecord { get; }
 
         public SinglePlayerCharacterAffected(TurnResultType theTurnResultType,
             PlayerCharacterRecord record, CharacterStats stats) : base(theTurnResultType)

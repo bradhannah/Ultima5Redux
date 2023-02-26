@@ -2,7 +2,12 @@
 {
     public class SprayBlastSpellSubType : SpellSubType
     {
-        private enum SprayType { Poison, Energy, Fire }
+        private enum SprayType
+        {
+            Poison,
+            Energy,
+            Fire
+        }
 
         public SprayBlastSpellSubType(MagicReference magicRef) : base(magicRef)
         {

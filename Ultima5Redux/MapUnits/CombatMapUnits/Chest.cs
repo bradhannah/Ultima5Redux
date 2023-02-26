@@ -5,7 +5,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    [DataContract] public sealed class Chest : NonAttackingUnit
+    [DataContract]
+    public sealed class Chest : NonAttackingUnit
     {
         public override bool ExposeInnerItemsOnOpen => true;
         public override bool ExposeInnerItemsOnSearch => false;
@@ -59,7 +60,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             GenerateItemStack(mapUnitPosition);
         }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             GenerateItemStack(MapUnitPosition);
         }

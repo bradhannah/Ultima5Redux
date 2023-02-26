@@ -53,7 +53,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 InvRefType = value.InvRefType;
         }
 
-        [JsonConstructor] protected InventoryItem()
+        [JsonConstructor]
+        protected InventoryItem()
         {
         }
 

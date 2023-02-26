@@ -9,7 +9,8 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
-    [DataContract] public class NonPlayerCharacterStates
+    [DataContract]
+    public class NonPlayerCharacterStates
     {
         [DataMember(Name = "NPCMap")]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>
@@ -44,7 +45,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
-        [JsonConstructor] private NonPlayerCharacterStates()
+        [JsonConstructor]
+        private NonPlayerCharacterStates()
         {
         }
 

@@ -7,13 +7,21 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public class Scroll : InventoryItem
+    [DataContract]
+    public class Scroll : InventoryItem
     {
-        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum ScrollSpells
         {
-            Vas_Lor = 0x27A, Rel_Hur = 0x27B, In_Sanct = 0x27C, In_An = 0x27D, In_Quas_Wis = 0x27E,
-            Kal_Xen_Corp = 0x27F, In_Mani_Corp = 0x280, An_Tym = 0x281
+            Vas_Lor = 0x27A,
+            Rel_Hur = 0x27B,
+            In_Sanct = 0x27C,
+            In_An = 0x27D,
+            In_Quas_Wis = 0x27E,
+            Kal_Xen_Corp = 0x27F,
+            In_Mani_Corp = 0x280,
+            An_Tym = 0x281
         }
 
         private const int SCROLL_SPRITE = 260;
@@ -35,7 +43,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             set => ScrollSpell = value.SpellEnum;
         }
 
-        [JsonConstructor] private Scroll()
+        [JsonConstructor]
+        private Scroll()
         {
         }
 

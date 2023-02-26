@@ -4,7 +4,8 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] public class MapHolder
+    [DataContract]
+    public class MapHolder
     {
         /// <summary>
         ///     Both underworld and overworld maps
@@ -27,7 +28,8 @@ namespace Ultima5Redux.Maps
         public SmallMaps SmallMaps => _smallMaps;
         public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        [OnDeserialized]
+        private void PostDeserialize(StreamingContext context)
         {
             foreach (KeyValuePair<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>> kvp in
                      _smallMaps.MapLocationDictionary)
