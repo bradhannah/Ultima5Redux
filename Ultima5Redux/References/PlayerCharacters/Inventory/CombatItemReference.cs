@@ -44,7 +44,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
 
-        [IgnoreDataMember] public virtual bool CanSell => BasePrice > 0;
+        [IgnoreDataMember]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public virtual bool CanSell => BasePrice > 0;
 
         [IgnoreDataMember]
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]

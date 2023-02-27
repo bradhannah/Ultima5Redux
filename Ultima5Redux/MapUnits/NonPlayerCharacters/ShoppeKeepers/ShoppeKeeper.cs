@@ -105,6 +105,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 .Select(b => (SmallMapReferences.SingleMapReference.Location)b).ToList();
         }
 
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
         public abstract string GetForSaleList();
 
         public abstract string GetWhichWouldYouSee();

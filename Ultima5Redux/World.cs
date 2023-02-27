@@ -1270,7 +1270,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Global
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToIgniteTorch(TurnResults turnResults)
+        [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")] public List<VirtualMap.AggressiveMapUnitInfo> TryToIgniteTorch(TurnResults turnResults)
         {
             // if there are no torches then report back and make no change
             if (State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity <=
@@ -2211,14 +2211,9 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            // if (npc.MapLocation == SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn
-            //     && npc.NPCRef.IsGuard)
-            // {
-            //     
-            // }
-
             ////// HERE is where I will need to put in the custom dialog options for custom AI types
             NonPlayerCharacterSchedule.AiType aiType = npc.GetCurrentAiType(State.TheTimeOfDay);
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (aiType)
             {
                 case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain:
@@ -2359,7 +2354,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUsePotion(Potion potion, PlayerCharacterRecord record,
             out bool bSucceeded, out MagicReference.SpellWords spell, TurnResults turnResults)
         {
@@ -2460,7 +2455,7 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseScroll(Scroll scroll, PlayerCharacterRecord record,
             TurnResults turnResults)
         {
@@ -2592,7 +2587,7 @@ namespace Ultima5Redux
         /// <param name="bSailsHoisted">are they now hoisted?</param>
         /// <param name="turnResults"></param>
         /// <returns>output string</returns>
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToYellForSails(out bool bSailsHoisted, TurnResults turnResults)
         {
             if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)

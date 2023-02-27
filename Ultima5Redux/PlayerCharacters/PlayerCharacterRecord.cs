@@ -55,7 +55,7 @@ namespace Ultima5Redux.PlayerCharacters
             Mage = 'M'
         }
 
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum CharacterGender
         {
             Male = 0x0B,

@@ -9,7 +9,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
     public class ProvisionReferences
     {
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))] [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum SpecificProvisionSpritesType
         {
             Torches = 269,

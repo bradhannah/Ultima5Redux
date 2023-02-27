@@ -15,6 +15,7 @@ namespace Ultima5Redux.References.Maps
             new DungeonMapReference[DungeonMapReference.N_DUNGEONS];
 
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
         public IReadOnlyList<DungeonMapReference> DungeonMapReferences => _dungeons;
 
         public DungeonReferences(string legacyDataDatFilePath)

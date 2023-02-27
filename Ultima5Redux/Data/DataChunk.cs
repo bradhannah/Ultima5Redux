@@ -206,6 +206,7 @@ namespace Ultima5Redux.Data
         /// <summary>
         ///     The offset used when getting the RawData
         /// </summary>
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private int FileOffset { get; }
 
         /// <summary>
@@ -349,7 +350,7 @@ namespace Ultima5Redux.Data
             // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             return DataFormat switch
             {
-                DataFormatType.FixedString => Utils.BytesToStringFixedWidth(RawData.ToList(), 0, DataLength),
+                DataFormatType.FixedString => Utils.BytesToStringFixedWidth(RawData.ToList(), DataLength),
                 DataFormatType.SimpleString => Utils.BytesToStringNullTerm(RawData.ToList(), 0, DataLength),
                 _ => throw new Ultima5ReduxException("String datatype doesn't match predefined list.")
             };
@@ -378,7 +379,7 @@ namespace Ultima5Redux.Data
         /// <returns>list of UINT16s</returns>
         public List<ushort> GetChunkAsUint16List()
         {
-            List<ushort> data = Utils.CreateOffsetList(RawData, FileOffset, DataLength);
+            List<ushort> data = Utils.CreateOffsetList(RawData, DataLength);
             for (int i = 0; i < data.Count; i++)
             {
                 data[i] = (ushort)(data[i] + ValueModifier);

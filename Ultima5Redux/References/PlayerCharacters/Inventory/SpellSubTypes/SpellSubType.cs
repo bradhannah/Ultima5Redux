@@ -39,6 +39,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
         /// <param name="spellResult">the current spell result object keeping tracking of status</param>
         /// <returns>true if it is castable, false if it is not</returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
         protected bool DoSetupAndStateCheck(GameState state, SpellResult spellResult)
         {
             spellResult.OutputStringBuilder.Append($"Casting {MagicRef.Spell}\n");

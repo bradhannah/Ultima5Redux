@@ -121,6 +121,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <returns></returns>
         internal int GetScheduleIndex(TimeOfDay timeOfDay)
         {
+            // ReSharper disable once InconsistentNaming
             int getIndex(int nOrigIndex) => nOrigIndex == 3 ? 1 : nOrigIndex;
 
             int nHour = timeOfDay.Hour;

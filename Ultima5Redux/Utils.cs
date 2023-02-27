@@ -47,7 +47,7 @@ namespace Ultima5Redux
                 .ToArray());
         }
 
-        public static string BytesToStringFixedWidth(List<byte> byteArray, int offset, int length)
+        public static string BytesToStringFixedWidth(List<byte> byteArray, int length)
         {
             string str = string.Empty;
             for (int i = 0; i < length; i++)
@@ -83,7 +83,7 @@ namespace Ultima5Redux
             return str;
         }
 
-        public static List<ushort> CreateOffsetList(byte[] byteArray, int offset, int length)
+        public static List<ushort> CreateOffsetList(byte[] byteArray, int length)
         {
             List<ushort> offsetArray = new();
 

@@ -114,12 +114,11 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <param name="genderedAddress"></param>
         /// <param name="personOfInterest"></param>
         /// <param name="locationToFindPersonOfInterest"></param>
-        /// <param name="bHighlightDetails"></param>
         /// <returns>a complete string with full replacements</returns>
         internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "",
             bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null,
             int nQuantity = 0, string genderedAddress = "", string personOfInterest = "",
-            string locationToFindPersonOfInterest = "", bool bHighlightDetails = false)
+            string locationToFindPersonOfInterest = "")
         {
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
             return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName, shoppeName, tod,

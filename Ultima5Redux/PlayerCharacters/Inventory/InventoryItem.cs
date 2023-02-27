@@ -72,7 +72,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             SmallMapReferences.SingleMapReference.Location location) =>
             0;
 
-        public virtual int GetAdjustedSellPrice(PlayerCharacterRecords records,
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")] public virtual int GetAdjustedSellPrice(PlayerCharacterRecords records,
             SmallMapReferences.SingleMapReference.Location location) =>
             0;
 

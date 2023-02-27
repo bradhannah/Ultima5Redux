@@ -326,6 +326,7 @@ namespace Ultima5Redux.Maps
                 // powers I will tweak later
 
                 VirtualMap.AggressiveMapUnitInfo.DecidedAction decidedAction = aggressiveMapUnitInfo.GetDecidedAction();
+                // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
                 switch (decidedAction)
                 {
                     case VirtualMap.AggressiveMapUnitInfo.DecidedAction.AttemptToArrest:
@@ -404,6 +405,7 @@ namespace Ultima5Redux.Maps
                 // it's possible that the aggressor may not actually be attacking even if they can
                 if (decidedAction != VirtualMap.AggressiveMapUnitInfo.DecidedAction.RangedAttack) continue;
 
+                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                 switch (aggressiveMapUnitInfo.AttackingMissileType)
                 {
                     case CombatItemReference.MissileType.None:
@@ -554,6 +556,7 @@ namespace Ultima5Redux.Maps
                 }
                 else
                 {
+                    // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
                     switch (aiType)
                     {
                         case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
@@ -646,6 +649,7 @@ namespace Ultima5Redux.Maps
 
             if (!bNextToEachOther)
             {
+                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                 switch (enemy.EnemyReference.LargeMapMissileType)
                 {
                     case CombatItemReference.MissileType.None:
@@ -792,7 +796,7 @@ namespace Ultima5Redux.Maps
             ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        public Horse CreateHorse(MapUnitPosition mapUnitPosition, Maps map, out int nIndex)
+        public Horse CreateHorse(MapUnitPosition mapUnitPosition, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex();
             if (nIndex == -1) return null;
@@ -822,7 +826,7 @@ namespace Ultima5Redux.Maps
             Random ran = new();
             Point2D chosenLocation = freeSpacesAroundAvatar[ran.Next() % freeSpacesAroundAvatar.Count];
             Horse horse = CreateHorse(
-                new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor), TheMapType,
+                new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor),
                 out int nIndex);
 
             if (nIndex == -1 || horse == null) return null;
@@ -996,7 +1000,7 @@ namespace Ultima5Redux.Maps
             unboardedMapUnit.Direction = GetAvatarMapUnit().Direction;
             unboardedMapUnit.KeyTileReference = unboardedMapUnit.GetNonBoardedTileReference();
 
-            AddNewMapUnit(TheMapType, unboardedMapUnit);
+            AddNewMapUnit(unboardedMapUnit);
             retStr += " " + unboardedMapUnit.BoardXitName;
 
             // if the Avatar is on a frigate then we will check for Skiffs and exit on a skiff instead

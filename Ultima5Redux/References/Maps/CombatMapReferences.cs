@@ -71,7 +71,7 @@ namespace Ultima5Redux.References.Maps
             }
         }
 
-        public string GetAsCsv(SingleCombatMapReference.Territory territory)
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] public string GetAsCsv(SingleCombatMapReference.Territory territory)
         {
             StringBuilder sb = new();
             sb.Append(SingleCombatMapReference.GetCsvHeader());

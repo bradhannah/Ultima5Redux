@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapUnits;
 
 namespace Ultima5Redux.References.Maps
 {
@@ -208,25 +207,26 @@ namespace Ultima5Redux.References.Maps
         /// <returns></returns>
         public static Point2D GetStartingXyByLocation() => new(32 / 2 - 1, 30);
 
-        /// <summary>
-        ///     Gets the starting position of a small map
-        /// </summary>
-        /// <returns></returns>
-        public static MapUnitPosition GetStartingXyzByLocation()
-        {
-            Point2D startingXy = GetStartingXyByLocation();
-            return new MapUnitPosition(startingXy.X, startingXy.Y, 0);
-        }
+        // /// <summary>
+        // ///     Gets the starting position of a small map
+        // /// </summary>
+        // /// <returns></returns>
+        // public static MapUnitPosition GetStartingXyzByLocation()
+        // {
+        //     Point2D startingXy = GetStartingXyByLocation();
+        //     return new MapUnitPosition(startingXy.X, startingXy.Y, 0);
+        // }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool DoesFloorExist(SingleMapReference.Location location, int nFloor) =>
             _mapReferenceDictionary[location].ContainsKey(nFloor);
 
 
-        public bool DoStairsGoDown(SingleMapReference.Location location, int nFloor,
-            Point2D tilePos, out TileReference stairTileReference) =>
-            !DoStairsGoUp(location, nFloor, tilePos, out stairTileReference);
+        // public bool DoStairsGoDown(SingleMapReference.Location location, int nFloor,
+        //     Point2D tilePos, out TileReference stairTileReference) =>
+        //     !DoStairsGoUp(location, nFloor, tilePos, out stairTileReference);
 
+        [SuppressMessage("ReSharper", "OutParameterValueIsAlwaysDiscarded.Global")]
         public bool DoStairsGoUp(SingleMapReference.Location location, int nFloor, Point2D tilePos,
             out TileReference stairTileReference)
         {
