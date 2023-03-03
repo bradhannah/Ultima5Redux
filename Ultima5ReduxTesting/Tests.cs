@@ -59,6 +59,11 @@ namespace Ultima5ReduxTesting
             blackt, BucDenEntrance, brandnew
         }
 
+        public enum DirectoryType
+        {
+            Data, LegacySaves, NewSaves
+        }
+
         // ReSharper disable once UnusedMember.Local
         private void OutputDirectories(string dir)
         {
@@ -75,24 +80,32 @@ namespace Ultima5ReduxTesting
             return Path.Combine(SaveRootDirectory, saveFiles.ToString());
         }
 
+        private string GetDirectory(DirectoryType directoryType)
+        {
+            FileInfo fileInfo = new FileInfo(typeof(Tests).Namespace);
+            var rootPath = fileInfo.Directory.ToString();
+
+            return @$"{rootPath}\{directoryType}";
+        }
+
         private string DataDirectory => TestContext.Parameters.Get("DataDirectory",
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
                 ? @"/Users/bradhannah/GitHub/Ultima5ReduxTestDependancies/Saves/Britain2"
                 //@"/Users/bradhannah/games/u5tests/Britain2"
-                : @"C:\games\ultima5tests\Britain2");
+                : GetDirectory(DirectoryType.Data));
 
         private string SaveRootDirectory =>
             TestContext.Parameters.Get("SaveRootDirectory",
                 RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
                     ? @"/Users/bradhannah/GitHub/Ultima5ReduxTestDependancies/Saves"
                     //@"/Users/bradhannah/games/u5tests"
-                    : @"C:\games\ultima5tests");
+                    : GetDirectory(DirectoryType.LegacySaves));
 
         private string NewSaveRootDirectory => TestContext.Parameters.Get("NewSaveRootDirectory",
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
                 ? @"/Users/bradhannah/GitHub/Ultima5ReduxTestDependancies/NewSaves"
                 //@"/Users/bradhannah/games/u5tests"
-                : @"C:\games\ultima5tests");
+                : GetDirectory(DirectoryType.NewSaves));
         //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "UltimaVRedux"));
 
         private string GetNewSaveDirectory(SaveFiles saveFiles) =>

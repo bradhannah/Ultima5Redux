@@ -13,4 +13,9 @@
     <ItemGroup>
         <ProjectReference Include="..\Ultima5Redux\Ultima5Redux.csproj" />
     </ItemGroup>
+	<ItemGroup>
+		<None Include="Data\**" CopyToOutputDirectory="Always" />
+		<None Include="LegacySaves\**" CopyToOutputDirectory="Always" />
+		<None Include="NewSaves\**" CopyToOutputDirectory="Always" />
+	</ItemGroup>
 </Project>
