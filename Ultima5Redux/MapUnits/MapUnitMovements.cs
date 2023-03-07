@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
@@ -8,8 +9,7 @@ namespace Ultima5Redux.MapUnits
     /// <summary>
     ///     Stores all movements of current NPC/monsters on current map
     /// </summary>
-    [DataContract]
-    public sealed class MapUnitMovements
+    [DataContract] public sealed class MapUnitMovements
     {
         private const int MAX_PLAYERS = 0x020;
 
@@ -18,8 +18,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         [DataMember(Name = "MovementList")] private readonly List<MapUnitMovement> _movementList = new(MAX_PLAYERS);
 
-        [JsonConstructor]
-        public MapUnitMovements()
+        [JsonConstructor] public MapUnitMovements()
         {
             // empty
         }
@@ -37,6 +36,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="nIndex"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public MapUnitMovement GetMovement(int nIndex) =>
             _movementList.Count <= nIndex ? new MapUnitMovement(nIndex) : _movementList[nIndex];
     }

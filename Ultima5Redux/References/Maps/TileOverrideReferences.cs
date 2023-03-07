@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 using Ultima5Redux.Properties;
 
@@ -83,10 +82,10 @@ namespace Ultima5Redux.References.Maps
             return AllTerritories.Britannia;
         }
 
-        private List<TileOverrideReference> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor) =>
-            TileOverrideExists(territory, nMapNumber, nFloor)
-                ? _tileOverrideMap[territory][nMapNumber][nFloor].Values.ToList()
-                : new List<TileOverrideReference>();
+        // private List<TileOverrideReference> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor) =>
+        //     TileOverrideExists(territory, nMapNumber, nFloor)
+        //         ? _tileOverrideMap[territory][nMapNumber][nFloor].Values.ToList()
+        //         : new List<TileOverrideReference>();
 
         /// <summary>
         ///     Gets a full collection of all tile overrides for a particular territory and map
@@ -106,18 +105,18 @@ namespace Ultima5Redux.References.Maps
             _tileOverrideMap.ContainsKey(territory) && _tileOverrideMap[territory].ContainsKey(nMapNumber) &&
             _tileOverrideMap[territory][nMapNumber].ContainsKey(nFloor);
 
-        public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference) =>
-            GetTileOverrides(GetOverrideTerritory(singleCombatMapReference),
-                singleCombatMapReference.CombatMapNum, 0);
+        // public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference) =>
+        //     GetTileOverrides(GetOverrideTerritory(singleCombatMapReference),
+        //         singleCombatMapReference.CombatMapNum, 0);
 
-        /// <summary>
-        ///     Gets all tile overrides by a single map location (which includes a single floor)
-        /// </summary>
-        /// <param name="singleMapReference"></param>
-        /// <returns>a list of TileOverride object, can be empty, but never null</returns>
-        public List<TileOverrideReference> GetTileOverrides(SmallMapReferences.SingleMapReference singleMapReference) =>
-            GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id,
-                singleMapReference.Floor);
+        // /// <summary>
+        // ///     Gets all tile overrides by a single map location (which includes a single floor)
+        // /// </summary>
+        // /// <param name="singleMapReference"></param>
+        // /// <returns>a list of TileOverride object, can be empty, but never null</returns>
+        // public List<TileOverrideReference> GetTileOverrides(SmallMapReferences.SingleMapReference singleMapReference) =>
+        //     GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id,
+        //         singleMapReference.Floor);
 
         public Dictionary<Point2D, TileOverrideReference> GetTileXyOverrides(
             SmallMapReferences.SingleMapReference singleMapReference) =>

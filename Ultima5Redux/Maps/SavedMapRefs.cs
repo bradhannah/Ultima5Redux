@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.References;
@@ -5,8 +6,7 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract]
-    public class SavedMapRefs
+    [DataContract] public class SavedMapRefs
     {
         [DataMember] public int Floor { get; private set; }
         [DataMember] public SmallMapReferences.SingleMapReference.Location Location { get; private set; }
@@ -42,10 +42,12 @@ namespace Ultima5Redux.Maps
         public SmallMapReferences.SingleMapReference GetSingleMapReference() =>
             Location switch
             {
-                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(Floor == 0
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => SmallMapReferences
+                    .SingleMapReference.GetLargeMapSingleInstance(Floor == 0
                         ? LargeMapLocationReferences.LargeMapType.Overworld
                         : LargeMapLocationReferences.LargeMapType.Underworld),
-                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(),
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => SmallMapReferences
+                    .SingleMapReference.GetCombatMapSingleInstance(),
                 _ => GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor)
             };
 
@@ -59,6 +61,7 @@ namespace Ultima5Redux.Maps
             SetMapUnitPosition(playerPosition);
         }
 
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public void SetBySingleCombatMapReference(SingleCombatMapReference singleCombatMapReference)
         {
             // not entirely sure we need to actually save much here since we never actually save games

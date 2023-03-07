@@ -170,6 +170,7 @@ namespace Ultima5Redux.References
         public MoonPhases GetMoonPhasesByTimeOfDay(TimeOfDay timeOfDay, MoonsAndSun moonsAndSun)
         {
             // the value stored is an offset and needs to be adjusted to a zero based index
+            // ReSharper disable once InconsistentNaming
             int getAdjustedValue(int nValue) => nValue - N_OFFSET_ADJUST;
 
             return moonsAndSun switch

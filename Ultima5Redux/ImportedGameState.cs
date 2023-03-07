@@ -419,6 +419,7 @@ namespace Ultima5Redux
             UnderworldMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, bLoadFromDisk);
             ActiveMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, bLoadFromDisk);
 
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (InitialMap)
             {
                 case Map.Maps.Small:

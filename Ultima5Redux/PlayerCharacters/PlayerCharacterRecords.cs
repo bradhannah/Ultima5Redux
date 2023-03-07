@@ -13,8 +13,7 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    [DataContract]
-    public class PlayerCharacterRecords
+    [DataContract] public class PlayerCharacterRecords
     {
         private const byte CHARACTER_OFFSET = 0x20;
 
@@ -48,8 +47,7 @@ namespace Ultima5Redux.PlayerCharacters
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int MaxCharactersInParty => MAX_PARTY_MEMBERS;
 
-        [JsonConstructor]
-        private PlayerCharacterRecords()
+        [JsonConstructor] private PlayerCharacterRecords()
         {
         }
 
@@ -206,6 +204,7 @@ namespace Ultima5Redux.PlayerCharacters
             return Records.FirstOrDefault(record => record.Name == npc.Name);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public int GetIndexOfPlayerCharacterRecord(PlayerCharacterRecord record)
         {
             for (int i = 0; i < Records.Count; i++)
@@ -246,10 +245,9 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public bool IsEquipmentEquipped(DataOvlReference.Equipment equipment)
-        {
-            return Records.Any(record => record.Equipped.IsEquipped(equipment));
-        }
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public bool IsEquipmentEquipped(DataOvlReference.Equipment equipment) =>
+            Records.Any(record => record.Equipped.IsEquipped(equipment));
 
         /// <summary>
         ///     Is my party full (at capacity)
@@ -296,6 +294,7 @@ namespace Ultima5Redux.PlayerCharacters
             DamageEachCharacter(turnResults, 1, 9);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public void SendCharacterToInn(PlayerCharacterRecord record,
             SmallMapReferences.SingleMapReference.Location location)
         {

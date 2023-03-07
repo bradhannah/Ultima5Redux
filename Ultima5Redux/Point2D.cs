@@ -355,29 +355,29 @@ namespace Ultima5Redux
 
             List<Point2D> points = new();
 
-            void addAcross(int nY)
-            {
-                Debug.Assert(nY >= 0);
-                for (int nX = Math.Max(0, X - nUnitsOut); nX < Math.Min(nXExtent, X + nUnitsOut + 1); nX++)
-                {
-                    points.Add(new Point2D(nX, Math.Min(Math.Max(0, nY), nYExtent)));
-                }
-            }
-
-            void addDown(int nX)
-            {
-                for (int nY = Math.Max(0, Y - nUnitsOut + 1); nY < Math.Min(nYExtent, Y + nUnitsOut); nY++)
-                {
-                    points.Add(new Point2D(Math.Min(Math.Max(0, nX), nXExtent), nY));
-                }
-            }
-
-            addAcross(Y - nUnitsOut);
-            addAcross(Y + nUnitsOut);
-            addDown(X - nUnitsOut);
-            addDown(X + nUnitsOut);
+            AddAcross(Y - nUnitsOut, nUnitsOut, nXExtent, points, nYExtent);
+            AddAcross(Y + nUnitsOut, nUnitsOut, nXExtent, points, nYExtent);
+            AddDown(X - nUnitsOut, nUnitsOut, nYExtent, points, nXExtent);
+            AddDown(X + nUnitsOut, nUnitsOut, nYExtent, points, nXExtent);
 
             return points;
+        }
+
+        private void AddDown(int nX, int nUnitsOut, int nYExtent, ICollection<Point2D> points, int nXExtent)
+        {
+            for (int nY = Math.Max(0, Y - nUnitsOut + 1); nY < Math.Min(nYExtent, Y + nUnitsOut); nY++)
+            {
+                points.Add(new Point2D(Math.Min(Math.Max(0, nX), nXExtent), nY));
+            }
+        }
+
+        private void AddAcross(int nY, int nUnitsOut, int nXExtent, ICollection<Point2D> points, int nYExtent)
+        {
+            Debug.Assert(nY >= 0);
+            for (int nX = Math.Max(0, X - nUnitsOut); nX < Math.Min(nXExtent, X + nUnitsOut + 1); nX++)
+            {
+                points.Add(new Point2D(nX, Math.Min(Math.Max(0, nY), nYExtent)));
+            }
         }
 
         public string GetFriendlyString() => "X=" + X + ",Y=" + Y;

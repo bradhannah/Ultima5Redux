@@ -22,35 +22,16 @@ namespace Ultima5Redux.Maps
 {
     public partial class VirtualMap
     {
-        internal enum LadderOrStairDirection
-        {
-            Up,
-            Down
-        }
+        internal enum LadderOrStairDirection { Up, Down }
     }
 
-    [DataContract]
-    public abstract class Map
+    [DataContract] public abstract class Map
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum Maps
-        {
-            Small = -1,
-            Overworld,
-            Underworld,
-            Combat,
-            Dungeon
-        }
+        public enum Maps { Small = -1, Overworld, Underworld, Combat, Dungeon }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum WalkableType
-        {
-            StandardWalking,
-            CombatLand,
-            CombatWater,
-            CombatFlyThroughWalls,
-            CombatLandAndWater
-        }
+        public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }
 
         public const int MAX_MAP_CHARACTERS = 64;
         protected const int MAX_LEGACY_MAP_CHARACTERS = 32;
@@ -113,11 +94,9 @@ namespace Ultima5Redux.Maps
             MapFloor = mapFloor;
         }
 
-        [JsonConstructor]
-        protected Map() => TheMapOverrides = new MapOverrides(this);
+        [JsonConstructor] protected Map() => TheMapOverrides = new MapOverrides(this);
 
-        [OnDeserialized]
-        private void PostDeserialize(StreamingContext context)
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             TheMapOverrides.TheMap = this;
         }
@@ -126,6 +105,7 @@ namespace Ultima5Redux.Maps
         internal abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
 
         // ReSharper disable once UnusedMemberInSuper.Global
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         internal abstract void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit);
 
         internal void ClearMapUnit(MapUnit mapUnit)
@@ -222,13 +202,15 @@ namespace Ultima5Redux.Maps
                     if (discoverableLoot.IsDeadBody)
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                .ThingsIFindStrings
                                 .A_ROTTING_BODY_BANG_N)));
                     }
                     else if (discoverableLoot.IsBloodSpatter)
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                .ThingsIFindStrings
                                 .A_BLOOD_PULP_BANG_N)));
                     }
                     else
@@ -375,7 +357,8 @@ namespace Ultima5Redux.Maps
                     if (bTriggeredTrap)
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                .ThingsIFindStrings
                                 .A_SIMPLE_TRAP_BANG_N)));
                         nonAttackingUnit.TriggerTrap(turnResults, record.Stats, records);
                         turnResults.PushTurnResult(
@@ -384,7 +367,8 @@ namespace Ultima5Redux.Maps
                     else
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                .ThingsIFindStrings
                                 .A_SIMPLE_TRAP_N)));
                         turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchRemoveSimple));
                     }
@@ -395,7 +379,8 @@ namespace Ultima5Redux.Maps
                     {
                         turnResults.PushOutputToConsole(
                             U5StringRef.ThouDostFind(
-                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                    .ThingsIFindStrings
                                     .A_COMPLEX_TRAP_BANG_N)));
                         nonAttackingUnit.TriggerTrap(turnResults, record.Stats, records);
                         turnResults.PushTurnResult(
@@ -405,7 +390,8 @@ namespace Ultima5Redux.Maps
                     {
                         turnResults.PushOutputToConsole(
                             U5StringRef.ThouDostFind(
-                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                    .ThingsIFindStrings
                                     .A_COMPLEX_TRAP_N)));
                         turnResults.PushTurnResult(
                             new BasicResult(TurnResult.TurnResultType.ActionSearchRemoveComplex));
@@ -708,20 +694,16 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        /// <param name="bIgnoreExposed"></param>
-        /// <param name="bIgnoreMoongate"></param>
         /// <returns></returns>
         public TileReference
-            GetTileReference(int x, int y, bool bIgnoreExposed = false, bool bIgnoreMoongate = false) =>
-            GetTileReference(new Point2D(x, y));
+            GetTileReference(int x, int y) => GetTileReference(new Point2D(x, y));
 
         /// <summary>
         ///     Gets a tile reference from the given coordinate
         /// </summary>
         /// <param name="xy"></param>
-        /// <param name="bIgnoreMoongate"></param>
         /// <returns></returns>
-        public TileReference GetTileReference(in Point2D xy, bool bIgnoreMoongate = false)
+        public TileReference GetTileReference(in Point2D xy)
         {
             // we check to see if our override map has something on top of it
             if (TheMapOverrides.HasOverrideTile(xy))
@@ -967,11 +949,11 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Adds a new map unit to the next position available
         /// </summary>
-        /// <param name="map"></param>
         /// <param name="mapUnit"></param>
         /// <returns>true if successful, false if no room was found</returns>
         // ReSharper disable once UnusedMethodReturnValue.Local
-        protected bool AddNewMapUnit(Maps map, MapUnit mapUnit)
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
+        protected bool AddNewMapUnit(MapUnit mapUnit)
         {
             int nIndex = FindNextFreeMapUnitIndex();
             return AddNewMapUnit(mapUnit, nIndex);

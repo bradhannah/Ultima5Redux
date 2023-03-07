@@ -123,6 +123,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             stateOutput = enemyCombatMapUnit.FriendlyName;
 
             HitState enemyHitState = enemyCombatMapUnit.CurrentHitState;
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (enemyHitState)
             {
                 case HitState.Grazed:

@@ -197,7 +197,7 @@ namespace Ultima5Redux.Maps
             int nIndex = FindNextFreeMapUnitIndex();
             if (nIndex < 0) return -1;
 
-            AddNewMapUnit(Maps.Combat, mapUnit);
+            AddNewMapUnit(mapUnit);
 
             return nIndex;
         }
@@ -1385,6 +1385,7 @@ namespace Ultima5Redux.Maps
         /// <param name="escapedPlayer">the player who escaped, or null if none left</param>
         /// <returns>true if a player escaped, false if none were found</returns>
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
         public bool NextCharacterEscape(out CombatPlayer escapedPlayer)
         {
             foreach (CombatPlayer combatPlayer in CurrentMapUnits.CombatPlayers)
@@ -1648,6 +1649,7 @@ namespace Ultima5Redux.Maps
                     enemy.EnemyReference.TheDefaultEnemyStats.Damage, enemy.EnemyReference.TheMissileType,
                     out NonAttackingUnit _, true);
 
+                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                 switch (hitState)
                 {
                     case CombatMapUnit.HitState.Missed:
@@ -1763,6 +1765,7 @@ namespace Ultima5Redux.Maps
 
         protected override bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             return walkableType switch
             {
                 WalkableType.CombatWater => tileReference.IsWaterEnemyPassable,

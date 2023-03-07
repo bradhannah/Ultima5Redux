@@ -1,4 +1,6 @@
-﻿namespace Ultima5Redux.MapUnits
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Ultima5Redux.MapUnits
 {
     public class MovementCommand
     {
@@ -22,6 +24,7 @@
         ///     Use a single iteration -decrement and return the number of remaining movements
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
         public int SpendSingleMovement()
         {
             if (Iterations == 0)

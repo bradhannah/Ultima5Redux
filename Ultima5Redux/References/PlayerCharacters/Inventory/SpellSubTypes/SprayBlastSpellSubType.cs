@@ -28,6 +28,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
 
             DoSetupAndStateCheck(state, spellResult);
 
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             SprayType sprayType = MagicRef.SpellEnum switch
             {
                 MagicReference.SpellWords.In_Vas_Grav_Corp => SprayType.Poison,
