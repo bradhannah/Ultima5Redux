@@ -10,8 +10,7 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux
 {
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class OddsAndLogic
     {
         private static readonly Dictionary<NonAttackingUnit.TrapType, int> ChestTrapsWeighted = new()
@@ -113,7 +112,20 @@ namespace Ultima5Redux
 
         public const int GETTING_POISONED_BY_STEPPING_ON_SWAMP = 4;
 
+        public const int ODDS_OF_TROLL_BRIDGE = 2;
+        public const int ODDS_OF_SNEAKING_PAST_TROLLS = 2;
+
+        public static bool IsTrollUnderBridge() => Utils.OneInXOdds(ODDS_OF_TROLL_BRIDGE);
+        public static bool DidWeSneakPastTroll() => Utils.OneInXOdds(ODDS_OF_SNEAKING_PAST_TROLLS);
+
         public static bool DidEnemyStealFood() => Utils.OneInXOdds(ODDS_OF_STEALING_FOOD);
+
+        public static int GetCostOfCrossingTrollBridge(PlayerCharacterRecords records) =>
+            records.Records[0].Stats.Level < 4 ? 40 : 100;
+
+        public static int GetNumberOfTrollsUnderBridge(PlayerCharacterRecords records) =>
+            records.Records[0].Stats.Level < 4 ? Utils.GetNumberFromAndTo(1, 3) : Utils.GetNumberFromAndTo(2, 4);
+
 
         /// <summary>
         ///     When the given user tries to open the chest - does it explode?

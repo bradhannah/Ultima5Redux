@@ -151,7 +151,9 @@ namespace Ultima5Redux.MapUnits.TurnResults
             PoofHorse,
             OpenPortcullis,
             OverrideCombatMapTile,
-            FoodStolenByEnemy
+            FoodStolenByEnemy,
+            SnuckPastTrollBridge,
+            FailedToSneakPastTrollUnderBridge
         }
 
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]

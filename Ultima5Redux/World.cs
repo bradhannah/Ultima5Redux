@@ -1782,16 +1782,22 @@ namespace Ultima5Redux
             // we get the newTile so that we can determine if it's passable
             TileReference newTileReference = regularMap.GetTileReference(newPosition.X, newPosition.Y);
 
-            if (newTileReference.Index ==
-                GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("BrickFloorHole") &&
+            // We often want to see if trolls want to bother us when we go over a bridge
+            if (newTileReference.IsTrollBridge)
+            {
+                bool bIsTrollUnderBridge = OddsAndLogic.IsTrollUnderBridge();
+                if (bIsTrollUnderBridge)
+                    turnResults.PushTurnResult(OddsAndLogic.DidWeSneakPastTroll()
+                        ? new BasicResult(TurnResult.TurnResultType.SnuckPastTrollBridge)
+                        : new BasicResult(TurnResult.TurnResultType.FailedToSneakPastTrollUnderBridge));
+            }
+            else if (newTileReference.Is(TileReference.SpriteIndex.BrickFloorHole) &&
                 !regularMap.IsAvatarRidingCarpet)
             {
                 State.TheVirtualMap.UseStairs(newPosition, true);
                 // we need to evaluate in the game and let the game know that they should continue to fall
                 TileReference newTileRef = regularMap.GetTileReference(regularMap.CurrentPosition.XY);
-                if (newTileRef.Index ==
-                    GameReferences.Instance.SpriteTileReferences.GetTileNumberByName("BrickFloorHole"))
-                    IsPendingFall = true;
+                if (newTileRef.Is(TileReference.SpriteIndex.BrickFloorHole)) IsPendingFall = true;
 
                 // todo: get string from data file
                 turnResults.PushOutputToConsole("A TRAPDOOR!");
@@ -1806,12 +1812,9 @@ namespace Ultima5Redux
             bool bPassable = regularMap.IsTileFreeToTravelForAvatar(newPosition);
 
             // this is insufficient in case I am in a boat
-            if ((bKlimb && newTileReference.IsKlimable) || bPassable || bFreeMove)
-            {
-                State.TheVirtualMap.CurrentMap.CurrentPosition.X = newPosition.X;
-                State.TheVirtualMap.CurrentMap.CurrentPosition.Y = newPosition.Y;
-            }
-            else // it is not passable
+            // if ((!bKlimb || !newTileReference.IsKlimable) && !bPassable && !bFreeMove)
+            if (!((bKlimb && newTileReference.IsKlimable) || bPassable || bFreeMove))
+            // it is not passable
             {
                 if (!bManualMovement && avatar.AreSailsHoisted)
                 {
@@ -1834,6 +1837,9 @@ namespace Ultima5Redux
                 // if it's not passable then we have no more business here
                 return AdvanceTime(nTimeAdvanceFactor, turnResults);
             }
+
+            State.TheVirtualMap.CurrentMap.CurrentPosition.X = newPosition.X;
+            State.TheVirtualMap.CurrentMap.CurrentPosition.Y = newPosition.Y;
 
             // the world is a circular - so when you get to the end, start over again
             // this will prevent a never ending growth or shrinking of character position in case the travel the world only moving right a bagillion times

@@ -115,13 +115,15 @@ namespace Ultima5Redux.References.Maps
             LeftDesert2 = 30,
             RightDesert2 = 31,
             StarPattern = 256,
-            Bridge = 106,
+            TrollBridgeHoriz = 106,
+            TrollBridgeVert = 107,
             WoodenBox = 270,
             Shard = 436,
             Crown = 437,
             Sceptre = 438,
-            Amulet = 439 
-            
+            Amulet = 439, 
+            BrickFloorHole = 140,
+            Troll_KeyIndex = 484
         }
 
 
@@ -189,6 +191,8 @@ namespace Ultima5Redux.References.Maps
                 or (int)SpriteIndex.TableFoodTop;
 
         public bool IsWaterTile => Name.ToLower().Contains("water");
+
+        public bool IsTrollBridge => Is(SpriteIndex.TrollBridgeHoriz) || Is(SpriteIndex.TrollBridgeVert);
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public int KeyTileTileReferenceIndex => Index - AnimationIndex;

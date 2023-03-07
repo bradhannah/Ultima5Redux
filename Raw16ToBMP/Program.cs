@@ -32,43 +32,40 @@ namespace Raw16ToBMP
 
         public static int Write16BitmapFile(string filename, int width, int height, byte[] imageData)
         {
-            using (new MemoryStream(imageData))
-            using (var bmp = new Bitmap(width, height, PixelFormat.Format24bppRgb))
-                // .Format8bppIndexed))// Format32bppArgb))
+            using var stream = new MemoryStream(imageData);
+            using var bmp = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0,
+                    bmp.Width,
+                    bmp.Height),
+                ImageLockMode.ReadWrite,
+                //ImageLockMode.WriteOnly,
+                bmp.PixelFormat);
+
+            //IntPtr pNative = bmpData.Scan0;
+            //Marshal.Copy(imageData, 0, pNative, imageData.Length-1);
+
+            Dictionary<byte, Color> egaPalette = GetEgaPalette();
+
+            bmp.UnlockBits(bmpData);
+
+            int index = 0;
+            for (int y = 0; y < height; y++)
             {
-                BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0,
-                        bmp.Width,
-                        bmp.Height),
-                    ImageLockMode.ReadWrite,
-                    //ImageLockMode.WriteOnly,
-                    bmp.PixelFormat);
-
-                //IntPtr pNative = bmpData.Scan0;
-                //Marshal.Copy(imageData, 0, pNative, imageData.Length-1);
-
-                Dictionary<byte, Color> egaPalette = GetEgaPalette();
-
-                bmp.UnlockBits(bmpData);
-
-                int index = 0;
-                for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x += 2)
                 {
-                    for (int x = 0; x < width; x += 2)
-                    {
-                        Color pixel1 = egaPalette[(byte)((imageData[index] >> 4) & 0xF)];
-                        Color pixel2 = egaPalette[(byte)(imageData[index] & 0xF)];
+                    Color pixel1 = egaPalette[(byte)((imageData[index] >> 4) & 0xF)];
+                    Color pixel2 = egaPalette[(byte)(imageData[index] & 0xF)];
 
-                        bmp.SetPixel(x, y, pixel1);
-                        bmp.SetPixel(x + 1, y, pixel2);
+                    bmp.SetPixel(x, y, pixel1);
+                    bmp.SetPixel(x + 1, y, pixel2);
 
-                        index++;
-                    }
+                    index++;
                 }
-
-                //bmp.UnlockBits(bmpData);
-
-                bmp.Save(filename);
             }
+
+            //bmp.UnlockBits(bmpData);
+
+            bmp.Save(filename);
 
             return 1;
         }
@@ -135,13 +132,13 @@ namespace Raw16ToBMP
             const int nStartIndex = 0x1D + 2; //(320 / 2) * 61 + 0x1A;
             //const int nOffsetPerFire = nBytesWidth * nPixelHeight + nDefaultOffset;
 
-            Export("C:\\games\\ultima_5\\temp\\dec_res\\mon1.16.uncomp",
-                "C:\\games\\ultima_5\\temp\\dec_res\\mon1.16.bmp",
+            Export($"{rootPath}/dec_res/mon1.16.uncomp",
+                $"{rootPath}/dec_res/mon1.16.bmp",
                 nPixelWidth, nPixelHeight, nStartIndex + nDefaultOffset);
 
             // const int indexSize = 0x32;
-            // byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\mon1.16.uncomp");
-            // //byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\create.16.uncomp");
+            // byte[] fileArray = File.ReadAllBytes("{rootPath}/dec_res/mon1.16.uncomp");
+            // //byte[] fileArray = File.ReadAllBytes("{rootPath}/dec_res/create.16.uncomp");
             //
             // byte[] positionArray = new byte[indexSize];
             // for (int i = 0; i < positionArray.Length; i++)
@@ -160,7 +157,7 @@ namespace Raw16ToBMP
             // }
             //
             //
-            // BitmapWriter.Write16BitmapFile("C:\\games\\ultima_5\\temp\\dec_res\\mon1.16.bmp", nForcedWidth, nForcedHeight, flameGraphic);
+            // BitmapWriter.Write16BitmapFile("{rootPath}/dec_res/mon1.16.bmp", nForcedWidth, nForcedHeight, flameGraphic);
             //positionArray[2], positionArray[3], fileArray);
         }
 
@@ -168,8 +165,8 @@ namespace Raw16ToBMP
         private static void CreateScreen()
         {
             const int IndexSize = 0x32;
-            byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\create.16.uncomp");
-            //byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\create.16.uncomp");
+            byte[] fileArray = File.ReadAllBytes("{rootPath}/dec_res/create.16.uncomp");
+            //byte[] fileArray = File.ReadAllBytes("{rootPath}/dec_res/create.16.uncomp");
 
             byte[] positionArray = new byte[IndexSize];
             for (int i = 0; i < positionArray.Length; i++)
@@ -188,7 +185,7 @@ namespace Raw16ToBMP
                 flameGraphic[byteIndex] = fileArray[byteIndex + IndexSize];
             }
 
-            BitmapWriter.Write16BitmapFile("C:\\games\\ultima_5\\temp\\dec_res\\create.16.bmp", nForcedWidth,
+            BitmapWriter.Write16BitmapFile($"{rootPath}/dec_res/create.16.bmp", nForcedWidth,
                 nForcedHeigh, flameGraphic);
             //positionArray[2], positionArray[3], fileArray);
         }
@@ -207,11 +204,13 @@ namespace Raw16ToBMP
             UltimaScreen();
             FireScreen();
 
-            var lzw = new PbvCompressorLzw();
-            lzw.Decompress("C:\\games\\ultima_5\\temp\\ultima.16",
-                "C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp2");
+            // var lzw = new PbvCompressorLzw();
+            // lzw.Decompress($"{rootPath}/ultima.16",
+            //     $"{rootPath}/dec_res/ultima.16.uncomp2");
         }
 
+        private static string rootPath = "/Users/bradhannah/games/Ultima_5/Gold";
+        
         public static void Export(string uncompFilename, string bmpFilename, int nGraphicWidth, int nGraphicHeight,
             int nOffset)
         {
@@ -237,6 +236,20 @@ namespace Raw16ToBMP
             BitmapWriter.Write16BitmapFile(bmpFilename, nForcedWidth, nForcedHeigh, flameGraphic);
         }
 
+        public static void Dungeons()
+        {
+            const int nDefaultOffset = 0x04;
+            const int nPixelWidth = 288;
+            const int nBytesWidth = nPixelWidth / 2;
+            const int nPixelHeight = 49;
+            const int nStartIndex = 320 / 2 * 61 + 0x1A;
+            const int nOffsetPerFire = nBytesWidth * nPixelHeight + nDefaultOffset;
+
+            Export($"{rootPath}/dec_res/ultima.16.uncomp",
+                $"{rootPath}/dec_res/ultima_fire.16.bmp",
+                nPixelWidth, nPixelHeight, nStartIndex + nDefaultOffset);
+        }
+
         public static void FireScreen()
         {
             const int nDefaultOffset = 0x04;
@@ -246,34 +259,34 @@ namespace Raw16ToBMP
             const int nStartIndex = 320 / 2 * 61 + 0x1A;
             const int nOffsetPerFire = nBytesWidth * nPixelHeight + nDefaultOffset;
 
-            Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
-                "C:\\games\\ultima_5\\temp\\dec_res\\ultima_fire.16.bmp",
+            Export($"{rootPath}/dec_res/ultima.16.uncomp",
+                $"{rootPath}/dec_res/ultima_fire.16.bmp",
                 nPixelWidth, nPixelHeight, nStartIndex + nDefaultOffset);
 
-            Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
-                "C:\\games\\ultima_5\\temp\\dec_res\\ultima_fire2.16.bmp",
+            Export($"{rootPath}/dec_res/ultima.16.uncomp",
+                $"{rootPath}/dec_res/ultima_fire2.16.bmp",
                 nPixelWidth, nPixelHeight, nStartIndex + nOffsetPerFire + nDefaultOffset);
 
-            Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
-                "C:\\games\\ultima_5\\temp\\dec_res\\ultima_fire3.16.bmp",
+            Export($"{rootPath}/dec_res/ultima.16.uncomp",
+                $"{rootPath}/dec_res/ultima_fire3.16.bmp",
                 nPixelWidth, nPixelHeight, nStartIndex + nOffsetPerFire * 2 + nDefaultOffset);
 
-            Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
-                "C:\\games\\ultima_5\\temp\\dec_res\\ultima_fire4.16.bmp",
+            Export($"{rootPath}/dec_res/ultima.16.uncomp",
+                $"{rootPath}/dec_res/ultima_fire4.16.bmp",
                 nPixelWidth, nPixelHeight, nStartIndex + nOffsetPerFire * 3 + nDefaultOffset);
         }
 
         public static void StartScreen()
         {
-            Export("C:\\games\\ultima_5\\temp\\dec_res\\startsc.16.uncomp",
-                "C:\\games\\ultima_5\\temp\\dec_res\\startsc.16.bmp",
+            Export($"{rootPath}/dec_res/startsc.16.uncomp",
+                $"{rootPath}/dec_res/startsc.16.bmp",
                 168, 30, 0);
         }
 
         public static void UltimaScreen()
         {
-            Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
-                "C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.bmp",
+            Export($"{rootPath}/dec_res/ultima.16.uncomp",
+                $"{rootPath}/dec_res/ultima.16.bmp",
                 320, 61, 0x1A);
         }
     }
