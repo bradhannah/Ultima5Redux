@@ -94,7 +94,11 @@ namespace Ultima5Redux.Maps
             MapFloor = mapFloor;
         }
 
-        [JsonConstructor] protected Map() => TheMapOverrides = new MapOverrides(this);
+        [JsonConstructor] protected Map()
+        {
+            CurrentMapUnits.RefreshActiveDictionaryCache();
+            TheMapOverrides = new MapOverrides(this);
+        } 
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
