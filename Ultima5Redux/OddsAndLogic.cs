@@ -66,6 +66,9 @@ namespace Ultima5Redux
 
         private const int WEIGHT_DEADBODY_TRAP_POISON = 1;
 
+        public const int DRUNK_TURNS_PER_DRINK = 0x19;
+        public const int DRUNK_COUNTER_FLOOR = -(DRUNK_TURNS_PER_DRINK * 3);
+
 
         private static readonly List<NonAttackingUnit.TrapType> BloodSpatterTrapsWeightedList =
             Utils.MakeWeightedList(BloodSpatterTrapsWeighted).ToList();

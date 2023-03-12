@@ -3815,6 +3815,47 @@ namespace Ultima5ReduxTesting
             }
         }
 
+        [Test] [TestCase(SaveFiles.brandnew)]
+        public void test_GettingDrunk(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            
+            // 0 drinks
+            Assert.False(world.State.CharacterRecords.AreDrunk);
+            world.State.CharacterRecords.HaveADrink();
+            // 1 drink
+            Assert.False(world.State.CharacterRecords.AreDrunk);
+            world.State.CharacterRecords.HaveADrink();
+            // 2 drink
+            Assert.False(world.State.CharacterRecords.AreDrunk);
+            world.State.CharacterRecords.HaveADrink();
+            // 3 drink
+            Assert.True(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
+            Assert.False(world.State.CharacterRecords.AreDrunk);
+            world.State.CharacterRecords.HaveADrink();
+            
+            // 4 - drunk now
+            Assert.False(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
+            Assert.True(world.State.CharacterRecords.AreDrunk);
+
+            for (int i = 0; i < OddsAndLogic.DRUNK_TURNS_PER_DRINK - 1; i++)
+            {
+                world.AdvanceTime(2, new TurnResults());
+                Assert.False(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
+                Assert.True(world.State.CharacterRecords.AreDrunk);
+            }
+
+            world.AdvanceTime(2, new TurnResults());
+            Assert.True(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
+            Assert.False(world.State.CharacterRecords.AreDrunk);
+            
+            //Assert.False(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
+            // Assert.False(world.State.CharacterRecords.AreDrunk);
+            // world.State.CharacterRecords.HaveADrink();
+            // should be drunk now
+        }
+
+        
         public void test_BasicLoadDifferentFloors(SaveFiles saveFiles, bool bReloadJson)
         {
             World world = CreateWorldFromLegacy(saveFiles, true, false);

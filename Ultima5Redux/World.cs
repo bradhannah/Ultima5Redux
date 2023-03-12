@@ -625,6 +625,7 @@ namespace Ultima5Redux
             if (State.TurnsToExtinguish > 0) State.TurnsToExtinguish--;
 
             State.TurnsSinceStart++;
+            State.CharacterRecords.DecrementDrunkCounter();
             
             // we know the map has changed so we refresh the cache 
             State.TheVirtualMap.CurrentMap.CurrentMapUnits.RefreshActiveDictionaryCache();
