@@ -21,6 +21,9 @@ namespace Ultima5Redux.References.Maps
         private readonly Dictionary<SingleMapReference.Location, Dictionary<int, SingleMapReference>>
             _mapReferenceDictionary = new();
 
+        private readonly Dictionary<LargeMapLocationReferences.LargeMapType, SingleMapReference>
+            _largeMapReferenceDictionary = new();
+
         // a mapping of the master file -> a list of locations, which also provides an index value for the town (implied within list)
         private readonly Dictionary<SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>>
             _masterFileLocationDictionary = new(MASTER_FILES);
@@ -53,6 +56,11 @@ namespace Ultima5Redux.References.Maps
             _dataRef = dataRef;
 
             InitializeLocationNames();
+
+            _largeMapReferenceDictionary.Add(LargeMapLocationReferences.LargeMapType.Overworld,
+                SingleMapReference.GetLargeMapSingleInstance(LargeMapLocationReferences.LargeMapType.Overworld));
+            _largeMapReferenceDictionary.Add(LargeMapLocationReferences.LargeMapType.Underworld,
+                SingleMapReference.GetLargeMapSingleInstance(LargeMapLocationReferences.LargeMapType.Underworld));
 
             // Castle.dat
             AddLocation(SingleMapReference.Location.Britannia_Underworld, true, 2);
@@ -384,7 +392,12 @@ namespace Ultima5Redux.References.Maps
         /// <returns>a single map reference providing details on the map itself</returns>
         public SingleMapReference GetSingleMapByLocation(SingleMapReference.Location location, int floor)
         {
-            // if (location == SingleMapReference.Location.Britannia_Underworld) return 
+            if (location == SingleMapReference.Location.Britannia_Underworld)
+                return _largeMapReferenceDictionary[
+                    floor == 0
+                        ? LargeMapLocationReferences.LargeMapType.Overworld
+                        : LargeMapLocationReferences.LargeMapType.Underworld];
+            
             if (!_mapReferenceDictionary[location].ContainsKey(floor))
                 throw new Ultima5ReduxException(location + ": " + floor + " was not found!");
 

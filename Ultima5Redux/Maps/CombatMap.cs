@@ -1129,6 +1129,7 @@ namespace Ultima5Redux.Maps
 
             List<CombatItem> combatItems = CurrentCombatPlayer.GetAttackWeapons();
             BuildCombatItemQueue(combatItems);
+            CurrentMapUnits.RefreshActiveDictionaryCache();
         }
 
         private void TriggerTile(TurnResults turnResults, TriggerTileData triggerTileData, Point2D triggerPosition)

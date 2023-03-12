@@ -42,10 +42,8 @@ namespace Ultima5Redux.Maps
         public SmallMapReferences.SingleMapReference GetSingleMapReference() =>
             Location switch
             {
-                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => SmallMapReferences
-                    .SingleMapReference.GetLargeMapSingleInstance(Floor == 0
-                        ? LargeMapLocationReferences.LargeMapType.Overworld
-                        : LargeMapLocationReferences.LargeMapType.Underworld),
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => 
+                    GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, Floor), 
                 SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => SmallMapReferences
                     .SingleMapReference.GetCombatMapSingleInstance(),
                 _ => GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor)

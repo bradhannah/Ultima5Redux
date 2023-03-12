@@ -14,8 +14,7 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract]
-    public sealed class SmallMap : RegularMap
+    [DataContract] public sealed class SmallMap : RegularMap
     {
         public const int X_TILES = 32;
         public const int Y_TILES = 32;
@@ -55,8 +54,7 @@ namespace Ultima5Redux.Maps
 
         public override Maps TheMapType => Maps.Small;
 
-        [JsonConstructor]
-        private SmallMap()
+        [JsonConstructor] private SmallMap()
         {
         }
 
@@ -70,8 +68,7 @@ namespace Ultima5Redux.Maps
             // load the map into memory
             TheMap = CurrentSingleMapReference.GetDefaultMap();
 
-        [OnDeserialized]
-        private void PostDeserialize(StreamingContext context)
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             TheMap = CurrentSingleMapReference.GetDefaultMap();
         }
@@ -216,7 +213,8 @@ namespace Ultima5Redux.Maps
                     .Desert1,
                 // sutek or grendal
                 (int)SmallMapReferences.SingleMapReference.Location.Suteks_Hut
-                    or (int)SmallMapReferences.SingleMapReference.Location.Grendels_Hut => (int)TileReference.SpriteIndex.Swamp,
+                    or (int)SmallMapReferences.SingleMapReference.Location.Grendels_Hut => (int)TileReference
+                        .SpriteIndex.Swamp,
                 // stonegate
                 (int)SmallMapReferences.SingleMapReference.Location.Stonegate => 11,
                 _ => (int)TileReference.SpriteIndex.Grass
@@ -263,7 +261,8 @@ namespace Ultima5Redux.Maps
                 // it it is the first day then we don't include Smith or the Rats. Let's start the day off
                 // on a positive note!
                 NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
-                                               (TileReference.SpriteIndex)m.NpcRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
+                                               (TileReference.SpriteIndex)m.NpcRef.NPCKeySprite is TileReference
+                                                   .SpriteIndex.HorseLeft
                                                or TileReference.SpriteIndex.HorseRight) ??
                                            throw new Ultima5ReduxException("Smith was not in Iolo's hut");
 
@@ -288,6 +287,8 @@ namespace Ultima5Redux.Maps
             if (location is SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
                 or SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
                 throw new Ultima5ReduxException("Tried to load " + location + " into a small map");
+
+            CurrentMapUnits.Clear();
 
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
@@ -382,6 +383,8 @@ namespace Ultima5Redux.Maps
                     }
                 }
             }
+
+            CurrentMapUnits.RefreshActiveDictionaryCache();
         }
 
         internal bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);

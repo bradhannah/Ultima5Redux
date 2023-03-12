@@ -244,6 +244,8 @@ namespace Ultima5Redux.References.Maps
                 };
             }
 
+            
+            
             public static SingleMapReference GetLargeMapSingleInstance(
                 LargeMapLocationReferences.LargeMapType largeMapType) //Map.Maps map)
                 =>

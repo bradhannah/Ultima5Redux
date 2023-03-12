@@ -598,6 +598,8 @@ namespace Ultima5Redux.Maps
 
             // load the A-Star compatible map into memory
             List<List<Node>> aStarNodesLists = Utils.Init2DList<Node>(nXTiles, nYTiles);
+            
+            CurrentMapUnits.RefreshActiveDictionaryCache();
 
             Point2D position = new();
             for (int x = 0; x < nXTiles; x++)
@@ -610,7 +612,7 @@ namespace Ultima5Redux.Maps
                         ? TheMapOverrides.GetOverrideTileReference(position)
                         : GetOriginalTileReference(position);
 
-                    bool bIsWalkable = IsTileWalkable(currentTile, walkableType) && !IsTileOccupied(position);
+                    bool bIsWalkable = IsTileWalkable(currentTile, walkableType) && !IsTileOccupiedFromCache(position);
 
                     float fWeight = GetAStarWeight(position);
 
@@ -1022,6 +1024,11 @@ namespace Ultima5Redux.Maps
             IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState) ||
             IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState) ||
             IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
+
+        private bool IsTileOccupiedFromCache(in Point2D xy)
+        {
+            return CurrentMapUnits.CachedActiveDictionary.ContainsKey(xy);
+        }
 
         protected bool IsTileOccupied(Point2D xy)
         {

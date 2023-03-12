@@ -218,6 +218,7 @@ namespace Ultima5Redux.MapUnits
         public void Clear()
         {
             AllMapUnits.Clear();
+            RefreshActiveDictionaryCache();
         }
 
         [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
