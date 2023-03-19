@@ -64,12 +64,17 @@ namespace Ultima5Redux.External
             return temp;
         }
 
-        public Stack<Node> FindPath(in Point2D startPosition, in Point2D endPosition)
+        public Stack<Node> FindPath(in Point2D startPosition, in Point2D endPosition, bool bIgnoreWalkableTargetIfMoreThanOneAway = false)
         {
-            if (!_grid[endPosition.X][endPosition.Y].Walkable)
+            bool bIsMoreThanOneAway = Math.Abs(startPosition.X - endPosition.X) > 0 &&
+                                      Math.Abs(startPosition.Y - endPosition.Y) > 0;
+            if (!bIgnoreWalkableTargetIfMoreThanOneAway || !bIsMoreThanOneAway)
             {
-                // if you pass in a non-walkable tile then we don't waste our time calculating
-                return null;
+                if (!_grid[endPosition.X][endPosition.Y].Walkable)
+                {
+                    // if you pass in a non-walkable tile then we don't waste our time calculating
+                    return null;
+                }
             }
 
             Node start = new(startPosition, true);
@@ -100,7 +105,10 @@ namespace Ultima5Redux.External
                 {
                     // if the tile is NOT walkable or already in the closedList which means it cannot be used
                     // to reach your final destination
-                    if (closedList.Contains(n) || !n.Walkable) continue;
+                    // if (closedList.Contains(n) || !n.Walkable) continue;
+                    bool bForceWalkable = bIgnoreWalkableTargetIfMoreThanOneAway && n.Position.X == endPosition.X &&
+                                          n.Position.Y == endPosition.Y;
+                    if (!bForceWalkable && (closedList.Contains(n) || !n.Walkable)) continue;
 
                     // if the openList contains the value then it's already been checked and doesn't need to
                     // be checked again

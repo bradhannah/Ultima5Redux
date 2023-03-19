@@ -68,6 +68,7 @@ namespace Ultima5Redux
 
         public const int DRUNK_TURNS_PER_DRINK = 0x19;
         public const int DRUNK_COUNTER_FLOOR = -(DRUNK_TURNS_PER_DRINK * 3);
+        public const int DRUNK_ONE_IN_X_NOT_RANDOM_MOVEMENT = 2; 
 
 
         private static readonly List<NonAttackingUnit.TrapType> BloodSpatterTrapsWeightedList =

@@ -3819,39 +3819,44 @@ namespace Ultima5ReduxTesting
         public void test_GettingDrunk(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles, true, false);
+
+            if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
+            {
+                throw new Ultima5ReduxException("Should have been a small map");
+            }
             
             // 0 drinks
-            Assert.False(world.State.CharacterRecords.AreDrunk);
-            world.State.CharacterRecords.HaveADrink();
+            Assert.False(smallMap.AreDrunk);
+            smallMap.HaveADrink();
             // 1 drink
-            Assert.False(world.State.CharacterRecords.AreDrunk);
-            world.State.CharacterRecords.HaveADrink();
+            Assert.False(smallMap.AreDrunk);
+            smallMap.HaveADrink();
             // 2 drink
-            Assert.False(world.State.CharacterRecords.AreDrunk);
-            world.State.CharacterRecords.HaveADrink();
+            Assert.False(smallMap.AreDrunk);
+            smallMap.HaveADrink();
             // 3 drink
-            Assert.True(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
-            Assert.False(world.State.CharacterRecords.AreDrunk);
-            world.State.CharacterRecords.HaveADrink();
+            Assert.True(smallMap.WillBeDrunkWithOneMoreDrink);
+            Assert.False(smallMap.AreDrunk);
+            smallMap.HaveADrink();
             
             // 4 - drunk now
-            Assert.False(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
-            Assert.True(world.State.CharacterRecords.AreDrunk);
+            Assert.False(smallMap.WillBeDrunkWithOneMoreDrink);
+            Assert.True(smallMap.AreDrunk);
 
             for (int i = 0; i < OddsAndLogic.DRUNK_TURNS_PER_DRINK - 1; i++)
             {
                 world.AdvanceTime(2, new TurnResults());
-                Assert.False(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
-                Assert.True(world.State.CharacterRecords.AreDrunk);
+                Assert.False(smallMap.WillBeDrunkWithOneMoreDrink);
+                Assert.True(smallMap.AreDrunk);
             }
 
             world.AdvanceTime(2, new TurnResults());
-            Assert.True(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
-            Assert.False(world.State.CharacterRecords.AreDrunk);
+            Assert.True(smallMap.WillBeDrunkWithOneMoreDrink);
+            Assert.False(smallMap.AreDrunk);
             
-            //Assert.False(world.State.CharacterRecords.WillBeDrunkWithOneMoreDrink);
-            // Assert.False(world.State.CharacterRecords.AreDrunk);
-            // world.State.CharacterRecords.HaveADrink();
+            //Assert.False(smallMap.WillBeDrunkWithOneMoreDrink);
+            // Assert.False(smallMap.AreDrunk);
+            // smallMap.HaveADrink();
             // should be drunk now
         }
 

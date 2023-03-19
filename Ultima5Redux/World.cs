@@ -28,42 +28,21 @@ namespace Ultima5Redux
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public class World
     {
-        private enum SpecialSearchLocation
-        {
-            None,
-            GlassSwords
-        }
+        private enum SpecialSearchLocation { None, GlassSwords }
 
-        public enum KlimbResult
-        {
-            Success,
-            SuccessFell,
-            CantKlimb,
-            RequiresDirection
-        }
+        public enum KlimbResult { Success, SuccessFell, CantKlimb, RequiresDirection }
 
         /// <summary>
         ///     Special things that can be looked at in the world that will require special consideration
         /// </summary>
         // ReSharper disable once UnusedMember.Global
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public enum SpecialLookCommand
-        {
-            None,
-            Sign,
-            GemCrystal
-        }
+        public enum SpecialLookCommand { None, Sign, GemCrystal }
 
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public enum TryToAttackResult
         {
-            Uninitialized,
-            NothingToAttack,
-            BrokenMirror,
-            CombatMapEnemy,
-            CombatMapNpc,
-            NpcMurder,
-            OnlyOnFoot,
+            Uninitialized, NothingToAttack, BrokenMirror, CombatMapEnemy, CombatMapNpc, NpcMurder, OnlyOnFoot,
             ShootAProjectile
         }
 
@@ -282,7 +261,7 @@ namespace Ultima5Redux
             int nFloor, Point2D position)
         {
             if (location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld && nFloor == 0
-                                                                             && position.X == 64 && position.Y == 80)
+                && position.X == 64 && position.Y == 80)
                 return SpecialSearchLocation.GlassSwords;
 
             return SpecialSearchLocation.None;
@@ -334,15 +313,18 @@ namespace Ultima5Redux
                     return true;
                 case LargeMap:
                     turnResults.PushOutputToConsole(
-                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                            .KeypressCommandsStrings
                             .FIRE) +
-                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                            .KeypressCommandsStrings
                             .D_WHAT));
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireWhat));
                     return false;
                 case CombatMap:
                     turnResults.PushOutputToConsole(
-                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                            .KeypressCommandsStrings
                             .FIRE) +
                         GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
                             .DASH_NOT_HERE_BANG_N));
@@ -618,6 +600,8 @@ namespace Ultima5Redux
                             State.TheTimeOfDay.MinutesSinceBeginning);
                     }
                 }
+
+                if (regularMap is SmallMap smallMap) smallMap.DecrementDrunkCounter();
             }
 
             // if a whole month has advanced then we go and add one month to the "staying at the inn" count
@@ -625,11 +609,10 @@ namespace Ultima5Redux
             if (State.TurnsToExtinguish > 0) State.TurnsToExtinguish--;
 
             State.TurnsSinceStart++;
-            State.CharacterRecords.DecrementDrunkCounter();
-            
+
             // we know the map has changed so we refresh the cache 
             State.TheVirtualMap.CurrentMap.CurrentMapUnits.RefreshActiveDictionaryCache();
-            
+
             return aggressiveMapUnitInfos.Values.ToList();
         }
 
@@ -793,7 +776,8 @@ namespace Ultima5Redux
                 // we were not able to attack, likely on a carpet or skiff and on the water
                 // but may be other edge cases
                 turnResults.PushOutputToConsole(
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                        .KeypressCommandsStrings
                         .ON_FOOT), false);
                 tryToAttackResult = TryToAttackResult.OnlyOnFoot;
 
@@ -1172,13 +1156,15 @@ namespace Ultima5Redux
                                 break;
                             case (int)TileReference.SpriteIndex.TableFoodBoth:
                                 State.TheVirtualMap.CurrentMap.SetOverridingTileReference(
-                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference
+                                        .SpriteIndex
                                         .TableFoodBottom), xy);
                                 bAte = true;
                                 break;
                             case (int)TileReference.SpriteIndex.TableFoodTop:
                                 State.TheVirtualMap.CurrentMap.SetOverridingTileReference(
-                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference
+                                        .SpriteIndex
                                         .TableMiddle), xy);
                                 bAte = true;
                                 break;
@@ -1190,14 +1176,16 @@ namespace Ultima5Redux
                         {
                             case (int)TileReference.SpriteIndex.TableFoodBottom:
                                 State.TheVirtualMap.CurrentMap.SetOverridingTileReference(
-                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference
+                                        .SpriteIndex
                                         .TableMiddle), xy);
                                 bAte = true;
                                 // do nothing
                                 break;
                             case (int)TileReference.SpriteIndex.TableFoodBoth:
                                 State.TheVirtualMap.CurrentMap.SetOverridingTileReference(
-                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference
+                                        .SpriteIndex
                                         .TableFoodTop), xy);
                                 bAte = true;
                                 break;
@@ -1275,7 +1263,8 @@ namespace Ultima5Redux
         /// </summary>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Global
-        [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")] public List<VirtualMap.AggressiveMapUnitInfo> TryToIgniteTorch(TurnResults turnResults)
+        [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToIgniteTorch(TurnResults turnResults)
         {
             // if there are no torches then report back and make no change
             if (State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity <=
@@ -1716,25 +1705,45 @@ namespace Ultima5Redux
                 regularMap is SmallMap ? 1 : N_DEFAULT_ADVANCE_TIME;
             int nTilesPerMapRow = regularMap.NumOfXTiles;
             int nTilesPerMapCol = regularMap.NumOfYTiles;
+            int xAdjust, yAdjust;
 
-            // if we were to move, which direction would we move
-            GetAdjustments(direction, out int xAdjust, out int yAdjust);
+            Point2D originalPos = regularMap.CurrentPosition.XY;
+
+            // calculate our new x and y values based on the adjustments
+            if (regularMap is SmallMap { AreDrunk: true } &&
+                Utils.OneInXOdds(OddsAndLogic.DRUNK_ONE_IN_X_NOT_RANDOM_MOVEMENT))
+            {
+                // if you are drunk and and lose the roll - you will go in a random direction, or not move at all
+                // it's possible you will move a direction that is blocked too which is normal and expected
+                // dirty and inelligent - but works 
+                direction = (Point2D.Direction)(Utils.Ran.Next() % Enum.GetNames(typeof(Point2D.Direction)).Length);
+                turnResults.PushOutputToConsole("Hic!");
+
+                // if we were to move, which direction would we move
+                GetAdjustments(direction, out xAdjust, out yAdjust);
+            }
+            else
+            {
+                // if we were to move, which direction would we move
+                GetAdjustments(direction, out xAdjust, out yAdjust);
+            }
+
+            var newPosition = new Point2D((regularMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol,
+                (regularMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow);
 
             // would we be leaving a small map if we went forward?
             if (regularMap is not LargeMap && IsLeavingMap(new Point2D(
                     regularMap.CurrentPosition.X + xAdjust, regularMap.CurrentPosition.Y + yAdjust)))
             {
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OfferToExitScreen));
+
+                if (regularMap is SmallMap { AreDrunk: false } smallMapToResetDrunk) smallMapToResetDrunk.ResetDrunkCounter();
+
                 // it is expected that the called will offer an exit option, but we won't move the avatar because the space
                 // is empty
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
             }
 
-            Point2D originalPos = regularMap.CurrentPosition.XY;
-
-            // calculate our new x and y values based on the adjustments
-            Point2D newPosition = new((regularMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol,
-                (regularMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow);
             Avatar avatar = regularMap.GetAvatarMapUnit();
             // we change the direction of the Avatar map unit
             // this will be used to determine which is the appropriate sprite to show
@@ -1797,7 +1806,7 @@ namespace Ultima5Redux
                         : new BasicResult(TurnResult.TurnResultType.FailedToSneakPastTrollUnderBridge));
             }
             else if (newTileReference.Is(TileReference.SpriteIndex.BrickFloorHole) &&
-                !regularMap.IsAvatarRidingCarpet)
+                     !regularMap.IsAvatarRidingCarpet)
             {
                 State.TheVirtualMap.UseStairs(newPosition, true);
                 // we need to evaluate in the game and let the game know that they should continue to fall
@@ -1819,7 +1828,7 @@ namespace Ultima5Redux
             // this is insufficient in case I am in a boat
             // if ((!bKlimb || !newTileReference.IsKlimable) && !bPassable && !bFreeMove)
             if (!((bKlimb && newTileReference.IsKlimable) || bPassable || bFreeMove))
-            // it is not passable
+                // it is not passable
             {
                 if (!bManualMovement && avatar.AreSailsHoisted)
                 {
@@ -2181,7 +2190,8 @@ namespace Ultima5Redux
             if (npc == null)
             {
                 turnResults.PushOutputToConsole(
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                        .KeypressCommandsStrings
                         .FUNNY_NO_RESPONSE), false,
                     false);
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NoOneToTalkTo));
@@ -2365,7 +2375,8 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")] [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUsePotion(Potion potion, PlayerCharacterRecord record,
             out bool bSucceeded, out MagicReference.SpellWords spell, TurnResults turnResults)
         {
@@ -2405,9 +2416,11 @@ namespace Ultima5Redux
                     bSucceeded = nHealedPoints >= 0;
                     turnResults.PushOutputToConsole(
                         bSucceeded
-                            ? GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                            ? GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                .ExclaimStrings
                                 .HEALED_BANG_N)
-                            : GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                            : GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                .ExclaimStrings
                                 .FAILED_BANG_N), false);
                     break;
                 case Potion.PotionColor.Red:
@@ -2466,7 +2479,8 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")] [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseScroll(Scroll scroll, PlayerCharacterRecord record,
             TurnResults turnResults)
         {
@@ -2598,7 +2612,8 @@ namespace Ultima5Redux
         /// <param name="bSailsHoisted">are they now hoisted?</param>
         /// <param name="turnResults"></param>
         /// <returns>output string</returns>
-        [SuppressMessage("ReSharper", "UnusedMember.Global")] [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global")]
         public List<VirtualMap.AggressiveMapUnitInfo> TryToYellForSails(out bool bSailsHoisted, TurnResults turnResults)
         {
             if (State.TheVirtualMap.CurrentMap is not RegularMap regularMap)

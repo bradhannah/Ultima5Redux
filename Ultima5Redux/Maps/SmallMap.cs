@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -198,6 +199,35 @@ namespace Ultima5Redux.Maps
             return bestChoiceList;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public void HaveADrink()
+        {
+            _nDrunkCounter = Math.Min(_nDrunkCounter + OddsAndLogic.DRUNK_TURNS_PER_DRINK,
+                OddsAndLogic.DRUNK_TURNS_PER_DRINK);
+        }
+        
+        /// <summary>
+        /// Decrement the drunk counter, but don't go lower than the floor
+        /// </summary>
+        internal void DecrementDrunkCounter()
+        {
+            _nDrunkCounter = Math.Max(_nDrunkCounter - 1, OddsAndLogic.DRUNK_COUNTER_FLOOR);
+        }
+        [DataMember] private int _nDrunkCounter = OddsAndLogic.DRUNK_COUNTER_FLOOR;
+
+        internal void ResetDrunkCounter()
+        {
+            _nDrunkCounter = OddsAndLogic.DRUNK_COUNTER_FLOOR;
+        }
+
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public bool WillBeDrunkWithOneMoreDrink =>
+            _nDrunkCounter <= 0 && _nDrunkCounter + OddsAndLogic.DRUNK_TURNS_PER_DRINK > 0;
+
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public bool AreDrunk => _nDrunkCounter > 0;
+
+        
         /// <summary>
         ///     Gets the appropriate out of bounds sprite based on the map
         /// </summary>

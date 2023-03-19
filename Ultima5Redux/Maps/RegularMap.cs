@@ -28,7 +28,12 @@ namespace Ultima5Redux.Maps
         ///     Are you wanted by the guards? For example - did you murder someone?
         /// </summary>
         [DataMember]
-        public bool IsWantedManByThePoPo { get; set; }
+        public bool IsWantedManByThePoPo { get; set; } 
+        // public bool IsWantedManByThePoPo
+        // {
+        //     get { return true;}
+        //     set { _ = value; }
+        // } 
 
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map

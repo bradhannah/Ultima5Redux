@@ -109,7 +109,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             string origStr = DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2
                 .N_N_DQ_I_BEG_THY_N_PARDON_COMMA_SP) + DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2
                 .DOT_N_DQ_BUT_HAVENT_N_THY_HAD_ENOUGH_N_TO_DRINK_Q_DQ);
-            return origStr.Replace("\"\n\n", ""); //.Replace("\n", " ") + TheShoppeKeeperReference.ShoppeKeeperName;
+            return origStr.Replace("\"\n\n", ""); 
 
         }
 
