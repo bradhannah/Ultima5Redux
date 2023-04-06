@@ -66,7 +66,10 @@ namespace Ultima5Redux
 
         private const int WEIGHT_DEADBODY_TRAP_POISON = 1;
 
-        public const int DRUNK_TURNS_PER_DRINK = 0x19;
+        /// <summary>
+        ///     Number of turns you are drunk for. bajh: I doubled it because it didn't feel long enough
+        /// </summary>
+        public const int DRUNK_TURNS_PER_DRINK = 0x19 * 2;
         public const int DRUNK_COUNTER_FLOOR = -(DRUNK_TURNS_PER_DRINK * 3);
         public const int DRUNK_ONE_IN_X_NOT_RANDOM_MOVEMENT = 2; 
 

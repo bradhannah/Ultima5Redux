@@ -12,6 +12,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.Maps
 {
@@ -107,11 +108,25 @@ namespace Ultima5Redux.Maps
             // TBD
         }
 
+        /// <summary>
+        ///     Are you wanted by the guards? For example - did you murder someone?
+        /// </summary>
+        [DataMember]
+        public bool IsWantedManByThePoPo
+        {
+            get => _isWantedManByThePoPo || AreDrunk;
+            set => _isWantedManByThePoPo = value;
+        }
+
+        private bool _isWantedManByThePoPo;
+
+        [DataMember] public bool DeclinedExtortion { get; set; }
 
         internal void ClearSmallMapFlags()
         {
             IsWantedManByThePoPo = false;
             DeclinedExtortion = false;
+            _nDrunkCounter = OddsAndLogic.DRUNK_COUNTER_FLOOR;
 
             // re-add all dead rats back
             foreach (NonPlayerCharacter mapUnit in CurrentMapUnits.NonPlayerCharacters
@@ -205,7 +220,7 @@ namespace Ultima5Redux.Maps
             _nDrunkCounter = Math.Min(_nDrunkCounter + OddsAndLogic.DRUNK_TURNS_PER_DRINK,
                 OddsAndLogic.DRUNK_TURNS_PER_DRINK);
         }
-        
+
         /// <summary>
         /// Decrement the drunk counter, but don't go lower than the floor
         /// </summary>
@@ -213,6 +228,7 @@ namespace Ultima5Redux.Maps
         {
             _nDrunkCounter = Math.Max(_nDrunkCounter - 1, OddsAndLogic.DRUNK_COUNTER_FLOOR);
         }
+
         [DataMember] private int _nDrunkCounter = OddsAndLogic.DRUNK_COUNTER_FLOOR;
 
         internal void ResetDrunkCounter()
@@ -227,7 +243,9 @@ namespace Ultima5Redux.Maps
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public bool AreDrunk => _nDrunkCounter > 0;
 
-        
+        public int DrunkCounter => _nDrunkCounter;
+
+
         /// <summary>
         ///     Gets the appropriate out of bounds sprite based on the map
         /// </summary>
@@ -243,8 +261,7 @@ namespace Ultima5Redux.Maps
                     .Desert1,
                 // sutek or grendal
                 (int)SmallMapReferences.SingleMapReference.Location.Suteks_Hut
-                    or (int)SmallMapReferences.SingleMapReference.Location.Grendels_Hut => (int)TileReference
-                        .SpriteIndex.Swamp,
+                    or (int)SmallMapReferences.SingleMapReference.Location.Grendels_Hut => (int)TileReference.SpriteIndex.Swamp,
                 // stonegate
                 (int)SmallMapReferences.SingleMapReference.Location.Stonegate => 11,
                 _ => (int)TileReference.SpriteIndex.Grass
@@ -291,8 +308,7 @@ namespace Ultima5Redux.Maps
                 // it it is the first day then we don't include Smith or the Rats. Let's start the day off
                 // on a positive note!
                 NonPlayerCharacter smith = CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(m =>
-                                               (TileReference.SpriteIndex)m.NpcRef.NPCKeySprite is TileReference
-                                                   .SpriteIndex.HorseLeft
+                                               (TileReference.SpriteIndex)m.NpcRef.NPCKeySprite is TileReference.SpriteIndex.HorseLeft
                                                or TileReference.SpriteIndex.HorseRight) ??
                                            throw new Ultima5ReduxException("Smith was not in Iolo's hut");
 
@@ -621,6 +637,167 @@ namespace Ultima5Redux.Maps
                 fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
 
             return fCost;
+        }
+
+        /// <summary>
+        ///     Gets the appropriate (if any) SingleCombatMapReference based on the map and mapunits attempting to engage in
+        ///     combat
+        /// </summary>
+        /// <param name="attackFromPosition">where are they attacking from</param>
+        /// <param name="attackToPosition">where are they attack to</param>
+        /// <param name="territory"></param>
+        /// <param name="aggressorMapUnit">who is the one attacking?</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <returns></returns>
+        protected override VirtualMap.AggressiveMapUnitInfo GetNonCombatMapAggressiveMapUnitInfo(
+            Point2D attackFromPosition,
+            Point2D attackToPosition, SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit)
+        {
+            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map) =>
+                GameReferences.Instance.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
+
+            TileReference attackToTileReference = GetTileReference(attackToPosition);
+            TileReference attackFromTileReference = GetTileReference(attackFromPosition);
+
+            List<MapUnit> mapUnits = GetMapUnitsByPosition(attackToPosition,
+                CurrentSingleMapReference.Floor);
+
+            switch (mapUnits.Count)
+            {
+                case 0:
+                    break;
+                case > 1:
+                    // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
+                    if (!mapUnits.Any(m => m is Avatar))
+                    {
+                        throw new Ultima5ReduxException($"Did not expect {mapUnits.Count} mapunits on targeted tile");
+                    }
+
+                    break;
+            }
+
+            VirtualMap.AggressiveMapUnitInfo mapUnitInfo = new(aggressorMapUnit);
+
+            bool bIsMadGuard = false;
+            if (aggressorMapUnit is NonPlayerCharacter npc)
+                bIsMadGuard = IsWantedManByThePoPo && npc.NpcRef.IsGuard;
+
+            // if the guard is next to you, then they will ask you to come quietly
+            bool bNextToEachOther = attackFromPosition.IsWithinNFourDirections(attackToPosition);
+            if (bIsMadGuard && bNextToEachOther && !TileReferences.IsHeadOfBed(
+                    GetTileReference(aggressorMapUnit.MapUnitPosition.XY).Index))
+            {
+                // if they are at the head of the bed then we don't try to arrest, this keeps guards who are "injured" 
+                // at the healers from trying to arrest
+                // if avatar is being attacked..
+                // we get to assume that the avatar is not necessarily next to the enemy
+                mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
+            }
+
+            // IF NPC is next to Avatar then we check for any AI behaviours such as arrests or extortion
+            if (bNextToEachOther && aggressorMapUnit is NonPlayerCharacter nextToEachOtherNpc)
+            {
+                NonPlayerCharacterSchedule.AiType aiType =
+                    aggressorMapUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
+
+                // because this overrides a LOT of AI behaviours, I just let all guards try to attack
+                // you if you turned down the extortion
+                if (nextToEachOtherNpc.NpcRef.IsGuard && IsWantedManByThePoPo && DeclinedExtortion)
+                {
+                    ForceAttack(mapUnitInfo, attackFromTileReference);
+                }
+                else
+                {
+                    // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
+                    switch (aiType)
+                    {
+                        case NonPlayerCharacterSchedule.AiType.BlackthornGuardFixed:
+                        case NonPlayerCharacterSchedule.AiType.BlackthornGuardWander:
+                            // let's add some randomness and only check them half the time
+                            if (Utils.OneInXOdds(2))
+                            {
+                                // are you wearing the black badge? 
+                                // temporary - if you have the badge then that's good enough
+                                if (GameStateReference.State.CharacterRecords.WearingBlackBadge)
+                                {
+                                    // if the guard has already harassed the Avatar, then they won't bug him
+                                    // again until he re-enters the castle
+                                    mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                        .BlackthornGuardPasswordCheck);
+                                }
+                                else
+                                {
+                                    mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                        .StraightToBlackthornDungeon);
+                                }
+                            }
+
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.Begging:
+                            mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction.Begging);
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
+                        case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
+                        case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
+                            // even if they are extortionists, if you did some super bad, they will try to arrest 
+                            if (IsWantedManByThePoPo && DeclinedExtortion)
+                            {
+                                // attack them
+                                goto case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing;
+                            }
+
+                            if (IsWantedManByThePoPo)
+                            {
+                                mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                    .AttemptToArrest);
+                                break;
+                            }
+
+                            mapUnitInfo.ForceDecidedAction(
+                                aiType == NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard
+                                    ? VirtualMap.AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion
+                                    : VirtualMap.AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion);
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
+                            // if they wanted to chat and they are a guard they can get pissed off and arrest you
+                            if (IsWantedManByThePoPo || (nextToEachOtherNpc.NpcState.PissedOffCountDown == 0 &&
+                                                         nextToEachOtherNpc.NpcRef.IsGuard))
+                            {
+                                mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                    .AttemptToArrest);
+                            }
+                            else
+                            {
+                                // some times non guard NPCs are just keen to chat
+                                mapUnitInfo.ForceDecidedAction(VirtualMap.AggressiveMapUnitInfo.DecidedAction
+                                    .WantsToChat);
+                            }
+
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.FixedExceptAttackWhenIsWantedByThePoPo:
+                            // wow - I just leaned how to do this goto
+                            // they only attack when you are wanted by the popo
+                            if (IsWantedManByThePoPo) ForceAttack(mapUnitInfo, attackFromTileReference);
+
+                            break;
+                        case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
+                            ForceAttack(mapUnitInfo, attackFromTileReference);
+                            break;
+                    }
+                }
+            }
+            // if a guard wants to chat, they lose patience after a while and want to arrest you
+            // so we count down like a stern parent
+            else if (aggressorMapUnit is NonPlayerCharacter pissedOffNonPlayerCharacter
+                     && pissedOffNonPlayerCharacter.NpcState.PissedOffCountDown > 0
+                     && pissedOffNonPlayerCharacter.NpcRef.IsGuard
+                     && pissedOffNonPlayerCharacter.NpcState.OverridenAiType ==
+                     NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat)
+            {
+                pissedOffNonPlayerCharacter.NpcState.PissedOffCountDown--;
+            }
+
+            return mapUnitInfo;
         }
     }
 }

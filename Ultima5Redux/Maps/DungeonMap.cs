@@ -87,5 +87,11 @@ namespace Ultima5Redux.Maps
         }
 
         protected override float GetAStarWeight(in Point2D xy) => 1.0f;
+
+        protected override VirtualMap.AggressiveMapUnitInfo GetNonCombatMapAggressiveMapUnitInfo(
+            Point2D attackFromPosition, Point2D attackToPosition,
+            SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit) =>
+            // not yet implemented
+            null;
     }
 }
