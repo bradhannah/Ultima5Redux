@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using NUnit.Framework;
 using Ultima5Redux;
 using Ultima5Redux.DayNightMoon;
@@ -44,9 +43,6 @@ namespace Ultima5ReduxTesting
     {
         [SetUp] public void Setup()
         {
-            // TestContext.Out.WriteLine("CWD: " + Directory.GetCurrentDirectory());
-            // TestContext.Out.WriteLine("CWD Dump: " + Directory.EnumerateDirectories(Directory.GetCurrentDirectory()));
-            // OutputDirectories(Directory.GetCurrentDirectory());
         }
 
         [TearDown] public void TearDown()
@@ -59,10 +55,7 @@ namespace Ultima5ReduxTesting
             blackt, BucDenEntrance, brandnew
         }
 
-        public enum DirectoryType
-        {
-            Data, LegacySaves, NewSaves
-        }
+        public enum DirectoryType { Data, LegacySaves, NewSaves }
 
         // ReSharper disable once UnusedMember.Local
         private void OutputDirectories(string dir)
@@ -77,48 +70,40 @@ namespace Ultima5ReduxTesting
         {
             if (!Enum.IsDefined(typeof(SaveFiles), saveFiles))
                 throw new InvalidEnumArgumentException(nameof(saveFiles), (int)saveFiles, typeof(SaveFiles));
-            return Path.Combine(SaveRootDirectory, saveFiles.ToString());
+
+            return Path.Combine(GetDirectory(DirectoryType.LegacySaves), saveFiles.ToString());
         }
 
-        private string GetDirectory(DirectoryType directoryType)
+        private static string GetDirectory(DirectoryType directoryType)
         {
-            FileInfo fileInfo = new FileInfo(typeof(Tests).Namespace);
-            var rootPath = fileInfo.Directory.ToString();
+            var fileInfo = new FileInfo(typeof(Tests).Namespace!);
+            string rootPath = fileInfo.Directory!.ToString();
 
-            return @$"{rootPath}\{directoryType}";
+            return Path.Combine(rootPath,
+                directoryType.ToString()); //@$"{rootPath}{Path.PathSeparator}{directoryType}");
         }
 
         private string DataDirectory => TestContext.Parameters.Get("DataDirectory",
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? @"/Users/bradhannah/GitHub/Ultima5ReduxTestDependancies/Saves/Britain2"
-                //@"/Users/bradhannah/games/u5tests/Britain2"
-                : GetDirectory(DirectoryType.Data));
+            GetDirectory(DirectoryType.Data));
 
-        private string SaveRootDirectory =>
-            TestContext.Parameters.Get("SaveRootDirectory",
-                RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                    ? @"/Users/bradhannah/GitHub/Ultima5ReduxTestDependancies/Saves"
-                    //@"/Users/bradhannah/games/u5tests"
-                    : GetDirectory(DirectoryType.LegacySaves));
+        private string GetNewSaveDirectory(SaveFiles saveFiles)
+        {
+            string newSaveRootDirectory = GetDirectory(DirectoryType.NewSaves);
 
-        private string NewSaveRootDirectory => TestContext.Parameters.Get("NewSaveRootDirectory",
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? @"/Users/bradhannah/GitHub/Ultima5ReduxTestDependancies/NewSaves"
-                //@"/Users/bradhannah/games/u5tests"
-                : GetDirectory(DirectoryType.NewSaves));
-        //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "UltimaVRedux"));
-
-        private string GetNewSaveDirectory(SaveFiles saveFiles) =>
-            Path.Combine(NewSaveRootDirectory, saveFiles.ToString());
+            return Path.Combine(newSaveRootDirectory, saveFiles.ToString());
+        }
 
         private World CreateWorldFromLegacy(SaveFiles saveFiles, bool bUseExtendedSprites = true,
-            bool bLoadInitGam = false) =>
-            new(true, GetSaveDirectory(saveFiles), DataDirectory,
+            bool bLoadInitGam = false)
+        {
+            string saveDirectory = GetSaveDirectory(saveFiles);
+            return new World(true, saveDirectory, DataDirectory,
                 bUseExtendedSprites, bLoadInitGam);
+        }
 
         private World CreateWorldFromNewSave(SaveFiles saveFiles, bool bUseExtendedSprites = true,
             bool bLoadInitGam = false) =>
-            new(false, Path.Combine(NewSaveRootDirectory, saveFiles.ToString()), DataDirectory,
+            new(false, GetNewSaveDirectory(saveFiles), DataDirectory,
                 bUseExtendedSprites, bLoadInitGam);
 
         [Test] [TestCase(SaveFiles.Britain)] public void AllSmallMapsLoadTest(SaveFiles saveFiles)
@@ -3828,8 +3813,7 @@ namespace Ultima5ReduxTesting
             }
         }
 
-        [Test] [TestCase(SaveFiles.brandnew)]
-        public void test_GettingDrunk(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.brandnew)] public void test_GettingDrunk(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles, true, false);
 
@@ -3837,7 +3821,7 @@ namespace Ultima5ReduxTesting
             {
                 throw new Ultima5ReduxException("Should have been a small map");
             }
-            
+
             // 0 drinks
             Assert.False(smallMap.AreDrunk);
             smallMap.HaveADrink();
@@ -3851,7 +3835,7 @@ namespace Ultima5ReduxTesting
             Assert.True(smallMap.WillBeDrunkWithOneMoreDrink);
             Assert.False(smallMap.AreDrunk);
             smallMap.HaveADrink();
-            
+
             // 4 - drunk now
             Assert.False(smallMap.WillBeDrunkWithOneMoreDrink);
             Assert.True(smallMap.AreDrunk);
@@ -3866,14 +3850,14 @@ namespace Ultima5ReduxTesting
             world.AdvanceTime(2, new TurnResults());
             Assert.True(smallMap.WillBeDrunkWithOneMoreDrink);
             Assert.False(smallMap.AreDrunk);
-            
+
             //Assert.False(smallMap.WillBeDrunkWithOneMoreDrink);
             // Assert.False(smallMap.AreDrunk);
             // smallMap.HaveADrink();
             // should be drunk now
         }
 
-        
+
         public void test_BasicLoadDifferentFloors(SaveFiles saveFiles, bool bReloadJson)
         {
             World world = CreateWorldFromLegacy(saveFiles, true, false);
