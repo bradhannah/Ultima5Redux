@@ -259,3 +259,26 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+# Ultima 5 Game Data Files
+/Ultima5ReduxTesting/Data/UNDER.DAT
+/Ultima5ReduxTesting/Data/TOWNE.TLK
+/Ultima5ReduxTesting/Data/TOWNE.NPC
+/Ultima5ReduxTesting/Data/TOWNE.DAT
+/Ultima5ReduxTesting/Data/SIGNS.DAT
+/Ultima5ReduxTesting/Data/SHOPPE.DAT
+/Ultima5ReduxTesting/Data/LOOK2.DAT
+/Ultima5ReduxTesting/Data/KEEP.TLK
+/Ultima5ReduxTesting/Data/KEEP.NPC
+/Ultima5ReduxTesting/Data/KEEP.DAT
+/Ultima5ReduxTesting/Data/DWELLING.TLK
+/Ultima5ReduxTesting/Data/DWELLING.NPC
+/Ultima5ReduxTesting/Data/DWELLING.DAT
+/Ultima5ReduxTesting/Data/DUNGEON.DAT
+/Ultima5ReduxTesting/Data/DUNGEON.CBT
+/Ultima5ReduxTesting/Data/DATA.OVL
+/Ultima5ReduxTesting/Data/CASTLE.TLK
+/Ultima5ReduxTesting/Data/CASTLE.NPC
+/Ultima5ReduxTesting/Data/CASTLE.DAT
+/Ultima5ReduxTesting/Data/BRIT.DAT
+/Ultima5ReduxTesting/Data/BRIT.CBT

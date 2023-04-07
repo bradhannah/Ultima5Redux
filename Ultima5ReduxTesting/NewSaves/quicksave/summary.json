@@ -1,0 +1,474 @@
+{
+  "GameDescription": "Last Saved: February 15, 2023 7:54 AM\n\n1 - 23 - 140 2:06 PM\n\nBRITAIN\n4,21 (Main Floor)\n\n",
+  "CharacterRecords": {
+    "Records": [
+      {
+        "Class": "Avatar",
+        "Equipped": {
+          "Amulet": "AmuletOfTurning",
+          "Armour": "PlateMail",
+          "Helmet": "IronHelm",
+          "LeftHand": "MagicAxe",
+          "RightHand": "MagicShield",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Avatar",
+        "PartyStatus": "InTheParty",
+        "Stats": {
+          "CurrentHp": 155,
+          "CurrentMp": 27,
+          "Dexterity": 26,
+          "ExperiencePoints": 100,
+          "Intelligence": 32,
+          "Level": 1,
+          "MaximumHp": 210,
+          "Status": "Good",
+          "Strength": 11
+        }
+      },
+      {
+        "Class": "Fighter",
+        "Equipped": {
+          "Amulet": "AmuletOfTurning",
+          "Armour": "PlateMail",
+          "Helmet": "IronHelm",
+          "LeftHand": "MagicAxe",
+          "RightHand": "MagicShield",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Shamino",
+        "PartyStatus": "InTheParty",
+        "Stats": {
+          "CurrentHp": 164,
+          "CurrentMp": 0,
+          "Dexterity": 22,
+          "ExperiencePoints": 2235,
+          "Intelligence": 17,
+          "Level": 6,
+          "MaximumHp": 180,
+          "Status": "Good",
+          "Strength": 22
+        }
+      },
+      {
+        "Class": "Bard",
+        "Equipped": {
+          "Amulet": "AmuletOfTurning",
+          "Armour": "PlateMail",
+          "Helmet": "IronHelm",
+          "LeftHand": "MagicAxe",
+          "RightHand": "MagicShield",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Iolo",
+        "PartyStatus": "InTheParty",
+        "Stats": {
+          "CurrentHp": 179,
+          "CurrentMp": 8,
+          "Dexterity": 22,
+          "ExperiencePoints": 1863,
+          "Intelligence": 17,
+          "Level": 6,
+          "MaximumHp": 180,
+          "Status": "Good",
+          "Strength": 19
+        }
+      },
+      {
+        "Class": "Bard",
+        "Equipped": {
+          "Amulet": "AmuletOfTurning",
+          "Armour": "PlateMail",
+          "Helmet": "IronHelm",
+          "LeftHand": "MagicShield",
+          "RightHand": "MagicAxe",
+          "Ring": "Nothing"
+        },
+        "Gender": "Female",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Julia",
+        "PartyStatus": "InTheParty",
+        "Stats": {
+          "CurrentHp": 177,
+          "CurrentMp": 9,
+          "Dexterity": 20,
+          "ExperiencePoints": 1899,
+          "Intelligence": 19,
+          "Level": 6,
+          "MaximumHp": 180,
+          "Status": "Good",
+          "Strength": 23
+        }
+      },
+      {
+        "Class": "Bard",
+        "Equipped": {
+          "Amulet": "AmuletOfTurning",
+          "Armour": "PlateMail",
+          "Helmet": "IronHelm",
+          "LeftHand": "MagicShield",
+          "RightHand": "MagicAxe",
+          "Ring": "Nothing"
+        },
+        "Gender": "Female",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Gwenno",
+        "PartyStatus": "InTheParty",
+        "Stats": {
+          "CurrentHp": 174,
+          "CurrentMp": 9,
+          "Dexterity": 24,
+          "ExperiencePoints": 2140,
+          "Intelligence": 19,
+          "Level": 6,
+          "MaximumHp": 180,
+          "Status": "Good",
+          "Strength": 17
+        }
+      },
+      {
+        "Class": "Mage",
+        "Equipped": {
+          "Amulet": "AmuletOfTurning",
+          "Armour": "PlateMail",
+          "Helmet": "IronHelm",
+          "LeftHand": "MagicAxe",
+          "RightHand": "MagicShield",
+          "Ring": "Nothing"
+        },
+        "Gender": "Female",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Jaana",
+        "PartyStatus": "InTheParty",
+        "Stats": {
+          "CurrentHp": 175,
+          "CurrentMp": 23,
+          "Dexterity": 20,
+          "ExperiencePoints": 1862,
+          "Intelligence": 23,
+          "Level": 6,
+          "MaximumHp": 180,
+          "Status": "Good",
+          "Strength": 16
+        }
+      },
+      {
+        "Class": "Mage",
+        "Equipped": {
+          "Amulet": "Nothing",
+          "Armour": "ClothArmour",
+          "Helmet": "Nothing",
+          "LeftHand": "Dagger",
+          "RightHand": "Nothing",
+          "Ring": "Nothing"
+        },
+        "Gender": "Female",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Mariah",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 2,
+          "CurrentMp": 22,
+          "Dexterity": 20,
+          "ExperiencePoints": 278,
+          "Intelligence": 22,
+          "Level": 3,
+          "MaximumHp": 90,
+          "Status": "Good",
+          "Strength": 12
+        }
+      },
+      {
+        "Class": "Fighter",
+        "Equipped": {
+          "Amulet": "Nothing",
+          "Armour": "ScaleMail",
+          "Helmet": "IronHelm",
+          "LeftHand": "TwoHSword",
+          "RightHand": "Nothing",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Dupre",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 90,
+          "CurrentMp": 0,
+          "Dexterity": 18,
+          "ExperiencePoints": 268,
+          "Intelligence": 16,
+          "Level": 3,
+          "MaximumHp": 90,
+          "Status": "Good",
+          "Strength": 22
+        }
+      },
+      {
+        "Class": "Fighter",
+        "Equipped": {
+          "Amulet": "Nothing",
+          "Armour": "ClothArmour",
+          "Helmet": "Nothing",
+          "LeftHand": "Club",
+          "RightHand": "Nothing",
+          "Ring": "Nothing"
+        },
+        "Gender": "Female",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Katrina",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 150,
+          "CurrentMp": 0,
+          "Dexterity": 21,
+          "ExperiencePoints": 800,
+          "Intelligence": 18,
+          "Level": 5,
+          "MaximumHp": 150,
+          "Status": "Good",
+          "Strength": 22
+        }
+      },
+      {
+        "Class": "Fighter",
+        "Equipped": {
+          "Amulet": "Nothing",
+          "Armour": "LeatherArmour",
+          "Helmet": "LeatherHelm",
+          "LeftHand": "ShortSword",
+          "RightHand": "SmallShield",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Sentri",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 60,
+          "CurrentMp": 0,
+          "Dexterity": 20,
+          "ExperiencePoints": 101,
+          "Intelligence": 19,
+          "Level": 2,
+          "MaximumHp": 60,
+          "Status": "Good",
+          "Strength": 23
+        }
+      },
+      {
+        "Class": "Fighter",
+        "Equipped": {
+          "Amulet": "SpikedCollar",
+          "Armour": "ScaleMail",
+          "Helmet": "SpikedHelm",
+          "LeftHand": "Mace",
+          "RightHand": "SpikedShield",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Geoffrey",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 90,
+          "CurrentMp": 0,
+          "Dexterity": 21,
+          "ExperiencePoints": 260,
+          "Intelligence": 16,
+          "Level": 3,
+          "MaximumHp": 90,
+          "Status": "Good",
+          "Strength": 24
+        }
+      },
+      {
+        "Class": "Mage",
+        "Equipped": {
+          "Amulet": "AmuletOfTurning",
+          "Armour": "LeatherArmour",
+          "Helmet": "Nothing",
+          "LeftHand": "Dagger",
+          "RightHand": "Nothing",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Johne",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 90,
+          "CurrentMp": 24,
+          "Dexterity": 20,
+          "ExperiencePoints": 206,
+          "Intelligence": 24,
+          "Level": 3,
+          "MaximumHp": 90,
+          "Status": "Good",
+          "Strength": 14
+        }
+      },
+      {
+        "Class": "Fighter",
+        "Equipped": {
+          "Amulet": "Nothing",
+          "Armour": "ScaleMail",
+          "Helmet": "IronHelm",
+          "LeftHand": "Club",
+          "RightHand": "LargeShield",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Gorn",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 60,
+          "CurrentMp": 0,
+          "Dexterity": 19,
+          "ExperiencePoints": 134,
+          "Intelligence": 15,
+          "Level": 2,
+          "MaximumHp": 60,
+          "Status": "Good",
+          "Strength": 21
+        }
+      },
+      {
+        "Class": "Fighter",
+        "Equipped": {
+          "Amulet": "Nothing",
+          "Armour": "LeatherArmour",
+          "Helmet": "ChainCoif",
+          "LeftHand": "ThrowingAxe",
+          "RightHand": "SmallShield",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Maxwell",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 30,
+          "CurrentMp": 0,
+          "Dexterity": 19,
+          "ExperiencePoints": 42,
+          "Intelligence": 14,
+          "Level": 1,
+          "MaximumHp": 30,
+          "Status": "Good",
+          "Strength": 21
+        }
+      },
+      {
+        "Class": "Bard",
+        "Equipped": {
+          "Amulet": "Nothing",
+          "Armour": "ClothArmour",
+          "Helmet": "Nothing",
+          "LeftHand": "MainGauche",
+          "RightHand": "Nothing",
+          "Ring": "RingProtection"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Toshi",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 30,
+          "CurrentMp": 8,
+          "Dexterity": 21,
+          "ExperiencePoints": 64,
+          "Intelligence": 16,
+          "Level": 1,
+          "MaximumHp": 30,
+          "Status": "Good",
+          "Strength": 17
+        }
+      },
+      {
+        "Class": "Bard",
+        "Equipped": {
+          "Amulet": "Nothing",
+          "Armour": "ScaleMail",
+          "Helmet": "IronHelm",
+          "LeftHand": "MorningStar",
+          "RightHand": "Nothing",
+          "Ring": "Nothing"
+        },
+        "Gender": "Male",
+        "IsInvisible": false,
+        "IsRat": false,
+        "MonthsSinceStayingAtInn": 255,
+        "Name": "Saduj",
+        "PartyStatus": "HasntJoinedYet",
+        "Stats": {
+          "CurrentHp": 120,
+          "CurrentMp": 10,
+          "Dexterity": 26,
+          "ExperiencePoints": 541,
+          "Intelligence": 20,
+          "Level": 4,
+          "MaximumHp": 120,
+          "Status": "Good",
+          "Strength": 21
+        }
+      }
+    ],
+    "WearingBlackBadge": false
+  },
+  "TheExtraSaveData": {
+    "CurrentMapPosition": {
+      "Floor": 0,
+      "X": 4,
+      "Y": 21
+    },
+    "FriendlyLocationName": "BRITAIN",
+    "LastWrite": "2023-02-15T07:54:59.803647-05:00",
+    "SavedDirectory": "/Users/bradhannah/UltimaVRedux/quicksave"
+  },
+  "TheTimeOfDay": {
+    "Day": 23,
+    "Hour": 14,
+    "Minute": 6,
+    "Month": 1,
+    "Tick": 0,
+    "Year": 140
+  }
+}
