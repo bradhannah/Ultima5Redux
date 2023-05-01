@@ -3,12 +3,12 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
-    public sealed class SinglePlayerCharacterAffected : TurnResult, ISinglePlayerCharacterAffected
+    public sealed class SingleCombatMapPlayerCharacterAffected : TurnResult, ISingleCombatMapPlayerCharacterAffected
     {
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public PlayerCharacterRecord PlayerRecord { get; }
 
-        public SinglePlayerCharacterAffected(TurnResultType theTurnResultType,
+        public SingleCombatMapPlayerCharacterAffected(TurnResultType theTurnResultType,
             PlayerCharacterRecord record, CharacterStats stats) : base(theTurnResultType)
         {
             CombatMapUnitStats = stats;

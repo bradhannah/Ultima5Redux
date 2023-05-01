@@ -89,7 +89,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             InnerItemStack = new ItemStack(MapUnitPosition);
         }
 
-        public void TriggerTrap(TurnResults.TurnResults turnResults, CharacterStats stats,
+        public void TriggerTrap(TurnResults.TurnResults turnResults,
+            PlayerCharacterRecord activeRecord, //CharacterStats stats,
             PlayerCharacterRecords records)
         {
             TurnResult turnResult;
@@ -98,25 +99,27 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 case TrapType.NONE:
                     return;
                 case TrapType.ACID:
-                    int nDamageAmount = stats.ProcessTurnAcid();
-                    turnResult =
-                        new CombatMapUnitTakesDamage(TurnResult.TurnResultType.DamageFromAcid, stats, nDamageAmount);
+                    int nDamageAmount = activeRecord.Stats.ProcessTurnAcid();
+                    turnResult = new PlayersTakeDamage(PlayersTakeDamage.DamageType.Acid, activeRecord, nDamageAmount);
+                    // turnResult =
+                    //     new CombatMapUnitTakesDamage(TurnResult.TurnResultType.DamageFromAcid, stats, nDamageAmount);
                     turnResults.PushTurnResult(turnResult);
                     break;
                 case TrapType.SLEEP:
-                    stats.Sleep();
+                    activeRecord.Stats.Sleep();
                     break;
                 case TrapType.POISON:
                     // NOTE: this is temporary - you don't automatically poison the whole party from a poison trap
-                    foreach (PlayerCharacterRecord record in records.Records)
+                    foreach (PlayerCharacterRecord record in records.GetActiveCharacterRecords())
                     {
                         turnResult =
-                            new SinglePlayerCharacterAffected(TurnResult.TurnResultType.PlayerCharacterPoisoned, record,
-                                stats);
+                            new SingleCombatMapPlayerCharacterAffected(
+                                TurnResult.TurnResultType.PlayerCharacterPoisoned, record,
+                                record.Stats);
                         turnResults.PushTurnResult(turnResult);
+                        record.Stats.Poison();
                     }
 
-                    stats.Poison();
                     break;
                 case TrapType.BOMB:
                     records.Records.ForEach(r => r.Stats.ProcessTurnBomb());

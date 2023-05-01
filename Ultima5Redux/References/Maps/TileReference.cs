@@ -102,9 +102,7 @@ namespace Ultima5Redux.References.Maps
             Beggar_KeyIndex = 365,
             HolyFloorSymbol = 278,
             Telescope = 89,
-            Clock1 = 250,
-            Clock2 = 251,
-            Well = 161,
+            Clock1 = 250, Clock2 = 251, Well = 161,
             Fountain_KeyIndex = 216,
             StoneBrickWall = 79,
             LargeRockWall = 77,
@@ -122,8 +120,7 @@ namespace Ultima5Redux.References.Maps
             Crown = 437,
             Sceptre = 438,
             Amulet = 439, 
-            BrickFloorHole = 140,
-            Troll_KeyIndex = 484
+            BrickFloorHole = 140, Troll_KeyIndex = 484, Waterfall_KeyIndex = 212
         }
 
 

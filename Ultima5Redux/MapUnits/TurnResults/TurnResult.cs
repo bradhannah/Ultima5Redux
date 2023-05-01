@@ -11,9 +11,6 @@ namespace Ultima5Redux.MapUnits.TurnResults
             ActionGetMoonstone,
             OverworldAvatarAttacking,
             EnemyAttacksOverworldOrSmallMap,
-            DamageOverTimePoisoned,
-            DamageOverTimeBurning,
-            DamageFromAcid,
             ActionXitWhat,
             ActionXitSuccess,
             ActionYellSailsHoisted,
@@ -152,8 +149,8 @@ namespace Ultima5Redux.MapUnits.TurnResults
             OpenPortcullis,
             OverrideCombatMapTile,
             FoodStolenByEnemy,
-            SnuckPastTrollBridge,
-            FailedToSneakPastTrollUnderBridge
+            SnuckPastTrollBridge, FailedToSneakPastTrollUnderBridge, FallDownWaterfallVariant_Underworld,
+            FallDownWaterfallVariant_Normal, PlayerTakesDamage
         }
 
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]

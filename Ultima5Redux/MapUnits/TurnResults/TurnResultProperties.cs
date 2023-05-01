@@ -51,6 +51,11 @@ namespace Ultima5Redux.MapUnits.TurnResults
 
     public interface ISinglePlayerCharacterAffected
     {
+        public PlayerCharacterRecord Record { get; }
+    }
+
+    public interface ISingleCombatMapPlayerCharacterAffected
+    {
         public CharacterStats CombatMapUnitStats { get; }
     }
 

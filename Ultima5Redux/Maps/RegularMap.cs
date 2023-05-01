@@ -411,7 +411,7 @@ namespace Ultima5Redux.Maps
                             // frigate takes damage instead
                             DamageShip(Point2D.Direction.None, turnResults);
                         else
-                            records.DamageEachCharacter(turnResults, 1, 9);
+                            records.DamageEachCharacter(turnResults, PlayersTakeDamage.DamageType.Acid, 1, 9);
 
                         turnResults.PushOutputToConsole(
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (melee)", false);
@@ -420,7 +420,7 @@ namespace Ultima5Redux.Maps
                         if (IsAvatarInFrigate)
                             DamageShip(Point2D.Direction.None, turnResults);
                         else
-                            records.DamageEachCharacter(turnResults, 1, 9);
+                            records.DamageEachCharacter(turnResults, PlayersTakeDamage.DamageType.CannonBall, 1, 9);
 
                         turnResults.PushOutputToConsole(
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (cannonball)",
@@ -432,7 +432,7 @@ namespace Ultima5Redux.Maps
                         if (IsAvatarInFrigate)
                             DamageShip(Point2D.Direction.None, turnResults);
                         else
-                            records.DamageEachCharacter(turnResults, 1, 9);
+                            records.DamageEachCharacter(turnResults, PlayersTakeDamage.DamageType.Acid, 1, 9);
 
                         turnResults.PushOutputToConsole(
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (ranged)", false);

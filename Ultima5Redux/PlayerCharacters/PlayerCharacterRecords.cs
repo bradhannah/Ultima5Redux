@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -104,7 +103,7 @@ namespace Ultima5Redux.PlayerCharacters
                 case 1:
                     // Gas - poison the whole party
                     retStr = "GAS!";
-                    foreach (PlayerCharacterRecord record in Records)
+                    foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
                     {
                         record.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
                     }
@@ -118,7 +117,7 @@ namespace Ultima5Redux.PlayerCharacters
                 case 3:
                     // Bomb - hurt the party
                     retStr = "BOMB!";
-                    foreach (PlayerCharacterRecord record in Records)
+                    foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
                     {
                         injurePlayer(record);
                     }
@@ -136,25 +135,27 @@ namespace Ultima5Redux.PlayerCharacters
         /// </summary>
         public void ClearCombatStatuses()
         {
-            foreach (PlayerCharacterRecord record in Records.Where(record => record.IsRat))
+            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords().Where(record => record.IsRat))
             {
                 record.TurnIntoNotARat();
             }
 
-            foreach (PlayerCharacterRecord record in Records.Where(record => record.IsInvisible))
+            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords().Where(record => record.IsInvisible))
             {
                 record.TurnVisible();
             }
         }
 
-        public void DamageEachCharacter(TurnResults turnResults, int nMin, int nMax)
+        public void DamageEachCharacter(TurnResults turnResults, PlayersTakeDamage.DamageType damageType, int nMin,
+            int nMax)
         {
             foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
             {
                 int nAdjust = -Utils.GetNumberFromAndTo(nMin, nMax);
                 record.Stats.CurrentHp += nAdjust;
-                turnResults.PushTurnResult(new CombatMapUnitTakesDamage(TurnResult.TurnResultType.DamageOverTimeBurning,
-                    record.Stats, nAdjust));
+                turnResults.PushTurnResult(new PlayersTakeDamage(damageType, record, nAdjust));
+                // new CombatMapUnitTakesDamage(TurnResult.TurnResultType.PlayerTakesDamage,
+                // record.Stats, nAdjust));
             }
         }
 
@@ -286,7 +287,7 @@ namespace Ultima5Redux.PlayerCharacters
         public void RanIntoCactus(TurnResults turnResults)
         {
             // injure players!
-            DamageEachCharacter(turnResults, 1, 5);
+            DamageEachCharacter(turnResults, PlayersTakeDamage.DamageType.Cactus, 1, 5);
         }
 
         /// <summary>
@@ -294,7 +295,7 @@ namespace Ultima5Redux.PlayerCharacters
         /// </summary>
         public void RoughSeasInjure(TurnResults turnResults)
         {
-            DamageEachCharacter(turnResults, 1, 9);
+            DamageEachCharacter(turnResults, PlayersTakeDamage.DamageType.RoughSeas, 1, 9);
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
@@ -307,7 +308,7 @@ namespace Ultima5Redux.PlayerCharacters
         public void SteppedOnLava(TurnResults turnResults)
         {
             // injure players!
-            DamageEachCharacter(turnResults, 1, 5);
+            DamageEachCharacter(turnResults, PlayersTakeDamage.DamageType.OverTimeBurning, 1, 5);
         }
 
         public bool SteppedOnSwamp()
@@ -315,7 +316,7 @@ namespace Ultima5Redux.PlayerCharacters
             bool bWasPoisoned = false;
             // do some thing that maybe poisons people?
             // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
-            foreach (PlayerCharacterRecord record in Records)
+            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
             {
                 if (!Utils.OneInXOdds(OddsAndLogic.GETTING_POISONED_BY_STEPPING_ON_SWAMP)) continue;
 

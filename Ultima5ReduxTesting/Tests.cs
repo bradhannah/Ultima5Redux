@@ -3858,6 +3858,7 @@ namespace Ultima5ReduxTesting
         }
 
 
+        [Test] [TestCase(SaveFiles.brandnew, true)]
         public void test_BasicLoadDifferentFloors(SaveFiles saveFiles, bool bReloadJson)
         {
             World world = CreateWorldFromLegacy(saveFiles, true, false);
@@ -3881,6 +3882,54 @@ namespace Ultima5ReduxTesting
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle,
                     1));
             Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentPosition.Floor == 1);
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet, true)]
+        public void test_FallDownWaterfall(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Overworld);
+            // world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY = new Point2D(166, 21);
+            world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY = new Point2D(54, 135);
+            // 54, 136 is top of underworld sending waterfall
+            var turnResults = new TurnResults();
+
+            world.TryToMoveNonCombatMap(Point2D.Direction.Down, false, false, turnResults, true);
+            bool bYay = false;
+            while (turnResults.HasTurnResult)
+            {
+                TurnResult turnResult = turnResults.PopTurnResult();
+
+                if (turnResult is FallDownWaterfall fallDownWaterfall)
+                {
+                    Assert.True(fallDownWaterfall.FallDownVariant ==
+                                FallDownWaterfall.FallDownWaterfallVariant.Underworld);
+                    bYay = true;
+                }
+            }
+
+            if (!bYay) throw new Exception("Did not see a waterfall message");
+            bYay = false;
+            world.State.TheVirtualMap.CurrentMap.CurrentPosition.XY = new Point2D(100, 95);
+
+            world.TryToMoveNonCombatMap(Point2D.Direction.Down, false, false, turnResults, true);
+            while (turnResults.HasTurnResult)
+            {
+                TurnResult turnResult = turnResults.PopTurnResult();
+
+                if (turnResult is FallDownWaterfall fallDownWaterfall)
+                {
+                    Assert.True(fallDownWaterfall.FallDownVariant == FallDownWaterfall.FallDownWaterfallVariant.Normal);
+                    bYay = true;
+                }
+            }
+
+            if (!bYay) throw new Exception("Did not see a waterfall message");
         }
     }
 }

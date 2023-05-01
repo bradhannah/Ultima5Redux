@@ -98,6 +98,7 @@ namespace Ultima5Redux
             Utils.MakeWeightedList(GenericDropAfterKillingEnemy).ToList();
 
         public const int ACID_DAMAGE_MAX = 10;
+        public const int DEFAULT_DAMAGE_FALLING_DOWN_WATERFALL = 5;
 
         public const int ACID_DAMAGE_MIN = 3;
         public const int AGGRESSIVE_TRAP_MODIFIER = 100;

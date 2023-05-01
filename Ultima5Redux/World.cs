@@ -261,7 +261,7 @@ namespace Ultima5Redux
             int nFloor, Point2D position)
         {
             if (location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld && nFloor == 0
-                && position.X == 64 && position.Y == 80)
+                                                                             && position.X == 64 && position.Y == 80)
                 return SpecialSearchLocation.GlassSwords;
 
             return SpecialSearchLocation.None;
@@ -313,18 +313,15 @@ namespace Ultima5Redux
                     return true;
                 case LargeMap:
                     turnResults.PushOutputToConsole(
-                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                            .KeypressCommandsStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
                             .FIRE) +
-                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                            .KeypressCommandsStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
                             .D_WHAT));
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireWhat));
                     return false;
                 case CombatMap:
                     turnResults.PushOutputToConsole(
-                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                            .KeypressCommandsStrings
+                        GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
                             .FIRE) +
                         GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
                             .DASH_NOT_HERE_BANG_N));
@@ -776,8 +773,7 @@ namespace Ultima5Redux
                 // we were not able to attack, likely on a carpet or skiff and on the water
                 // but may be other edge cases
                 turnResults.PushOutputToConsole(
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                        .KeypressCommandsStrings
+                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
                         .ON_FOOT), false);
                 tryToAttackResult = TryToAttackResult.OnlyOnFoot;
 
@@ -1156,15 +1152,13 @@ namespace Ultima5Redux
                                 break;
                             case (int)TileReference.SpriteIndex.TableFoodBoth:
                                 State.TheVirtualMap.CurrentMap.SetOverridingTileReference(
-                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference
-                                        .SpriteIndex
+                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                                         .TableFoodBottom), xy);
                                 bAte = true;
                                 break;
                             case (int)TileReference.SpriteIndex.TableFoodTop:
                                 State.TheVirtualMap.CurrentMap.SetOverridingTileReference(
-                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference
-                                        .SpriteIndex
+                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                                         .TableMiddle), xy);
                                 bAte = true;
                                 break;
@@ -1176,16 +1170,14 @@ namespace Ultima5Redux
                         {
                             case (int)TileReference.SpriteIndex.TableFoodBottom:
                                 State.TheVirtualMap.CurrentMap.SetOverridingTileReference(
-                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference
-                                        .SpriteIndex
+                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                                         .TableMiddle), xy);
                                 bAte = true;
                                 // do nothing
                                 break;
                             case (int)TileReference.SpriteIndex.TableFoodBoth:
                                 State.TheVirtualMap.CurrentMap.SetOverridingTileReference(
-                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference
-                                        .SpriteIndex
+                                    GameReferences.Instance.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
                                         .TableFoodTop), xy);
                                 bAte = true;
                                 break;
@@ -1737,7 +1729,8 @@ namespace Ultima5Redux
             {
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.OfferToExitScreen));
 
-                if (regularMap is SmallMap { AreDrunk: false } smallMapToResetDrunk) smallMapToResetDrunk.ResetDrunkCounter();
+                if (regularMap is SmallMap { AreDrunk: false } smallMapToResetDrunk)
+                    smallMapToResetDrunk.ResetDrunkCounter();
 
                 // it is expected that the called will offer an exit option, but we won't move the avatar because the space
                 // is empty
@@ -1797,7 +1790,27 @@ namespace Ultima5Redux
             TileReference newTileReference = regularMap.GetTileReference(newPosition.X, newPosition.Y);
 
             // We often want to see if trolls want to bother us when we go over a bridge
-            if (newTileReference.IsTrollBridge)
+            Point2D oneTileBelowPosition = regularMap.GetAdjustedPosition(newPosition, Point2D.Direction.Down);
+            if (regularMap.GetTileReference(oneTileBelowPosition).Is(TileReference.SpriteIndex.Waterfall_KeyIndex))
+            {
+                // Waterfall
+                // we fall down waterfalls - and if it's the correct coordinates then we go to the underworld!
+                turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.FileNamesAndFalls.FALLS_BANG_BANG_BANG));
+                // there is one location in the world where you will actually tumble to the underworld
+                var fallDownWaterfall = new FallDownWaterfall(
+                    newPosition.X == 54 && newPosition.Y == 136
+                        ? FallDownWaterfall.FallDownWaterfallVariant.Underworld
+                        : FallDownWaterfall.FallDownWaterfallVariant.Normal,
+                    newPosition);
+                turnResults.PushTurnResult(fallDownWaterfall);
+                foreach (PlayerCharacterRecord record in State.CharacterRecords.GetActiveCharacterRecords())
+                {
+                    turnResults.PushTurnResult(new PlayersTakeDamage(PlayersTakeDamage.DamageType.Waterfall, record,
+                        OddsAndLogic.DEFAULT_DAMAGE_FALLING_DOWN_WATERFALL));
+                }
+            }
+            else if (newTileReference.IsTrollBridge)
             {
                 bool bIsTrollUnderBridge = OddsAndLogic.IsTrollUnderBridge();
                 if (bIsTrollUnderBridge)
@@ -2190,8 +2203,7 @@ namespace Ultima5Redux
             if (npc == null)
             {
                 turnResults.PushOutputToConsole(
-                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                        .KeypressCommandsStrings
+                    GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
                         .FUNNY_NO_RESPONSE), false,
                     false);
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NoOneToTalkTo));
@@ -2416,11 +2428,9 @@ namespace Ultima5Redux
                     bSucceeded = nHealedPoints >= 0;
                     turnResults.PushOutputToConsole(
                         bSucceeded
-                            ? GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                                .ExclaimStrings
+                            ? GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
                                 .HEALED_BANG_N)
-                            : GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                                .ExclaimStrings
+                            : GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
                                 .FAILED_BANG_N), false);
                     break;
                 case Potion.PotionColor.Red:

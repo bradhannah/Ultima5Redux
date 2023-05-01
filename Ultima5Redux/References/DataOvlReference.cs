@@ -281,8 +281,7 @@ namespace Ultima5Redux.References
             SEARCH_OBJECT_LOCATION,
             SEARCH_OBJECT_FLOOR,
             SEARCH_OBJECT_X,
-            SEARCH_OBJECT_Y,
-            RESPONSE_TO_KEYSTROKE
+            SEARCH_OBJECT_Y, RESPONSE_TO_KEYSTROKE, FILE_NAMES_AND_FALLS
         }
 
 
@@ -971,6 +970,11 @@ namespace Ultima5Redux.References
             MANDRAKE_ROOT
         }
 
+        public enum FileNamesAndFalls
+        {
+            UNDER_DAT, BRIT_DAT, BRIT_OOL, UNDER_OOL, N, BRIT_DAT_2, WHAT_TOWN, FALLS_BANG_BANG_BANG,
+            FALLING_INTO_UNDERWORLD_BANG_BANG, BRIT_OOL_2, UNDER_OOL_2, UNDER_DAT_2, UNDER_OOL_3
+        }
 
         public enum ResponseToKeystroke
         {
@@ -2351,6 +2355,10 @@ namespace Ultima5Redux.References
                 0x3886, 0x100);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random filenames, texts and unknown", 0x3986,
                 0xaf);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Some file names, and waterfall strings",
+                0x3986,
+                0x8e, 0x00, DataChunkName.FILE_NAMES_AND_FALLS);
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3a35, 0xd);
 
             // Another big thank you to Markus Brenner (@minstrel_dragon) for providing the "actual" base prices that 

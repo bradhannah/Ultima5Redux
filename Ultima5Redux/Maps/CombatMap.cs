@@ -759,7 +759,7 @@ namespace Ultima5Redux.Maps
             attackStr = attackStr.TrimEnd() + "... yourself? ";
             attackStr += "\nYou think better of it and skip your turn.";
             turnResults.PushOutputToConsole(attackStr);
-            turnResults.PushTurnResult(new SinglePlayerCharacterAffected(
+            turnResults.PushTurnResult(new SingleCombatMapPlayerCharacterAffected(
                 TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackSelf, combatPlayer.Record,
                 combatPlayer.Stats));
             AdvanceIfSafe(combatPlayer, turnResults);

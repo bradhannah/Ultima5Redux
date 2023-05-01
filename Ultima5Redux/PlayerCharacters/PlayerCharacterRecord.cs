@@ -326,9 +326,12 @@ namespace Ultima5Redux.PlayerCharacters
             if (Stats.Status == CharacterStatus.Poisoned)
             {
                 int nDamage = Stats.ProcessTurnPoison();
-                CombatMapUnitTakesDamage combatMapUnitTakesDamage =
-                    new(TurnResult.TurnResultType.DamageOverTimePoisoned, Stats, nDamage);
-                turnResults.PushTurnResult(combatMapUnitTakesDamage);
+                var playersTakeDamage = new PlayersTakeDamage(
+                    PlayersTakeDamage.DamageType.OverTimePoisoned,
+                    this, nDamage);
+                // CombatMapUnitTakesDamage combatMapUnitTakesDamage =
+                //     new(TurnResult.TurnResultType.DamageOverTimePoisoned, Stats, nDamage);
+                turnResults.PushTurnResult(playersTakeDamage);
                 Stats.ProcessTurnPoison();
             }
         }

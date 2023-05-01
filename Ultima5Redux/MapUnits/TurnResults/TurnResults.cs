@@ -11,9 +11,9 @@ namespace Ultima5Redux.MapUnits.TurnResults
     {
         private readonly Dictionary<TurnResult.TurnResultType, Type> _expectedTurnResults = new()
         {
-            { TurnResult.TurnResultType.DamageOverTimePoisoned, typeof(CombatMapUnitTakesDamage) },
-            { TurnResult.TurnResultType.DamageOverTimeBurning, typeof(CombatMapUnitTakesDamage) },
-            { TurnResult.TurnResultType.PlayerCharacterPoisoned, typeof(SinglePlayerCharacterAffected) },
+            // { TurnResult.TurnResultType.DamageOverTimePoisoned, typeof(CombatMapUnitTakesDamage) },
+            // { TurnResult.TurnResultType.DamageOverTimeBurning, typeof(CombatMapUnitTakesDamage) },
+            { TurnResult.TurnResultType.PlayerCharacterPoisoned, typeof(SingleCombatMapPlayerCharacterAffected) },
             { TurnResult.TurnResultType.OutputToConsole, typeof(OutputToConsole) },
             { TurnResult.TurnResultType.Combat_EnemyMoved, typeof(EnemyMoved) }
         };

@@ -206,15 +206,13 @@ namespace Ultima5Redux.Maps
                     if (discoverableLoot.IsDeadBody)
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                                .ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                 .A_ROTTING_BODY_BANG_N)));
                     }
                     else if (discoverableLoot.IsBloodSpatter)
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                                .ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                 .A_BLOOD_PULP_BANG_N)));
                     }
                     else
@@ -361,18 +359,16 @@ namespace Ultima5Redux.Maps
                     if (bTriggeredTrap)
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                                .ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                 .A_SIMPLE_TRAP_BANG_N)));
-                        nonAttackingUnit.TriggerTrap(turnResults, record.Stats, records);
+                        nonAttackingUnit.TriggerTrap(turnResults, record, records);
                         turnResults.PushTurnResult(
                             new BasicResult(TurnResult.TurnResultType.ActionSearchTriggerSimpleTrap));
                     }
                     else
                     {
                         turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
-                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                                .ThingsIFindStrings
+                            GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                 .A_SIMPLE_TRAP_N)));
                         turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchRemoveSimple));
                     }
@@ -383,10 +379,9 @@ namespace Ultima5Redux.Maps
                     {
                         turnResults.PushOutputToConsole(
                             U5StringRef.ThouDostFind(
-                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                                    .ThingsIFindStrings
+                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_COMPLEX_TRAP_BANG_N)));
-                        nonAttackingUnit.TriggerTrap(turnResults, record.Stats, records);
+                        nonAttackingUnit.TriggerTrap(turnResults, record, records);
                         turnResults.PushTurnResult(
                             new BasicResult(TurnResult.TurnResultType.ActionSearchTriggerComplexTrap));
                     }
@@ -394,8 +389,7 @@ namespace Ultima5Redux.Maps
                     {
                         turnResults.PushOutputToConsole(
                             U5StringRef.ThouDostFind(
-                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference
-                                    .ThingsIFindStrings
+                                GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_COMPLEX_TRAP_N)));
                         turnResults.PushTurnResult(
                             new BasicResult(TurnResult.TurnResultType.ActionSearchRemoveComplex));
@@ -519,6 +513,22 @@ namespace Ultima5Redux.Maps
                 "You provided a MapUnit to clear, but it is not in the active MapUnit list");
         }
 
+        public Point2D GetAdjustedPosition(Point2D currentPosition, Point2D.Direction directionToGoTo)
+        {
+            Point2D adjustedPos = currentPosition.GetAdjustedPosition(directionToGoTo);
+
+            if (IsRepeatingMap)
+            {
+                return new Point2D(Point2D.AdjustToMax(adjustedPos.X, NumOfXTiles),
+                    Point2D.AdjustToMax(adjustedPos.Y, NumOfYTiles));
+            }
+
+            if (adjustedPos.X < 0 || adjustedPos.X >= NumOfXTiles || adjustedPos.Y < 0 ||
+                adjustedPos.Y >= NumOfYTiles)
+                return null;
+            return adjustedPos;
+        }
+        
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public int ClosestTileReferenceAround(Point2D midPosition, int nRadius, Func<int, bool> checkTile)
         {

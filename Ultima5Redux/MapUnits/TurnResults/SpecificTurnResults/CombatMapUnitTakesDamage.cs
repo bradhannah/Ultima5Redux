@@ -2,7 +2,7 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
-    public sealed class CombatMapUnitTakesDamage : TurnResult, ISinglePlayerCharacterAffected, IDamageAmount
+    public sealed class CombatMapUnitTakesDamage : TurnResult, ISingleCombatMapPlayerCharacterAffected, IDamageAmount
     {
         public CombatMapUnitTakesDamage(TurnResultType theTurnResultType, CharacterStats combatMapUnitStats,
             int damageAmount) : base(theTurnResultType)
