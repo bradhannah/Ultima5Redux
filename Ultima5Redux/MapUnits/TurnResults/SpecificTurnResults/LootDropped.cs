@@ -4,7 +4,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
     public sealed class LootDropped : TurnResult, ILoot
     {
-        public LootDropped(NonAttackingUnit loot) : base(TurnResultType.Combat_LootDropped) => Loot = loot;
+        public LootDropped(NonAttackingUnit loot) : base(TurnResultType.Combat_LootDropped,
+            TurnResulActionType.ActionAlreadyPerformed) => Loot = loot;
 
         public override string GetDebugString() =>
             $@"LootDropped: {Loot.FriendlyName}

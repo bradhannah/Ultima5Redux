@@ -9,7 +9,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     {
         public NonPlayerCharacterReference NpcReference { get; }
 
-        public NpcJoinedParty(NonPlayerCharacterReference npcReference) : base(TurnResultType.NpcJoinedParty) =>
+        public NpcJoinedParty(NonPlayerCharacterReference npcReference) : base(TurnResultType.NpcJoinedParty,
+            TurnResulActionType.ActionAlreadyPerformed) =>
             NpcReference = npcReference;
     }
 }

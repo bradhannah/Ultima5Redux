@@ -10,7 +10,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         public AttackerTurnResult(TurnResultType theTurnResultType, CombatMapUnit attacker, CombatMapUnit opponent,
             CombatItemReference.MissileType missileType, CombatMapUnit.HitState hitState,
             Point2D missedOrTriggerPoint = null) :
-            base(theTurnResultType)
+            base(theTurnResultType, TurnResulActionType.ActionAlreadyPerformed)
         {
             Debug.Assert(attacker != null, nameof(attacker) + " != null");
             Attacker = attacker;

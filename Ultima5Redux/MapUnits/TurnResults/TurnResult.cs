@@ -150,7 +150,7 @@ namespace Ultima5Redux.MapUnits.TurnResults
             OverrideCombatMapTile,
             FoodStolenByEnemy,
             SnuckPastTrollBridge, FailedToSneakPastTrollUnderBridge, FallDownWaterfallVariant_Underworld,
-            FallDownWaterfallVariant_Normal, PlayerTakesDamage
+            FallDownWaterfallVariant_Normal, PlayerTakesDamage, TeleportToNewLocation
         }
 
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]
@@ -179,7 +179,15 @@ namespace Ultima5Redux.MapUnits.TurnResults
 
         public TurnResultType TheTurnResultType { get; }
 
-        protected TurnResult(TurnResultType theTurnResultType) => TheTurnResultType = theTurnResultType;
+        public enum TurnResulActionType { ActionRequired, ActionAlreadyPerformed, Unsure }
+
+        public TurnResulActionType TheTurnResulActionType { get; }
+
+        protected TurnResult(TurnResultType theTurnResultType, TurnResulActionType theTurnResulActionType)
+        {
+            TheTurnResultType = theTurnResultType;
+            TheTurnResulActionType = theTurnResulActionType;
+        }
 
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public virtual string GetDebugString() =>

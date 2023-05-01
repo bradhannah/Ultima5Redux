@@ -2,7 +2,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
     public class KarmaChanged : TurnResult, IQuantityChanged
     {
-        public KarmaChanged(int adjustedBy, int previousQuantity) : base(TurnResultType.KarmaChanged)
+        public KarmaChanged(int adjustedBy, int previousQuantity) : base(TurnResultType.KarmaChanged,
+            TurnResulActionType.ActionAlreadyPerformed)
         {
             AdjustedBy = adjustedBy;
             PreviousQuantity = previousQuantity;

@@ -3,7 +3,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     public sealed class OutputToConsole : TurnResult, IOutputString
     {
         public OutputToConsole(string outputString, bool bUseArrow = true, bool bForceNewLine = true) : base(
-            TurnResultType.OutputToConsole)
+            TurnResultType.OutputToConsole, TurnResulActionType.ActionRequired)
         {
             OutputString = outputString;
             UseArrow = bUseArrow;

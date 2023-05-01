@@ -1809,6 +1809,14 @@ namespace Ultima5Redux
                     turnResults.PushTurnResult(new PlayersTakeDamage(PlayersTakeDamage.DamageType.Waterfall, record,
                         OddsAndLogic.DEFAULT_DAMAGE_FALLING_DOWN_WATERFALL));
                 }
+
+                if (fallDownWaterfall.FallDownVariant == FallDownWaterfall.FallDownWaterfallVariant.Underworld)
+                {
+                    // teleport to underworld
+                    turnResults.PushTurnResult(new TeleportNewLocation(
+                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
+                        fallDownWaterfall.WaterfallPosition, -1, TeleportNewLocation.TeleportType.Waterfall));
+                }
             }
             else if (newTileReference.IsTrollBridge)
             {

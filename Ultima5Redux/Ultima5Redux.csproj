@@ -175,8 +175,8 @@
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ReadScroll.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ShoppeKeeperInteraction.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\SinglePlayerCharacterAffected.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\TeleportNewLocation.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\TileOverrideOnCombatMap.cs" />
-        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\WhoToldMeToDoThis.cs" />
         <Compile Include="MapUnits\TurnResults\TurnResult.cs" />
         <Compile Include="MapUnits\TurnResults\TurnResultProperties.cs" />
         <Compile Include="MapUnits\TurnResults\TurnResults.cs" />

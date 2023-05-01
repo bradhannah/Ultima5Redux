@@ -5,7 +5,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     public sealed class EnemyMoved : TurnResult, IEnemyFocus, IMovedPosition
     {
         public EnemyMoved(TurnResultType theTurnResultType, Enemy theEnemy, Point2D movedFromPosition,
-            Point2D moveToPosition) : base(theTurnResultType)
+            Point2D moveToPosition) : base(theTurnResultType, TurnResulActionType.ActionAlreadyPerformed)
         {
             TheEnemy = theEnemy;
             MovedFromPosition = movedFromPosition;

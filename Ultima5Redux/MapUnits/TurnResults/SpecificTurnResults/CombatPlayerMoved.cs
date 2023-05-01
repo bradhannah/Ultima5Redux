@@ -7,7 +7,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     {
         public CombatPlayerMoved(TurnResultType theTurnResultType, CombatPlayer theCombatPlayer,
             Point2D movedFromPosition, Point2D moveToPosition, TileReference movedToTileReference) : base(
-            theTurnResultType)
+            theTurnResultType, TurnResulActionType.ActionAlreadyPerformed)
         {
             TheCombatPlayer = theCombatPlayer;
             MovedFromPosition = movedFromPosition;

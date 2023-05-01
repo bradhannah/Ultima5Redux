@@ -4,7 +4,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
     public sealed class EnemyFocusedTurnResult : TurnResult, IEnemyFocus
     {
-        public EnemyFocusedTurnResult(TurnResultType theTurnResultType, Enemy theEnemy) : base(theTurnResultType) =>
+        public EnemyFocusedTurnResult(TurnResultType theTurnResultType, Enemy theEnemy) : base(theTurnResultType,
+            TurnResulActionType.ActionAlreadyPerformed) =>
             TheEnemy = theEnemy;
 
         public override string GetDebugString() =>

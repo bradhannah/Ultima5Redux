@@ -13,7 +13,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         public MagicReference.SpellWords SpellWords { get; }
 
         public ReadScroll(MagicReference.SpellWords spellWords, PlayerCharacterRecord readByWho,
-            PlayerCharacterRecord playerWhoIsTargeted) : base(TurnResultType.ActionUseReadScroll)
+            PlayerCharacterRecord playerWhoIsTargeted) : base(TurnResultType.ActionUseReadScroll,
+            TurnResulActionType.ActionRequired)
         {
             SpellWords = spellWords;
             ReadByWho = readByWho;

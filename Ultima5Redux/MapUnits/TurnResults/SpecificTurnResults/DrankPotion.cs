@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         public MagicReference.SpellWords SpellWord { get; }
 
         public DrankPotion(Potion.PotionColor potionColor, MagicReference.SpellWords spellWord) : base(TurnResultType
-            .ActionUseDrankPotion)
+            .ActionUseDrankPotion, TurnResulActionType.ActionAlreadyPerformed)
         {
             PotionColor = potionColor;
             SpellWord = spellWord;

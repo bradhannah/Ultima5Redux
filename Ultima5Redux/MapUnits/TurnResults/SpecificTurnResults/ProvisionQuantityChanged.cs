@@ -11,7 +11,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 
         public ProvisionQuantityChanged(int adjustedBy, int previousQuantity,
             ProvisionReferences.SpecificProvisionType theProvision) :
-            base(TurnResultType.ProvisionQuantityChanged)
+            base(TurnResultType.ProvisionQuantityChanged, TurnResulActionType.ActionAlreadyPerformed)
         {
             AdjustedBy = adjustedBy;
             PreviousQuantity = previousQuantity;

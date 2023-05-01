@@ -28,13 +28,5 @@ namespace Ultima5Redux.References.Maps
         [DataMember] public int Y { get; set; }
 
         [DataMember] public int Z { get; set; }
-        
-        // public bool IsOverworld => MapNumber == 0 && Z == 0;
-        //
-        // public bool IsSmallMap => MapNumber != 0;
-        //
-        // public bool IsUnderworld => MapNumber == 0 && Z == -1;
-        //
-        // public MapUnitPosition Position => new(X, Y, Z);
     }
 }

@@ -9,7 +9,8 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         public PlayerCharacterRecord PlayerRecord { get; }
 
         public SingleCombatMapPlayerCharacterAffected(TurnResultType theTurnResultType,
-            PlayerCharacterRecord record, CharacterStats stats) : base(theTurnResultType)
+            PlayerCharacterRecord record, CharacterStats stats) : base(theTurnResultType,
+            TurnResulActionType.ActionAlreadyPerformed)
         {
             CombatMapUnitStats = stats;
             PlayerRecord = record;

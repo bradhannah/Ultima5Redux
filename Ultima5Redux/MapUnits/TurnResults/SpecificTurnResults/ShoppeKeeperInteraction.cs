@@ -10,6 +10,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         public ShoppeKeeper ShoppeKeeper { get; }
 
         public ShoppeKeeperInteraction(ShoppeKeeper shoppeKeeper) :
-            base(TurnResultType.ActionShoppeKeeperInteraction) => ShoppeKeeper = shoppeKeeper;
+            base(TurnResultType.ActionShoppeKeeperInteraction, TurnResulActionType.ActionRequired) =>
+            ShoppeKeeper = shoppeKeeper;
     }
 }

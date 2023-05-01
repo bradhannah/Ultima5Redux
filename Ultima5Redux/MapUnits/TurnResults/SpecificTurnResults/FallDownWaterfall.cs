@@ -1,5 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class FallDownWaterfall : TurnResult
     {
         public enum FallDownWaterfallVariant { Underworld, Normal }
@@ -13,7 +17,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         public FallDownWaterfall(FallDownWaterfallVariant fallDownWaterfallVariant, Point2D startingPosition) : base(
             fallDownWaterfallVariant == FallDownWaterfallVariant.Normal
                 ? TurnResultType.FallDownWaterfallVariant_Normal
-                : TurnResultType.FallDownWaterfallVariant_Underworld)
+                : TurnResultType.FallDownWaterfallVariant_Underworld, TurnResulActionType.ActionRequired)
         {
             StartingPosition = startingPosition;
             WaterfallPosition = startingPosition.GetAdjustedPosition(Point2D.Direction.Down);

@@ -10,7 +10,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         }
 
         public PlayersTakeDamage(DamageType damageType, PlayerCharacterRecord record, int damageAmount) :
-            base(TurnResultType.PlayerTakesDamage)
+            base(TurnResultType.PlayerTakesDamage, TurnResulActionType.ActionAlreadyPerformed)
         {
             DamageAmount = damageAmount;
             Record = record;

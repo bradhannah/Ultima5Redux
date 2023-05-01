@@ -5,7 +5,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     public sealed class PlayerMoved : TurnResult, IMovedPosition, IMovedToTileReference
     {
         public PlayerMoved(TurnResultType theTurnResultType, Point2D movedFromPosition, Point2D moveToPosition,
-            TileReference movedToTileReference) : base(theTurnResultType)
+            TileReference movedToTileReference) : base(theTurnResultType, TurnResulActionType.ActionAlreadyPerformed)
         {
             MovedFromPosition = movedFromPosition;
             MoveToPosition = moveToPosition;

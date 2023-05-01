@@ -34,6 +34,30 @@ namespace Ultima5Redux.References
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public static Map.Maps GetMapTypeByLocation(SmallMapReferences.SingleMapReference.Location location, int nFloor)
+        {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+            switch (location)
+            {
+                case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
+                    return nFloor == -1 ? Map.Maps.Underworld : Map.Maps.Overworld;
+                case SmallMapReferences.SingleMapReference.Location.Deceit:
+                case SmallMapReferences.SingleMapReference.Location.Despise:
+                case SmallMapReferences.SingleMapReference.Location.Destard:
+                case SmallMapReferences.SingleMapReference.Location.Wrong:
+                case SmallMapReferences.SingleMapReference.Location.Covetous:
+                case SmallMapReferences.SingleMapReference.Location.Shame:
+                case SmallMapReferences.SingleMapReference.Location.Hythloth:
+                case SmallMapReferences.SingleMapReference.Location.Doom:
+                    return Map.Maps.Dungeon;
+                case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
+                    return Map.Maps.Combat;
+                default:
+                    return Map.Maps.Small;
+            }
+        }
+
         public CombatItemReferences CombatItemRefs { get; private set; }
 
         public CombatMapReferences CombatMapRefs { get; private set; }

@@ -11,7 +11,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         public TileReference ReplacementTile { get; }
 
         public TileOverrideOnCombatMap(Point2D position, TileReference replacementTile) : base(TurnResultType
-            .OverrideCombatMapTile)
+            .OverrideCombatMapTile, TurnResulActionType.ActionAlreadyPerformed)
         {
             Position = position;
             ReplacementTile = replacementTile;
