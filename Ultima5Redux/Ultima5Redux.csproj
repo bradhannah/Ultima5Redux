@@ -151,6 +151,7 @@
         <Compile Include="Maps\Look.cs" />
         <Compile Include="Maps\Signs.cs" />
         <Compile Include="DayNightMoon\Moongates.cs" />
+        <Compile Include="MapUnits\TurnResults\LoadCombatMap.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\AttackerTurnResult.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\AttemptToArrest.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\BasicResult.cs" />

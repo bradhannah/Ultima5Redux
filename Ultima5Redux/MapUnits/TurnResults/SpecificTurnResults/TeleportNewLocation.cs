@@ -9,7 +9,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         public Point2D TeleportPosition { get; }
         public int TeleportFloor { get; }
 
-        public enum TeleportType { InnSleep, Waterfall, Whirlpool, CombatMap }
+        public enum TeleportType { InnSleep, Waterfall, Whirlpool, CombatMap, EnterSmallMap }
 
         public TeleportType TheTeleportType { get; }
 

@@ -585,10 +585,13 @@ namespace Ultima5Redux
                             // let's delete the map unit from the map too since they disappear regardless of result
                             regularMap.ClearMapUnit(aggressiveMapUnitInfo.AttackingMapUnit);
 
-                            State.TheVirtualMap.LoadCombatMapWithCalculation(aggressiveMapUnitInfo.CombatMapReference,
-                                State.CharacterRecords, aggressiveMapUnitInfo.AttackingMapUnit);
-
-                            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.CombatMapLoaded));
+                            if (aggressiveMapUnitInfo.AttackingMapUnit.NpcRef != null)
+                                turnResults.PushTurnResult(new LoadCombatMap(aggressiveMapUnitInfo.CombatMapReference,
+                                    aggressiveMapUnitInfo.AttackingMapUnit.NpcRef));
+                            else
+                                turnResults.PushTurnResult(new LoadCombatMap(aggressiveMapUnitInfo.CombatMapReference,
+                                    GameReferences.Instance.EnemyRefs.GetEnemyReference(aggressiveMapUnitInfo
+                                        .AttackingMapUnit.KeyTileReference)));
                         }
                     }
                     else if (State.TheVirtualMap.CurrentMap is LargeMap theLargeMap)
@@ -973,9 +976,10 @@ namespace Ultima5Redux
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
             }
 
-            State.TheVirtualMap.LoadSmallMap(singleMap);
-            // set us to the front of the building
-            State.TheVirtualMap.CurrentMap.CurrentPosition.XY = SmallMapReferences.GetStartingXyByLocation();
+            // // set us to the front of the building
+            turnResults.PushTurnResult(new TeleportNewLocation(singleMap.MapLocation,
+                SmallMapReferences.GetStartingXyByLocation(), singleMap.Floor,
+                TeleportNewLocation.TeleportType.EnterSmallMap));
 
             turnResults.PushOutputToConsole(
                 GameReferences.Instance.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings

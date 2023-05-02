@@ -26,7 +26,8 @@ namespace Ultima5Redux.MapUnits.TurnResults
             MovedSelectionCursor,
             IgnoredMovement,
             Ignore,
-            CombatMapLoaded,
+
+            //CombatMapLoaded,
             PassTurn,
             ActionOpenDoorOpened,
             ActionOpenDoorLocked,
@@ -150,7 +151,7 @@ namespace Ultima5Redux.MapUnits.TurnResults
             OverrideCombatMapTile,
             FoodStolenByEnemy,
             SnuckPastTrollBridge, FailedToSneakPastTrollUnderBridge, FallDownWaterfallVariant_Underworld,
-            FallDownWaterfallVariant_Normal, PlayerTakesDamage, TeleportToNewLocation
+            FallDownWaterfallVariant_Normal, PlayerTakesDamage, TeleportToNewLocation, LoadCombatMap
         }
 
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]

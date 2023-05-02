@@ -458,25 +458,25 @@ namespace Ultima5Redux.Maps
             LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, 1, null, 0, npcRef);
         }
 
-        public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
-            PlayerCharacterRecords records, MapUnit mapUnit)
-        {
-            switch (mapUnit)
-            {
-                case Enemy enemy:
-                    LoadCombatMapWithCalculation(singleCombatMapReference,
-                        SingleCombatMapReference.EntryDirection.South, records, enemy.EnemyReference);
-                    return;
-                case NonPlayerCharacter npc:
-                    EnemyReference enemyReference =
-                        GameReferences.Instance.EnemyRefs.GetEnemyReference(npc.KeyTileReference.Index);
-                    LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.South, records,
-                        enemyReference, npc.NpcRef);
-                    return;
-            }
-
-            throw new Ultima5ReduxException("You can only calculate combat map loading with Enemies and NPCs");
-        }
+        // public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
+        //     PlayerCharacterRecords records, MapUnit mapUnit)
+        // {
+        //     switch (mapUnit)
+        //     {
+        //         case Enemy enemy:
+        //             LoadCombatMapWithCalculation(singleCombatMapReference,
+        //                 SingleCombatMapReference.EntryDirection.South, records, enemy.EnemyReference);
+        //             return;
+        //         case NonPlayerCharacter npc:
+        //             EnemyReference enemyReference =
+        //                 GameReferences.Instance.EnemyRefs.GetEnemyReference(npc.KeyTileReference.Index);
+        //             LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.South, records,
+        //                 enemyReference, npc.NpcRef);
+        //             return;
+        //     }
+        //
+        //     throw new Ultima5ReduxException("You can only calculate combat map loading with Enemies and NPCs");
+        // }
 
         /// <summary>
         ///     Loads a combat map, but aut
