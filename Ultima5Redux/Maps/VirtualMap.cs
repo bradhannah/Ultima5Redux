@@ -54,19 +54,20 @@ namespace Ultima5Redux.Maps
         {
             get
             {
-                SmallMapReferences.SingleMapReference singleMapReference = SavedMapRefs.GetSingleMapReference();
+                SavedMapRefs savedMapRefs = SavedMapRefs;
+                SmallMapReferences.SingleMapReference singleMapReference = savedMapRefs.GetSingleMapReference();
                 if (singleMapReference == null)
                     throw new Ultima5ReduxException("Tried to get CurrentMap but it was false");
 
                 if (singleMapReference.IsDungeon) return TheMapHolder.TheDungeonMap;
 
-                return SavedMapRefs.Location switch
+                return savedMapRefs.Location switch
                 {
-                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine when SavedMapRefs.MapType ==
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine when savedMapRefs.MapType ==
                                                                            Map.Maps.Combat => TheMapHolder.TheCombatMap,
                     SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => throw
                         new Ultima5ReduxException("Resting and Shrines have not been implemented yet"),
-                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => SavedMapRefs.Floor == 0
+                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => savedMapRefs.Floor == 0
                         ? TheMapHolder.OverworldMap
                         : TheMapHolder.UnderworldMap,
                     _ => TheMapHolder.GetSmallMap(singleMapReference)
@@ -328,10 +329,11 @@ namespace Ultima5Redux.Maps
         public TileStack GetTileStack(Point2D xy, bool bSkipMapUnit)
         {
             var tileStack = new TileStack(xy);
+            Map currentMap = CurrentMap;
 
             // this checks to see if you are on the outer bounds of a small map, and if the flood fill touched it
             // if it has touched it then we draw the outer tiles
-            if (CurrentMap is SmallMap smallMap && !SmallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
+            if (currentMap is SmallMap smallMap && !SmallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
             {
                 TileReference outerTileReference = GameReferences.Instance.SpriteTileReferences.GetTileReference(
                     smallMap.GetOutOfBoundsSprite(xy));
@@ -341,8 +343,8 @@ namespace Ultima5Redux.Maps
 
             // if the position of the tile is no longer inside the bounds of the visibility
             // or has become invisible, then destroy the voxels and return right away
-            bool bOutsideOfVisibilityArray = !CurrentMap.IsInsideBounds(xy);
-            if (bOutsideOfVisibilityArray || !CurrentMap.VisibleOnMap[xy.X][xy.Y])
+            bool bOutsideOfVisibilityArray = !currentMap.IsInsideBounds(xy);
+            if (bOutsideOfVisibilityArray || !currentMap.VisibleOnMap[xy.X][xy.Y])
             {
                 if (!bOutsideOfVisibilityArray)
                     tileStack.PushTileReference(GameReferences.Instance.SpriteTileReferences.GetTileReference(255));
@@ -350,20 +352,20 @@ namespace Ultima5Redux.Maps
             }
 
             // get the reference as per the original game data
-            TileReference origTileReference = CurrentMap.GetTileReference(xy);
+            TileReference origTileReference = currentMap.GetTileReference(xy);
             // get topmost active map units on the tile
-            MapUnit topMostMapUnit = bSkipMapUnit ? null : CurrentMap.GetTopVisibleMapUnit(xy, false);
+            MapUnit topMostMapUnit = bSkipMapUnit ? null : currentMap.GetTopVisibleMapUnit(xy, false);
 
-            bool bIsAvatarTile = CurrentMap is not CombatMap && xy == CurrentMap.CurrentPosition?.XY;
+            bool bIsAvatarTile = currentMap is not CombatMap && xy == currentMap.CurrentPosition?.XY;
             bool bIsMapUnitOccupiedTile = topMostMapUnit != null;
 
             // if there is an alternate flat sprite (for example, trees have grass)
             if (origTileReference.HasAlternateFlatSprite ||
-                CurrentMap.IsXyOverride(xy, TileOverrideReference.TileType.Flat))
+                currentMap.IsXyOverride(xy, TileOverrideReference.TileType.Flat))
             {
                 TileReference flatTileReference =
                     GameReferences.Instance.SpriteTileReferences.GetTileReference(
-                        CurrentMap.GetAlternateFlatSprite(xy));
+                        currentMap.GetAlternateFlatSprite(xy));
                 tileStack.PushTileReference(flatTileReference);
             }
 
@@ -397,7 +399,7 @@ namespace Ultima5Redux.Maps
             Avatar avatarMapUnit = null;
             if (bIsAvatarTile)
                 avatarMapUnit =
-                    CurrentMap is RegularMap regularMap ? regularMap.GetAvatarMapUnit() : null;
+                    currentMap is RegularMap regularMap ? regularMap.GetAvatarMapUnit() : null;
 
             switch (topMostMapUnit)
             {

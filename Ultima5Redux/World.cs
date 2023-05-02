@@ -1791,7 +1791,8 @@ namespace Ultima5Redux
 
             // We often want to see if trolls want to bother us when we go over a bridge
             Point2D oneTileBelowPosition = regularMap.GetAdjustedPosition(newPosition, Point2D.Direction.Down);
-            if (regularMap.GetTileReference(oneTileBelowPosition).Is(TileReference.SpriteIndex.Waterfall_KeyIndex))
+            if (oneTileBelowPosition != null && regularMap.GetTileReference(oneTileBelowPosition)
+                    .Is(TileReference.SpriteIndex.Waterfall_KeyIndex))
             {
                 // Waterfall
                 // we fall down waterfalls - and if it's the correct coordinates then we go to the underworld!
