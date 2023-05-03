@@ -14,6 +14,8 @@ namespace Ultima5Redux.MapUnits
     {
         private const string REGULAR_CARPET_STR = "Carpet2";
 
+        public override bool CanStackMapUnitsOnTop => true;
+
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;
 
         [IgnoreDataMember]
