@@ -21,6 +21,8 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 { SmallMapReferences.SingleMapReference.Location.Jhelom, 400 }
             };
 
+        public override bool CanStackMapUnitsOnTop => true;
+
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Skiff;
 
         public override string BoardXitName => GameReferences.Instance.DataOvlRef.StringReferences

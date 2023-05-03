@@ -21,6 +21,8 @@ namespace Ultima5Redux.MapUnits
                 { SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, 260 }
             };
 
+        public override bool CanStackMapUnitsOnTop => true;
+
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Horse;
 
         [IgnoreDataMember]
