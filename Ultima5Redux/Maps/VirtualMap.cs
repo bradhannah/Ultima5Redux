@@ -532,6 +532,11 @@ namespace Ultima5Redux.Maps
 
             SavedMapRefs ??= new SavedMapRefs();
             SavedMapRefs.SetByLargeMapType(largeMapType, playerPosition);
+
+            // we need to set the actual map to the correct coordinates - up to this point we have only changed the map
+            CurrentMap.CurrentPosition.Floor =
+                largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1;
+            if (playerPosition != null) CurrentMap.CurrentPosition.XY = playerPosition;
         }
 
         /// <summary>

@@ -3931,5 +3931,19 @@ namespace Ultima5ReduxTesting
 
             if (!bYay) throw new Exception("Did not see a waterfall message");
         }
+
+        [Test] [TestCase(SaveFiles.b_horse, false)] [TestCase(SaveFiles.b_horse, true)]
+        public void test_CheckLoadLargeAndThenUnderworld(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadLargeMap(LargeMapLocationReferences.LargeMapType.Underworld);
+
+            Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentPosition.Floor == -1);
+        }
     }
 }

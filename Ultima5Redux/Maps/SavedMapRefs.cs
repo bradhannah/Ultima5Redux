@@ -23,7 +23,7 @@ namespace Ultima5Redux.Maps
                 MapType = MapType
             };
 
-        private void SetMapUnitPosition(Point2D playerPosition)
+        private void SetMapUnitPosition(Point2D playerPosition, int nFloor)
         {
             if (playerPosition == null)
             {
@@ -36,7 +36,8 @@ namespace Ultima5Redux.Maps
                 MapUnitPosition.Y = playerPosition.Y;
             }
 
-            MapUnitPosition.Floor = Floor;
+            MapUnitPosition.Floor = nFloor;
+            
         }
 
         public SmallMapReferences.SingleMapReference GetSingleMapReference() =>
@@ -44,8 +45,7 @@ namespace Ultima5Redux.Maps
             {
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => 
                     GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, Floor), 
-                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => SmallMapReferences
-                    .SingleMapReference.GetCombatMapSingleInstance(),
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(),
                 _ => GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(Location, Floor)
             };
 
@@ -56,7 +56,7 @@ namespace Ultima5Redux.Maps
             MapType = largeMapType == LargeMapLocationReferences.LargeMapType.Overworld
                 ? Map.Maps.Overworld
                 : Map.Maps.Underworld;
-            SetMapUnitPosition(playerPosition);
+            SetMapUnitPosition(playerPosition, Floor);
         }
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
@@ -75,7 +75,7 @@ namespace Ultima5Redux.Maps
             Location = singleDungeonMapFloorReference.DungeonLocation;
             Floor = singleDungeonMapFloorReference.DungeonFloor;
             MapType = Map.Maps.Dungeon;
-            SetMapUnitPosition(playerPosition);
+            SetMapUnitPosition(playerPosition, Floor);
         }
 
         public void SetBySingleMapReference(SmallMapReferences.SingleMapReference singleMapReference,
@@ -84,7 +84,7 @@ namespace Ultima5Redux.Maps
             Location = singleMapReference.MapLocation;
             Floor = singleMapReference.Floor;
             MapType = singleMapReference.MapType;
-            SetMapUnitPosition(playerPosition ?? Point2D.Zero);
+            SetMapUnitPosition(playerPosition ?? Point2D.Zero, Floor);
             MapUnitPosition.Floor = singleMapReference.Floor;
         }
     }
