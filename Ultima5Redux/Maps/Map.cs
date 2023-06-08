@@ -719,7 +719,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        public TileReference GetTileReference(in Point2D xy)
+        public virtual TileReference GetTileReference(in Point2D xy)
         {
             // we check to see if our override map has something on top of it
             if (TheMapOverrides.HasOverrideTile(xy))

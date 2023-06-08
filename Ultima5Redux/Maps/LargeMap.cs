@@ -369,8 +369,10 @@ namespace Ultima5Redux.Maps
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        public TileReference GetTileReference(in Point2D xy, bool bIgnoreMoongate = false)
+        public override TileReference GetTileReference(in Point2D xy)
         {
+            // bajh: temp override to test
+            bool bIgnoreMoongate = false;
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
             // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
             if (!bIgnoreMoongate &&

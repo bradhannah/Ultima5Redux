@@ -396,6 +396,7 @@ namespace Ultima5Redux.Maps
             // we need to determine WHICH MapUnit to draw at this point
             // it could be the original, or boarded or even a different one all together?
             TileReference mapUnitTileReference = topMostMapUnit.GetAnimatedTileReference();
+            
             Avatar avatarMapUnit = null;
             if (bIsAvatarTile)
                 avatarMapUnit =
@@ -420,7 +421,7 @@ namespace Ultima5Redux.Maps
                     tileStack.PushTileReference(mapUnitTileReference, true);
                     break;
             }
-
+            
             return tileStack;
         }
 
