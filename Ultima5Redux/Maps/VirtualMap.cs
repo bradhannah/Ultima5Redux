@@ -459,26 +459,6 @@ namespace Ultima5Redux.Maps
             LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, 1, null, 0, npcRef);
         }
 
-        // public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
-        //     PlayerCharacterRecords records, MapUnit mapUnit)
-        // {
-        //     switch (mapUnit)
-        //     {
-        //         case Enemy enemy:
-        //             LoadCombatMapWithCalculation(singleCombatMapReference,
-        //                 SingleCombatMapReference.EntryDirection.South, records, enemy.EnemyReference);
-        //             return;
-        //         case NonPlayerCharacter npc:
-        //             EnemyReference enemyReference =
-        //                 GameReferences.Instance.EnemyRefs.GetEnemyReference(npc.KeyTileReference.Index);
-        //             LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.South, records,
-        //                 enemyReference, npc.NpcRef);
-        //             return;
-        //     }
-        //
-        //     throw new Ultima5ReduxException("You can only calculate combat map loading with Enemies and NPCs");
-        // }
-
         /// <summary>
         ///     Loads a combat map, but aut
         /// </summary>
@@ -531,6 +511,7 @@ namespace Ultima5Redux.Maps
             // forget about your transgressions
             ClearAllFlagsBeforeMapLoad();
 
+            MapUnit existingBoardedMapUnit = CurrentMap.CurrentMapUnits.TheAvatar.CurrentBoardedMapUnit;
             SavedMapRefs ??= new SavedMapRefs();
             SavedMapRefs.SetByLargeMapType(largeMapType, playerPosition);
 
@@ -538,6 +519,9 @@ namespace Ultima5Redux.Maps
             CurrentMap.CurrentPosition.Floor =
                 largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1;
             if (playerPosition != null) CurrentMap.CurrentPosition.XY = playerPosition;
+            if (existingBoardedMapUnit != null)
+                CurrentMap.CurrentMapUnits.TheAvatar.BoardMapUnit(existingBoardedMapUnit); 
+
         }
 
         /// <summary>
@@ -555,6 +539,8 @@ namespace Ultima5Redux.Maps
             // forget about your transgressions
             ClearAllFlagsBeforeMapLoad();
 
+            MapUnit existingBoardedMapUnit = CurrentMap.CurrentMapUnits.TheAvatar.CurrentBoardedMapUnit;
+            
             // setting this will make everything think we have a new map
             // CurrentMap will now point to the new map as well
             SavedMapRefs ??= new SavedMapRefs();
@@ -571,6 +557,9 @@ namespace Ultima5Redux.Maps
             smallMap.CurrentPosition = xy == null
                 ? new MapUnitPosition(0, 0, singleMapReference.Floor)
                 : new MapUnitPosition(xy.X, xy.Y, singleMapReference.Floor);
+
+            if (existingBoardedMapUnit != null)
+                smallMap.GetAvatarMapUnit().BoardMapUnit(existingBoardedMapUnit); 
 
             smallMap.HandleSpecialCasesForSmallMapLoad();
         }
