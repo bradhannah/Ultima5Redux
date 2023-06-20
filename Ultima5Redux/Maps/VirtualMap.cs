@@ -55,6 +55,7 @@ namespace Ultima5Redux.Maps
             get
             {
                 SavedMapRefs savedMapRefs = SavedMapRefs;
+                if (savedMapRefs == null) return null;
                 SmallMapReferences.SingleMapReference singleMapReference = savedMapRefs.GetSingleMapReference();
                 if (singleMapReference == null)
                     throw new Ultima5ReduxException("Tried to get CurrentMap but it was false");
@@ -511,7 +512,7 @@ namespace Ultima5Redux.Maps
             // forget about your transgressions
             ClearAllFlagsBeforeMapLoad();
 
-            MapUnit existingBoardedMapUnit = CurrentMap.CurrentMapUnits.TheAvatar.CurrentBoardedMapUnit;
+            MapUnit existingBoardedMapUnit = CurrentMap?.CurrentMapUnits?.TheAvatar?.CurrentBoardedMapUnit;
             SavedMapRefs ??= new SavedMapRefs();
             SavedMapRefs.SetByLargeMapType(largeMapType, playerPosition);
 
@@ -539,7 +540,7 @@ namespace Ultima5Redux.Maps
             // forget about your transgressions
             ClearAllFlagsBeforeMapLoad();
 
-            MapUnit existingBoardedMapUnit = CurrentMap.CurrentMapUnits.TheAvatar.CurrentBoardedMapUnit;
+            MapUnit existingBoardedMapUnit = CurrentMap?.CurrentMapUnits?.TheAvatar?.CurrentBoardedMapUnit;
             
             // setting this will make everything think we have a new map
             // CurrentMap will now point to the new map as well

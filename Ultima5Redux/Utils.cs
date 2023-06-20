@@ -141,7 +141,8 @@ namespace Ultima5Redux
                 throw new Ultima5ReduxException($"{fileNameAndPath} (file) does not exist");
             string dirName = Path.GetDirectoryName(fileNameAndPath);
             if (string.IsNullOrEmpty(dirName))
-                throw new Ultima5ReduxException($"{dirName} (directory) does not exist!");
+                throw new Ultima5ReduxException(
+                    $"{dirName} (directory) does not exist - but the file was {fileNameAndPath}!");
 
             foreach (string checkFileName in Directory.GetFiles(dirName))
             {

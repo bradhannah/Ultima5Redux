@@ -21,10 +21,15 @@ namespace Ultima5Redux
         /// <param name="parentSavePath">the path of all the save files (typically Documents/UltimaVRedux</param>
         public void Initialize(string legacyDataPath, string parentSavePath)
         {
-            if (!GameReferences.Instance.IsInitialized)
-            {
-                GameReferences.Initialize(legacyDataPath);
-            }
+            if (legacyDataPath == string.Empty)
+                throw new Ultima5ReduxException("Tried to Initialize but legacyDataPath was empty");
+            if (parentSavePath == string.Empty)
+                throw new Ultima5ReduxException("Tried to Initialize but parentSavePath was empty");
+
+            // if (!GameReferences.Instance.IsInitialized)
+            // {
+            //     GameReferences.Initialize(legacyDataPath);
+            // }
 
             _gameStates.Clear();
 

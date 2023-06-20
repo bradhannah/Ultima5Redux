@@ -689,6 +689,46 @@
       "SpriteName": "WaterCoast",
       "Comment": "Serpents Hold Fountain",
       "TheTileType": 1
+    },
+    {
+      "MapNumber": 6,
+      "X": 17,
+      "Y": 13,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Trinsic Square",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 6,
+      "X": 17,
+      "Y": 17,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Trinsic Square",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 6,
+      "X": 17,
+      "Y": 13,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Trinsic Square",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 6,
+      "X": 17,
+      "Y": 17,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Trinsic Square",
+      "TheTileType": 1
     }
   ],
   "CombatBritannia": [
