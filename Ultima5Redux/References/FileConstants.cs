@@ -42,6 +42,9 @@ namespace Ultima5Redux.References
         public const string TOWNE_TLK = "TOWNE.TLK";
         public const string UNDER_DAT = "UNDER.DAT";
         public const string UNDER_OOL = "UNDER.OOL";
+
+        public const string MISCMAPS_DAT = "MISCMAPS.DAT";
+        
         public static readonly string[] TalkFiles = { CASTLE_TLK, TOWNE_TLK, DWELLING_TLK, KEEP_TLK };
         public static readonly string[] NpcFiles = { CASTLE_NPC, TOWNE_NPC, DWELLING_NPC, KEEP_NPC };
         public static readonly string[] SmallMapFiles = { CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT };

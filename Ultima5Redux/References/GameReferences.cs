@@ -58,6 +58,8 @@ namespace Ultima5Redux.References
             }
         }
 
+        public CutOrIntroSceneMapReferences CutOrIntroSceneMapReferences { get; private set; }
+        
         public CombatItemReferences CombatItemRefs { get; private set; }
 
         public CombatMapReferences CombatMapRefs { get; private set; }
@@ -173,6 +175,7 @@ namespace Ultima5Redux.References
             ProvisionReferences = new ProvisionReferences();
             SearchLocationReferences = new SearchLocationReferences(DataOvlRef);
             DungeonReferences = new DungeonReferences(_legacyDataDirectory);
+            CutOrIntroSceneMapReferences = new CutOrIntroSceneMapReferences(_legacyDataDirectory);
         }
 
         public static void Initialize(string dataDirectory = "")

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Ultima5Redux.Maps
@@ -30,6 +31,13 @@ namespace Ultima5Redux.Maps
             BlackthornInterrogation = 0, ShrineOfVirtueInterior, ShrineOfTheCodexInterior, LordBritishMirrorRoom,
             IntroEarthBedroom, IntroCircleOfStones, IntroShadowlordEncounter, IntroIolosHut
         }
+
+        private Dictionary<CutOrIntroSceneMapTypes, int> _startingMapPositions = new()
+        {
+            { CutOrIntroSceneMapTypes.IntroIolosHut, 0 }
+        };
+
+        public static int N_SCENES = Enum.GetNames(typeof(CutOrIntroSceneMapTypes)).Length;
 
         public CutOrIntroSceneMapTypes TheCutOrIntroSceneMapType { get; }
 
