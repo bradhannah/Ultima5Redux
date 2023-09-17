@@ -92,6 +92,8 @@
         <Compile Include="GameSummary.cs" />
         <Compile Include="ImportedGameState.cs" />
         <Compile Include="Maps\CombatMap.cs" />
+        <Compile Include="Maps\CutSceneMap.cs" />
+        <Compile Include="Maps\CutSceneMapReferences.cs" />
         <Compile Include="Maps\DungeonMap.cs" />
         <Compile Include="Maps\InitiativeQueue.cs" />
         <Compile Include="Maps\MapHolder.cs" />
@@ -101,6 +103,7 @@
         <Compile Include="Maps\SearchItem.cs" />
         <Compile Include="Maps\SearchItems.cs" />
         <Compile Include="Maps\Sign.cs" />
+        <Compile Include="Maps\SingleCutSceneMapReference.cs" />
         <Compile Include="Maps\SingleDungeonMapFloorReference.cs" />
         <Compile Include="Maps\TileStack.cs" />
         <Compile Include="Maps\TriggerTileData.cs" />
