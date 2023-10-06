@@ -8,6 +8,18 @@ namespace Ultima5Redux.Maps
 {
     public class CutOrIntroSceneMapReferences
     {
+        private readonly Dictionary<SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType,
+            SingleCutOrIntroSceneMapReference> _cutOrIntroScenes = new();
+
+        public IEnumerable<SingleCutOrIntroSceneMapReference> CutScenes =>
+            _cutOrIntroScenes.Where(f => f.Value.IsCutsceneMap).Select(f => f.Value);
+
+        public IEnumerable<SingleCutOrIntroSceneMapReference> IntroScenes =>
+            _cutOrIntroScenes.Where(f => !f.Value.IsCutsceneMap).Select(f => f.Value);
+
+        public IEnumerable<SingleCutOrIntroSceneMapReference> AllScenes =>
+            _cutOrIntroScenes.Select(f => f.Value);
+
         public CutOrIntroSceneMapReferences(string legacyDataDatFilePath)
         {
             byte[] cutOrIntroSceneContents;
@@ -22,9 +34,19 @@ namespace Ultima5Redux.Maps
 
             List<byte> cutOrIntroSceneListContents = cutOrIntroSceneContents.ToList();
 
-            for (int i = 0; i < SingleCutOrIntroSceneMapReference.N_SCENES; i++)
+            foreach (SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType cutOrIntroSceneMapTypes in Enum.GetValues(
+                         typeof(SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType)))
             {
+                int nOffset = SingleCutOrIntroSceneMapReference.GetMapDataOffset(cutOrIntroSceneMapTypes);
+                int bBytesPerMap = SingleCutOrIntroSceneMapReference.GetNBytesForMap(cutOrIntroSceneMapTypes);
+                var singleCutOrIntroSceneMapReference = new SingleCutOrIntroSceneMapReference(cutOrIntroSceneMapTypes,
+                    cutOrIntroSceneListContents.GetRange(nOffset, bBytesPerMap));
+                _cutOrIntroScenes.Add(cutOrIntroSceneMapTypes, singleCutOrIntroSceneMapReference);
             }
         }
+
+        public SingleCutOrIntroSceneMapReference GetSingleCutOrIntroSceneMapReference(
+            SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType nMapType) =>
+            _cutOrIntroScenes[nMapType];
     }
 }

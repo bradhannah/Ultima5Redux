@@ -3945,5 +3945,20 @@ namespace Ultima5ReduxTesting
 
             Assert.True(world.State.TheVirtualMap.CurrentMap.CurrentPosition.Floor == -1);
         }
+
+        [Test] [TestCase(SaveFiles.b_horse, true)]
+        public void test_LoadCutSceneMaps(SaveFiles saveFiles, bool bReloadJson) {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            SingleCutOrIntroSceneMapReference singleMap =
+                GameReferences.Instance.CutOrIntroSceneMapReferences.GetSingleCutOrIntroSceneMapReference(
+                    SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.BlackthornInterrogation);
+
+            world.State.TheVirtualMap.LoadCutOrIntroScene(singleMap, new Point2D(0, 0));
+        }
     }
 }

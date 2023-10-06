@@ -38,6 +38,10 @@ namespace Ultima5Redux.Maps
                     continue;
                 }
 
+                if (mapRef.MapType is Map.Maps.CutScene or Map.Maps.Intro) {
+                    continue;
+                }
+
                 // now I can go through each and every reference
                 SmallMap smallMap = new(mapRef);
 

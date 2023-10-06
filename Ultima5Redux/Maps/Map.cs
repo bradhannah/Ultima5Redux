@@ -28,7 +28,7 @@ namespace Ultima5Redux.Maps
     [DataContract] public abstract class Map
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum Maps { Small = -1, Overworld, Underworld, Combat, Dungeon, CutScene }
+        public enum Maps { Small = -1, Overworld, Underworld, Combat, Dungeon, CutScene, Intro, _Not }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }
@@ -1204,7 +1204,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        protected void SetMaxVisibleArea(in Point2D startPos, int nVisibleTiles)
+        protected virtual void SetMaxVisibleArea(in Point2D startPos, int nVisibleTiles)
         {
             if (nVisibleTiles < 3) throw new Ultima5ReduxException("Can't set visible area if smaller than 3");
             if (startPos == null) throw new Ultima5ReduxException("Must have a proper start position");

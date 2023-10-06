@@ -202,8 +202,9 @@ namespace Ultima5Redux
 
             _ = Math.DivRem(listCount, splitEveryN, out int remainder);
 
-            if (remainder != 0)
-                throw new ArgumentOutOfRangeException($"The Remainder: {remainder} should be zero when loading a map");
+            // REMOVE THIS CHECK (TEMP?) because MISCMAPS.DAT has maps of different sizes which breaks the check
+            // if (remainder != 0)
+            //     throw new ArgumentOutOfRangeException($"The Remainder: {remainder} should be zero when loading a map");
 
             // if a problem pops up for the maps in the future, then it's because of this call... am I creating the array correctly???
             T[][] theArray = Init2DArray<T>(length / splitEveryN, splitEveryN);

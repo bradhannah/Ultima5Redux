@@ -66,8 +66,10 @@ namespace Ultima5Redux.Maps
                 {
                     SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine when savedMapRefs.MapType ==
                                                                            Map.Maps.Combat => TheMapHolder.TheCombatMap,
-                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine => throw
-                        new Ultima5ReduxException("Resting and Shrines have not been implemented yet"),
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine =>
+                        TheMapHolder.CutSceneMap,
+                    //throw
+                    //new Ultima5ReduxException("Resting and Shrines have not been implemented yet"),
                     SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => savedMapRefs.Floor == 0
                         ? TheMapHolder.OverworldMap
                         : TheMapHolder.UnderworldMap,
@@ -498,6 +500,22 @@ namespace Ultima5Redux.Maps
             TheMapHolder.TheDungeonMap = new DungeonMap(singleDungeonMapFloorReference);
 
             if (startingPosition != null) CurrentMap.CurrentPosition.XY = startingPosition;
+        }
+
+        public void LoadCutOrIntroScene(SingleCutOrIntroSceneMapReference singleCutOrIntroSceneMapReference,
+            Point2D startingPosition) {
+            ClearAllFlagsBeforeMapLoad();
+
+            SavedMapRefs ??= new SavedMapRefs();
+            SavedMapRefs.SetBySingleCutOrIntroSceneMapReference(singleCutOrIntroSceneMapReference);
+
+            if (singleCutOrIntroSceneMapReference.IsCutsceneMap) {
+                TheMapHolder.CutSceneMap = new CutSceneMap(singleCutOrIntroSceneMapReference);
+                if (startingPosition != null) CurrentMap.CurrentPosition.XY = startingPosition;
+            }
+            else {
+                _ = "";
+            }
         }
 
         /// <summary>

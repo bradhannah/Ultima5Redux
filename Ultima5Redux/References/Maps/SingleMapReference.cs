@@ -75,7 +75,7 @@ namespace Ultima5Redux.References.Maps
                 Towne,
                 Dwelling,
                 Keep,
-                Dungeon,
+                Dungeon, CutOrIntroScene,
                 None
             }
 
@@ -96,6 +96,8 @@ namespace Ultima5Redux.References.Maps
             [DataMember]
             public Location MapLocation { get; }
 
+            private readonly Map.Maps _overridenMapType = Map.Maps._Not;
+            
             /// <summary>
             ///     name of the map file
             /// </summary>
@@ -119,8 +121,8 @@ namespace Ultima5Redux.References.Maps
             [IgnoreDataMember]
             public Map.Maps MapType
             {
-                get
-                {
+                get {
+                    if (_overridenMapType != Map.Maps._Not) return _overridenMapType;
                     return MapLocation switch
                     {
                         Location.Britannia_Underworld => Floor == 0 ? Map.Maps.Overworld : Map.Maps.Underworld,
@@ -198,8 +200,10 @@ namespace Ultima5Redux.References.Maps
             /// <param name="mapLocation">overall location (ie. Moonglow)</param>
             /// <param name="floor">the floor in the location (-1 basement, 0 main level, 1+ upstairs)</param>
             /// <param name="fileOffset">location of data offset in map file</param>
-            public SingleMapReference(string dataDirectory, Location mapLocation, int floor, int fileOffset)
-            {
+            public SingleMapReference(string dataDirectory, Location mapLocation, int floor, int fileOffset,
+                Map.Maps overrideMapType = Map.Maps._Not) {
+                if (overrideMapType != Map.Maps._Not)
+                    _overridenMapType = overrideMapType;
                 _dataDirectory = dataDirectory;
                 MapLocation = mapLocation;
                 Floor = floor;
@@ -240,7 +244,8 @@ namespace Ultima5Redux.References.Maps
                     SmallMapMasterFiles.Dwelling => FileConstants.DWELLING_DAT,
                     SmallMapMasterFiles.Keep => FileConstants.KEEP_DAT,
                     SmallMapMasterFiles.Dungeon => FileConstants.DUNGEON_DAT,
-                    _ => throw new Ultima5ReduxException("Bad _location")
+                    SmallMapMasterFiles.CutOrIntroScene => FileConstants.MISCMAPS_DAT
+                    //throw new Ultima5ReduxException("Bad _location")
                 };
             }
 
@@ -311,8 +316,9 @@ namespace Ultima5Redux.References.Maps
                     case Location.Hythloth:
                     case Location.Doom:
                         return SmallMapMasterFiles.Dungeon;
-                    case Location.Britannia_Underworld:
                     case Location.Combat_resting_shrine:
+                        return SmallMapMasterFiles.CutOrIntroScene;
+                    case Location.Britannia_Underworld:
                         return SmallMapMasterFiles.None;
                     default:
                         throw new Ultima5ReduxException("EH?");
@@ -355,8 +361,9 @@ namespace Ultima5Redux.References.Maps
                         return FileConstants.KEEP_TLK;
                     case SmallMapMasterFiles.Towne:
                         return FileConstants.TOWNE_TLK;
+                    case SmallMapMasterFiles.CutOrIntroScene:
+                        return FileConstants.MISCMAPS_DAT;
                     case SmallMapMasterFiles.Dungeon:
-                    case SmallMapMasterFiles.None:
                     default:
                         throw new ArgumentOutOfRangeException(nameof(mapMaster), mapMaster, null);
                 }

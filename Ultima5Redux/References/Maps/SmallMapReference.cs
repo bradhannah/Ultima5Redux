@@ -63,9 +63,6 @@ namespace Ultima5Redux.References.Maps
                 SingleMapReference.GetLargeMapSingleInstance(LargeMapLocationReferences.LargeMapType.Underworld));
 
             // Castle.dat
-            AddLocation(SingleMapReference.Location.Britannia_Underworld, true, 2);
-            AddLocation(SingleMapReference.Location.Combat_resting_shrine, false, 1);
-
             AddLocation(SingleMapReference.Location.Lord_Britishs_Castle, true, 5);
             AddLocation(SingleMapReference.Location.Palace_of_Blackthorn, true, 5);
             AddLocation(SingleMapReference.Location.West_Britanny, false, 1);
@@ -105,6 +102,7 @@ namespace Ultima5Redux.References.Maps
             AddLocation(SingleMapReference.Location.Empath_Abbey, false, 3);
             AddLocation(SingleMapReference.Location.Serpents_Hold, true, 3);
 
+            // DUNGEONS.DAT
             AddLocation(SingleMapReference.Location.Deceit, false, 8);
             AddLocation(SingleMapReference.Location.Despise, false, 8);
             AddLocation(SingleMapReference.Location.Destard, false, 8);
@@ -113,18 +111,23 @@ namespace Ultima5Redux.References.Maps
             AddLocation(SingleMapReference.Location.Shame, false, 8);
             AddLocation(SingleMapReference.Location.Hythloth, false, 8);
             AddLocation(SingleMapReference.Location.Doom, false, 8);
+
+            AddLocation(SingleMapReference.Location.Britannia_Underworld, true, 2);
+            AddLocation(SingleMapReference.Location.Combat_resting_shrine, false, 1);
+
+            //AddLocation(SingleMapReference.Location.Combat_resting_shrine, false, 8);
         }
 
         /// <summary>
         ///     Cheater function to automatically create floors in a building
         /// </summary>
         /// <param name="location"></param>
-        /// <param name="startFloor"></param>
+        /// <param name="nStartFloor"></param>
         /// <param name="nFloors"></param>
         /// <param name="roomOffset"></param>
         /// <returns></returns>
         private static IEnumerable<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
-            int startFloor, short nFloors, short roomOffset)
+            int nStartFloor, short nFloors, short roomOffset)
         {
             List<SingleMapReference> mapRefs = new();
 
@@ -132,11 +135,18 @@ namespace Ultima5Redux.References.Maps
                 roomOffset * SmallMap.X_TILES *
                 SmallMap.Y_TILES; // the number of rooms offset, converted to number of bytes to skip
 
-            for (int i = 0; i < nFloors; i++)
+            for (int nFloor = 0; nFloor < nFloors; nFloor++)
             {
-                mapRefs.Add(new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory, location,
-                    startFloor + i,
-                    fileOffset + i * SmallMap.X_TILES * SmallMap.Y_TILES));
+                if (location == SingleMapReference.Location.Combat_resting_shrine) {
+                    // these maps are loaded in a different way so we set 0 offset (for now?) 
+                    mapRefs.Add(new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory, location,
+                        nFloor, 0));
+                }
+                else {
+                    mapRefs.Add(new SingleMapReference(GameReferences.Instance.DataOvlRef.DataDirectory, location,
+                        nStartFloor + nFloor,
+                        fileOffset + nFloor * SmallMap.X_TILES * SmallMap.Y_TILES));
+                }
             }
 
             return mapRefs;
@@ -152,7 +162,16 @@ namespace Ultima5Redux.References.Maps
         {
             // get the master map file from the location info
             SingleMapReference.SmallMapMasterFiles masterMap = SingleMapReference.GetMapMasterFromLocation(location);
-            if (masterMap == SingleMapReference.SmallMapMasterFiles.None) return;
+
+            if (masterMap == SingleMapReference.SmallMapMasterFiles.None)
+                return;
+
+            // if (masterMap == SingleMapReference.SmallMapMasterFiles.CutOrIntroScene && location != SingleMapReference.Location.Combat_resting_shrine) {
+            //     // if (location == SingleMapReference.Location.Combat_resting_shrine) {
+            //     //     
+            //     // }
+            //     return;
+            // }
 
             // we are going to track the order that the maps were added 
             // if the master map hasn't been seen yet, then we need to create a new index array of locations
@@ -390,13 +409,19 @@ namespace Ultima5Redux.References.Maps
         /// <param name="location">The location you are looking for</param>
         /// <param name="floor"></param>
         /// <returns>a single map reference providing details on the map itself</returns>
-        public SingleMapReference GetSingleMapByLocation(SingleMapReference.Location location, int floor)
-        {
+        public SingleMapReference GetSingleMapByLocation(SingleMapReference.Location location, int floor) {
+            if (location == SingleMapReference.Location.Combat_resting_shrine)
+                return _mapReferenceDictionary[SingleMapReference.Location.Combat_resting_shrine][0];
             if (location == SingleMapReference.Location.Britannia_Underworld)
                 return _largeMapReferenceDictionary[
                     floor == 0
                         ? LargeMapLocationReferences.LargeMapType.Overworld
                         : LargeMapLocationReferences.LargeMapType.Underworld];
+
+            // if (location == SingleMapReference.Location.Combat_resting_shrine)
+            // {
+            //     return 
+            // }
             
             if (!_mapReferenceDictionary[location].ContainsKey(floor))
                 throw new Ultima5ReduxException(location + ": " + floor + " was not found!");
