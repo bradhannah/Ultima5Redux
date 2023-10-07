@@ -96,6 +96,7 @@
         <Compile Include="Maps\CutSceneMapReferences.cs" />
         <Compile Include="Maps\DungeonMap.cs" />
         <Compile Include="Maps\InitiativeQueue.cs" />
+        <Compile Include="Maps\IntroSceneMap.cs" />
         <Compile Include="Maps\MapHolder.cs" />
         <Compile Include="Maps\MapOverrides.cs" />
         <Compile Include="Maps\RegularMap.cs" />

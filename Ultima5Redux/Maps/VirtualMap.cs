@@ -62,19 +62,21 @@ namespace Ultima5Redux.Maps
 
                 if (singleMapReference.IsDungeon) return TheMapHolder.TheDungeonMap;
 
-                return savedMapRefs.Location switch
-                {
-                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine when savedMapRefs.MapType ==
-                                                                           Map.Maps.Combat => TheMapHolder.TheCombatMap,
-                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine =>
-                        TheMapHolder.CutSceneMap,
+                switch (savedMapRefs.Location) {
+                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
+                        when savedMapRefs.MapType == Map.Maps.Combat:
+                        return TheMapHolder.TheCombatMap;
+                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
+                        if (savedMapRefs.Floor is >= 0 and < 4)
+                            return TheMapHolder.CutSceneMap;
+                        return TheMapHolder.IntroSceneMap;
                     //throw
                     //new Ultima5ReduxException("Resting and Shrines have not been implemented yet"),
-                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld => savedMapRefs.Floor == 0
-                        ? TheMapHolder.OverworldMap
-                        : TheMapHolder.UnderworldMap,
-                    _ => TheMapHolder.GetSmallMap(singleMapReference)
-                };
+                    case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
+                        return savedMapRefs.Floor == 0 ? TheMapHolder.OverworldMap : TheMapHolder.UnderworldMap;
+                    default:
+                        return TheMapHolder.GetSmallMap(singleMapReference);
+                }
             }
         }
 
@@ -511,11 +513,12 @@ namespace Ultima5Redux.Maps
 
             if (singleCutOrIntroSceneMapReference.IsCutsceneMap) {
                 TheMapHolder.CutSceneMap = new CutSceneMap(singleCutOrIntroSceneMapReference);
-                if (startingPosition != null) CurrentMap.CurrentPosition.XY = startingPosition;
             }
             else {
-                _ = "";
+                TheMapHolder.IntroSceneMap = new IntroSceneMap(singleCutOrIntroSceneMapReference);
             }
+
+            if (startingPosition != null) CurrentMap.CurrentPosition.XY = startingPosition;
         }
 
         /// <summary>

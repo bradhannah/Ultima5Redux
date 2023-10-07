@@ -23,6 +23,7 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public DungeonMap TheDungeonMap { get; internal set; }
         [DataMember] public CutSceneMap CutSceneMap { get; internal set; }
+        [DataMember] public IntroSceneMap IntroSceneMap { get; internal set; }
         [IgnoreDataMember] public CombatMap TheCombatMap { get; internal set; }
         public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
         public SmallMaps SmallMaps => _smallMaps;

@@ -62,7 +62,7 @@ namespace Ultima5Redux.Maps
         public void SetBySingleCutOrIntroSceneMapReference(
             SingleCutOrIntroSceneMapReference singleCutOrIntroSceneMapReference) {
             Location = SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine;
-            Floor = 0;
+            Floor = (int)singleCutOrIntroSceneMapReference.TheCutOrIntroSceneMapType;
             MapType = singleCutOrIntroSceneMapReference.IsCutsceneMap ? Map.Maps.CutScene : Map.Maps.Intro;
         }
         

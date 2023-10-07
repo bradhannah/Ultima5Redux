@@ -3954,11 +3954,31 @@ namespace Ultima5ReduxTesting
 
             if (bReloadJson) world.ReLoadFromJson();
 
-            SingleCutOrIntroSceneMapReference singleMap =
+            SingleCutOrIntroSceneMapReference singleCutSceneMap =
                 GameReferences.Instance.CutOrIntroSceneMapReferences.GetSingleCutOrIntroSceneMapReference(
                     SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.BlackthornInterrogation);
 
-            world.State.TheVirtualMap.LoadCutOrIntroScene(singleMap, new Point2D(0, 0));
+            world.State.TheVirtualMap.LoadCutOrIntroScene(singleCutSceneMap, new Point2D(0, 0));
+        }
+
+        [Test] [TestCase(SaveFiles.b_horse, true)]
+        public void test_LoadIntroSceneMaps(SaveFiles saveFiles, bool bReloadJson) {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            SingleCutOrIntroSceneMapReference singleIntroMap =
+                GameReferences.Instance.CutOrIntroSceneMapReferences.GetSingleCutOrIntroSceneMapReference(
+                    SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.IntroCircleOfStones);
+
+            world.State.TheVirtualMap.LoadCutOrIntroScene(singleIntroMap, new Point2D());
+
+            Assert.NotNull(world.State.TheVirtualMap.CurrentMap);
+            Map currentMap = world.State.TheVirtualMap.CurrentMap;
+            _ = "";
+            Assert.NotNull(currentMap.CurrentPosition);
         }
     }
 }
