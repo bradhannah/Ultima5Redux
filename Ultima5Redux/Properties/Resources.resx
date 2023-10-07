@@ -186,6 +186,11 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <data name="CutSceneScripts" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>..\DataFiles\CutSceneScripts.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </data>
     <!-- ReSharper disable once ResxNotResolved -->
     <data name="BritOol" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\DataFiles\InitialSaveGame\BRIT.OOL;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,

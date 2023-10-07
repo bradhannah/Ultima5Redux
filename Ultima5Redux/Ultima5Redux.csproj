@@ -92,6 +92,7 @@
         <Compile Include="GameSummary.cs" />
         <Compile Include="ImportedGameState.cs" />
         <Compile Include="Maps\CombatMap.cs" />
+        <Compile Include="Maps\CutOrIntroSceneScript.cs" />
         <Compile Include="Maps\CutSceneMap.cs" />
         <Compile Include="Maps\CutSceneMapReferences.cs" />
         <Compile Include="Maps\DungeonMap.cs" />
@@ -355,6 +356,8 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
         <EmbeddedResource Include="DataFiles\CustomDialogue.json" />
+        <Content Include="DataFiles\CutSceneScripts.csv" />
+        <EmbeddedResource Include="DataFiles\CutSceneScripts.json" />
         <Content Include="DataFiles\DungeonCombatMapDetails.csv" />
         <Content Include="DataFiles\DungeonCombatMapReferences.csv" />
         <EmbeddedResource Include="DataFiles\InitialSaveGame\INIT.GAM" />

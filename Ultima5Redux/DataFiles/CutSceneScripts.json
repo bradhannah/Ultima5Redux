@@ -1,0 +1,312 @@
+{
+  "0": [
+    {
+      "FrameNum": 0,
+      "Command": "Comment",
+      "SpriteNum": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "---- TEST Shrine of Virtue Cut Scene"
+    },
+    {
+      "FrameNum": 0,
+      "Command": " CreateMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 1,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 2,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 3,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 5,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": true,
+      "Comment": "avatar enters on camera"
+    },
+    {
+      "FrameNum": 6,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 9,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 7,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 8,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 8,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 7,
+      "Visible": false,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 8,
+      "Command": " CreateMapunit",
+      "SpriteNum": 364,
+      "X": 5,
+      "Y": 7,
+      "Visible": true,
+      "Comment": "switch to beggar/prayer"
+    },
+    {
+      "FrameNum": 8,
+      "Command": " PromptVirtueMeditate",
+      "SpriteNum": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": true,
+      "Comment": "begin meditation"
+    },
+    {
+      "FrameNum": 9,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 7,
+      "Visible": true,
+      "Comment": "avatar stands up"
+    },
+    {
+      "FrameNum": 9,
+      "Command": " MoveMapunit",
+      "SpriteNum": 364,
+      "X": 5,
+      "Y": 7,
+      "Visible": false,
+      "Comment": "beggar/prayer is all done"
+    },
+    {
+      "FrameNum": 10,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 8,
+      "Visible": true,
+      "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 11,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 9,
+      "Visible": true,
+      "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 12,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": true,
+      "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 13,
+      "Command": " EndSequence",
+      "SpriteNum": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "end of scene"
+    }
+  ],
+  "1": [
+    {
+      "FrameNum": 0,
+      "Command": "Comment",
+      "SpriteNum": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "---- Shrine of Virtue Cut Scene"
+    },
+    {
+      "FrameNum": 0,
+      "Command": " CreateMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 1,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 2,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 3,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 5,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": true,
+      "Comment": "avatar enters on camera"
+    },
+    {
+      "FrameNum": 6,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 9,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 7,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 8,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 8,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 7,
+      "Visible": false,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 8,
+      "Command": " CreateMapunit",
+      "SpriteNum": 364,
+      "X": 5,
+      "Y": 7,
+      "Visible": true,
+      "Comment": "switch to beggar/prayer"
+    },
+    {
+      "FrameNum": 8,
+      "Command": " PromptVirtueMeditate",
+      "SpriteNum": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": true,
+      "Comment": "begin meditation"
+    },
+    {
+      "FrameNum": 9,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 7,
+      "Visible": true,
+      "Comment": "avatar stands up"
+    },
+    {
+      "FrameNum": 9,
+      "Command": " MoveMapunit",
+      "SpriteNum": 364,
+      "X": 5,
+      "Y": 7,
+      "Visible": false,
+      "Comment": "beggar/prayer is all done"
+    },
+    {
+      "FrameNum": 10,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 8,
+      "Visible": true,
+      "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 11,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 9,
+      "Visible": true,
+      "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 12,
+      "Command": " MoveMapunit",
+      "SpriteNum": 284,
+      "X": 5,
+      "Y": 10,
+      "Visible": true,
+      "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 13,
+      "Command": " EndSequence",
+      "SpriteNum": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "end of scene"
+    }
+  ]
+}

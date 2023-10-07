@@ -107,6 +107,12 @@ namespace Ultima5Redux.Properties {
             }
         }
         
+        internal static string CutSceneScripts {
+            get {
+                return ResourceManager.GetString("CutSceneScripts", resourceCulture);
+            }
+        }
+        
         internal static byte[] BritOol {
             get {
                 object obj = ResourceManager.GetObject("BritOol", resourceCulture);
