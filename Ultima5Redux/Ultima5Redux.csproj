@@ -191,6 +191,7 @@
         <Compile Include="References\Maps\DungeonReferences.cs" />
         <Compile Include="References\Maps\DungeonTile.cs" />
         <Compile Include="References\Maps\DungeonMapReference.cs" />
+        <Compile Include="References\Maps\ShrineReferences.cs" />
         <Compile Include="References\SearchLocationReferences.cs" />
         <Compile Include="StreamingOutput.cs" />
         <Compile Include="StreamingOutputItem.cs" />

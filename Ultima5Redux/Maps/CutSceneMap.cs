@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.References;
@@ -8,10 +9,21 @@ namespace Ultima5Redux.Maps
 {
     public class CutSceneMap : RegularMap
     {
-        protected override void SetMaxVisibleArea(in Point2D startPos, int nVisibleTiles) {
-            //base.SetMaxVisibleArea(in startPos, nVisibleTiles);
-            _ = "";
-        }
+        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
+            GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0);
+
+        public override bool IsRepeatingMap => false;
+
+        //public override MapUnitPosition CurrentPosition { get; set; }
+        public override int NumOfXTiles => TheSingleCutOrIntroSceneMapReference.N_MAP_COLS_PER_ROW;
+        public override int NumOfYTiles => TheSingleCutOrIntroSceneMapReference.N_MAP_ROWS_PER_MAP;
+
+        public override byte[][] TheMap { get; protected set; }
+
+        public override Maps TheMapType => Maps.CutScene;
+
+        public SingleCutOrIntroSceneMapReference TheSingleCutOrIntroSceneMapReference { get; }
 
         public CutSceneMap(SingleCutOrIntroSceneMapReference theSingleCutOrIntroSceneMapReference) : base(
             SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0) {
@@ -30,18 +42,48 @@ namespace Ultima5Redux.Maps
             CurrentMapUnits.Add(theAvatar);
         }
 
-        public SingleCutOrIntroSceneMapReference TheSingleCutOrIntroSceneMapReference { get; }
+        private readonly Dictionary<string, MapUnit> _mapUnitsByIdentifier = new();
 
-        public override Maps TheMapType => Maps.CutScene;
+        public void ProcessScriptLine(CutOrIntroSceneScriptLine scriptLine) {
+            switch (scriptLine.Command) {
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.CreateMapunit: {
+                    MapUnit mapUnit = CreateNewMapUnit(new MapUnitMovement(0), false,
+                        SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, null,
+                        new MapUnitPosition(), scriptLine.TileReference);
+                    mapUnit.MapUnitPosition.XY = scriptLine.Position;
+                    // we maintain a specific identifier for the mapunit going forward
+                    _mapUnitsByIdentifier.Add(scriptLine.StrParam, mapUnit);
+                    break;
+                }
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.MoveMapunit:
+                    if (!_mapUnitsByIdentifier.ContainsKey(scriptLine.StrParam)) {
+                        throw new Ultima5ReduxException(
+                            $"{scriptLine.Command} command issued for mapunit \"{scriptLine.StrParam}\", but does not appear to be created yet.");
+                    }
 
-        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
-            GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
-                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0);
+                    MapUnit mapUnitToMove = _mapUnitsByIdentifier[scriptLine.StrParam];
+                    mapUnitToMove.MapUnitPosition.XY = scriptLine.Position;
+                    break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptVirtueMeditate:
+                    // Something must be done externally for this...
+                    break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.EndSequence:
+                    // Close the map and return to whence you came
+                    break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Comment:
+                    // we will always do nothing here, it's just for the readability of the script
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
-        //public override MapUnitPosition CurrentPosition { get; set; }
-        public override int NumOfXTiles => TheSingleCutOrIntroSceneMapReference.N_MAP_COLS_PER_ROW;
-        public override int NumOfYTiles => TheSingleCutOrIntroSceneMapReference.N_MAP_ROWS_PER_MAP;
-        public override byte[][] TheMap { get; protected set; }
+        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => throw new NotImplementedException();
+
+        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit) {
+        }
+
+        protected override float GetAStarWeight(in Point2D xy) => throw new NotImplementedException();
         //protected override Dictionary<Point2D, TileOverrideReference> XyOverrides => new();
 
         protected override VirtualMap.AggressiveMapUnitInfo GetNonCombatMapAggressiveMapUnitInfo(
@@ -49,14 +91,9 @@ namespace Ultima5Redux.Maps
             SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit) =>
             throw new NotImplementedException();
 
-        internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => throw new NotImplementedException();
-
-        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
-        {
+        protected override void SetMaxVisibleArea(in Point2D startPos, int nVisibleTiles) {
+            //base.SetMaxVisibleArea(in startPos, nVisibleTiles);
+            _ = "";
         }
-
-        protected override float GetAStarWeight(in Point2D xy) => throw new NotImplementedException();
-
-        public override bool IsRepeatingMap => false;
     }
 }

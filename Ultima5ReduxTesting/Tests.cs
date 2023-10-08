@@ -3754,7 +3754,28 @@ namespace Ultima5ReduxTesting
             CutOrIntroSceneScripts c = new();
             Assert.NotNull(c);
         }
-    }
 
-    //
+        [Test] [TestCase(SaveFiles.b_horse, true)]
+        public void test_GetTrinsicHonorShrineReferences(SaveFiles saveFiles, bool bReloadJson) {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            var honorShrinePosition = new Point2D(81, 207);
+            ShrineReference goodShrine =
+                GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(honorShrinePosition);
+            Assert.NotNull(goodShrine);
+            Assert.True(goodShrine.TheVirtue == ShrineReference.Virtue.Honor);
+
+            ShrineReference badShrine =
+                GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(new Point2D(81, 208));
+            Assert.IsNull(badShrine);
+
+            Assert.True(GameReferences.Instance.LargeMapRef.IsMapXyEnterable(honorShrinePosition));
+            Assert.True(GameReferences.Instance.LargeMapRef.GetLocationByMapXy(honorShrinePosition) ==
+                        SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine);
+        }
+    }
 }

@@ -47,7 +47,8 @@ namespace Ultima5Redux.References.Maps
         ///     Constructor building xy table
         /// </summary>
         /// <param name="dataRef">data ovl reference for extracting xy coordinates</param>
-        public LargeMapLocationReferences(DataOvlReference dataRef)
+        /// <param name="shrineReferences"></param>
+        public LargeMapLocationReferences(DataOvlReference dataRef, ShrineReferences shrineReferences)
         {
             // Load the location XYs and map them against the location
             List<byte> xPos = dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATIONS_X).GetAsByteList();
@@ -61,6 +62,15 @@ namespace Ultima5Redux.References.Maps
                     (SmallMapReferences.SingleMapReference.Location)nVector + 1;
                 LocationXy.Add(location, mapPoint);
                 LocationXyLocations.Add(mapPoint, location);
+            }
+
+            // add the shrines
+            foreach (ShrineReference shrineReference in shrineReferences.Shrines) {
+                // It will indicate there is a shrine - but will not say which shrine. That will need to be looked up with ShrineReferences
+                // TODO: this is not ideal as it gives different answers depending on how you ask it
+                //LocationXy.Add(SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, shrineReference.Position);
+                LocationXyLocations.Add(shrineReference.Position,
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine);
             }
         }
 

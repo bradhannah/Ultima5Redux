@@ -59,6 +59,8 @@ namespace Ultima5Redux.References
         }
 
         public CutOrIntroSceneMapReferences CutOrIntroSceneMapReferences { get; private set; }
+
+        public ShrineReferences ShrineReferences { get; private set; }
         
         public CombatItemReferences CombatItemRefs { get; private set; }
 
@@ -160,7 +162,8 @@ namespace Ultima5Redux.References
             DataOvlRef = new DataOvlReference(_legacyDataDirectory);
 
             SmallMapRef = new SmallMapReferences(DataOvlRef);
-            LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
+            ShrineReferences = new ShrineReferences(DataOvlRef);
+            LargeMapRef = new LargeMapLocationReferences(DataOvlRef, ShrineReferences);
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
             CombatItemRefs = new CombatItemReferences(InvRef);

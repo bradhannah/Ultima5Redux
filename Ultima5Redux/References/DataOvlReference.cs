@@ -280,8 +280,8 @@ namespace Ultima5Redux.References
             SEARCH_OBJECT_QUALITY,
             SEARCH_OBJECT_LOCATION,
             SEARCH_OBJECT_FLOOR,
-            SEARCH_OBJECT_X,
-            SEARCH_OBJECT_Y, RESPONSE_TO_KEYSTROKE, FILE_NAMES_AND_FALLS
+            SEARCH_OBJECT_X, SEARCH_OBJECT_Y, RESPONSE_TO_KEYSTROKE, FILE_NAMES_AND_FALLS, SHRINE_X_COORDS,
+            SHRINE_Y_COORDS
         }
 
 
@@ -2294,8 +2294,10 @@ namespace Ultima5Redux.References
                 "flags that define the special abilities of monsters during combat", 0x154C, 0x30 * 2);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List,
                 "moon phases (28 byte pairs, one for each day of the month)", 0x1EEA, 0x38);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinates of shrines", 0x1F7E, 0x8);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinates of shrines", 0x1F86, 0x8);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinates of shrines", 0x1F7E, 0x8,
+                0, DataChunkName.SHRINE_X_COORDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinates of shrines", 0x1F86, 0x8,
+                0, DataChunkName.SHRINE_Y_COORDS);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Arms seller's name index", 0x22da, 0x12);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x22ec, 0x20c);
 

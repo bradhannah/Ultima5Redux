@@ -16,14 +16,15 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public int FrameNum { get; private set; }
         [DataMember] public CutOrIntroSceneScriptLineCommand Command { get; private set; }
-        [DataMember] public byte SpriteNum { get; private set; }
+        [DataMember] public string StrParam { get; private set; } = string.Empty;
+        [DataMember(EmitDefaultValue = true)] public int IntParam { get; private set; } = -1;
         [DataMember] public int X { get; private set; }
         [DataMember] public int Y { get; private set; }
         [DataMember] public bool Visible { get; private set; }
         [DataMember] public string Comment { get; private set; }
 
         [IgnoreDataMember]
-        public TileReference TileReference => GameReferences.Instance.SpriteTileReferences.GetTileReference(FrameNum);
+        public TileReference TileReference => GameReferences.Instance.SpriteTileReferences.GetTileReference(IntParam);
 
         [IgnoreDataMember] public Point2D Position => new(X, Y);
     }
@@ -32,6 +33,10 @@ namespace Ultima5Redux.Maps
     {
         private readonly Dictionary<SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType, CutOrIntroSceneScript>
             _scripts = new();
+
+        public CutOrIntroSceneScript GetScriptByCutOrIntroSceneMapType(
+            SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType cutOrIntroSceneMapType) =>
+            _scripts[cutOrIntroSceneMapType];
 
         public CutOrIntroSceneScripts() {
             Dictionary<SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType, List<CutOrIntroSceneScriptLine>>
