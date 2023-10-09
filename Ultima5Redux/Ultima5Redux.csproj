@@ -179,6 +179,12 @@
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\OutputToConsole.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\PlayerMoved.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ReadScroll.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\CreateMapUnit.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\ExecuteCutScene.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\ExitBuilding.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\MapUnitMoved.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\PromptVirtueMeditate.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\CutOrIntroSceneScriptLineResult.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ShoppeKeeperInteraction.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\SinglePlayerCharacterAffected.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\TeleportNewLocation.cs" />

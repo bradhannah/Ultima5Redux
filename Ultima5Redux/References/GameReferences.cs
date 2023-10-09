@@ -52,13 +52,14 @@ namespace Ultima5Redux.References
                 case SmallMapReferences.SingleMapReference.Location.Doom:
                     return Map.Maps.Dungeon;
                 case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
-                    return Map.Maps.Combat;
+                    return Map.Maps.CutScene;
                 default:
                     return Map.Maps.Small;
             }
         }
 
         public CutOrIntroSceneMapReferences CutOrIntroSceneMapReferences { get; private set; }
+        public CutOrIntroSceneScripts CutOrIntroSceneScripts { get; private set; }
 
         public ShrineReferences ShrineReferences { get; private set; }
         
@@ -179,6 +180,7 @@ namespace Ultima5Redux.References
             SearchLocationReferences = new SearchLocationReferences(DataOvlRef);
             DungeonReferences = new DungeonReferences(_legacyDataDirectory);
             CutOrIntroSceneMapReferences = new CutOrIntroSceneMapReferences(_legacyDataDirectory);
+            CutOrIntroSceneScripts = new CutOrIntroSceneScripts();
         }
 
         public static void Initialize(string dataDirectory = "")

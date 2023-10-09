@@ -73,6 +73,8 @@ namespace Ultima5Redux.Maps
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Comment:
                     // we will always do nothing here, it's just for the readability of the script
                     break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Output:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

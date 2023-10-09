@@ -1,19 +1,31 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults.ScriptTurnResults;
 using Ultima5Redux.Properties;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    public class CutOrIntroSceneScriptLine
+    [DataContract] public class CutOrIntroSceneScriptLine
     {
         public enum CutOrIntroSceneScriptLineCommand
         {
-            CreateMapunit, MoveMapunit, PromptVirtueMeditate, EndSequence, Comment
+            CreateMapunit, MoveMapunit, PromptVirtueMeditate, EndSequence, Comment, Output
         }
 
+        // "FrameNum": 0,
+        // "Command": "Comment",
+        // "StrParam": "",
+        // "IntParam": null,
+        // "X": 0,
+        // "Y": 0,
+        // "Visible": false,
+        // "Comment": "---- TEST Shrine of Virtue Cut Scene"
         [DataMember] public int FrameNum { get; private set; }
         [DataMember] public CutOrIntroSceneScriptLineCommand Command { get; private set; }
         [DataMember] public string StrParam { get; private set; } = string.Empty;
@@ -41,11 +53,9 @@ namespace Ultima5Redux.Maps
         public CutOrIntroSceneScripts() {
             Dictionary<SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType, List<CutOrIntroSceneScriptLine>>
                 scripts =
-                    JsonConvert
-                        .DeserializeObject<
-                            Dictionary<SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType,
-                                List<CutOrIntroSceneScriptLine>>>(Resources.CutSceneScripts);
-
+                    JsonConvert.DeserializeObject<Dictionary<SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType
+                        , List<CutOrIntroSceneScriptLine>>>(Resources.CutSceneScripts);
+            //SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType
             foreach (KeyValuePair<SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType,
                          List<CutOrIntroSceneScriptLine>> kvp in scripts) {
                 _scripts.Add(kvp.Key, new CutOrIntroSceneScript(kvp.Key, kvp.Value));
@@ -57,14 +67,46 @@ namespace Ultima5Redux.Maps
     {
         public SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType MapType { get; }
 
-        public IEnumerable<CutOrIntroSceneScriptLine> ScriptLines => _scriptItems;
+        public IEnumerable<CutOrIntroSceneScriptLine> ScriptLines => _scriptLines;
 
-        private readonly List<CutOrIntroSceneScriptLine> _scriptItems;
+        private readonly List<CutOrIntroSceneScriptLine> _scriptLines;
+
+        public TurnResults GenerateTurnResultsFromFrame(int nFrame) {
+            TurnResults turnResults = new();
+            IEnumerable<CutOrIntroSceneScriptLine> scriptLinesInFrame = _scriptLines.Where(i => i.FrameNum == nFrame);
+            foreach (CutOrIntroSceneScriptLine scriptLine in scriptLinesInFrame) {
+                switch (scriptLine.Command) {
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.CreateMapunit:
+                        turnResults.PushTurnResult(new CreateMapUnit(scriptLine));
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.MoveMapunit:
+                        turnResults.PushTurnResult(new MapUnitMove(scriptLine));
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptVirtueMeditate:
+                        turnResults.PushTurnResult(new PromptVirtueMeditate(scriptLine,
+                            ShrineReference.Virtue.Compassion));
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.EndSequence:
+                        turnResults.PushTurnResult(new ExitBuilding(scriptLine));
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Comment:
+                        // do nothing - this is just to keep track
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Output:
+                        turnResults.PushOutputToConsole(scriptLine.StrParam, false);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return turnResults;
+        }
 
         internal CutOrIntroSceneScript(SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType mapType,
             List<CutOrIntroSceneScriptLine> scriptLines) {
             MapType = mapType;
-            _scriptItems = scriptLines;
+            _scriptLines = scriptLines;
         }
     }
 }
