@@ -223,6 +223,16 @@
       "Comment": "off camera"
     },
     {
+      "FrameNum": 1,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
       "FrameNum": 2,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
@@ -231,6 +241,16 @@
       "Y": 10,
       "Visible": false,
       "Comment": "off camera"
+    },
+    {
+      "FrameNum": 2,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
     },
     {
       "FrameNum": 3,
@@ -243,6 +263,16 @@
       "Comment": "off camera"
     },
     {
+      "FrameNum": 3,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
       "FrameNum": 4,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
@@ -251,6 +281,16 @@
       "Y": 10,
       "Visible": true,
       "Comment": "avatar enters on camera"
+    },
+    {
+      "FrameNum": 4,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
     },
     {
       "FrameNum": 5,
@@ -263,6 +303,16 @@
       "Comment": "moves forward"
     },
     {
+      "FrameNum": 5,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
       "FrameNum": 6,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
@@ -273,24 +323,84 @@
       "Comment": "moves forward"
     },
     {
+      "FrameNum": 6,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
       "FrameNum": 7,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
       "X": 5,
       "Y": 7,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 7,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
       "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 8,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 6,
+      "Visible": true,
       "Comment": "moves forward"
     },
     {
       "FrameNum": 8,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 9,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 6,
+      "Visible": false,
+      "Comment": "avatar stands up"
+    },
+    {
+      "FrameNum": 9,
       "Command": "CreateMapunit",
       "StrParam": "beggar",
       "IntParam": 364,
       "X": 5,
-      "Y": 7,
+      "Y": 6,
       "Visible": true,
       "Comment": "switch to beggar/prayer"
+    },
+    {
+      "FrameNum": 9,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
     },
     {
       "FrameNum": 9,
@@ -305,6 +415,36 @@
     {
       "FrameNum": 10,
       "Command": "MoveMapunit",
+      "StrParam": "beggar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 6,
+      "Visible": false,
+      "Comment": "beggar/prayer is all done"
+    },
+    {
+      "FrameNum": 10,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 6,
+      "Visible": true,
+      "Comment": "avatar stands up"
+    },
+    {
+      "FrameNum": 10,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 11,
+      "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
       "X": 5,
@@ -314,13 +454,13 @@
     },
     {
       "FrameNum": 11,
-      "Command": "MoveMapunit",
-      "StrParam": "beggar",
-      "IntParam": 0,
-      "X": 5,
-      "Y": 7,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
       "Visible": false,
-      "Comment": "beggar/prayer is all done"
+      "Comment": ""
     },
     {
       "FrameNum": 12,
@@ -333,6 +473,16 @@
       "Comment": "avatar walks out"
     },
     {
+      "FrameNum": 12,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
       "FrameNum": 13,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
@@ -343,6 +493,16 @@
       "Comment": "avatar walks out"
     },
     {
+      "FrameNum": 13,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
       "FrameNum": 14,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
@@ -351,6 +511,16 @@
       "Y": 10,
       "Visible": true,
       "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 15,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
     },
     {
       "FrameNum": 15,

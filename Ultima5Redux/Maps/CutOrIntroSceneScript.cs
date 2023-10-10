@@ -15,7 +15,7 @@ namespace Ultima5Redux.Maps
     {
         public enum CutOrIntroSceneScriptLineCommand
         {
-            CreateMapunit, MoveMapunit, PromptVirtueMeditate, EndSequence, Comment, Output
+            CreateMapunit, MoveMapunit, PromptVirtueMeditate, EndSequence, Comment, Output, Pause
         }
 
         // "FrameNum": 0,
@@ -71,11 +71,17 @@ namespace Ultima5Redux.Maps
 
         private readonly List<CutOrIntroSceneScriptLine> _scriptLines;
 
+        public int NumberOfFrames => _scriptLines.GroupBy(i => i.FrameNum).Count();
+        //Count(i => i.FrameNum == nFrame)
+
         public TurnResults GenerateTurnResultsFromFrame(int nFrame, ShrineReference shrineReference = null) {
             TurnResults turnResults = new();
             IEnumerable<CutOrIntroSceneScriptLine> scriptLinesInFrame = _scriptLines.Where(i => i.FrameNum == nFrame);
             foreach (CutOrIntroSceneScriptLine scriptLine in scriptLinesInFrame) {
                 switch (scriptLine.Command) {
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Pause:
+                        turnResults.PushTurnResult(new Pause(scriptLine));
+                        break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.CreateMapunit:
                         turnResults.PushTurnResult(new CreateMapUnit(scriptLine));
                         break;

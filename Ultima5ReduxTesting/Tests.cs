@@ -3814,17 +3814,23 @@ namespace Ultima5ReduxTesting
                 throw new Ultima5ReduxException("oof");
             }
 
-            TurnResults scriptTurnResults = GameReferences.Instance.CutOrIntroSceneScripts
+            CutOrIntroSceneScript script = GameReferences.Instance.CutOrIntroSceneScripts
                 .GetScriptByCutOrIntroSceneMapType(SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType
-                    .ShrineOfVirtueInterior).GenerateTurnResultsFromFrame(0, goodShrine);
+                    .ShrineOfVirtueInterior);
 
-            while (scriptTurnResults.HasTurnResult) {
-                TurnResult turnResult = scriptTurnResults.PopTurnResult();
-                if (turnResult is not CutOrIntroSceneScriptLineTurnResult scriptLineTurnResult) {
-                    throw new Ultima5ReduxException("Expected a CutOrIntroSceneScriptLineTurnResult");
+            int nFrames = script.NumberOfFrames;
+
+            for (int i = 0; i < nFrames; i++) {
+                TurnResults scriptTurnResults = script.GenerateTurnResultsFromFrame(i, goodShrine);
+
+                while (scriptTurnResults.HasTurnResult) {
+                    TurnResult turnResult = scriptTurnResults.PopTurnResult();
+                    if (turnResult is not CutOrIntroSceneScriptLineTurnResult scriptLineTurnResult) {
+                        throw new Ultima5ReduxException("Expected a CutOrIntroSceneScriptLineTurnResult");
+                    }
+
+                    cutSceneMap.ProcessScriptLine(scriptLineTurnResult.ScriptLine);
                 }
-
-                cutSceneMap.ProcessScriptLine(scriptLineTurnResult.ScriptLine);
             }
         }
     }
