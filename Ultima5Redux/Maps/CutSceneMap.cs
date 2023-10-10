@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
@@ -42,27 +43,32 @@ namespace Ultima5Redux.Maps
             CurrentMapUnits.Add(theAvatar);
         }
 
-        private readonly Dictionary<string, MapUnit> _mapUnitsByIdentifier = new();
+        private readonly Dictionary<string, CutSceneNonPlayerCharacter> _mapUnitsByIdentifier = new();
 
         public void ProcessScriptLine(CutOrIntroSceneScriptLine scriptLine) {
             switch (scriptLine.Command) {
-                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.CreateMapunit: {
-                    MapUnit mapUnit = CreateNewMapUnit(new MapUnitMovement(0), false,
-                        SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, null,
-                        new MapUnitPosition(), scriptLine.TileReference);
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.CreateMapunit:
+                    var mapUnitPosition = new MapUnitPosition();
+                    mapUnitPosition.XY = scriptLine.Position;
+
+                    // MapUnit mapUnit = new CutSceneNonPlayerCharacter(scriptLine.Visible || true, scriptLine.TileReference);
+                    var mapUnit = new CutSceneNonPlayerCharacter(scriptLine.Visible, scriptLine.TileReference);
+                    
                     mapUnit.MapUnitPosition.XY = scriptLine.Position;
+                    mapUnit.SetActive(scriptLine.Visible);
                     // we maintain a specific identifier for the mapunit going forward
                     _mapUnitsByIdentifier.Add(scriptLine.StrParam, mapUnit);
+                    CurrentMapUnits.Add(mapUnit);
                     break;
-                }
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.MoveMapunit:
                     if (!_mapUnitsByIdentifier.ContainsKey(scriptLine.StrParam)) {
                         throw new Ultima5ReduxException(
                             $"{scriptLine.Command} command issued for mapunit \"{scriptLine.StrParam}\", but does not appear to be created yet.");
                     }
 
-                    MapUnit mapUnitToMove = _mapUnitsByIdentifier[scriptLine.StrParam];
+                    CutSceneNonPlayerCharacter mapUnitToMove = _mapUnitsByIdentifier[scriptLine.StrParam];
                     mapUnitToMove.MapUnitPosition.XY = scriptLine.Position;
+                    mapUnitToMove.SetActive(scriptLine.Visible);
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptVirtueMeditate:
                     // Something must be done externally for this...

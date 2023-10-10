@@ -919,13 +919,10 @@ namespace Ultima5Redux
                         .ENTER_SPACE) + GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.WorldStrings
                         .to_enter_THE_SHRINE_OF) + " " + shrineRef.TheVirtue);
-                // turnResults.PushTurnResult(new TeleportNewLocation(singleMap.MapLocation,
-                //     SmallMapReferences.GetStartingXyByLocation(), singleMap.Floor,
-                //     TeleportNewLocation.TeleportType.CutScene));
                 turnResults.PushTurnResult(new ExecuteCutScene(
                     SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior,
                     GameReferences.Instance.CutOrIntroSceneScripts.GetScriptByCutOrIntroSceneMapType(
-                        SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior)));
+                        SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior), shrineRef));
                 bWasSuccessful = true;
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
             }

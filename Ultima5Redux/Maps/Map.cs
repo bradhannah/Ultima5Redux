@@ -56,6 +56,7 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] private readonly List<Type> _visiblePriorityOrder = new()
         {
             typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
+            typeof(CutSceneNonPlayerCharacter),
             typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(MoonstoneNonAttackingUnit), typeof(ItemStack),
             typeof(StackableItem), typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField),
             typeof(Whirlpool)

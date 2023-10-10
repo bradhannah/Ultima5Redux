@@ -206,7 +206,7 @@
       "FrameNum": 0,
       "Command": "CreateMapunit",
       "StrParam": "avatar",
-      "IntParam": 284,
+      "IntParam": 332,
       "X": 5,
       "Y": 10,
       "Visible": false,
@@ -243,7 +243,7 @@
       "Comment": "off camera"
     },
     {
-      "FrameNum": 5,
+      "FrameNum": 4,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
@@ -253,7 +253,7 @@
       "Comment": "avatar enters on camera"
     },
     {
-      "FrameNum": 6,
+      "FrameNum": 5,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
@@ -263,7 +263,7 @@
       "Comment": "moves forward"
     },
     {
-      "FrameNum": 7,
+      "FrameNum": 6,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
@@ -273,7 +273,7 @@
       "Comment": "moves forward"
     },
     {
-      "FrameNum": 8,
+      "FrameNum": 7,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
@@ -293,7 +293,7 @@
       "Comment": "switch to beggar/prayer"
     },
     {
-      "FrameNum": 8,
+      "FrameNum": 9,
       "Command": "PromptVirtueMeditate",
       "StrParam": "",
       "IntParam": 0,
@@ -303,7 +303,7 @@
       "Comment": "begin meditation"
     },
     {
-      "FrameNum": 9,
+      "FrameNum": 10,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
@@ -313,7 +313,7 @@
       "Comment": "avatar stands up"
     },
     {
-      "FrameNum": 9,
+      "FrameNum": 11,
       "Command": "MoveMapunit",
       "StrParam": "beggar",
       "IntParam": 0,
@@ -323,7 +323,7 @@
       "Comment": "beggar/prayer is all done"
     },
     {
-      "FrameNum": 10,
+      "FrameNum": 12,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
@@ -333,7 +333,7 @@
       "Comment": "avatar walks out"
     },
     {
-      "FrameNum": 11,
+      "FrameNum": 13,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
@@ -343,7 +343,7 @@
       "Comment": "avatar walks out"
     },
     {
-      "FrameNum": 12,
+      "FrameNum": 14,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
@@ -353,7 +353,7 @@
       "Comment": "avatar walks out"
     },
     {
-      "FrameNum": 13,
+      "FrameNum": 15,
       "Command": "EndSequence",
       "StrParam": "",
       "IntParam": 0,

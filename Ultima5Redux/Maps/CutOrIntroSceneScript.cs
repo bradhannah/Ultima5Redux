@@ -71,7 +71,7 @@ namespace Ultima5Redux.Maps
 
         private readonly List<CutOrIntroSceneScriptLine> _scriptLines;
 
-        public TurnResults GenerateTurnResultsFromFrame(int nFrame) {
+        public TurnResults GenerateTurnResultsFromFrame(int nFrame, ShrineReference shrineReference = null) {
             TurnResults turnResults = new();
             IEnumerable<CutOrIntroSceneScriptLine> scriptLinesInFrame = _scriptLines.Where(i => i.FrameNum == nFrame);
             foreach (CutOrIntroSceneScriptLine scriptLine in scriptLinesInFrame) {
@@ -84,7 +84,7 @@ namespace Ultima5Redux.Maps
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptVirtueMeditate:
                         turnResults.PushTurnResult(new PromptVirtueMeditate(scriptLine,
-                            ShrineReference.Virtue.Compassion));
+                            shrineReference.TheVirtue));
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.EndSequence:
                         turnResults.PushTurnResult(new ExitBuilding(scriptLine));

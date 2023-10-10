@@ -1,4 +1,5 @@
 using Ultima5Redux.Maps;
+using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults.ScriptTurnResults
 {
@@ -7,10 +8,14 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults.ScriptTurnResult
         public CutOrIntroSceneScript Script { get; private set; }
         public SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType MapType { get; private set; }
 
+        public ShrineReference ShrineReference { get; private set; }
+
         public ExecuteCutScene(SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType mapType,
-            CutOrIntroSceneScript script) : base(TurnResultType.ExecuteCutScene, TurnResulActionType.ActionRequired) {
+            CutOrIntroSceneScript script, ShrineReference shrineReference = null) : base(TurnResultType.ExecuteCutScene,
+            TurnResulActionType.ActionRequired) {
             Script = script;
             MapType = mapType;
+            ShrineReference = shrineReference;
         }
     }
 }

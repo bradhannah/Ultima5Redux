@@ -18,6 +18,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults.ScriptTurnResults;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -3776,6 +3777,55 @@ namespace Ultima5ReduxTesting
             Assert.True(GameReferences.Instance.LargeMapRef.IsMapXyEnterable(honorShrinePosition));
             Assert.True(GameReferences.Instance.LargeMapRef.GetLocationByMapXy(honorShrinePosition) ==
                         SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine);
+        }
+
+        [Test] [TestCase(SaveFiles.b_horse, true)]
+        public void test_RunThroughShrineCutscene(SaveFiles saveFiles, bool bReloadJson) {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            var honorShrinePosition = new Point2D(81, 207);
+            ShrineReference goodShrine =
+                GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(honorShrinePosition);
+            Assert.NotNull(goodShrine);
+            Assert.True(goodShrine.TheVirtue == ShrineReference.Virtue.Honor);
+
+            Assert.True(GameReferences.Instance.LargeMapRef.IsMapXyEnterable(honorShrinePosition));
+            Assert.True(GameReferences.Instance.LargeMapRef.GetLocationByMapXy(honorShrinePosition) ==
+                        SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine);
+
+            TurnResults turnResults = new();
+            world.TryToEnterBuilding(honorShrinePosition, out bool bWasSuccessful, turnResults);
+            Assert.True(bWasSuccessful);
+
+            SingleCutOrIntroSceneMapReference singleCutOrIntroSceneMapReference =
+                GameReferences.Instance.CutOrIntroSceneMapReferences.GetSingleCutOrIntroSceneMapReference(
+                    SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior);
+            // SingleDungeonMapFloorReference dungeonMapFloorReference = GameReferences.Instance.DungeonReferences
+            //     .GetDungeon(location).GetSingleDungeonMapFloorReferenceByFloor(nFloor);
+
+            world.State.TheVirtualMap.LoadCutOrIntroScene(singleCutOrIntroSceneMapReference,
+                new Point2D(0, 0));
+
+            if (world.State.TheVirtualMap.CurrentMap is not CutSceneMap cutSceneMap) {
+                throw new Ultima5ReduxException("oof");
+            }
+
+            TurnResults scriptTurnResults = GameReferences.Instance.CutOrIntroSceneScripts
+                .GetScriptByCutOrIntroSceneMapType(SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType
+                    .ShrineOfVirtueInterior).GenerateTurnResultsFromFrame(0, goodShrine);
+
+            while (scriptTurnResults.HasTurnResult) {
+                TurnResult turnResult = scriptTurnResults.PopTurnResult();
+                if (turnResult is not CutOrIntroSceneScriptLineTurnResult scriptLineTurnResult) {
+                    throw new Ultima5ReduxException("Expected a CutOrIntroSceneScriptLineTurnResult");
+                }
+
+                cutSceneMap.ProcessScriptLine(scriptLineTurnResult.ScriptLine);
+            }
         }
     }
 }

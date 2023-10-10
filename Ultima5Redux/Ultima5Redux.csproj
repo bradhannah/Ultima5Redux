@@ -135,6 +135,7 @@
         <Compile Include="MapUnits\CombatMapUnits\Enemy.cs" />
         <Compile Include="MapUnits\MovementCommand.cs" />
         <Compile Include="MapUnits\MapUnitMovements.cs" />
+        <Compile Include="MapUnits\NonPlayerCharacters\CutSceneNonPlayerCharacters.cs" />
         <Compile Include="MapUnits\NonPlayerCharacters\ExtendedNpc\WishingWell.cs" />
         <Compile Include="MapUnits\NonPlayerCharacters\NonPlayerCharacter.cs" />
         <Compile Include="MapUnits\NonPlayerCharacters\NonPlayerCharacterState.cs" />
