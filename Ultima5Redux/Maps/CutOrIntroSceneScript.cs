@@ -15,7 +15,7 @@ namespace Ultima5Redux.Maps
     {
         public enum CutOrIntroSceneScriptLineCommand
         {
-            CreateMapunit, MoveMapunit, PromptVirtueMeditate, EndSequence, Comment, Output, Pause
+            CreateMapunit, MoveMapunit, PromptVirtueMeditate, EndSequence, Comment, Output, Pause, SoundEffect
         }
 
         // "FrameNum": 0,
@@ -79,6 +79,9 @@ namespace Ultima5Redux.Maps
             IEnumerable<CutOrIntroSceneScriptLine> scriptLinesInFrame = _scriptLines.Where(i => i.FrameNum == nFrame);
             foreach (CutOrIntroSceneScriptLine scriptLine in scriptLinesInFrame) {
                 switch (scriptLine.Command) {
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.SoundEffect:
+                        turnResults.PushTurnResult(new SoundEffect(scriptLine));
+                        break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Pause:
                         turnResults.PushTurnResult(new Pause(scriptLine));
                         break;

@@ -224,6 +224,16 @@
     },
     {
       "FrameNum": 1,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Heard off camera"
+    },
+    {
+      "FrameNum": 1,
       "Command": "Pause",
       "StrParam": "",
       "IntParam": 500,
@@ -241,6 +251,16 @@
       "Y": 10,
       "Visible": false,
       "Comment": "off camera"
+    },
+    {
+      "FrameNum": 2,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Heard off camera"
     },
     {
       "FrameNum": 2,
@@ -261,6 +281,16 @@
       "Y": 10,
       "Visible": false,
       "Comment": "off camera"
+    },
+    {
+      "FrameNum": 3,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Heard off camera"
     },
     {
       "FrameNum": 3,
@@ -284,6 +314,16 @@
     },
     {
       "FrameNum": 4,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 4,
       "Command": "Pause",
       "StrParam": "",
       "IntParam": 500,
@@ -301,6 +341,16 @@
       "Y": 9,
       "Visible": true,
       "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 5,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 5,
@@ -324,6 +374,16 @@
     },
     {
       "FrameNum": 6,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 6,
       "Command": "Pause",
       "StrParam": "",
       "IntParam": 500,
@@ -344,6 +404,16 @@
     },
     {
       "FrameNum": 7,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 7,
       "Command": "Pause",
       "StrParam": "",
       "IntParam": 500,
@@ -361,6 +431,16 @@
       "Y": 6,
       "Visible": true,
       "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 8,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 8,
@@ -450,7 +530,17 @@
       "X": 5,
       "Y": 7,
       "Visible": true,
-      "Comment": "avatar stands up"
+      "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 11,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 11,
@@ -474,6 +564,16 @@
     },
     {
       "FrameNum": 12,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 12,
       "Command": "Pause",
       "StrParam": "",
       "IntParam": 500,
@@ -494,6 +594,16 @@
     },
     {
       "FrameNum": 13,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 13,
       "Command": "Pause",
       "StrParam": "",
       "IntParam": 500,
@@ -511,6 +621,16 @@
       "Y": 10,
       "Visible": true,
       "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 14,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 15,

@@ -70,6 +70,8 @@ namespace Ultima5Redux.Maps
                     mapUnitToMove.MapUnitPosition.XY = scriptLine.Position;
                     mapUnitToMove.SetActive(scriptLine.Visible);
                     break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.SoundEffect:
+                    break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Pause:
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptVirtueMeditate:

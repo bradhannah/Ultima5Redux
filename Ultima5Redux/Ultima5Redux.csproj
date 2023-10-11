@@ -187,6 +187,7 @@
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\Pause.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\PromptVirtueMeditate.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\CutOrIntroSceneScriptLineResult.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\SoundEffect.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ShoppeKeeperInteraction.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\SinglePlayerCharacterAffected.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\TeleportNewLocation.cs" />
