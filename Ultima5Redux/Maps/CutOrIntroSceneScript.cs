@@ -93,7 +93,7 @@ namespace Ultima5Redux.Maps
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptVirtueMeditate:
                         turnResults.PushTurnResult(new PromptVirtueMeditate(scriptLine,
-                            shrineReference.TheVirtue));
+                            shrineReference.Virtue));
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.EndSequence:
                         turnResults.PushTurnResult(new ExitBuilding(scriptLine));

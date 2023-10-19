@@ -107,7 +107,7 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference singleMap =
                     GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
                 // we don't test dungeon maps here
-                if (singleMap.MapType == Map.Maps.Dungeon) continue;
+                if (singleMap.MapType != Map.Maps.Small) continue;
                 world.State.TheVirtualMap.LoadSmallMap(singleMap);
             }
 
@@ -244,9 +244,10 @@ namespace Ultima5ReduxTesting
                     GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
                 if (smr.MapLocation == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
                     throw new Ultima5ReduxException("OOOF");
-                if (singleMapReference.MapType == Map.Maps.Dungeon) continue;
-                world.State.TheVirtualMap.LoadSmallMap(
-                    GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
+                SmallMapReferences.SingleMapReference singleMap =
+                    GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
+                if (singleMap.MapType != Map.Maps.Small) continue;
+                world.State.TheVirtualMap.LoadSmallMap(singleMap);
 
                 int i = 24 * (60 / 2);
                 //i = 1;
@@ -890,7 +891,11 @@ namespace Ultima5ReduxTesting
             _ = "";
 
             var turnResults = new TurnResults();
-            world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
+            //world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+
 
             if (world.State.TheVirtualMap.CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Should be small map");
@@ -1834,7 +1839,7 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference singleMap =
                     GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
                 // we don't test dungeon maps here
-                if (singleMap.MapType == Map.Maps.Dungeon) continue;
+                if (singleMap.MapType != Map.Maps.Small) continue;
                 world.State.TheVirtualMap.LoadSmallMap(singleMap);
 
                 for (int i = 0; i < 32; i++) {
@@ -3266,7 +3271,9 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference singleMap =
                     GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
                 // we don't test dungeon maps here
-                if (singleMap.MapType == Map.Maps.Dungeon) continue;
+                if (singleMap.MapType is Map.Maps.Dungeon or Map.Maps.Intro or Map.Maps.CutScene or Map.Maps.Combat)
+                    continue;
+                
                 world.State.TheVirtualMap.LoadSmallMap(singleMap);
                 foreach (NonPlayerCharacter npc in world.State.TheVirtualMap.CurrentMap.CurrentMapUnits
                              .NonPlayerCharacters) {
@@ -3768,7 +3775,7 @@ namespace Ultima5ReduxTesting
             ShrineReference goodShrine =
                 GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(honorShrinePosition);
             Assert.NotNull(goodShrine);
-            Assert.True(goodShrine.TheVirtue == ShrineReference.Virtue.Honor);
+            Assert.True(goodShrine.Virtue.Virtue == VirtueReference.VirtueType.Honor);
 
             ShrineReference badShrine =
                 GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(new Point2D(81, 208));
@@ -3791,7 +3798,7 @@ namespace Ultima5ReduxTesting
             ShrineReference goodShrine =
                 GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(honorShrinePosition);
             Assert.NotNull(goodShrine);
-            Assert.True(goodShrine.TheVirtue == ShrineReference.Virtue.Honor);
+            Assert.True(goodShrine.Virtue.Virtue == VirtueReference.VirtueType.Honor);
 
             Assert.True(GameReferences.Instance.LargeMapRef.IsMapXyEnterable(honorShrinePosition));
             Assert.True(GameReferences.Instance.LargeMapRef.GetLocationByMapXy(honorShrinePosition) ==
@@ -3825,11 +3832,15 @@ namespace Ultima5ReduxTesting
 
                 while (scriptTurnResults.HasTurnResult) {
                     TurnResult turnResult = scriptTurnResults.PopTurnResult();
-                    if (turnResult is not CutOrIntroSceneScriptLineTurnResult scriptLineTurnResult) {
-                        throw new Ultima5ReduxException("Expected a CutOrIntroSceneScriptLineTurnResult");
+                    if (turnResult is CutOrIntroSceneScriptLineTurnResult scriptLineTurnResult) {
+                        cutSceneMap.ProcessScriptLine(scriptLineTurnResult.ScriptLine);
+                    }
+                    else {
+                        if (turnResult is not OutputToConsole)
+                            throw new Ultima5ReduxException(
+                                "Expected a CutOrIntroSceneScriptLineTurnResult or OutputToConsole");
                     }
 
-                    cutSceneMap.ProcessScriptLine(scriptLineTurnResult.ScriptLine);
                 }
             }
         }

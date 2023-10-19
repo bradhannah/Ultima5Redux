@@ -58,6 +58,8 @@ namespace Ultima5Redux.References
             }
         }
 
+        public VirtueReferences VirtueReferences { get; private set; }
+        
         public CutOrIntroSceneMapReferences CutOrIntroSceneMapReferences { get; private set; }
         public CutOrIntroSceneScripts CutOrIntroSceneScripts { get; private set; }
 
@@ -154,6 +156,7 @@ namespace Ultima5Redux.References
 
         private void Build()
         {
+
             LookRef = new Look(_legacyDataDirectory);
             SignRef = new Signs(_legacyDataDirectory);
             InvRef = new InventoryReferences();
@@ -162,8 +165,10 @@ namespace Ultima5Redux.References
 
             DataOvlRef = new DataOvlReference(_legacyDataDirectory);
 
-            SmallMapRef = new SmallMapReferences(DataOvlRef);
+            VirtueReferences = new VirtueReferences();
             ShrineReferences = new ShrineReferences(DataOvlRef);
+
+            SmallMapRef = new SmallMapReferences(DataOvlRef);
             LargeMapRef = new LargeMapLocationReferences(DataOvlRef, ShrineReferences);
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);

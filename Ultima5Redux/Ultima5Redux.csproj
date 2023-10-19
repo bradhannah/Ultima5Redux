@@ -202,6 +202,7 @@
         <Compile Include="References\Maps\DungeonMapReference.cs" />
         <Compile Include="References\Maps\ShrineReferences.cs" />
         <Compile Include="References\SearchLocationReferences.cs" />
+        <Compile Include="References\Virtues.cs" />
         <Compile Include="StreamingOutput.cs" />
         <Compile Include="StreamingOutputItem.cs" />
         <Compile Include="PlayerCharacters\CharacterEquipped.cs" />
