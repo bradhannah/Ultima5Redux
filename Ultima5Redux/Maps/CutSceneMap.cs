@@ -8,11 +8,13 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
-    public class CutSceneMap : RegularMap
+    public class CutSceneMap : Map
     {
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                 SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0);
+
+        public override MapUnitPosition CurrentPosition { get; set; } = new(0, 0, 0);
 
         public override bool IsRepeatingMap => false;
 
@@ -34,13 +36,6 @@ namespace Ultima5Redux.Maps
 
             CurrentMapUnits ??= new MapUnitCollection();
             CurrentMapUnits.Clear();
-
-            MapUnit theAvatar = Avatar.CreateAvatar(
-                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine,
-                new MapUnitMovement(0),
-                new MapUnitPosition(0, 0, 0),
-                GameReferences.Instance.SpriteTileReferences.GetTileReference(284), UseExtendedSprites);
-            CurrentMapUnits.Add(theAvatar);
         }
 
         private readonly Dictionary<string, CutSceneNonPlayerCharacter> _mapUnitsByIdentifier = new();
@@ -48,8 +43,8 @@ namespace Ultima5Redux.Maps
         public void ProcessScriptLine(CutOrIntroSceneScriptLine scriptLine) {
             switch (scriptLine.Command) {
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.CreateMapunit:
-                    var mapUnitPosition = new MapUnitPosition();
-                    mapUnitPosition.XY = scriptLine.Position;
+                    // var mapUnitPosition = new MapUnitPosition();
+                    // mapUnitPosition.XY = scriptLine.Position;
 
                     // MapUnit mapUnit = new CutSceneNonPlayerCharacter(scriptLine.Visible || true, scriptLine.TileReference);
                     var mapUnit = new CutSceneNonPlayerCharacter(scriptLine.Visible, scriptLine.TileReference);
@@ -90,21 +85,15 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        protected override Dictionary<Point2D, TileOverrideReference> XyOverrides { get; } = new();
         internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit) => throw new NotImplementedException();
 
         internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit) {
         }
 
         protected override float GetAStarWeight(in Point2D xy) => throw new NotImplementedException();
-        //protected override Dictionary<Point2D, TileOverrideReference> XyOverrides => new();
-
-        protected override VirtualMap.AggressiveMapUnitInfo GetNonCombatMapAggressiveMapUnitInfo(
-            Point2D attackFromPosition, Point2D attackToPosition,
-            SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit) =>
-            throw new NotImplementedException();
 
         protected override void SetMaxVisibleArea(in Point2D startPos, int nVisibleTiles) {
-            //base.SetMaxVisibleArea(in startPos, nVisibleTiles);
             _ = "";
         }
     }

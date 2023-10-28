@@ -493,7 +493,7 @@
       "Comment": "walking in grass"
     },
     {
-      "FrameNum": 15,
+      "FrameNum": 14,
       "Command": "Pause",
       "StrParam": "",
       "IntParam": 500,
@@ -504,13 +504,43 @@
     },
     {
       "FrameNum": 15,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 15,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 15,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 16,
       "Command": "EndSequence",
       "StrParam": "",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "end of scene"
+      "Comment": "end of scene1"
     }
   ]
 }

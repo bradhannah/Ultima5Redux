@@ -48,5 +48,8 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,13,Pause,,500,0,0,false,""
 1,14,MoveMapunit,avatar,0,5,10,true,"avatar walks out"
 1,14,SoundEffect,WalkOnGrass,0,0,0,false,"walking in grass"
+1,14,Pause,,500,0,0,false,""
+1,15,MoveMapunit,avatar,0,0,0,false,avatar walks out
+1,15,SoundEffect,WalkOnGrass,0,0,0,false,"walking in grass"
 1,15,Pause,,500,0,0,false,""
-1,15,EndSequence,,0,0,0,false,end of scene
+1,16,EndSequence,,0,0,0,false,end of scene1
