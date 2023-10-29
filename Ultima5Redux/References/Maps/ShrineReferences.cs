@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ultima5Redux.References.Maps
 {
@@ -10,6 +11,20 @@ namespace Ultima5Redux.References.Maps
         public ShrineReference GetShrineReferenceByVirtue(VirtueReference.VirtueType virtue) =>
             _shrineReferences[virtue];
 
+        private bool DoesUserInputMatchShrine(string userInput, VirtueReference.VirtueType virtueType) {
+            if (userInput.Length < 4) return false;
+
+            string cleanedUserInput = userInput.ToLower().Substring(0, 4);
+            string virtueStr = virtueType.ToString().ToLower().Substring(0, 4);
+            return cleanedUserInput == virtueStr;
+        }
+
+        public ShrineReference GetShrineReferenceByUserInput(string userInput) {
+            KeyValuePair<VirtueReference.VirtueType, ShrineReference> shrineRefKvp =
+                _shrineReferences.FirstOrDefault(s => DoesUserInputMatchShrine(userInput, s.Key));
+            return shrineRefKvp.Value;
+        }
+        
         public ShrineReference GetShrineReferenceByPosition(Point2D position) =>
             _shrineReferencesByPosition.ContainsKey(position) ? _shrineReferencesByPosition[position] : null;
 
@@ -28,21 +43,6 @@ namespace Ultima5Redux.References.Maps
                 _shrineReferences.Add(virtue.Virtue, shrineReference);
                 _shrineReferencesByPosition.Add(shrineReference.Position, shrineReference);
             }
-        }
-    }
-
-    public class ShrineReference
-    {
-    
-
-        // SHRINE_X_COORDS
-        // SHRINE_Y_COORDS
-        public Point2D Position { get; }
-        public VirtueReference Virtue { get; private set; }
-
-        internal ShrineReference(VirtueReference virtue, Point2D position) {
-            Virtue = virtue;
-            Position = position;
         }
     }
 }

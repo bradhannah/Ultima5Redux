@@ -19,7 +19,7 @@ namespace Ultima5Redux.References.Maps
             Water = 1,
             Swamp = 4,
             Grass = 5,
-            Desert1 = 7,
+            Desert1 = 7, Shrine = 25, RuinedShrine = 26,
             TableFoodTop = 154,
             TableFoodBottom = 155,
             TableFoodBoth = 156,

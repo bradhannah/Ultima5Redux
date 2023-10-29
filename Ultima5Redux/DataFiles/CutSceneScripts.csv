@@ -3,7 +3,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 0,0,Output,"Blackthornes oof",0,0,0,false,""
 0,1,EndSequence,,0,0,0,false,end of scene
 1,0,Comment,,0,0,0,false,"---- Shrine of Virtue Cut Scene"
-1,0,Output,"Thou dost approach the tranquil Shrine",0,0,0,false,""
+1,0,Output,"\nThou dost approach the tranquil Shrine...",0,0,0,false,""
 1,0,CreateMapunit,avatar,332,5,10,false,"off camera"
 1,1,MoveMapunit,avatar,0,5,10,false,"off camera"
 1,1,SoundEffect,WalkOnGrass,0,0,0,false,"Heard off camera"
@@ -32,7 +32,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,9,MoveMapunit,avatar,0,5,6,false,"avatar stands up"
 1,9,CreateMapunit,beggar,364,5,6,true,"switch to beggar/prayer"
 1,9,Pause,,500,0,0,false,""
-1,9,Output,"Upon what virtue does thou meditate?",0,0,0,false,""
+1,9,Output,"\nUpon what virtue does thou meditate?",0,0,0,false,""
 1,9,PromptVirtueMeditate,,0,0,0,true,"begin meditation"
 1,10,MoveMapunit,beggar,0,5,6,false,"beggar/prayer is all done"
 1,10,MoveMapunit,avatar,0,5,6,true,"avatar stands up"

@@ -8,11 +8,11 @@ namespace Ultima5Redux.References
         public VirtueType Virtue { get; }
         public MantraType Mantra { get; }
         public WordOfPowerType WordOfPower { get; }
-
+        
         public enum VirtueType
         {
             Honesty = 0, Compassion = 1, Valor = 2, Justice = 3, Sacrifice = 4, Honor = 5, Spirituality = 6,
-            Humility = 7
+            Humility = 7, None = -1
         }
 
         public enum MantraType { Ahm = 0, Mu = 1, Ra = 2, Beh = 3, Cah = 4, Summ = 5, Om = 6, Lumm = 7 }
@@ -43,10 +43,12 @@ namespace Ultima5Redux.References
 
         public IEnumerable<VirtueReference> Virtues => _virtues.Values;
 
-        public VirtueReference GetVirtue(VirtueReference.VirtueType virtueType) => _virtues[virtueType];
+        public VirtueReference GetVirtue(VirtueReference.VirtueType virtueType) =>
+            _virtues.ContainsKey(virtueType) ? _virtues[virtueType] : null;
 
         public VirtueReferences() {
             foreach (VirtueReference.VirtueType virtueType in Enum.GetValues(typeof(VirtueReference.VirtueType))) {
+                if (virtueType == VirtueReference.VirtueType.None) continue;
                 _virtues.Add(virtueType, new VirtueReference(virtueType));
             }
 

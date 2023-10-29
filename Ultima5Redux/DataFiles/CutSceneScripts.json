@@ -45,7 +45,7 @@
     {
       "FrameNum": 0,
       "Command": "Output",
-      "StrParam": "Thou dost approach the tranquil Shrine",
+      "StrParam": "\nThou dost approach the tranquil Shrine...",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -335,7 +335,7 @@
     {
       "FrameNum": 9,
       "Command": "Output",
-      "StrParam": "Upon what virtue does thou meditate?",
+      "StrParam": "\nUpon what virtue does thou meditate?",
       "IntParam": 0,
       "X": 0,
       "Y": 0,

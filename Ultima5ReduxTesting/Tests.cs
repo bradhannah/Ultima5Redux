@@ -3775,7 +3775,7 @@ namespace Ultima5ReduxTesting
             ShrineReference goodShrine =
                 GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(honorShrinePosition);
             Assert.NotNull(goodShrine);
-            Assert.True(goodShrine.Virtue.Virtue == VirtueReference.VirtueType.Honor);
+            Assert.True(goodShrine.VirtueRef.Virtue == VirtueReference.VirtueType.Honor);
 
             ShrineReference badShrine =
                 GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(new Point2D(81, 208));
@@ -3798,7 +3798,7 @@ namespace Ultima5ReduxTesting
             ShrineReference goodShrine =
                 GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(honorShrinePosition);
             Assert.NotNull(goodShrine);
-            Assert.True(goodShrine.Virtue.Virtue == VirtueReference.VirtueType.Honor);
+            Assert.True(goodShrine.VirtueRef.Virtue == VirtueReference.VirtueType.Honor);
 
             Assert.True(GameReferences.Instance.LargeMapRef.IsMapXyEnterable(honorShrinePosition));
             Assert.True(GameReferences.Instance.LargeMapRef.GetLocationByMapXy(honorShrinePosition) ==

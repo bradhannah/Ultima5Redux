@@ -918,7 +918,7 @@ namespace Ultima5Redux
                     DataOvlReference.WorldStrings
                         .ENTER_SPACE) + GameReferences.Instance.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.WorldStrings
-                        .to_enter_THE_SHRINE_OF) + " " + shrineRef.Virtue);
+                        .to_enter_THE_SHRINE_OF) + " " + shrineRef.VirtueRef.Virtue);
                 turnResults.PushTurnResult(new ExecuteCutScene(
                     SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior,
                     GameReferences.Instance.CutOrIntroSceneScripts.GetScriptByCutOrIntroSceneMapType(
