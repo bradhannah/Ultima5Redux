@@ -15,7 +15,7 @@ namespace Ultima5Redux.References
             Humility = 7, None = -1
         }
 
-        public enum MantraType { Ahm = 0, Mu = 1, Ra = 2, Beh = 3, Cah = 4, Summ = 5, Om = 6, Lumm = 7 }
+        public enum MantraType { Ahm = 0, Mu = 1, Ra = 2, Beh = 3, Cah = 4, Summ = 5, Om = 6, Lumm = 7, None = -1 }
 
         public enum WordOfPowerType
         {
