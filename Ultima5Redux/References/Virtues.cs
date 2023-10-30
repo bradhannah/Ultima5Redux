@@ -27,6 +27,12 @@ namespace Ultima5Redux.References
             Mantra = (MantraType)virtueType;
             WordOfPower = (WordOfPowerType)virtueType;
         }
+
+        public bool IsCorrectMantra(string userInput) =>
+            string.Equals(userInput, Mantra.ToString(), StringComparison.CurrentCultureIgnoreCase);
+
+        public bool DoesVirtueMatch(string userInput) =>
+            string.Equals(userInput, Virtue.ToString(), StringComparison.CurrentCultureIgnoreCase);
     }
 
     public class VirtueReferences
