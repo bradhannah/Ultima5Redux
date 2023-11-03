@@ -16,6 +16,7 @@ using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
+using Ultima5Redux.State;
 
 namespace Ultima5Redux
 {
@@ -61,8 +62,7 @@ namespace Ultima5Redux
             GRAPPLE,
             SKULL_KEYS_QUANTITY,
             KARMA,
-            TURNS_SINCE_START,
-            SEARCH_OBJECT_STILL_THERE
+            TURNS_SINCE_START, SEARCH_OBJECT_STILL_THERE, SHRINES_QUESTS_COMPLETED, SHRINES_DESTROYED
         }
 
         private enum OverlayChunkName
@@ -144,6 +144,8 @@ namespace Ultima5Redux
         internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
 
         internal SearchItems TheSearchItems { get; private set; }
+
+        internal ShrineStates TheShrineStates { get; private set; }
 
         internal TimeOfDay TheTimeOfDay => new(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
             DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH), DataChunks.GetDataChunk(DataChunkName.CURRENT_DAY),
@@ -410,6 +412,12 @@ namespace Ultima5Redux
             DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Sprite (by smallmap)", 0xFF8, 0x20, 0x00,
                 DataChunkName.NPC_SPRITE_INDEXES);
 
+            DataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "Shrine Quest Completed flags", 0x326, 0x01, 0x00,
+                DataChunkName.SHRINES_QUESTS_COMPLETED);
+
+            DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shrine Destroyed flags", 0x332, 0x08, 0x00,
+                DataChunkName.SHRINES_DESTROYED);
+
             //// MapUnitStates
             OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks);
             UnderworldMapUnitStates = new MapUnitStates(UnderworldOverlayDataChunks);
@@ -446,6 +454,12 @@ namespace Ultima5Redux
 
             TheSearchItems =
                 new SearchItems(DataChunks.GetDataChunk(DataChunkName.SEARCH_OBJECT_STILL_THERE).GetAsBitmapBoolList());
+
+            TheShrineStates =
+                new ShrineStates(
+                    DataChunks.GetDataChunk(DataChunkName.SHRINES_QUESTS_COMPLETED).GetAsBitmapBoolList(0, 1),
+                    DataChunks.GetDataChunk(DataChunkName.SHRINES_DESTROYED).GetAsByteList());
+
         }
 
         public MapUnitStates GetMapUnitStatesByMap(Map.Maps map)

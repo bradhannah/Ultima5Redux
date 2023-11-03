@@ -13,6 +13,7 @@ using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.State;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -85,6 +86,8 @@ namespace Ultima5Redux
 
         [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
+        [DataMember] public ShrineStates TheShrineStates { get; private set; }
+        
         /// Legacy save game state
         [IgnoreDataMember] internal readonly ImportedGameState ImportedGameState;
 
@@ -95,6 +98,7 @@ namespace Ultima5Redux
         public string AvatarsName =>
             CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
 
+        
         [IgnoreDataMember]
         public string FriendlyLocationName
         {
@@ -158,6 +162,8 @@ namespace Ultima5Redux
             TheMoongates = ImportedGameState.TheMoongates;
 
             TheTimeOfDay = ImportedGameState.TheTimeOfDay;
+
+            TheShrineStates = ImportedGameState.TheShrineStates;
 
             TheNonPlayerCharacterStates = ImportedGameState.TheNonPlayerCharacterStates;
 

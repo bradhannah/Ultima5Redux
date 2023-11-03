@@ -204,6 +204,7 @@
         <Compile Include="References\Maps\ShrineReferences.cs" />
         <Compile Include="References\SearchLocationReferences.cs" />
         <Compile Include="References\Virtues.cs" />
+        <Compile Include="State\ShrineStates.cs" />
         <Compile Include="StreamingOutput.cs" />
         <Compile Include="StreamingOutputItem.cs" />
         <Compile Include="PlayerCharacters\CharacterEquipped.cs" />
