@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults.ScriptTurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.State;
 
 namespace Ultima5Redux.Maps
 {
+    public class ShrineCutSceneState {
+        public ShrineReference CurrentShrine { get; set; }
+        public bool WasMantraCorrect { get; set; } = false;
+    }
+    
     public class CutSceneMap : Map
     {
+        public ShrineCutSceneState ShrineCutSceneState { get; }
+
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             GameReferences.Instance.SmallMapRef.GetSingleMapByLocation(
                 SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0);
@@ -28,6 +37,12 @@ namespace Ultima5Redux.Maps
 
         public SingleCutOrIntroSceneMapReference TheSingleCutOrIntroSceneMapReference { get; }
 
+        public CutSceneMap(SingleCutOrIntroSceneMapReference theSingleCutOrIntroSceneMapReference,
+            ShrineReference shrineReference) : this(theSingleCutOrIntroSceneMapReference) =>
+            ShrineCutSceneState = new ShrineCutSceneState {
+                CurrentShrine = shrineReference
+            };
+
         public CutSceneMap(SingleCutOrIntroSceneMapReference theSingleCutOrIntroSceneMapReference) : base(
             SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0) {
             TheSingleCutOrIntroSceneMapReference = theSingleCutOrIntroSceneMapReference;
@@ -40,13 +55,9 @@ namespace Ultima5Redux.Maps
 
         private readonly Dictionary<string, CutSceneNonPlayerCharacter> _mapUnitsByIdentifier = new();
 
-        public void ProcessScriptLine(CutOrIntroSceneScriptLine scriptLine) {
+        public ScriptLineResult ProcessScriptLine(CutOrIntroSceneScriptLine scriptLine) {
             switch (scriptLine.Command) {
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.CreateMapunit:
-                    // var mapUnitPosition = new MapUnitPosition();
-                    // mapUnitPosition.XY = scriptLine.Position;
-
-                    // MapUnit mapUnit = new CutSceneNonPlayerCharacter(scriptLine.Visible || true, scriptLine.TileReference);
                     var mapUnit = new CutSceneNonPlayerCharacter(scriptLine.Visible, scriptLine.TileReference);
                     
                     mapUnit.MapUnitPosition.XY = scriptLine.Position;
@@ -70,19 +81,88 @@ namespace Ultima5Redux.Maps
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Pause:
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptVirtueMeditate:
+                    if (ShrineCutSceneState?.CurrentShrine == null) {
+                        throw new Ultima5ReduxException(
+                            "Unexpected null value for _shrineCutSceneState when trying to PromptVirtueMeditate");
+                    }
                     // Something must be done externally for this...
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.EndSequence:
                     // Close the map and return to whence you came
-                    break;
+                    return new ScriptLineResult(ScriptLineResult.Result.EndSequence);
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Comment:
                     // we will always do nothing here, it's just for the readability of the script
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Output:
                     break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Goto:
+                    return new ScriptLineResult(ScriptLineResult.Result.Goto, scriptLine.IntParam);
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.GotoIf:
+                    var gotoDetails = new Goto(scriptLine);
+                    int nFrame = ProcessGoto(gotoDetails);
+                    if (nFrame != -1) {
+                        return new ScriptLineResult(ScriptLineResult.Result.Goto, nFrame);
+                    }
+
+                    break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptMantra:
+                    break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.NoOp:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            return new ScriptLineResult(ScriptLineResult.Result.Continue);
+        }
+
+        private int ProcessGoto(Goto gotoResult) {
+            if ((gotoResult.TheGotoCondition.ToString().StartsWith("ShrineStatus_") && ShrineCutSceneState == null) ||
+                ShrineCutSceneState.CurrentShrine == null) {
+                throw new Ultima5ReduxException(
+                    "For ShrineStatus_ type GotoCondition, expected shrine state to have already been tracked.");
+            }
+
+            ShrineState shrineState = ShrineCutSceneState?.CurrentShrine != null
+                ? GameStateReference.State.TheShrineStates.GetShrineStateByVirtue(ShrineCutSceneState.CurrentShrine
+                    .VirtueRef.Virtue)
+                : null;
+
+            switch (gotoResult.TheGotoCondition) {
+                case Goto.GotoCondition.None:
+                    return gotoResult.LineNumber;
+                case Goto.GotoCondition.BadMantra:
+                    if (ShrineCutSceneState is { WasMantraCorrect: false }) return gotoResult.LineNumber;
+                    break;
+                case Goto.GotoCondition.ShrineStatus_QuestNotStarted:
+                    if (shrineState?.TheShrineStatus == ShrineState.ShrineStatus.QuestNotStarted) {
+                        return gotoResult.LineNumber;
+                    }
+
+                    break;
+                case Goto.GotoCondition.ShrineStatus_ShrineOrdainedNoCodex:
+                    if (shrineState?.TheShrineStatus == ShrineState.ShrineStatus.ShrineOrdainedNoCodex) {
+                        return gotoResult.LineNumber;
+                    }
+
+                    break;
+                case Goto.GotoCondition.ShrineStatus_ShrineOrdainedWithCodex:
+                    if (shrineState?.TheShrineStatus == ShrineState.ShrineStatus.ShrineOrdainedWithCodex) {
+                        return gotoResult.LineNumber;
+                    }
+
+                    break;
+                case Goto.GotoCondition.ShrineStatus_ShrineCompleted:
+                    if (shrineState?.TheShrineStatus == ShrineState.ShrineStatus.ShrineCompleted) {
+                        return gotoResult.LineNumber;
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return -1;
         }
 
         protected override Dictionary<Point2D, TileOverrideReference> XyOverrides { get; } = new();

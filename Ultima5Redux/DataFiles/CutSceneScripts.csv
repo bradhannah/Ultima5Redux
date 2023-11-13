@@ -32,24 +32,42 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,9,MoveMapunit,avatar,0,5,6,false,"avatar stands up"
 1,9,CreateMapunit,beggar,364,5,6,true,"switch to beggar/prayer"
 1,9,Pause,,500,0,0,false,""
-1,9,Output,"\nUpon what virtue does thou meditate?",0,0,0,false,""
-1,9,PromptVirtueMeditate,,0,0,0,true,"begin meditation"
-1,10,MoveMapunit,beggar,0,5,6,false,"beggar/prayer is all done"
-1,10,MoveMapunit,avatar,0,5,6,true,"avatar stands up"
-1,10,Pause,,500,0,0,false,""
-1,11,MoveMapunit,avatar,0,5,7,true,"avatar walks out"
-1,11,SoundEffect,WalkOnGrass,0,0,0,false,"walking in grass"
+1,9,Output,"Upon what virtue does thou meditate?",0,0,0,false,""
+1,9,PromptVirtueMeditate,,0,0,0,true,"begin meditation and ask for virtue"
+1,9,PromptMantra,,0,0,0,true,"ask for the correct mantra for the virtue meditated upon"
+1,9,GotoIf,BadMantra,100,0,0,false,If bad Mantra then we leave
+1,9,Goto,,10,0,0,true,"quirk: need to goto next line explicitly for now"
+1,10,GotoIf,BadMantra,100,0,0,false,If bad Mantra then we leave
+1,10,GotoIf,ShrineStatus_QuestNotStarted,200,0,0,false
+1,10,GotoIf,ShrineStatus_ShrineOrdainedNoCodex,300,0,0,false
+1,10,GotoIf,ShrineStatus_ShrineOrdainedWithCodex,400,0,0,false
+1,10,GotoIf,ShrineStatus_ShrineCompleted,500,0,0,false
+1,11,MoveMapunit,beggar,0,5,6,false,"beggar/prayer is all done"
+1,11,MoveMapunit,avatar,0,5,6,true,"avatar stands up"
 1,11,Pause,,500,0,0,false,""
-1,12,MoveMapunit,avatar,0,5,8,true,"avatar walks out"
+1,12,MoveMapunit,avatar,0,5,7,true,"avatar walks out"
 1,12,SoundEffect,WalkOnGrass,0,0,0,false,"walking in grass"
 1,12,Pause,,500,0,0,false,""
-1,13,MoveMapunit,avatar,0,5,9,true,"avatar walks out"
+1,13,MoveMapunit,avatar,0,5,8,true,"avatar walks out"
 1,13,SoundEffect,WalkOnGrass,0,0,0,false,"walking in grass"
 1,13,Pause,,500,0,0,false,""
-1,14,MoveMapunit,avatar,0,5,10,true,"avatar walks out"
+1,14,MoveMapunit,avatar,0,5,9,true,"avatar walks out"
 1,14,SoundEffect,WalkOnGrass,0,0,0,false,"walking in grass"
 1,14,Pause,,500,0,0,false,""
-1,15,MoveMapunit,avatar,0,0,0,false,avatar walks out
+1,15,MoveMapunit,avatar,0,5,10,true,"avatar walks out"
 1,15,SoundEffect,WalkOnGrass,0,0,0,false,"walking in grass"
 1,15,Pause,,500,0,0,false,""
-1,16,EndSequence,,0,0,0,false,end of scene1
+1,16,MoveMapunit,avatar,0,0,0,false,avatar walks out
+1,16,SoundEffect,WalkOnGrass,0,0,0,false,"walking in grass"
+1,16,Pause,,500,0,0,false,""
+1,17,EndSequence,,0,0,0,false,end of scene1
+1,100,NoOp,,0,0,0,false,Jumped to if BadMantra
+1,101,Goto,,11,0,0,false,Leave Shrine
+1,200,NoOp,,0,0,0,false,Jumped to if ShrineStatus.QuestNotStarted
+1,299,Goto,,11,0,0,false,Leave Shrine
+1,300,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedNoCodex
+1,399,Goto,,11,0,0,false,Leave Shrine
+1,400,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedWithCodex
+1,499,Goto,,11,0,0,false,Leave Shrine
+1,500,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineCompleted
+1,599,Goto,,11,0,0,false,Leave Shrine

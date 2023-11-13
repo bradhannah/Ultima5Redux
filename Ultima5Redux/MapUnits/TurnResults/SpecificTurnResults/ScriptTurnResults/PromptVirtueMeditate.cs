@@ -8,8 +8,9 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults.ScriptTurnResult
     {
         public ShrineReference ShrineReference { get; private set; }
 
-        public PromptVirtueMeditate(CutOrIntroSceneScriptLine scriptLine, VirtueReference virtue) : base(
+        public PromptVirtueMeditate(CutOrIntroSceneScriptLine scriptLine, VirtueReference virtueReference) : base(
             TurnResultType.Script_PromptVirtueMeditate, TurnResulActionType.ActionRequired, scriptLine) =>
-            ShrineReference = GameReferences.Instance.ShrineReferences.GetShrineReferenceByVirtue(virtue.Virtue);
+            ShrineReference =
+                GameReferences.Instance.ShrineReferences.GetShrineReferenceByVirtue(virtueReference.Virtue);
     }
 }

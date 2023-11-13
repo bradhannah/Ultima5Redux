@@ -11,11 +11,24 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {
+    public class ScriptLineResult {
+        public ScriptLineResult(Result theResult, int gotoFrame = -1) {
+            TheResult = theResult;
+            GotoFrame = gotoFrame;
+        }
+
+        public enum Result { Continue, Goto, EndSequence }
+
+        public Result TheResult { get; private set; }
+        public int GotoFrame { get; private set; }
+    }
+    
     [DataContract] public class CutOrIntroSceneScriptLine
     {
         public enum CutOrIntroSceneScriptLineCommand
         {
-            CreateMapunit, MoveMapunit, PromptVirtueMeditate, EndSequence, Comment, Output, Pause, SoundEffect
+            CreateMapunit, MoveMapunit, PromptVirtueMeditate, PromptMantra, EndSequence, Comment, Output, Pause,
+            SoundEffect, Goto, GotoIf, NoOp
         }
 
         // "FrameNum": 0,
@@ -79,6 +92,7 @@ namespace Ultima5Redux.Maps
             IEnumerable<CutOrIntroSceneScriptLine> scriptLinesInFrame = _scriptLines.Where(i => i.FrameNum == nFrame);
             foreach (CutOrIntroSceneScriptLine scriptLine in scriptLinesInFrame) {
                 switch (scriptLine.Command) {
+                    
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.SoundEffect:
                         turnResults.PushTurnResult(new SoundEffect(scriptLine));
                         break;
@@ -93,7 +107,11 @@ namespace Ultima5Redux.Maps
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptVirtueMeditate:
                         turnResults.PushTurnResult(new PromptVirtueMeditate(scriptLine,
-                            shrineReference.VirtueRef));
+                            shrineReference?.VirtueRef));
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptMantra:
+                        turnResults.PushTurnResult(new PromptMantra(scriptLine,
+                            shrineReference?.VirtueRef));
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.EndSequence:
                         turnResults.PushTurnResult(new ExitBuilding(scriptLine));
@@ -103,6 +121,13 @@ namespace Ultima5Redux.Maps
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Output:
                         turnResults.PushOutputToConsole(scriptLine.StrParam, false);
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Goto:
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.GotoIf:
+                        turnResults.PushTurnResult(new Goto(scriptLine));
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.NoOp:
+                        turnResults.PushTurnResult(new NoOp(scriptLine));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

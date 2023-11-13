@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
@@ -86,10 +87,21 @@ namespace Ultima5Redux
 
         [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
-        [DataMember] public ShrineStates TheShrineStates { get; private set; }
-        
+        [DataMember]
+        public ShrineStates TheShrineStates {
+            get {
+                if (_theShrineStates != null) return _theShrineStates;
+
+                _theShrineStates = new ShrineStates(new bool[8].ToList(), new bool[8].ToList(), new byte[8].ToList());
+                return _theShrineStates;
+            }
+            private set => _theShrineStates = value;
+        }
+
         /// Legacy save game state
         [IgnoreDataMember] internal readonly ImportedGameState ImportedGameState;
+
+        private ShrineStates _theShrineStates;
 
         /// <summary>
         ///     The name of the Avatar

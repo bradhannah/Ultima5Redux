@@ -45,7 +45,7 @@
     {
       "FrameNum": 0,
       "Command": "Output",
-      "StrParam": "\nThou dost approach the tranquil Shrine...",
+      "StrParam": "\\nThou dost approach the tranquil Shrine...",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -335,7 +335,7 @@
     {
       "FrameNum": 9,
       "Command": "Output",
-      "StrParam": "\nUpon what virtue does thou meditate?",
+      "StrParam": "Upon what virtue does thou meditate?",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -350,32 +350,82 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": "begin meditation"
+      "Comment": "begin meditation and ask for virtue"
     },
     {
-      "FrameNum": 10,
-      "Command": "MoveMapunit",
-      "StrParam": "beggar",
-      "IntParam": 0,
-      "X": 5,
-      "Y": 6,
-      "Visible": false,
-      "Comment": "beggar/prayer is all done"
-    },
-    {
-      "FrameNum": 10,
-      "Command": "MoveMapunit",
-      "StrParam": "avatar",
-      "IntParam": 0,
-      "X": 5,
-      "Y": 6,
-      "Visible": true,
-      "Comment": "avatar stands up"
-    },
-    {
-      "FrameNum": 10,
-      "Command": "Pause",
+      "FrameNum": 9,
+      "Command": "PromptMantra",
       "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": true,
+      "Comment": "ask for the correct mantra for the virtue meditated upon"
+    },
+    {
+      "FrameNum": 9,
+      "Command": "GotoIf",
+      "StrParam": "BadMantra",
+      "IntParam": 100,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "If bad Mantra then we leave"
+    },
+    {
+      "FrameNum": 9,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 10,
+      "X": 0,
+      "Y": 0,
+      "Visible": true,
+      "Comment": "quirk: need to goto next line explicitly for now"
+    },
+    {
+      "FrameNum": 10,
+      "Command": "GotoIf",
+      "StrParam": "BadMantra",
+      "IntParam": 100,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "If bad Mantra then we leave"
+    },
+    {
+      "FrameNum": 10,
+      "Command": "GotoIf",
+      "StrParam": "ShrineStatus_QuestNotStarted",
+      "IntParam": 200,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 10,
+      "Command": "GotoIf",
+      "StrParam": "ShrineStatus_ShrineOrdainedNoCodex",
+      "IntParam": 300,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 10,
+      "Command": "GotoIf",
+      "StrParam": "ShrineStatus_ShrineOrdainedWithCodex",
+      "IntParam": 400,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 10,
+      "Command": "GotoIf",
+      "StrParam": "ShrineStatus_ShrineCompleted",
       "IntParam": 500,
       "X": 0,
       "Y": 0,
@@ -385,22 +435,22 @@
     {
       "FrameNum": 11,
       "Command": "MoveMapunit",
-      "StrParam": "avatar",
+      "StrParam": "beggar",
       "IntParam": 0,
       "X": 5,
-      "Y": 7,
-      "Visible": true,
-      "Comment": "avatar walks out"
+      "Y": 6,
+      "Visible": false,
+      "Comment": "beggar/prayer is all done"
     },
     {
       "FrameNum": 11,
-      "Command": "SoundEffect",
-      "StrParam": "WalkOnGrass",
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
       "IntParam": 0,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": "walking in grass"
+      "X": 5,
+      "Y": 6,
+      "Visible": true,
+      "Comment": "avatar stands up"
     },
     {
       "FrameNum": 11,
@@ -418,7 +468,7 @@
       "StrParam": "avatar",
       "IntParam": 0,
       "X": 5,
-      "Y": 8,
+      "Y": 7,
       "Visible": true,
       "Comment": "avatar walks out"
     },
@@ -448,7 +498,7 @@
       "StrParam": "avatar",
       "IntParam": 0,
       "X": 5,
-      "Y": 9,
+      "Y": 8,
       "Visible": true,
       "Comment": "avatar walks out"
     },
@@ -478,7 +528,7 @@
       "StrParam": "avatar",
       "IntParam": 0,
       "X": 5,
-      "Y": 10,
+      "Y": 9,
       "Visible": true,
       "Comment": "avatar walks out"
     },
@@ -507,9 +557,9 @@
       "Command": "MoveMapunit",
       "StrParam": "avatar",
       "IntParam": 0,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
+      "X": 5,
+      "Y": 10,
+      "Visible": true,
       "Comment": "avatar walks out"
     },
     {
@@ -534,6 +584,36 @@
     },
     {
       "FrameNum": 16,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "avatar walks out"
+    },
+    {
+      "FrameNum": 16,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 16,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 17,
       "Command": "EndSequence",
       "StrParam": "",
       "IntParam": 0,
@@ -541,6 +621,106 @@
       "Y": 0,
       "Visible": false,
       "Comment": "end of scene1"
+    },
+    {
+      "FrameNum": 100,
+      "Command": "NoOp",
+      "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Jumped to if BadMantra"
+    },
+    {
+      "FrameNum": 101,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 11,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leave Shrine"
+    },
+    {
+      "FrameNum": 200,
+      "Command": "NoOp",
+      "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Jumped to if ShrineStatus.QuestNotStarted"
+    },
+    {
+      "FrameNum": 299,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 11,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leave Shrine"
+    },
+    {
+      "FrameNum": 300,
+      "Command": "NoOp",
+      "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedNoCodex"
+    },
+    {
+      "FrameNum": 399,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 11,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leave Shrine"
+    },
+    {
+      "FrameNum": 400,
+      "Command": "NoOp",
+      "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedWithCodex"
+    },
+    {
+      "FrameNum": 499,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 11,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leave Shrine"
+    },
+    {
+      "FrameNum": 500,
+      "Command": "NoOp",
+      "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Jumped to if ShrineStatus.ShrineCompleted"
+    },
+    {
+      "FrameNum": 599,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 11,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leave Shrine"
     }
   ]
 }

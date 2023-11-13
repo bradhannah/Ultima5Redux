@@ -6,8 +6,8 @@ namespace Ultima5Redux.References
     public sealed class VirtueReference
     {
         public VirtueType Virtue { get; }
-        public MantraType Mantra { get; }
-        public WordOfPowerType WordOfPower { get; }
+        public MantraType Mantra => (MantraType)Virtue;
+        public WordOfPowerType WordOfPower => (WordOfPowerType)Virtue;
         
         public enum VirtueType
         {
@@ -22,10 +22,28 @@ namespace Ultima5Redux.References
             Fallax = 0, Vilis = 1, Inopia = 2, Malum = 3, Avidus = 4, Infama = 5, Ignavus = 6, Veramocor = 7
         }
 
+        public string CodexWisdom =>
+            Virtue switch {
+                VirtueType.Honesty =>
+                    "A dishonest life brings unto thee temporary gain, but forsakes the permanent.\n",
+                VirtueType.Compassion => "Only a detested life owes its pleasures to another's pain.\n",
+                VirtueType.Valor => "Those who fear to try know not their limits, and thus know not themselves.\n",
+                VirtueType.Justice =>
+                    "Those who inflict injustice upon others cannot expect fair treatment unto themselves.\n",
+                VirtueType.Sacrifice =>
+                    "None live alone, save they who will not share their fortune with those around them.\n",
+                VirtueType.Honor => "It is the guilt, not the guillotine, that constitutes the shame.\n",
+                VirtueType.Spirituality =>
+                    "To forsake one's inner being is to abandon thy hopes for thyself and thy world.\n",
+                VirtueType.Humility =>
+                    "Pride is a vice which pride itself inclines one to find in others, and overlook in oneself.\n",
+                VirtueType.None => "",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+
         public VirtueReference(VirtueType virtueType) {
             Virtue = virtueType;
-            Mantra = (MantraType)virtueType;
-            WordOfPower = (WordOfPowerType)virtueType;
         }
 
         public bool IsCorrectMantra(string userInput) =>

@@ -3811,8 +3811,6 @@ namespace Ultima5ReduxTesting
             SingleCutOrIntroSceneMapReference singleCutOrIntroSceneMapReference =
                 GameReferences.Instance.CutOrIntroSceneMapReferences.GetSingleCutOrIntroSceneMapReference(
                     SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior);
-            // SingleDungeonMapFloorReference dungeonMapFloorReference = GameReferences.Instance.DungeonReferences
-            //     .GetDungeon(location).GetSingleDungeonMapFloorReferenceByFloor(nFloor);
 
             world.State.TheVirtualMap.LoadCutOrIntroScene(singleCutOrIntroSceneMapReference,
                 new Point2D(0, 0));
@@ -3827,21 +3825,40 @@ namespace Ultima5ReduxTesting
 
             int nFrames = script.NumberOfFrames;
 
-            for (int i = 0; i < nFrames; i++) {
-                TurnResults scriptTurnResults = script.GenerateTurnResultsFromFrame(i, goodShrine);
-
+            int nCurFrame = 0;
+            bool bEndSequence = false;
+            while (!bEndSequence) {
+                TurnResults scriptTurnResults = script.GenerateTurnResultsFromFrame(nCurFrame, goodShrine);
+                bool bIncFrame = true;
+                
                 while (scriptTurnResults.HasTurnResult) {
                     TurnResult turnResult = scriptTurnResults.PopTurnResult();
                     if (turnResult is CutOrIntroSceneScriptLineTurnResult scriptLineTurnResult) {
-                        cutSceneMap.ProcessScriptLine(scriptLineTurnResult.ScriptLine);
-                    }
-                    else {
-                        if (turnResult is not OutputToConsole)
-                            throw new Ultima5ReduxException(
-                                "Expected a CutOrIntroSceneScriptLineTurnResult or OutputToConsole");
+                        ScriptLineResult result = cutSceneMap.ProcessScriptLine(scriptLineTurnResult.ScriptLine);
+                        switch (result.TheResult) {
+                            case ScriptLineResult.Result.Continue:
+                                continue;
+                            case ScriptLineResult.Result.Goto:
+                                bIncFrame = false;
+                                nCurFrame = result.GotoFrame;
+                                break;
+                            case ScriptLineResult.Result.EndSequence:
+                                bEndSequence = true;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+
+                        break;
                     }
 
+                    if (turnResult is not OutputToConsole)
+                        throw new Ultima5ReduxException(
+                            "Expected a CutOrIntroSceneScriptLineTurnResult or OutputToConsole");
+
                 }
+
+                if (bIncFrame) nCurFrame++;
             }
         }
     }

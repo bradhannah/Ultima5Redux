@@ -61,8 +61,8 @@ namespace Ultima5Redux
             ACTIVE_CHARACTER,
             GRAPPLE,
             SKULL_KEYS_QUANTITY,
-            KARMA,
-            TURNS_SINCE_START, SEARCH_OBJECT_STILL_THERE, SHRINES_QUESTS_COMPLETED, SHRINES_DESTROYED
+            KARMA, TURNS_SINCE_START, SEARCH_OBJECT_STILL_THERE, SHRINES_QUESTS_ORDAINED, SHRINES_DESTROYED,
+            SHRINES_VISITED_CODEX
         }
 
         private enum OverlayChunkName
@@ -413,7 +413,10 @@ namespace Ultima5Redux
                 DataChunkName.NPC_SPRITE_INDEXES);
 
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "Shrine Quest Completed flags", 0x326, 0x01, 0x00,
-                DataChunkName.SHRINES_QUESTS_COMPLETED);
+                DataChunkName.SHRINES_QUESTS_ORDAINED);
+
+            DataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "Shrine Quest Completed flags", 0x328, 0x01, 0x00,
+                DataChunkName.SHRINES_VISITED_CODEX);
 
             DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shrine Destroyed flags", 0x332, 0x08, 0x00,
                 DataChunkName.SHRINES_DESTROYED);
@@ -457,9 +460,9 @@ namespace Ultima5Redux
 
             TheShrineStates =
                 new ShrineStates(
-                    DataChunks.GetDataChunk(DataChunkName.SHRINES_QUESTS_COMPLETED).GetAsBitmapBoolList(0, 1),
+                    DataChunks.GetDataChunk(DataChunkName.SHRINES_QUESTS_ORDAINED).GetAsBitmapBoolList(0, 1),
+                    DataChunks.GetDataChunk(DataChunkName.SHRINES_VISITED_CODEX).GetAsBitmapBoolList(0, 1),
                     DataChunks.GetDataChunk(DataChunkName.SHRINES_DESTROYED).GetAsByteList());
-
         }
 
         public MapUnitStates GetMapUnitStatesByMap(Map.Maps map)

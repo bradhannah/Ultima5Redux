@@ -42,7 +42,7 @@ namespace Ultima5Redux.Maps
         ///     Used when entering combat to save your previous position
         /// </summary>
         [IgnoreDataMember]
-        private SavedMapRefs PreCombatMapSavedMapRefs { get; set; }
+        private SavedMapRefs PreTeleportMapSavedMapRefs { get; set; }
 
 
         /// <summary>
@@ -232,18 +232,7 @@ namespace Ultima5Redux.Maps
                 Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0,
                     "when assigning an NPC, you must have single enemy");
 
-            if (PreCombatMapSavedMapRefs == null || CurrentMap is not CombatMap)
-            {
-                Debug.Assert(CurrentMap is RegularMap,
-                    "You can't load a combat map when you are already in a combat map");
-                // save the existing map details to return to
-                // we also grab the latest XYZ and save it since we don't keep track of the 
-                // the XY coords expect at load and save
-                PreCombatMapSavedMapRefs = SavedMapRefs.Copy();
-                PreCombatMapSavedMapRefs.MapUnitPosition.Floor = CurrentMap.CurrentPosition.Floor;
-                PreCombatMapSavedMapRefs.MapUnitPosition.X = CurrentMap.CurrentPosition.X;
-                PreCombatMapSavedMapRefs.MapUnitPosition.Y = CurrentMap.CurrentPosition.Y;
-            }
+            SavePreTeleportMapRefs();
 
             TheMapHolder.TheCombatMap = new CombatMap(singleCombatMapReference);
 
@@ -260,6 +249,19 @@ namespace Ultima5Redux.Maps
                 secondaryEnemyReference, nSecondaryEnemies, npcRef);
 
             combatMap.InitializeInitiativeQueue();
+        }
+
+        private void SavePreTeleportMapRefs() {
+            if (PreTeleportMapSavedMapRefs != null && CurrentMap is CombatMap or CutSceneMap) return;
+            Debug.Assert(CurrentMap is RegularMap,
+                "You can't load a combat map when you are already in a combat map");
+            // save the existing map details to return to
+            // we also grab the latest XYZ and save it since we don't keep track of the 
+            // the XY coords expect at load and save
+            PreTeleportMapSavedMapRefs = SavedMapRefs.Copy();
+            PreTeleportMapSavedMapRefs.MapUnitPosition.Floor = CurrentMap.CurrentPosition.Floor;
+            PreTeleportMapSavedMapRefs.MapUnitPosition.X = CurrentMap.CurrentPosition.X;
+            PreTeleportMapSavedMapRefs.MapUnitPosition.Y = CurrentMap.CurrentPosition.Y;
         }
 
 
@@ -509,10 +511,25 @@ namespace Ultima5Redux.Maps
             ClearAllFlagsBeforeMapLoad();
 
             SavedMapRefs ??= new SavedMapRefs();
+            SavePreTeleportMapRefs();
             SavedMapRefs.SetBySingleCutOrIntroSceneMapReference(singleCutOrIntroSceneMapReference);
 
             if (singleCutOrIntroSceneMapReference.IsCutsceneMap) {
-                TheMapHolder.CutSceneMap = new CutSceneMap(singleCutOrIntroSceneMapReference);
+                if (singleCutOrIntroSceneMapReference.TheCutOrIntroSceneMapType == SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior) {
+                    ShrineReference shrineReference =
+                        GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(
+                            PreTeleportMapSavedMapRefs.MapUnitPosition.XY);
+
+                    if (shrineReference == null) {
+                        throw new Ultima5ReduxException(
+                            $"Unexpected ShrineReference was null at position {SavedMapRefs.MapUnitPosition.XY}");
+                    }
+
+                    TheMapHolder.CutSceneMap = new CutSceneMap(singleCutOrIntroSceneMapReference, shrineReference);
+                }
+                else {
+                    TheMapHolder.CutSceneMap = new CutSceneMap(singleCutOrIntroSceneMapReference);
+                }
             }
             else {
                 TheMapHolder.IntroSceneMap = new IntroSceneMap(singleCutOrIntroSceneMapReference);
@@ -589,12 +606,12 @@ namespace Ultima5Redux.Maps
 
         public void ReturnToPreviousMapAfterCombat()
         {
-            switch (PreCombatMapSavedMapRefs.MapType)
+            switch (PreTeleportMapSavedMapRefs.MapType)
             {
                 case Map.Maps.Small:
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
-                    SavedMapRefs = PreCombatMapSavedMapRefs.Copy();
+                    SavedMapRefs = PreTeleportMapSavedMapRefs.Copy();
                     break;
                 case Map.Maps.Dungeon:
                     break;
@@ -602,7 +619,7 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new Ultima5ReduxException(
                         "Attempting to return to previous map after combat with an unsupported map type: " +
-                        PreCombatMapSavedMapRefs.MapType);
+                        PreTeleportMapSavedMapRefs.MapType);
             }
         }
 

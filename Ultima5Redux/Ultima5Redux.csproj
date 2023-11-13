@@ -183,8 +183,11 @@
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\CreateMapUnit.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\ExecuteCutScene.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\ExitBuilding.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\Goto.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\MapUnitMoved.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\NoOp.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\Pause.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\PromptMantra.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\PromptVirtueMeditate.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\CutOrIntroSceneScriptLineResult.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\SoundEffect.cs" />
