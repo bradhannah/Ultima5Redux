@@ -37,7 +37,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,9,PromptMantra,,0,0,0,true,"ask for the correct mantra for the virtue meditated upon"
 1,9,GotoIf,BadMantra,100,0,0,false,If bad Mantra then we leave
 1,9,Goto,,10,0,0,true,"quirk: need to goto next line explicitly for now"
-1,10,GotoIf,BadMantra,100,0,0,false,If bad Mantra then we leave
+1,10,OutputModalText,"Yay! You got it!/Yay!?",0,0,0,true,
 1,10,GotoIf,ShrineStatus_QuestNotStarted,200,0,0,false
 1,10,GotoIf,ShrineStatus_ShrineOrdainedNoCodex,300,0,0,false
 1,10,GotoIf,ShrineStatus_ShrineOrdainedWithCodex,400,0,0,false

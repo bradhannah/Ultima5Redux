@@ -384,13 +384,13 @@
     },
     {
       "FrameNum": 10,
-      "Command": "GotoIf",
-      "StrParam": "BadMantra",
-      "IntParam": 100,
+      "Command": "OutputModalText",
+      "StrParam": "Yay! You got it!/Yay!?",
+      "IntParam": 0,
       "X": 0,
       "Y": 0,
-      "Visible": false,
-      "Comment": "If bad Mantra then we leave"
+      "Visible": true,
+      "Comment": ""
     },
     {
       "FrameNum": 10,
@@ -663,7 +663,7 @@
       "Comment": "Jumped to if ShrineStatus.QuestNotStarted"
     },
     {
-      "FrameNum": 299,
+      "FrameNum": 201,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,
@@ -683,7 +683,7 @@
       "Comment": "Jumped to if ShrineStatus.ShrineOrdainedNoCodex"
     },
     {
-      "FrameNum": 399,
+      "FrameNum": 301,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,
@@ -703,7 +703,7 @@
       "Comment": "Jumped to if ShrineStatus.ShrineOrdainedWithCodex"
     },
     {
-      "FrameNum": 499,
+      "FrameNum": 401,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,
@@ -723,7 +723,7 @@
       "Comment": "Jumped to if ShrineStatus.ShrineCompleted"
     },
     {
-      "FrameNum": 599,
+      "FrameNum": 501,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,

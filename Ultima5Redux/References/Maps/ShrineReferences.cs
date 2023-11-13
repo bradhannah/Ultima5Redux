@@ -11,7 +11,7 @@ namespace Ultima5Redux.References.Maps
         public ShrineReference GetShrineReferenceByVirtue(VirtueReference.VirtueType virtue) =>
             _shrineReferences[virtue];
 
-        private bool DoesUserInputMatchShrine(string userInput, VirtueReference.VirtueType virtueType) {
+        public static bool DoesUserInputMatchShrine(string userInput, VirtueReference.VirtueType virtueType) {
             if (userInput.Length < 4) return false;
 
             string cleanedUserInput = userInput.ToLower().Substring(0, 4);
