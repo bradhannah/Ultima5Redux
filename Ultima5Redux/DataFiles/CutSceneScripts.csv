@@ -62,12 +62,13 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,16,Pause,,500,0,0,false,""
 1,17,EndSequence,,0,0,0,false,end of scene1
 1,100,NoOp,,0,0,0,false,Jumped to if BadMantra
+1,100,OutputModalText,Thine thoughts are unfocused/Leave,0,0,0,false,
 1,101,Goto,,11,0,0,false,Leave Shrine
 1,200,NoOp,,0,0,0,false,Jumped to if ShrineStatus.QuestNotStarted
-1,299,Goto,,11,0,0,false,Leave Shrine
+1,201,Goto,,11,0,0,false,Leave Shrine
 1,300,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedNoCodex
-1,399,Goto,,11,0,0,false,Leave Shrine
+1,301,Goto,,11,0,0,false,Leave Shrine
 1,400,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedWithCodex
-1,499,Goto,,11,0,0,false,Leave Shrine
+1,401,Goto,,11,0,0,false,Leave Shrine
 1,500,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineCompleted
-1,599,Goto,,11,0,0,false,Leave Shrine
+1,501,Goto,,11,0,0,false,Leave Shrine

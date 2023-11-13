@@ -17,7 +17,7 @@ namespace Ultima5Redux.Maps
             GotoFrame = gotoFrame;
         }
 
-        public enum Result { Continue, Goto, EndSequence }
+        public enum Result { Continue, Goto, EndSequence, GotoIf }
 
         public Result TheResult { get; private set; }
         public int GotoFrame { get; private set; }
@@ -28,7 +28,7 @@ namespace Ultima5Redux.Maps
         public enum CutOrIntroSceneScriptLineCommand
         {
             CreateMapunit, MoveMapunit, PromptVirtueMeditate, PromptMantra, EndSequence, Comment, Output, Pause,
-            SoundEffect, Goto, GotoIf, NoOp
+            SoundEffect, Goto, GotoIf, NoOp, OutputModalText
         }
 
         // "FrameNum": 0,
@@ -128,6 +128,9 @@ namespace Ultima5Redux.Maps
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.NoOp:
                         turnResults.PushTurnResult(new NoOp(scriptLine));
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.OutputModalText:
+                        turnResults.PushTurnResult(new OutputModalText(scriptLine));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

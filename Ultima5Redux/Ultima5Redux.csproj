@@ -186,6 +186,7 @@
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\Goto.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\MapUnitMoved.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\NoOp.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\OutputModalText.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\Pause.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\PromptMantra.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\PromptVirtueMeditate.cs" />

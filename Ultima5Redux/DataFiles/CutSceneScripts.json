@@ -633,6 +633,16 @@
       "Comment": "Jumped to if BadMantra"
     },
     {
+      "FrameNum": 100,
+      "Command": "OutputModalText",
+      "StrParam": "Thine thoughts are unfocused/Leave",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
       "FrameNum": 101,
       "Command": "Goto",
       "StrParam": "",
