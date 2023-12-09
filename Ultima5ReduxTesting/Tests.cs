@@ -454,7 +454,7 @@ namespace Ultima5ReduxTesting
                 Point2D.Direction.Down);
             Assert.True(bWasSuccessful);
             Assert.True(item != null);
-            Assert.True(item.GetType() == typeof(Moonstone));
+            Assert.True(item is Moonstone);
 
             world.TryToUseMoonstone((Moonstone)item, out bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
@@ -1571,7 +1571,7 @@ namespace Ultima5ReduxTesting
             //GameReferences.Instance.Initialize(DataDirectory);
 
             ///// HEY BRAD
-            /// we are at that part where the loading new JSON save files becomes super broken!
+            // we are at that part where the loading new JSON save files becomes super broken!
             world.ReLoadFromJson();
 
             Assert.True(

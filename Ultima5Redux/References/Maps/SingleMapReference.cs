@@ -200,6 +200,7 @@ namespace Ultima5Redux.References.Maps
             /// <param name="mapLocation">overall location (ie. Moonglow)</param>
             /// <param name="floor">the floor in the location (-1 basement, 0 main level, 1+ upstairs)</param>
             /// <param name="fileOffset">location of data offset in map file</param>
+            /// <param name="overrideMapType"></param>
             public SingleMapReference(string dataDirectory, Location mapLocation, int floor, int fileOffset,
                 Map.Maps overrideMapType = Map.Maps._Not) {
                 if (overrideMapType != Map.Maps._Not)

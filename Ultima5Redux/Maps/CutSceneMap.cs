@@ -27,7 +27,6 @@ namespace Ultima5Redux.Maps
 
         public override bool IsRepeatingMap => false;
 
-        //public override MapUnitPosition CurrentPosition { get; set; }
         public override int NumOfXTiles => TheSingleCutOrIntroSceneMapReference.N_MAP_COLS_PER_ROW;
         public override int NumOfYTiles => TheSingleCutOrIntroSceneMapReference.N_MAP_ROWS_PER_MAP;
 
@@ -99,11 +98,8 @@ namespace Ultima5Redux.Maps
                     return new ScriptLineResult(ScriptLineResult.Result.Goto, scriptLine.IntParam);
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.GotoIf:
                     var gotoDetails = new Goto(scriptLine);
-                    // int nFrame = ProcessGoto(gotoDetails);
-                    // if (nFrame != -1) {
-                    return new ScriptLineResult(ScriptLineResult.Result.GotoIf, scriptLine.IntParam);
-                    // }
-                    break;
+                    int nGotoLine = ProcessGoto(gotoDetails);
+                    return new ScriptLineResult(ScriptLineResult.Result.GotoIf, nGotoLine);
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptMantra:
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.NoOp:

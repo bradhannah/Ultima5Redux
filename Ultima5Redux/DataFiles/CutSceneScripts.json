@@ -433,6 +433,16 @@
       "Comment": ""
     },
     {
+      "FrameNum": 10,
+      "Command": "OutputModalText",
+      "StrParam": "No matchy matchy",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": true,
+      "Comment": ""
+    },
+    {
       "FrameNum": 11,
       "Command": "MoveMapunit",
       "StrParam": "beggar",
@@ -663,7 +673,47 @@
       "Comment": "Jumped to if ShrineStatus.QuestNotStarted"
     },
     {
+      "FrameNum": 200,
+      "Command": "OutputModalText",
+      "StrParam": "The Altar speaks and a Quest is ordained!",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
       "FrameNum": 201,
+      "Command": "OutputModalText",
+      "StrParam": "'Tis now thy sacred quest to unto the Codex and learn the darkness of Dishonor!",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 202,
+      "Command": "SoundEffect",
+      "StrParam": "DaaaaDoooo",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Cool little sound!"
+    },
+    {
+      "FrameNum": 203,
+      "Command": "OutputModalText",
+      "StrParam": "Return again why thy Quest is done!",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 204,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,
@@ -684,6 +734,16 @@
     },
     {
       "FrameNum": 301,
+      "Command": "OutputModalText",
+      "StrParam": "ShrineStatus.ShrineOrdainedNoCodex",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 302,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,
@@ -704,6 +764,16 @@
     },
     {
       "FrameNum": 401,
+      "Command": "OutputModalText",
+      "StrParam": "ShrineStatus.ShrineOrdainedWithCodex",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 402,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,
@@ -724,6 +794,16 @@
     },
     {
       "FrameNum": 501,
+      "Command": "OutputModalText",
+      "StrParam": "ShrineStatus.ShrineCompleted",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 502,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,

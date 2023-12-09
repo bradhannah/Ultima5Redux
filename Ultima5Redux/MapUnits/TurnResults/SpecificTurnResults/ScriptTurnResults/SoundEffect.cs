@@ -5,7 +5,7 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults.ScriptTurnResult
 {
     public class SoundEffect : CutOrIntroSceneScriptLineTurnResult
     {
-        public enum SoundEffectType { WalkOnGrass }
+        public enum SoundEffectType { WalkOnGrass, DaaaaDoooo }
 
         public SoundEffectType TheSoundEffectType { get; private set; }
 
