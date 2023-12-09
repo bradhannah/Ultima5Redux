@@ -45,7 +45,8 @@ namespace Ultima5Redux.MapUnits.TurnResults
             FailedToSneakPastTrollUnderBridge, FallDownWaterfallVariant_Underworld, FallDownWaterfallVariant_Normal,
             PlayerTakesDamage, TeleportToNewLocation, LoadCombatMap, ExecuteCutScene, Script_PromptVirtueMeditate,
             Script_ExitBuilding, Script_CreateMapUnit, Script_MapUnitMove, Script_Pause, Script_SoundEffect,
-            Script_Goto, Script_GotoIf, Script_NoOp, Script_PromptMantra, Script_OutputModalText
+            Script_Goto, Script_GotoIf, Script_NoOp, Script_PromptMantra, Script_OutputModalText,
+            Script_ChangeShrineState
         }
 
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]

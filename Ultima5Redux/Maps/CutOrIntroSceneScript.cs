@@ -28,7 +28,7 @@ namespace Ultima5Redux.Maps
         public enum CutOrIntroSceneScriptLineCommand
         {
             CreateMapunit, MoveMapunit, PromptVirtueMeditate, PromptMantra, EndSequence, Comment, Output, Pause,
-            SoundEffect, Goto, GotoIf, NoOp, OutputModalText
+            SoundEffect, Goto, GotoIf, NoOp, OutputModalText, ChangeShrineState
         }
 
         // "FrameNum": 0,
@@ -68,7 +68,6 @@ namespace Ultima5Redux.Maps
                 scripts =
                     JsonConvert.DeserializeObject<Dictionary<SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType
                         , List<CutOrIntroSceneScriptLine>>>(Resources.CutSceneScripts);
-            //SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType
             foreach (KeyValuePair<SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType,
                          List<CutOrIntroSceneScriptLine>> kvp in scripts) {
                 _scripts.Add(kvp.Key, new CutOrIntroSceneScript(kvp.Key, kvp.Value));
@@ -85,14 +84,15 @@ namespace Ultima5Redux.Maps
         private readonly List<CutOrIntroSceneScriptLine> _scriptLines;
 
         public int NumberOfFrames => _scriptLines.GroupBy(i => i.FrameNum).Count();
-        //Count(i => i.FrameNum == nFrame)
 
         public TurnResults GenerateTurnResultsFromFrame(int nFrame, ShrineReference shrineReference = null) {
             TurnResults turnResults = new();
             IEnumerable<CutOrIntroSceneScriptLine> scriptLinesInFrame = _scriptLines.Where(i => i.FrameNum == nFrame);
             foreach (CutOrIntroSceneScriptLine scriptLine in scriptLinesInFrame) {
                 switch (scriptLine.Command) {
-                    
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.ChangeShrineState:
+                        turnResults.PushTurnResult(new ChangeShrineState(scriptLine, shrineReference));
+                        break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.SoundEffect:
                         turnResults.PushTurnResult(new SoundEffect(scriptLine));
                         break;

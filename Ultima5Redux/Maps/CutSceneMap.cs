@@ -56,10 +56,23 @@ namespace Ultima5Redux.Maps
 
         public ScriptLineResult ProcessScriptLine(CutOrIntroSceneScriptLine scriptLine) {
             switch (scriptLine.Command) {
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.ChangeShrineState:
+                    // change it man
+                    var newShrineStatus =
+                        (ShrineState.ShrineStatus)Enum.Parse(typeof(ShrineState.ShrineStatus), scriptLine.StrParam);
+                    //ChangeShrineState changeShrineState = new (scriptLine, ShrineCutSceneState.CurrentShrine, newShrineStatus)
+                    ShrineState shrineState = GetShrineState(ShrineCutSceneState.CurrentShrine
+                        .VirtueRef.Virtue);
+                    shrineState.TheShrineStatus = newShrineStatus;
+
+                    break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.CreateMapunit:
-                    var mapUnit = new CutSceneNonPlayerCharacter(scriptLine.Visible, scriptLine.TileReference);
-                    
-                    mapUnit.MapUnitPosition.XY = scriptLine.Position;
+                    var mapUnit = new CutSceneNonPlayerCharacter(scriptLine.Visible, scriptLine.TileReference) {
+                        MapUnitPosition = {
+                            XY = scriptLine.Position
+                        }
+                    };
+
                     mapUnit.SetActive(scriptLine.Visible);
                     // we maintain a specific identifier for the mapunit going forward
                     _mapUnitsByIdentifier.Add(scriptLine.StrParam, mapUnit);
@@ -99,7 +112,8 @@ namespace Ultima5Redux.Maps
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.GotoIf:
                     var gotoDetails = new Goto(scriptLine);
                     int nGotoLine = ProcessGoto(gotoDetails);
-                    return new ScriptLineResult(ScriptLineResult.Result.GotoIf, nGotoLine);
+                    if (nGotoLine != -1) return new ScriptLineResult(ScriptLineResult.Result.GotoIf, nGotoLine);
+                    break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptMantra:
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.NoOp:
@@ -113,6 +127,11 @@ namespace Ultima5Redux.Maps
             return new ScriptLineResult(ScriptLineResult.Result.Continue);
         }
 
+        private ShrineState GetShrineState(VirtueReference.VirtueType virtueType) =>
+            ShrineCutSceneState?.CurrentShrine != null
+                ? GameStateReference.State.TheShrineStates.GetShrineStateByVirtue(virtueType)
+                : null;
+
         private int ProcessGoto(Goto gotoResult) {
             if ((gotoResult.TheGotoCondition.ToString().StartsWith("ShrineStatus_") && ShrineCutSceneState == null) ||
                 ShrineCutSceneState.CurrentShrine == null) {
@@ -120,10 +139,8 @@ namespace Ultima5Redux.Maps
                     "For ShrineStatus_ type GotoCondition, expected shrine state to have already been tracked.");
             }
 
-            ShrineState shrineState = ShrineCutSceneState?.CurrentShrine != null
-                ? GameStateReference.State.TheShrineStates.GetShrineStateByVirtue(ShrineCutSceneState.CurrentShrine
-                    .VirtueRef.Virtue)
-                : null;
+            ShrineState shrineState = GetShrineState(ShrineCutSceneState.CurrentShrine
+                .VirtueRef.Virtue);
 
             switch (gotoResult.TheGotoCondition) {
                 case Goto.GotoCondition.None:

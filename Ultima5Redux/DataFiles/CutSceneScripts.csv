@@ -70,7 +70,8 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,201,OutputModalText,"'Tis now thy sacred quest to unto the Codex and learn the darkness of Dishonor!",0,0,0,false,
 1,202,SoundEffect,DaaaaDoooo,0,0,0,false,"Cool little sound!"
 1,203,OutputModalText,"Return again why thy Quest is done!",0,0,0,false,
-1,204,Goto,,11,0,0,false,Leave Shrine
+1,204,ChangeShrineState,ShrineOrdainedNoCodex,0,0,0,false
+1,205,Goto,,11,0,0,false,Leave Shrine
 1,300,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedNoCodex
 1,301,OutputModalText,"ShrineStatus.ShrineOrdainedNoCodex",0,0,0,false,
 1,302,Goto,,11,0,0,false,Leave Shrine

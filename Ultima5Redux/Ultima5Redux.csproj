@@ -180,6 +180,7 @@
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\OutputToConsole.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\PlayerMoved.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ReadScroll.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\ChangeShrineState.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\CreateMapUnit.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\ExecuteCutScene.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\ExitBuilding.cs" />

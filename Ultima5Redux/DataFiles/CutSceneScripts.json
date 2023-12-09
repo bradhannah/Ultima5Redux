@@ -714,6 +714,16 @@
     },
     {
       "FrameNum": 204,
+      "Command": "ChangeShrineState",
+      "StrParam": "ShrineOrdainedNoCodex",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 205,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,
