@@ -73,8 +73,18 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,204,ChangeShrineState,ShrineOrdainedNoCodex,0,0,0,false
 1,205,Goto,,11,0,0,false,Leave Shrine
 1,300,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedNoCodex
-1,301,OutputModalText,"ShrineStatus.ShrineOrdainedNoCodex",0,0,0,false,
-1,302,Goto,,11,0,0,false,Leave Shrine
+1,301,OutputModalText,"Well Done!",0,0,0,false,
+1,302,SoundEffect,HighPitchedYay,1,0,0,false,"Cool little sound!"
+1,303,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
+1,304,Pause,,500,0,0,false,"Hold Tight"
+1,305,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
+1,305,SoundEffect,HighPitchedYay,0,0,0,false,"Stop the no longer cool sound..."
+1,306,ScreenEffect,ShakeScreen,1,0,0,false,"Earthquake!"
+1,307,Pause,,100,0,0,false,"Hold Tight for EarthQuake"
+1,308,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake is over..."
+1,309,BoostStats,,1,0,0,false,"Boost stats depending on which shrine they are at"
+1,310,ChangeShrineState,ShrineOrdainedWithCodex,0,0,0,false
+1,311,Goto,,11,0,0,false,Leave Shrine
 1,400,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedWithCodex
 1,401,OutputModalText,"ShrineStatus.ShrineOrdainedWithCodex",0,0,0,false,
 1,402,Goto,,11,0,0,false,Leave Shrine

@@ -46,7 +46,7 @@ namespace Ultima5Redux.MapUnits.TurnResults
             PlayerTakesDamage, TeleportToNewLocation, LoadCombatMap, ExecuteCutScene, Script_PromptVirtueMeditate,
             Script_ExitBuilding, Script_CreateMapUnit, Script_MapUnitMove, Script_Pause, Script_SoundEffect,
             Script_Goto, Script_GotoIf, Script_NoOp, Script_PromptMantra, Script_OutputModalText,
-            Script_ChangeShrineState
+            Script_ChangeShrineState, Script_ScreenEffect, Script_BoostStats
         }
 
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault")]

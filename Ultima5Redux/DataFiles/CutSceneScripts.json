@@ -745,7 +745,7 @@
     {
       "FrameNum": 301,
       "Command": "OutputModalText",
-      "StrParam": "ShrineStatus.ShrineOrdainedNoCodex",
+      "StrParam": "Well Done!",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -754,6 +754,106 @@
     },
     {
       "FrameNum": 302,
+      "Command": "SoundEffect",
+      "StrParam": "HighPitchedYay",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Cool little sound!"
+    },
+    {
+      "FrameNum": 303,
+      "Command": "ScreenEffect",
+      "StrParam": "InvertColors",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Invert the Colours"
+    },
+    {
+      "FrameNum": 304,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Hold Tight"
+    },
+    {
+      "FrameNum": 305,
+      "Command": "ScreenEffect",
+      "StrParam": "InvertColors",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Uninvert Colors"
+    },
+    {
+      "FrameNum": 305,
+      "Command": "SoundEffect",
+      "StrParam": "HighPitchedYay",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Stop the no longer cool sound..."
+    },
+    {
+      "FrameNum": 306,
+      "Command": "ScreenEffect",
+      "StrParam": "ShakeScreen",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Earthquake!"
+    },
+    {
+      "FrameNum": 307,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 100,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Hold Tight for EarthQuake"
+    },
+    {
+      "FrameNum": 308,
+      "Command": "ScreenEffect",
+      "StrParam": "ShakeScreen",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Earthquake is over..."
+    },
+    {
+      "FrameNum": 309,
+      "Command": "BoostStats",
+      "StrParam": "",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Boost stats depending on which shrine they are at"
+    },
+    {
+      "FrameNum": 310,
+      "Command": "ChangeShrineState",
+      "StrParam": "ShrineOrdainedWithCodex",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 311,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,

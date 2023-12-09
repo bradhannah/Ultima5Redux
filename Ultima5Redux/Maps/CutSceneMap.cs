@@ -88,6 +88,11 @@ namespace Ultima5Redux.Maps
                     mapUnitToMove.MapUnitPosition.XY = scriptLine.Position;
                     mapUnitToMove.SetActive(scriptLine.Visible);
                     break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.BoostStats:
+                    // todo: boost those stats!
+                    break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.ScreenEffect:
+                    break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.SoundEffect:
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Pause:
