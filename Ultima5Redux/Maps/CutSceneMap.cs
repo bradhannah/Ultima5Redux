@@ -56,6 +56,10 @@ namespace Ultima5Redux.Maps
 
         public ScriptLineResult ProcessScriptLine(CutOrIntroSceneScriptLine scriptLine) {
             switch (scriptLine.Command) {
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.BoostKarmaByMoney:
+                    break;
+                case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptShrineGold:
+                    break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.ChangeShrineState:
                     // change it man
                     var newShrineStatus =
@@ -151,6 +155,8 @@ namespace Ultima5Redux.Maps
             switch (gotoResult.TheGotoCondition) {
                 case Goto.GotoCondition.None:
                     return gotoResult.LineNumber;
+                case Goto.GotoCondition.HasNotEnoughMoney:
+                    break;
                 case Goto.GotoCondition.BadMantra:
                     if (ShrineCutSceneState is { WasMantraCorrect: false }) return gotoResult.LineNumber;
                     break;

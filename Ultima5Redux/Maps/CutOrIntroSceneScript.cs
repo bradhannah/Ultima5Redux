@@ -28,13 +28,14 @@ namespace Ultima5Redux.Maps
         public enum CutOrIntroSceneScriptLineCommand
         {
             CreateMapunit, MoveMapunit, PromptVirtueMeditate, PromptMantra, EndSequence, Comment, Output, Pause,
-            SoundEffect, Goto, GotoIf, NoOp, OutputModalText, ChangeShrineState, ScreenEffect, BoostStats
+            SoundEffect, Goto, GotoIf, NoOp, OutputModalText, ChangeShrineState, ScreenEffect, BoostStats,
+            PromptShrineGold, BoostKarmaByMoney
         }
 
         // "FrameNum": 0,
         // "Command": "Comment",
         // "StrParam": "",
-        // "IntParam": null,
+        // "IntParam": null,`````
         // "X": 0,
         // "Y": 0,
         // "Visible": false,
@@ -90,6 +91,12 @@ namespace Ultima5Redux.Maps
             IEnumerable<CutOrIntroSceneScriptLine> scriptLinesInFrame = _scriptLines.Where(i => i.FrameNum == nFrame);
             foreach (CutOrIntroSceneScriptLine scriptLine in scriptLinesInFrame) {
                 switch (scriptLine.Command) {
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.BoostKarmaByMoney:
+                        turnResults.PushTurnResult(new BoostKarmaByMoney(scriptLine));
+                        break;
+                    case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptShrineGold:
+                        turnResults.PushTurnResult(new PromptShrineGold(scriptLine));
+                        break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.ScreenEffect:
                         turnResults.PushTurnResult(new ScreenEffect(scriptLine));
                         break;

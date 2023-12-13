@@ -426,7 +426,7 @@
       "FrameNum": 10,
       "Command": "GotoIf",
       "StrParam": "ShrineStatus_ShrineCompleted",
-      "IntParam": 500,
+      "IntParam": 400,
       "X": 0,
       "Y": 0,
       "Visible": false,
@@ -826,7 +826,7 @@
       "FrameNum": 307,
       "Command": "Pause",
       "StrParam": "",
-      "IntParam": 2000,
+      "IntParam": 3000,
       "X": 0,
       "Y": 0,
       "Visible": false,
@@ -890,20 +890,50 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedWithCodex"
+      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedWithCodex or Jumped to if ShrineStatus.ShrineCompleted"
     },
     {
-      "FrameNum": 401,
-      "Command": "OutputModalText",
-      "StrParam": "ShrineStatus.ShrineOrdainedWithCodex",
+      "FrameNum": 400,
+      "Command": "PromptShrineGold",
+      "StrParam": "",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "would ask - Offer how many hundredweights gold?"
+    },
+    {
+      "FrameNum": 401,
+      "Command": "GotoIf",
+      "StrParam": "HasNotEnoughMoney",
+      "IntParam": 450,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leave Shrine"
+    },
+    {
+      "FrameNum": 401,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 402,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Quirk - must make it explicit"
     },
     {
       "FrameNum": 402,
+      "Command": "BoostKarmaByMoney",
+      "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Add +1 Karma for each 100gp "
+    },
+    {
+      "FrameNum": 403,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,
@@ -913,19 +943,9 @@
       "Comment": "Leave Shrine"
     },
     {
-      "FrameNum": 500,
-      "Command": "NoOp",
-      "StrParam": "",
-      "IntParam": 0,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": "Jumped to if ShrineStatus.ShrineCompleted"
-    },
-    {
-      "FrameNum": 501,
+      "FrameNum": 450,
       "Command": "OutputModalText",
-      "StrParam": "ShrineStatus.ShrineCompleted",
+      "StrParam": "Thou hast not that much gold!",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -933,7 +953,7 @@
       "Comment": ""
     },
     {
-      "FrameNum": 502,
+      "FrameNum": 451,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,

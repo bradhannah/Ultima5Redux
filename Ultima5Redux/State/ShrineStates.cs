@@ -39,7 +39,7 @@ namespace Ultima5Redux.State {
     }
 
     [DataContract] public class ShrineStates {
-        [DataMember] private Dictionary<VirtueReference.VirtueType, ShrineState> _shrines = new();
+        [DataMember(Name = "Shrines")] private Dictionary<VirtueReference.VirtueType, ShrineState> _shrines = new();
 
         private const int TOTAL_VIRTUES = 8;
 

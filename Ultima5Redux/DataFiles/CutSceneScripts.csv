@@ -41,7 +41,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,10,GotoIf,ShrineStatus_QuestNotStarted,200,0,0,false
 1,10,GotoIf,ShrineStatus_ShrineOrdainedNoCodex,300,0,0,false
 1,10,GotoIf,ShrineStatus_ShrineOrdainedWithCodex,400,0,0,false
-1,10,GotoIf,ShrineStatus_ShrineCompleted,500,0,0,false
+1,10,GotoIf,ShrineStatus_ShrineCompleted,400,0,0,false
 1,10,OutputModalText,"No matchy matchy",0,0,0,true,
 1,11,MoveMapunit,beggar,0,5,6,false,"beggar/prayer is all done"
 1,11,MoveMapunit,avatar,0,5,6,true,"avatar stands up"
@@ -87,9 +87,11 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,309,BoostStats,,1,0,0,false,"Boost stats depending on which shrine they are at"
 1,310,ChangeShrineState,ShrineOrdainedWithCodex,0,0,0,false
 1,311,Goto,,11,0,0,false,Leave Shrine
-1,400,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedWithCodex
-1,401,OutputModalText,"ShrineStatus.ShrineOrdainedWithCodex",0,0,0,false,
-1,402,Goto,,11,0,0,false,Leave Shrine
-1,500,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineCompleted
-1,501,OutputModalText,"ShrineStatus.ShrineCompleted",0,0,0,false,
-1,502,Goto,,11,0,0,false,Leave Shrine
+1,400,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedWithCodex or Jumped to if ShrineStatus.ShrineCompleted
+1,400,PromptShrineGold,,0,0,0,false,"would ask - Offer how many hundredweights gold?"
+1,401,GotoIf,HasNotEnoughMoney,450,0,0,false,Leave Shrine
+1,401,Goto,,402,0,0,false,"Quirk - must make it explicit"
+1,402,BoostKarmaByMoney,,0,0,0,false,Add +1 Karma for each 100gp
+1,403,Goto,,11,0,0,false,Leave Shrine
+1,450,OutputModalText,"Thou hast not that much gold!",0,0,0,false,
+1,451,Goto,,11,0,0,false,Leave Shrine

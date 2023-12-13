@@ -180,6 +180,7 @@
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\OutputToConsole.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\PlayerMoved.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ReadScroll.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\BoostKarmaByMoney.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\BoostStats.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\ChangeShrineState.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\CreateMapUnit.cs" />
@@ -191,6 +192,7 @@
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\OutputModalText.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\Pause.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\PromptMantra.cs" />
+        <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\PromptShrineGold.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\PromptVirtueMeditate.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\CutOrIntroSceneScriptLineResult.cs" />
         <Compile Include="MapUnits\TurnResults\SpecificTurnResults\ScriptTurnResults\ScreenEffect.cs" />
