@@ -91,12 +91,10 @@ namespace Ultima5Redux.Maps
             foreach (CutOrIntroSceneScriptLine scriptLine in scriptLinesInFrame) {
                 switch (scriptLine.Command) {
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.ScreenEffect:
-                        // todo: oof
                         turnResults.PushTurnResult(new ScreenEffect(scriptLine));
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.BoostStats:
-                        // todo: oof
-                        turnResults.PushTurnResult(new BoostStats(scriptLine));
+                        turnResults.PushTurnResult(new BoostStats(scriptLine, shrineReference));
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.ChangeShrineState:
                         turnResults.PushTurnResult(new ChangeShrineState(scriptLine, shrineReference));
@@ -126,6 +124,7 @@ namespace Ultima5Redux.Maps
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Comment:
                         // do nothing - this is just to keep track
+                        // todo: pass it on, because this is great for Debugging
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.Output:
                         turnResults.PushOutputToConsole(scriptLine.StrParam, false);

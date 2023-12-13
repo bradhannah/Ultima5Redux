@@ -89,7 +89,8 @@ namespace Ultima5Redux.Maps
                     mapUnitToMove.SetActive(scriptLine.Visible);
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.BoostStats:
-                    // todo: boost those stats!
+                    ShrineCutSceneState.CurrentShrine.BoostStats(GameStateReference.State.CharacterRecords.AvatarRecord
+                        .Stats);
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.ScreenEffect:
                     break;

@@ -5,12 +5,16 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults.ScriptTurnResult
 {
     public class SoundEffect : CutOrIntroSceneScriptLineTurnResult
     {
-        public enum SoundEffectType { WalkOnGrass, DaaaaDoooo, HighPitchedYay }
+        public enum SoundEffectType { WalkOnGrass, DaaaaDoooo, HighPitchedYay, EarthQuake }
 
         public SoundEffectType TheSoundEffectType { get; private set; }
 
+        public bool StartSoundEffect { get; }
+
         public SoundEffect(CutOrIntroSceneScriptLine scriptLine) : base(
-            TurnResultType.Script_SoundEffect, TurnResulActionType.ActionRequired, scriptLine) =>
+            TurnResultType.Script_SoundEffect, TurnResulActionType.ActionRequired, scriptLine) {
             TheSoundEffectType = (SoundEffectType)Enum.Parse(typeof(SoundEffectType), scriptLine.StrParam);
+            StartSoundEffect = scriptLine.IntParam > 0;
+        }
     }
 }
