@@ -13,6 +13,7 @@ namespace Ultima5Redux.Maps
     public class ShrineCutSceneState {
         public ShrineReference CurrentShrine { get; set; }
         public bool WasMantraCorrect { get; set; } = false;
+        public int HundredsOfGoldDonated { get; set; } = 0;
     }
     
     public class CutSceneMap : Map
@@ -57,6 +58,7 @@ namespace Ultima5Redux.Maps
         public ScriptLineResult ProcessScriptLine(CutOrIntroSceneScriptLine scriptLine) {
             switch (scriptLine.Command) {
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.BoostKarmaByMoney:
+                    
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptShrineGold:
                     break;

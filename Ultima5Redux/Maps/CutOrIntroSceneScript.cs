@@ -92,10 +92,10 @@ namespace Ultima5Redux.Maps
             foreach (CutOrIntroSceneScriptLine scriptLine in scriptLinesInFrame) {
                 switch (scriptLine.Command) {
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.BoostKarmaByMoney:
-                        turnResults.PushTurnResult(new BoostKarmaByMoney(scriptLine));
+                        turnResults.PushTurnResult(new BoostKarmaByMoney(scriptLine, shrineReference));
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptShrineGold:
-                        turnResults.PushTurnResult(new PromptShrineGold(scriptLine));
+                        turnResults.PushTurnResult(new PromptShrineGold(scriptLine, shrineReference));
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.ScreenEffect:
                         turnResults.PushTurnResult(new ScreenEffect(scriptLine));
