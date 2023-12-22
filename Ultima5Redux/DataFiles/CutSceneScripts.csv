@@ -37,10 +37,9 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,9,PromptMantra,,0,0,0,true,"ask for the correct mantra for the virtue meditated upon"
 1,9,GotoIf,BadMantra,100,0,0,false,If bad Mantra then we leave
 1,9,Goto,,10,0,0,true,"quirk: need to goto next line explicitly for now"
-1,10,OutputModalText,"Yay! You got it!/Yay!?",0,0,0,true,
 1,10,GotoIf,ShrineStatus_QuestNotStarted,200,0,0,false
-1,10,GotoIf,ShrineStatus_ShrineOrdainedNoCodex,300,0,0,false
-1,10,GotoIf,ShrineStatus_ShrineOrdainedWithCodex,400,0,0,false
+1,10,GotoIf,ShrineStatus_ShrineOrdainedNoCodex,200,0,0,false
+1,10,GotoIf,ShrineStatus_ShrineOrdainedWithCodex,300,0,0,false
 1,10,GotoIf,ShrineStatus_ShrineCompleted,400,0,0,false
 1,10,OutputModalText,"No matchy matchy",0,0,0,true,
 1,11,MoveMapunit,beggar,0,5,6,false,"beggar/prayer is all done"
@@ -67,13 +66,13 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,101,Goto,,11,0,0,false,Leave Shrine
 1,200,NoOp,,0,0,0,false,Jumped to if ShrineStatus.QuestNotStarted
 1,200,OutputModalText,The Altar speaks and a Quest is ordained!,0,0,0,false,
-1,201,OutputModalText,"'Tis now thy sacred quest to unto the Codex and learn the darkness of Dishonor!",0,0,0,false,
+1,201,OutputModalText,_GoToCodex,0,0,0,false,
 1,202,SoundEffect,DaaaaDoooo,1,0,0,false,"Cool little sound!"
 1,203,OutputModalText,"Return again why thy Quest is done!",0,0,0,false,
 1,204,ChangeShrineState,ShrineOrdainedNoCodex,0,0,0,false
 1,205,Goto,,11,0,0,false,Leave Shrine
 1,300,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedNoCodex
-1,301,OutputModalText,"A thunderous voice booms:\n\nWell Done!",0,0,0,false,
+1,301,OutputModalText,"A thunderous voice booms:<br><br>Well Done!",0,0,0,false,
 1,302,SoundEffect,HighPitchedYay,1,0,0,false,"Cool little sound!"
 1,303,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
 1,304,Pause,,1500,0,0,false,"Hold Tight"
@@ -85,7 +84,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,308,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake is over..."
 1,308,SoundEffect,EarthQuake,0,0,0,false,"Earthquake rumble is over!"
 1,309,BoostStats,,1,0,0,false,"Boost stats depending on which shrine they are at"
-1,310,ChangeShrineState,ShrineOrdainedWithCodex,0,0,0,false
+1,310,ChangeShrineState,ShrineStatus_ShrineCompleted,0,0,0,false
 1,311,Goto,,11,0,0,false,Leave Shrine
 1,400,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedWithCodex or Jumped to if ShrineStatus.ShrineCompleted
 1,400,PromptShrineGold,,0,0,0,false,"would ask - Offer how many hundredweights gold?"
@@ -95,5 +94,10 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,403,Goto,,460,0,0,false,Leave Shrine
 1,450,OutputModalText,"Thou hast not that much gold!",0,0,0,false,
 1,451,Goto,,11,0,0,false,Leave Shrine
-1,460,OutputModalText,"Karma boost!",0,0,0,false,
-1,461,Goto,,11,0,0,false,Leave Shrine
+1,460,SoundEffect,HighPitchedYay,1,0,0,false,"Cool little sound!"
+1,460,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
+1,461,Pause,,1500,0,0,false,"Hold Tight"
+1,462,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
+1,462,SoundEffect,HighPitchedYay,0,0,0,false,"Stop the no longer cool sound..."
+1,462,OutputModalText,"Your karma has improved!",0,0,0,false,
+1,463,Goto,,11,0,0,false,Leave Shrine

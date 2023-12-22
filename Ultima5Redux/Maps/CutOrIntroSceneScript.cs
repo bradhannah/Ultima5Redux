@@ -42,7 +42,7 @@ namespace Ultima5Redux.Maps
         // "Comment": "---- TEST Shrine of Virtue Cut Scene"
         [DataMember] public int FrameNum { get; private set; }
         [DataMember] public CutOrIntroSceneScriptLineCommand Command { get; private set; }
-        [DataMember] public string StrParam { get; private set; } = string.Empty;
+        [DataMember] public string StrParam { get; internal set; } = string.Empty;
         [DataMember(EmitDefaultValue = true)] public int IntParam { get; private set; } = -1;
         [DataMember] public int X { get; private set; }
         [DataMember] public int Y { get; private set; }
@@ -144,6 +144,12 @@ namespace Ultima5Redux.Maps
                         turnResults.PushTurnResult(new NoOp(scriptLine));
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.OutputModalText:
+                        if (scriptLine.StrParam.StartsWith("_")) {
+                            if (scriptLine.StrParam == "_GoToCodex") {
+                                if (shrineReference != null)
+                                    scriptLine.StrParam = shrineReference.GetGoToCodexInstruction();
+                            }
+                        }
                         turnResults.PushTurnResult(new OutputModalText(scriptLine));
                         break;
                     default:

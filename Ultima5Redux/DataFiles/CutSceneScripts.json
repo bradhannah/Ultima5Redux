@@ -422,17 +422,6 @@
     },
     {
       "FrameNum": 10,
-      "Command": "OutputModalText",
-      "StrParam": "Yay! You got it!/Yay!?",
-      "IntParam": 0,
-      "X": 0,
-      "Y": 0,
-      "Visible": true,
-      "Comment": "",
-      "FIELD10": ""
-    },
-    {
-      "FrameNum": 10,
       "Command": "GotoIf",
       "StrParam": "ShrineStatus_QuestNotStarted",
       "IntParam": 200,
@@ -446,7 +435,7 @@
       "FrameNum": 10,
       "Command": "GotoIf",
       "StrParam": "ShrineStatus_ShrineOrdainedNoCodex",
-      "IntParam": 300,
+      "IntParam": 200,
       "X": 0,
       "Y": 0,
       "Visible": false,
@@ -457,7 +446,7 @@
       "FrameNum": 10,
       "Command": "GotoIf",
       "StrParam": "ShrineStatus_ShrineOrdainedWithCodex",
-      "IntParam": 400,
+      "IntParam": 300,
       "X": 0,
       "Y": 0,
       "Visible": false,
@@ -753,7 +742,7 @@
     {
       "FrameNum": 201,
       "Command": "OutputModalText",
-      "StrParam": "'Tis now thy sacred quest to unto the Codex and learn the darkness of Dishonor!",
+      "StrParam": "_GoToCodex",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -819,7 +808,7 @@
     {
       "FrameNum": 301,
       "Command": "OutputModalText",
-      "StrParam": "A thunderous voice booms:\\n\\nWell Done!",
+      "StrParam": "A thunderous voice booms:<br><br>Well Done!",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -951,7 +940,7 @@
     {
       "FrameNum": 310,
       "Command": "ChangeShrineState",
-      "StrParam": "ShrineOrdainedWithCodex",
+      "StrParam": "ShrineCompleted",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -1060,8 +1049,63 @@
     },
     {
       "FrameNum": 460,
+      "Command": "SoundEffect",
+      "StrParam": "HighPitchedYay",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Cool little sound!",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 460,
+      "Command": "ScreenEffect",
+      "StrParam": "InvertColors",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Invert the Colours",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 461,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 1500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Hold Tight",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 462,
+      "Command": "ScreenEffect",
+      "StrParam": "InvertColors",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Uninvert Colors",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 462,
+      "Command": "SoundEffect",
+      "StrParam": "HighPitchedYay",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Stop the no longer cool sound...",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 462,
       "Command": "OutputModalText",
-      "StrParam": "Karma boost!",
+      "StrParam": "Your karma has improved!",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -1070,7 +1114,7 @@
       "FIELD10": ""
     },
     {
-      "FrameNum": 461,
+      "FrameNum": 463,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 11,
