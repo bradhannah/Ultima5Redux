@@ -89,9 +89,11 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,311,Goto,,11,0,0,false,Leave Shrine
 1,400,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedWithCodex or Jumped to if ShrineStatus.ShrineCompleted
 1,400,PromptShrineGold,,0,0,0,false,"would ask - Offer how many hundredweights gold?"
-1,401,GotoIf,HasNotEnoughMoney,450,0,0,false,Leave Shrine
-1,401,Goto,,402,0,0,false,"Quirk - must make it explicit"
-1,402,BoostKarmaByMoney,,0,0,0,false,Add +1 Karma for each 100gp
-1,403,Goto,,11,0,0,false,Leave Shrine
+1,401,BoostKarmaByMoney,,0,0,0,false,Add +1 Karma for each 100gp
+1,402,GotoIf,HasNotEnoughMoney,450,0,0,false,Leave Shrine
+1,402,GotoIf,GaveNoMoney,11,0,0,false,Didn't donate any money, so we just leave
+1,403,Goto,,460,0,0,false,Leave Shrine
 1,450,OutputModalText,"Thou hast not that much gold!",0,0,0,false,
 1,451,Goto,,11,0,0,false,Leave Shrine
+1,460,OutputModalText,"Karma boost!",0,0,0,false,
+1,461,Goto,,11,0,0,false,Leave Shrine

@@ -10,10 +10,13 @@ using Ultima5Redux.State;
 
 namespace Ultima5Redux.Maps
 {
+    public enum GoldDonationState { GoldDonatedSuccessfully, ZeroGoldDonated, AttemptedGoldDonationNotEnoughMoney }
+    
     public class ShrineCutSceneState {
         public ShrineReference CurrentShrine { get; set; }
         public bool WasMantraCorrect { get; set; } = false;
         public int HundredsOfGoldDonated { get; set; } = 0;
+        public GoldDonationState GoldDonationState { get; set; }
     }
     
     public class CutSceneMap : Map
@@ -58,7 +61,19 @@ namespace Ultima5Redux.Maps
         public ScriptLineResult ProcessScriptLine(CutOrIntroSceneScriptLine scriptLine) {
             switch (scriptLine.Command) {
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.BoostKarmaByMoney:
-                    
+                    int nTotalGold = ShrineCutSceneState.HundredsOfGoldDonated * 100;
+                    if (nTotalGold == 0) {
+                        // donated, but entered zero gp
+                        ShrineCutSceneState.GoldDonationState = GoldDonationState.ZeroGoldDonated;
+                    }
+                    else if (GameStateReference.State.PlayerInventory.Gold < nTotalGold) {
+                        ShrineCutSceneState.GoldDonationState = GoldDonationState.AttemptedGoldDonationNotEnoughMoney;
+                    }
+                    else {
+                        GameStateReference.State.ChangeKarma(ShrineCutSceneState.HundredsOfGoldDonated,
+                            new TurnResults());
+                        ShrineCutSceneState.GoldDonationState = GoldDonationState.GoldDonatedSuccessfully;
+                    }
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.PromptShrineGold:
                     break;
@@ -157,7 +172,18 @@ namespace Ultima5Redux.Maps
             switch (gotoResult.TheGotoCondition) {
                 case Goto.GotoCondition.None:
                     return gotoResult.LineNumber;
+                case Goto.GotoCondition.GaveNoMoney:
+                    if (ShrineCutSceneState.GoldDonationState == GoldDonationState.ZeroGoldDonated) {
+                        return gotoResult.LineNumber;
+                    }
+
+                    break;
                 case Goto.GotoCondition.HasNotEnoughMoney:
+                    // if gold was NOT donated, then we know we didn't have enough
+                    if (ShrineCutSceneState.GoldDonationState ==
+                        GoldDonationState.AttemptedGoldDonationNotEnoughMoney) {
+                        return gotoResult.LineNumber;
+                    }
                     break;
                 case Goto.GotoCondition.BadMantra:
                     if (ShrineCutSceneState is { WasMantraCorrect: false }) return gotoResult.LineNumber;
@@ -166,7 +192,6 @@ namespace Ultima5Redux.Maps
                     if (shrineState?.TheShrineStatus == ShrineState.ShrineStatus.QuestNotStarted) {
                         return gotoResult.LineNumber;
                     }
-
                     break;
                 case Goto.GotoCondition.ShrineStatus_ShrineOrdainedNoCodex:
                     if (shrineState?.TheShrineStatus == ShrineState.ShrineStatus.ShrineOrdainedNoCodex) {

@@ -8,7 +8,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "---- TEST Shrine of Virtue Cut Scene"
+      "Comment": "---- TEST Shrine of Virtue Cut Scene",
+      "FIELD10": ""
     },
     {
       "FrameNum": 0,
@@ -18,7 +19,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 1,
@@ -28,7 +30,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "end of scene"
+      "Comment": "end of scene",
+      "FIELD10": ""
     }
   ],
   "1": [
@@ -40,7 +43,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "---- Shrine of Virtue Cut Scene"
+      "Comment": "---- Shrine of Virtue Cut Scene",
+      "FIELD10": ""
     },
     {
       "FrameNum": 0,
@@ -50,7 +54,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 0,
@@ -60,7 +65,8 @@
       "X": 5,
       "Y": 10,
       "Visible": false,
-      "Comment": "off camera"
+      "Comment": "off camera",
+      "FIELD10": ""
     },
     {
       "FrameNum": 1,
@@ -70,7 +76,8 @@
       "X": 5,
       "Y": 10,
       "Visible": false,
-      "Comment": "off camera"
+      "Comment": "off camera",
+      "FIELD10": ""
     },
     {
       "FrameNum": 1,
@@ -80,7 +87,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Heard off camera"
+      "Comment": "Heard off camera",
+      "FIELD10": ""
     },
     {
       "FrameNum": 1,
@@ -90,7 +98,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 2,
@@ -100,7 +109,8 @@
       "X": 5,
       "Y": 10,
       "Visible": false,
-      "Comment": "off camera"
+      "Comment": "off camera",
+      "FIELD10": ""
     },
     {
       "FrameNum": 2,
@@ -110,7 +120,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Heard off camera"
+      "Comment": "Heard off camera",
+      "FIELD10": ""
     },
     {
       "FrameNum": 2,
@@ -120,7 +131,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 3,
@@ -130,7 +142,8 @@
       "X": 5,
       "Y": 10,
       "Visible": false,
-      "Comment": "off camera"
+      "Comment": "off camera",
+      "FIELD10": ""
     },
     {
       "FrameNum": 3,
@@ -140,7 +153,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Heard off camera"
+      "Comment": "Heard off camera",
+      "FIELD10": ""
     },
     {
       "FrameNum": 3,
@@ -150,7 +164,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 4,
@@ -160,7 +175,8 @@
       "X": 5,
       "Y": 10,
       "Visible": true,
-      "Comment": "avatar enters on camera"
+      "Comment": "avatar enters on camera",
+      "FIELD10": ""
     },
     {
       "FrameNum": 4,
@@ -170,7 +186,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 4,
@@ -180,7 +197,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 5,
@@ -190,7 +208,8 @@
       "X": 5,
       "Y": 9,
       "Visible": true,
-      "Comment": "moves forward"
+      "Comment": "moves forward",
+      "FIELD10": ""
     },
     {
       "FrameNum": 5,
@@ -200,7 +219,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 5,
@@ -210,7 +230,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 6,
@@ -220,7 +241,8 @@
       "X": 5,
       "Y": 8,
       "Visible": true,
-      "Comment": "moves forward"
+      "Comment": "moves forward",
+      "FIELD10": ""
     },
     {
       "FrameNum": 6,
@@ -230,7 +252,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 6,
@@ -240,7 +263,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 7,
@@ -250,7 +274,8 @@
       "X": 5,
       "Y": 7,
       "Visible": true,
-      "Comment": "moves forward"
+      "Comment": "moves forward",
+      "FIELD10": ""
     },
     {
       "FrameNum": 7,
@@ -260,7 +285,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 7,
@@ -270,7 +296,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 8,
@@ -280,7 +307,8 @@
       "X": 5,
       "Y": 6,
       "Visible": true,
-      "Comment": "moves forward"
+      "Comment": "moves forward",
+      "FIELD10": ""
     },
     {
       "FrameNum": 8,
@@ -290,7 +318,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 8,
@@ -300,7 +329,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 9,
@@ -310,7 +340,8 @@
       "X": 5,
       "Y": 6,
       "Visible": false,
-      "Comment": "avatar stands up"
+      "Comment": "avatar stands up",
+      "FIELD10": ""
     },
     {
       "FrameNum": 9,
@@ -320,7 +351,8 @@
       "X": 5,
       "Y": 6,
       "Visible": true,
-      "Comment": "switch to beggar/prayer"
+      "Comment": "switch to beggar/prayer",
+      "FIELD10": ""
     },
     {
       "FrameNum": 9,
@@ -330,7 +362,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 9,
@@ -340,7 +373,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 9,
@@ -350,7 +384,8 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": "begin meditation and ask for virtue"
+      "Comment": "begin meditation and ask for virtue",
+      "FIELD10": ""
     },
     {
       "FrameNum": 9,
@@ -360,7 +395,8 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": "ask for the correct mantra for the virtue meditated upon"
+      "Comment": "ask for the correct mantra for the virtue meditated upon",
+      "FIELD10": ""
     },
     {
       "FrameNum": 9,
@@ -370,7 +406,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "If bad Mantra then we leave"
+      "Comment": "If bad Mantra then we leave",
+      "FIELD10": ""
     },
     {
       "FrameNum": 9,
@@ -380,7 +417,8 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": "quirk: need to goto next line explicitly for now"
+      "Comment": "quirk: need to goto next line explicitly for now",
+      "FIELD10": ""
     },
     {
       "FrameNum": 10,
@@ -390,7 +428,8 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 10,
@@ -400,7 +439,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 10,
@@ -410,7 +450,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 10,
@@ -420,7 +461,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 10,
@@ -430,7 +472,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 10,
@@ -440,7 +483,8 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 11,
@@ -450,7 +494,8 @@
       "X": 5,
       "Y": 6,
       "Visible": false,
-      "Comment": "beggar/prayer is all done"
+      "Comment": "beggar/prayer is all done",
+      "FIELD10": ""
     },
     {
       "FrameNum": 11,
@@ -460,7 +505,8 @@
       "X": 5,
       "Y": 6,
       "Visible": true,
-      "Comment": "avatar stands up"
+      "Comment": "avatar stands up",
+      "FIELD10": ""
     },
     {
       "FrameNum": 11,
@@ -470,7 +516,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 12,
@@ -480,7 +527,8 @@
       "X": 5,
       "Y": 7,
       "Visible": true,
-      "Comment": "avatar walks out"
+      "Comment": "avatar walks out",
+      "FIELD10": ""
     },
     {
       "FrameNum": 12,
@@ -490,7 +538,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 12,
@@ -500,7 +549,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 13,
@@ -510,7 +560,8 @@
       "X": 5,
       "Y": 8,
       "Visible": true,
-      "Comment": "avatar walks out"
+      "Comment": "avatar walks out",
+      "FIELD10": ""
     },
     {
       "FrameNum": 13,
@@ -520,7 +571,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 13,
@@ -530,7 +582,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 14,
@@ -540,7 +593,8 @@
       "X": 5,
       "Y": 9,
       "Visible": true,
-      "Comment": "avatar walks out"
+      "Comment": "avatar walks out",
+      "FIELD10": ""
     },
     {
       "FrameNum": 14,
@@ -550,7 +604,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 14,
@@ -560,7 +615,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 15,
@@ -570,7 +626,8 @@
       "X": 5,
       "Y": 10,
       "Visible": true,
-      "Comment": "avatar walks out"
+      "Comment": "avatar walks out",
+      "FIELD10": ""
     },
     {
       "FrameNum": 15,
@@ -580,7 +637,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 15,
@@ -590,7 +648,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 16,
@@ -600,7 +659,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "avatar walks out"
+      "Comment": "avatar walks out",
+      "FIELD10": ""
     },
     {
       "FrameNum": 16,
@@ -610,7 +670,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass"
+      "Comment": "walking in grass",
+      "FIELD10": ""
     },
     {
       "FrameNum": 16,
@@ -620,7 +681,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 17,
@@ -630,7 +692,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "end of scene1"
+      "Comment": "end of scene1",
+      "FIELD10": ""
     },
     {
       "FrameNum": 100,
@@ -640,7 +703,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Jumped to if BadMantra"
+      "Comment": "Jumped to if BadMantra",
+      "FIELD10": ""
     },
     {
       "FrameNum": 100,
@@ -650,7 +714,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 101,
@@ -660,7 +725,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine"
+      "Comment": "Leave Shrine",
+      "FIELD10": ""
     },
     {
       "FrameNum": 200,
@@ -670,7 +736,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Jumped to if ShrineStatus.QuestNotStarted"
+      "Comment": "Jumped to if ShrineStatus.QuestNotStarted",
+      "FIELD10": ""
     },
     {
       "FrameNum": 200,
@@ -680,7 +747,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 201,
@@ -690,7 +758,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 202,
@@ -700,7 +769,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Cool little sound!"
+      "Comment": "Cool little sound!",
+      "FIELD10": ""
     },
     {
       "FrameNum": 203,
@@ -710,7 +780,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 204,
@@ -720,7 +791,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 205,
@@ -730,7 +802,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine"
+      "Comment": "Leave Shrine",
+      "FIELD10": ""
     },
     {
       "FrameNum": 300,
@@ -740,7 +813,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedNoCodex"
+      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedNoCodex",
+      "FIELD10": ""
     },
     {
       "FrameNum": 301,
@@ -750,7 +824,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 302,
@@ -760,7 +835,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Cool little sound!"
+      "Comment": "Cool little sound!",
+      "FIELD10": ""
     },
     {
       "FrameNum": 303,
@@ -770,7 +846,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Invert the Colours"
+      "Comment": "Invert the Colours",
+      "FIELD10": ""
     },
     {
       "FrameNum": 304,
@@ -780,7 +857,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Hold Tight"
+      "Comment": "Hold Tight",
+      "FIELD10": ""
     },
     {
       "FrameNum": 305,
@@ -790,7 +868,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Uninvert Colors"
+      "Comment": "Uninvert Colors",
+      "FIELD10": ""
     },
     {
       "FrameNum": 305,
@@ -800,7 +879,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Stop the no longer cool sound..."
+      "Comment": "Stop the no longer cool sound...",
+      "FIELD10": ""
     },
     {
       "FrameNum": 306,
@@ -810,7 +890,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Start the rumble!"
+      "Comment": "Start the rumble!",
+      "FIELD10": ""
     },
     {
       "FrameNum": 306,
@@ -820,7 +901,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Earthquake!"
+      "Comment": "Earthquake!",
+      "FIELD10": ""
     },
     {
       "FrameNum": 307,
@@ -830,7 +912,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Hold Tight for EarthQuake"
+      "Comment": "Hold Tight for EarthQuake",
+      "FIELD10": ""
     },
     {
       "FrameNum": 308,
@@ -840,7 +923,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Earthquake is over..."
+      "Comment": "Earthquake is over...",
+      "FIELD10": ""
     },
     {
       "FrameNum": 308,
@@ -850,7 +934,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Earthquake rumble is over!"
+      "Comment": "Earthquake rumble is over!",
+      "FIELD10": ""
     },
     {
       "FrameNum": 309,
@@ -860,7 +945,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Boost stats depending on which shrine they are at"
+      "Comment": "Boost stats depending on which shrine they are at",
+      "FIELD10": ""
     },
     {
       "FrameNum": 310,
@@ -870,7 +956,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 311,
@@ -880,7 +967,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine"
+      "Comment": "Leave Shrine",
+      "FIELD10": ""
     },
     {
       "FrameNum": 400,
@@ -890,7 +978,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedWithCodex or Jumped to if ShrineStatus.ShrineCompleted"
+      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedWithCodex or Jumped to if ShrineStatus.ShrineCompleted",
+      "FIELD10": ""
     },
     {
       "FrameNum": 400,
@@ -900,47 +989,52 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "would ask - Offer how many hundredweights gold?"
+      "Comment": "would ask - Offer how many hundredweights gold?",
+      "FIELD10": ""
     },
     {
       "FrameNum": 401,
-      "Command": "GotoIf",
-      "StrParam": "HasNotEnoughMoney",
-      "IntParam": 450,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": "Leave Shrine"
-    },
-    {
-      "FrameNum": 401,
-      "Command": "Goto",
-      "StrParam": "",
-      "IntParam": 402,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": "Quirk - must make it explicit"
-    },
-    {
-      "FrameNum": 402,
       "Command": "BoostKarmaByMoney",
       "StrParam": "",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Add +1 Karma for each 100gp "
+      "Comment": "Add +1 Karma for each 100gp",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 402,
+      "Command": "GotoIf",
+      "StrParam": "HasNotEnoughMoney",
+      "IntParam": 450,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leave Shrine",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 402,
+      "Command": "GotoIf",
+      "StrParam": "GaveNoMoney",
+      "IntParam": 11,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Didn't donate any money",
+      "FIELD10": " so we just leave"
     },
     {
       "FrameNum": 403,
       "Command": "Goto",
       "StrParam": "",
-      "IntParam": 11,
+      "IntParam": 460,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine"
+      "Comment": "Leave Shrine",
+      "FIELD10": ""
     },
     {
       "FrameNum": 450,
@@ -950,7 +1044,8 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "",
+      "FIELD10": ""
     },
     {
       "FrameNum": 451,
@@ -960,7 +1055,30 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine"
+      "Comment": "Leave Shrine",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 460,
+      "Command": "OutputModalText",
+      "StrParam": "Karma boost!",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 461,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 11,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leave Shrine",
+      "FIELD10": ""
     }
   ]
 }
