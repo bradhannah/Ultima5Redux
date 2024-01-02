@@ -3787,6 +3787,26 @@ namespace Ultima5ReduxTesting
         }
 
         [Test] [TestCase(SaveFiles.b_horse, true)]
+        public void test_RunThroughCodexCutscene(SaveFiles saveFiles, bool bReloadJson) {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            var codexPosition = new Point2D(233, 233);
+
+            TurnResults turnResults = new();
+            world.TryToEnterBuilding(codexPosition, out bool bWasSuccessful, turnResults);
+            Assert.True(bWasSuccessful);
+
+            SingleCutOrIntroSceneMapReference singleCutOrIntroSceneMapReference =
+                GameReferences.Instance.CutOrIntroSceneMapReferences.GetSingleCutOrIntroSceneMapReference(
+                    SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfTheCodexInterior);
+            _ = "";
+        }
+
+        [Test] [TestCase(SaveFiles.b_horse, true)]
         public void test_RunThroughShrineCutscene(SaveFiles saveFiles, bool bReloadJson) {
             World world = CreateWorldFromLegacy(saveFiles, true, false);
             Assert.NotNull(world);

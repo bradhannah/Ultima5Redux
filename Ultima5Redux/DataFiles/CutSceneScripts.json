@@ -940,7 +940,7 @@
     {
       "FrameNum": 310,
       "Command": "ChangeShrineState",
-      "StrParam": "ShrineCompleted",
+      "StrParam": "ShrineStatus_ShrineCompleted",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -1122,6 +1122,30 @@
       "Y": 0,
       "Visible": false,
       "Comment": "Leave Shrine",
+      "FIELD10": ""
+    }
+  ],
+  "2": [
+    {
+      "FrameNum": 0,
+      "Command": "OutputModalText",
+      "StrParam": "Codex oof!",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "",
+      "FIELD10": ""
+    },
+    {
+      "FrameNum": 1,
+      "Command": "EndSequence",
+      "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "end of scene1",
       "FIELD10": ""
     }
   ]

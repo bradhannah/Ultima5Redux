@@ -35,8 +35,9 @@ namespace Ultima5Redux.Maps
 
         public enum CutOrIntroSceneMapType
         {
-            BlackthornInterrogation = 0, ShrineOfVirtueInterior, ShrineOfTheCodexInterior, LordBritishMirrorRoom,
-            IntroEarthBedroom, IntroCircleOfStones, IntroShadowlordEncounter, IntroIolosHut
+            BlackthornInterrogation = 0, ShrineOfVirtueInterior = 1, ShrineOfTheCodexInterior = 2,
+            LordBritishMirrorRoom = 3, IntroEarthBedroom = 4, IntroCircleOfStones = 5, IntroShadowlordEncounter = 6,
+            IntroIolosHut = 7
         }
 
         public static int GetMapDataOffset(CutOrIntroSceneMapType nMapType)

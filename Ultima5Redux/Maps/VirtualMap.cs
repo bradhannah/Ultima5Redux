@@ -16,11 +16,8 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable IdentifierTypo
-namespace Ultima5Redux.Maps
-{
-    [DataContract]
-    public partial class VirtualMap
-    {
+namespace Ultima5Redux.Maps {
+    [DataContract] public partial class VirtualMap {
         [DataMember] public int OneInXOddsOfNewMonster { get; set; } = 16;
 
         /// <summary>
@@ -50,10 +47,8 @@ namespace Ultima5Redux.Maps
         ///     Returns large or small depending on what is active
         /// </summary>
         [IgnoreDataMember]
-        public Map CurrentMap
-        {
-            get
-            {
+        public Map CurrentMap {
+            get {
                 SavedMapRefs savedMapRefs = SavedMapRefs;
                 if (savedMapRefs == null) return null;
                 SmallMapReferences.SingleMapReference singleMapReference = savedMapRefs.GetSingleMapReference();
@@ -93,16 +88,14 @@ namespace Ultima5Redux.Maps
             Map.Maps initialMap,
             // ReSharper disable once UnusedParameter.Local
             SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites,
-            ImportedGameState importedGameState, SearchItems theSearchItems)
-        {
+            ImportedGameState importedGameState, SearchItems theSearchItems) {
             TheSearchItems = theSearchItems;
             TheMapHolder = new MapHolder();
 
             TheMapHolder.OverworldMap.InitializeFromLegacy(theSearchItems, importedGameState);
             TheMapHolder.UnderworldMap.InitializeFromLegacy(theSearchItems, importedGameState);
 
-            switch (initialMap)
-            {
+            switch (initialMap) {
                 case Map.Maps.Small:
                     LoadSmallMap(currentSmallMapReference, null, !importedGameState.IsInitialSaveFile,
                         importedGameState);
@@ -123,25 +116,19 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        [JsonConstructor]
-        private VirtualMap()
-        {
+        [JsonConstructor] private VirtualMap() {
         }
 
-        [OnDeserialized]
-        private void PostDeserialize(StreamingContext context)
-        {
+        [OnDeserialized] private void PostDeserialize(StreamingContext context) {
             TheSearchItems = new SearchItems();
             TheSearchItems.Initialize();
         }
 
 
-        private void ClearAllFlagsBeforeMapLoad()
-        {
+        private void ClearAllFlagsBeforeMapLoad() {
             // this likely means it's our first load and there is nothing to clear
             if (SavedMapRefs == null) return;
-            switch (CurrentMap)
-            {
+            switch (CurrentMap) {
                 case SmallMap smallMap:
                     smallMap.ClearSmallMapFlags();
                     break;
@@ -152,14 +139,12 @@ namespace Ultima5Redux.Maps
         }
 
         private int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
-            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, MapUnit mapUnit, out bool bDrawCharacterOnTile)
-        {
+            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, MapUnit mapUnit, out bool bDrawCharacterOnTile) {
             int nSprite = tileReference.Index;
             bool bIsMirror = TileReferences.IsUnbrokenMirror(nSprite);
             bDrawCharacterOnTile = false;
 
-            if (bIsMirror)
-            {
+            if (bIsMirror) {
                 // if the avatar is south of the mirror then show his image
                 Point2D expectedAvatarPos = new(tilePosInMap.X, tilePosInMap.Y + 1);
                 if (expectedAvatarPos == CurrentMap.CurrentPosition.XY)
@@ -186,16 +171,14 @@ namespace Ultima5Redux.Maps
 
             if (bIsStaircase && CurrentMap is SmallMap smallMap)
                 nNewSpriteIndex = smallMap.GetStairsSprite(tilePosInMap).Index;
-            else
-            {
+            else {
                 // kinda hacky - but check if it's a minstrel because when they are on a chair, they play!
                 if (bIsMapUnitOccupiedTile && mapUnit is NonPlayerCharacter { IsMinstrel: true } npc
-                                           && nSprite == (int)TileReference.SpriteIndex.ChairBackBack && !bIsFoodNearby)
-                {
+                                           && nSprite == (int)TileReference.SpriteIndex.ChairBackBack &&
+                                           !bIsFoodNearby) {
                     nNewSpriteIndex = npc.AlternateSittingTileReference.Index;
                 }
-                else
-                {
+                else {
                     nNewSpriteIndex = GameReferences.Instance.SpriteTileReferences.GetCorrectSprite(nSprite,
                         bIsMapUnitOccupiedTile,
                         bIsAvatarTile, bIsFoodNearby, GameStateReference.State.TheTimeOfDay.IsDayLight);
@@ -226,8 +209,7 @@ namespace Ultima5Redux.Maps
         private void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference, int nPrimaryEnemies, EnemyReference secondaryEnemyReference,
-            int nSecondaryEnemies, NonPlayerCharacterReference npcRef)
-        {
+            int nSecondaryEnemies, NonPlayerCharacterReference npcRef) {
             if (npcRef != null)
                 Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0,
                     "when assigning an NPC, you must have single enemy");
@@ -265,8 +247,7 @@ namespace Ultima5Redux.Maps
         }
 
 
-        public bool ContainsSearchableMapUnits(in Point2D xy)
-        {
+        public bool ContainsSearchableMapUnits(in Point2D xy) {
             // moonstone check
             List<MapUnit> mapUnits = CurrentMap.GetMapUnitsOnTile(xy);
             TileReference tileReference = CurrentMap.GetTileReference(xy);
@@ -309,8 +290,7 @@ namespace Ultima5Redux.Maps
         ///     Gets the Avatar's current position in 3D spaces
         /// </summary>
         /// <returns></returns>
-        public Point3D GetCurrent3DPosition()
-        {
+        public Point3D GetCurrent3DPosition() {
             if (CurrentMap is SmallMap smallMap)
                 return new Point3D(CurrentMap.CurrentPosition.X, CurrentMap.CurrentPosition.Y, smallMap.MapFloor);
 
@@ -319,8 +299,7 @@ namespace Ultima5Redux.Maps
         }
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location)
-        {
+        public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location) {
             // 0 = Jhelom
             // 1 = Minoc
             // 2 = East Brittany
@@ -333,15 +312,13 @@ namespace Ultima5Redux.Maps
             return seaFaringVessel;
         }
 
-        public TileStack GetTileStack(Point2D xy, bool bSkipMapUnit)
-        {
+        public TileStack GetTileStack(Point2D xy, bool bSkipMapUnit) {
             var tileStack = new TileStack(xy);
             Map currentMap = CurrentMap;
 
             // this checks to see if you are on the outer bounds of a small map, and if the flood fill touched it
             // if it has touched it then we draw the outer tiles
-            if (currentMap is SmallMap smallMap && !SmallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
-            {
+            if (currentMap is SmallMap smallMap && !SmallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder) {
                 TileReference outerTileReference = GameReferences.Instance.SpriteTileReferences.GetTileReference(
                     smallMap.GetOutOfBoundsSprite(xy));
                 tileStack.PushTileReference(outerTileReference);
@@ -351,8 +328,7 @@ namespace Ultima5Redux.Maps
             // if the position of the tile is no longer inside the bounds of the visibility
             // or has become invisible, then destroy the voxels and return right away
             bool bOutsideOfVisibilityArray = !currentMap.IsInsideBounds(xy);
-            if (bOutsideOfVisibilityArray || !currentMap.VisibleOnMap[xy.X][xy.Y])
-            {
+            if (bOutsideOfVisibilityArray || !currentMap.VisibleOnMap[xy.X][xy.Y]) {
                 if (!bOutsideOfVisibilityArray)
                     tileStack.PushTileReference(GameReferences.Instance.SpriteTileReferences.GetTileReference(255));
                 return tileStack;
@@ -368,8 +344,7 @@ namespace Ultima5Redux.Maps
 
             // if there is an alternate flat sprite (for example, trees have grass)
             if (origTileReference.HasAlternateFlatSprite ||
-                currentMap.IsXyOverride(xy, TileOverrideReference.TileType.Flat))
-            {
+                currentMap.IsXyOverride(xy, TileOverrideReference.TileType.Flat)) {
                 TileReference flatTileReference =
                     GameReferences.Instance.SpriteTileReferences.GetTileReference(
                         currentMap.GetAlternateFlatSprite(xy));
@@ -403,20 +378,18 @@ namespace Ultima5Redux.Maps
             // we need to determine WHICH MapUnit to draw at this point
             // it could be the original, or boarded or even a different one all together?
             TileReference mapUnitTileReference = topMostMapUnit.GetAnimatedTileReference();
-            
+
             Avatar avatarMapUnit = null;
             if (bIsAvatarTile)
                 avatarMapUnit =
                     currentMap is RegularMap regularMap ? regularMap.GetAvatarMapUnit() : null;
 
-            switch (topMostMapUnit)
-            {
+            switch (topMostMapUnit) {
                 case Horse when bIsAvatarTile: // if we are on a horse, let's show the mounted tile
                 case Avatar { IsAvatarOnBoardedThing: true }: // we always show the Avatar on the thing he is boarded on
                     tileStack.PushTileReference(topMostMapUnit.GetBoardedTileReference(), true);
                     break;
-                case MagicCarpet when bIsAvatarTile:
-                {
+                case MagicCarpet when bIsAvatarTile: {
                     tileStack.PushTileReference(mapUnitTileReference, true);
                     if (avatarMapUnit == null)
                         throw new Ultima5ReduxException(
@@ -428,7 +401,7 @@ namespace Ultima5Redux.Maps
                     tileStack.PushTileReference(mapUnitTileReference, true);
                     break;
             }
-            
+
             return tileStack;
         }
 
@@ -444,8 +417,7 @@ namespace Ultima5Redux.Maps
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference = null, int nPrimaryEnemies = 0,
-            EnemyReference secondaryEnemyReference = null, int nSecondaryEnemies = 0)
-        {
+            EnemyReference secondaryEnemyReference = null, int nSecondaryEnemies = 0) {
             LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, nPrimaryEnemies,
                 secondaryEnemyReference, nSecondaryEnemies, null);
         }
@@ -461,8 +433,7 @@ namespace Ultima5Redux.Maps
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
-            EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
-        {
+            EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef) {
             LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, 1, null, 0, npcRef);
         }
 
@@ -476,8 +447,7 @@ namespace Ultima5Redux.Maps
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
-            EnemyReference enemyReference)
-        {
+            EnemyReference enemyReference) {
             const int nPrimaryEnemies = 1;
             int nSecondaryEnemies = 1;
 
@@ -492,8 +462,7 @@ namespace Ultima5Redux.Maps
 
 
         public void LoadDungeonMap(SingleDungeonMapFloorReference singleDungeonMapFloorReference,
-            Point2D startingPosition)
-        {
+            Point2D startingPosition) {
             // if you are somehow transported between two different small map locations, then the guards
             // forget about your transgressions
             ClearAllFlagsBeforeMapLoad();
@@ -531,6 +500,9 @@ namespace Ultima5Redux.Maps
                     TheMapHolder.CutSceneMap = new CutSceneMap(singleCutOrIntroSceneMapReference);
                 }
             }
+            else if (singleCutOrIntroSceneMapReference.TheCutOrIntroSceneMapType == SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfTheCodexInterior) {
+                TheMapHolder.CutSceneMap = new CutSceneMap(singleCutOrIntroSceneMapReference);
+            }
             else {
                 TheMapHolder.IntroSceneMap = new IntroSceneMap(singleCutOrIntroSceneMapReference);
             }
@@ -544,8 +516,7 @@ namespace Ultima5Redux.Maps
         /// <param name="largeMapType"></param>
         /// <param name="playerPosition"></param>
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        public void LoadLargeMap(LargeMapLocationReferences.LargeMapType largeMapType, Point2D playerPosition = null)
-        {
+        public void LoadLargeMap(LargeMapLocationReferences.LargeMapType largeMapType, Point2D playerPosition = null) {
             // if you are somehow transported between two different small map locations, then the guards
             // forget about your transgressions
             ClearAllFlagsBeforeMapLoad();
@@ -559,8 +530,7 @@ namespace Ultima5Redux.Maps
                 largeMapType == LargeMapLocationReferences.LargeMapType.Overworld ? 0 : -1;
             if (playerPosition != null) CurrentMap.CurrentPosition.XY = playerPosition;
             if (existingBoardedMapUnit != null)
-                CurrentMap.CurrentMapUnits.TheAvatar.BoardMapUnit(existingBoardedMapUnit); 
-
+                CurrentMap.CurrentMapUnits.TheAvatar.BoardMapUnit(existingBoardedMapUnit);
         }
 
         /// <summary>
@@ -572,14 +542,13 @@ namespace Ultima5Redux.Maps
         /// <param name="importedGameState"></param>
         /// <exception cref="Ultima5ReduxException"></exception>
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null,
-            bool bLoadFromDisk = false, ImportedGameState importedGameState = null)
-        {
+            bool bLoadFromDisk = false, ImportedGameState importedGameState = null) {
             // if you are somehow transported between two different small map locations, then the guards
             // forget about your transgressions
             ClearAllFlagsBeforeMapLoad();
 
             MapUnit existingBoardedMapUnit = CurrentMap?.CurrentMapUnits?.TheAvatar?.CurrentBoardedMapUnit;
-            
+
             // setting this will make everything think we have a new map
             // CurrentMap will now point to the new map as well
             SavedMapRefs ??= new SavedMapRefs();
@@ -598,16 +567,14 @@ namespace Ultima5Redux.Maps
                 : new MapUnitPosition(xy.X, xy.Y, singleMapReference.Floor);
 
             if (existingBoardedMapUnit != null)
-                smallMap.GetAvatarMapUnit().BoardMapUnit(existingBoardedMapUnit); 
+                smallMap.GetAvatarMapUnit().BoardMapUnit(existingBoardedMapUnit);
 
             smallMap.HandleSpecialCasesForSmallMapLoad();
         }
 
 
-        public void ReturnToPreviousMapAfterCombat()
-        {
-            switch (PreTeleportMapSavedMapRefs.MapType)
-            {
+        public void ReturnToPreviousMapAfterCombat() {
+            switch (PreTeleportMapSavedMapRefs.MapType) {
                 case Map.Maps.Small:
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
@@ -629,8 +596,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy">the position of the stairs, ladder or trapdoor</param>
         /// <param name="bForceDown">force a downward stairs</param>
-        public void UseStairs(Point2D xy, bool bForceDown = false)
-        {
+        public void UseStairs(Point2D xy, bool bForceDown = false) {
             if (CurrentMap is not SmallMap smallMap)
                 throw new Ultima5ReduxException("Cannot UseStairs unless you are in a small map");
 

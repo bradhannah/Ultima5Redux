@@ -3,7 +3,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 0,0,Output,"Blackthornes oof",0,0,0,false,""
 0,1,EndSequence,,0,0,0,false,end of scene
 1,0,Comment,,0,0,0,false,"---- Shrine of Virtue Cut Scene"
-1,0,Output,"\nThou dost approach the tranquil Shrine...",0,0,0,false,""
+1,0,Output,"<br>Thou dost approach the tranquil Shrine...",0,0,0,false,""
 1,0,CreateMapunit,avatar,332,5,10,false,"off camera"
 1,1,MoveMapunit,avatar,0,5,10,false,"off camera"
 1,1,SoundEffect,WalkOnGrass,1,0,0,false,"Heard off camera"
@@ -101,3 +101,5 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,462,SoundEffect,HighPitchedYay,0,0,0,false,"Stop the no longer cool sound..."
 1,462,OutputModalText,"Your karma has improved!",0,0,0,false,
 1,463,Goto,,11,0,0,false,Leave Shrine
+2,0,OutputModalText,"Codex oof!",0,0,0,false,
+2,1,EndSequence,,0,0,0,false,end of scene2

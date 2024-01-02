@@ -72,6 +72,10 @@ namespace Ultima5Redux.References.Maps
                 LocationXyLocations.Add(shrineReference.Position,
                     SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine);
             }
+
+            // Codex of Wisdom
+            LocationXyLocations.Add(new Point2D(233, 233),
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine);
         }
 
         /// <summary>

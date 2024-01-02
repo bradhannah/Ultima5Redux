@@ -914,15 +914,28 @@ namespace Ultima5Redux
 
             if (singleMap.MapType is Map.Maps.Combat or Map.Maps.CutScene or Map.Maps.Intro) {
                 ShrineReference shrineRef = GameReferences.Instance.ShrineReferences.GetShrineReferenceByPosition(xy);
-                turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.WorldStrings
-                        .ENTER_SPACE) + GameReferences.Instance.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.WorldStrings
-                        .to_enter_THE_SHRINE_OF) + " " + shrineRef.VirtueRef.Virtue);
-                turnResults.PushTurnResult(new ExecuteCutScene(
-                    SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior,
-                    GameReferences.Instance.CutOrIntroSceneScripts.GetScriptByCutOrIntroSceneMapType(
-                        SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior), shrineRef));
+                if (shrineRef != null) {
+                    turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.WorldStrings
+                            .ENTER_SPACE) + GameReferences.Instance.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.WorldStrings
+                            .to_enter_THE_SHRINE_OF) + " " + shrineRef.VirtueRef.Virtue);
+                    turnResults.PushTurnResult(new ExecuteCutScene(
+                        SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior,
+                        GameReferences.Instance.CutOrIntroSceneScripts.GetScriptByCutOrIntroSceneMapType(
+                            SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfVirtueInterior),
+                        shrineRef));
+                }
+                else {
+                    // it is not a shrine, but is a location - for now we assume CODEX
+                    turnResults.PushOutputToConsole(GameReferences.Instance.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.WorldStrings
+                            .ENTER_SPACE) + "Codex of Ultimate Wisdom");
+                    turnResults.PushTurnResult(new ExecuteCutScene(
+                        SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfTheCodexInterior,
+                        GameReferences.Instance.CutOrIntroSceneScripts.GetScriptByCutOrIntroSceneMapType(
+                            SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfTheCodexInterior)));
+                }
                 bWasSuccessful = true;
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
             }
