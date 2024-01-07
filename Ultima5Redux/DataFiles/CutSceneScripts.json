@@ -8,8 +8,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "---- TEST Shrine of Virtue Cut Scene",
-      "FIELD10": ""
+      "Comment": "---- TEST Shrine of Virtue Cut Scene"
     },
     {
       "FrameNum": 0,
@@ -19,8 +18,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 1,
@@ -30,8 +28,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "end of scene",
-      "FIELD10": ""
+      "Comment": "end of scene"
     }
   ],
   "1": [
@@ -43,19 +40,17 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "---- Shrine of Virtue Cut Scene",
-      "FIELD10": ""
+      "Comment": "---- Shrine of Virtue Cut Scene"
     },
     {
       "FrameNum": 0,
       "Command": "Output",
-      "StrParam": "\\nThou dost approach the tranquil Shrine...",
+      "StrParam": "<br>Thou dost approach the tranquil Shrine...",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 0,
@@ -65,8 +60,17 @@
       "X": 5,
       "Y": 10,
       "Visible": false,
-      "Comment": "off camera",
-      "FIELD10": ""
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 0,
+      "Command": "CreateMapunit",
+      "StrParam": "avatar",
+      "IntParam": 65,
+      "X": 5,
+      "Y": 2,
+      "Visible": true,
+      "Comment": "Codex of Ultimate Wisdom"
     },
     {
       "FrameNum": 1,
@@ -76,8 +80,7 @@
       "X": 5,
       "Y": 10,
       "Visible": false,
-      "Comment": "off camera",
-      "FIELD10": ""
+      "Comment": "off camera"
     },
     {
       "FrameNum": 1,
@@ -87,8 +90,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Heard off camera",
-      "FIELD10": ""
+      "Comment": "Heard off camera"
     },
     {
       "FrameNum": 1,
@@ -98,8 +100,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 2,
@@ -109,8 +110,7 @@
       "X": 5,
       "Y": 10,
       "Visible": false,
-      "Comment": "off camera",
-      "FIELD10": ""
+      "Comment": "off camera"
     },
     {
       "FrameNum": 2,
@@ -120,8 +120,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Heard off camera",
-      "FIELD10": ""
+      "Comment": "Heard off camera"
     },
     {
       "FrameNum": 2,
@@ -131,8 +130,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 3,
@@ -142,8 +140,7 @@
       "X": 5,
       "Y": 10,
       "Visible": false,
-      "Comment": "off camera",
-      "FIELD10": ""
+      "Comment": "off camera"
     },
     {
       "FrameNum": 3,
@@ -153,8 +150,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Heard off camera",
-      "FIELD10": ""
+      "Comment": "Heard off camera"
     },
     {
       "FrameNum": 3,
@@ -164,8 +160,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 4,
@@ -175,8 +170,7 @@
       "X": 5,
       "Y": 10,
       "Visible": true,
-      "Comment": "avatar enters on camera",
-      "FIELD10": ""
+      "Comment": "avatar enters on camera"
     },
     {
       "FrameNum": 4,
@@ -186,8 +180,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 4,
@@ -197,8 +190,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 5,
@@ -208,8 +200,7 @@
       "X": 5,
       "Y": 9,
       "Visible": true,
-      "Comment": "moves forward",
-      "FIELD10": ""
+      "Comment": "moves forward"
     },
     {
       "FrameNum": 5,
@@ -219,8 +210,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 5,
@@ -230,8 +220,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 6,
@@ -241,8 +230,7 @@
       "X": 5,
       "Y": 8,
       "Visible": true,
-      "Comment": "moves forward",
-      "FIELD10": ""
+      "Comment": "moves forward"
     },
     {
       "FrameNum": 6,
@@ -252,8 +240,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 6,
@@ -263,8 +250,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 7,
@@ -274,8 +260,7 @@
       "X": 5,
       "Y": 7,
       "Visible": true,
-      "Comment": "moves forward",
-      "FIELD10": ""
+      "Comment": "moves forward"
     },
     {
       "FrameNum": 7,
@@ -285,8 +270,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 7,
@@ -296,8 +280,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 8,
@@ -307,8 +290,7 @@
       "X": 5,
       "Y": 6,
       "Visible": true,
-      "Comment": "moves forward",
-      "FIELD10": ""
+      "Comment": "moves forward"
     },
     {
       "FrameNum": 8,
@@ -318,8 +300,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 8,
@@ -329,8 +310,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 9,
@@ -340,8 +320,7 @@
       "X": 5,
       "Y": 6,
       "Visible": false,
-      "Comment": "avatar stands up",
-      "FIELD10": ""
+      "Comment": "avatar stands up"
     },
     {
       "FrameNum": 9,
@@ -351,8 +330,7 @@
       "X": 5,
       "Y": 6,
       "Visible": true,
-      "Comment": "switch to beggar/prayer",
-      "FIELD10": ""
+      "Comment": "switch to beggar/prayer"
     },
     {
       "FrameNum": 9,
@@ -362,8 +340,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 9,
@@ -373,8 +350,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 9,
@@ -384,8 +360,7 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": "begin meditation and ask for virtue",
-      "FIELD10": ""
+      "Comment": "begin meditation and ask for virtue"
     },
     {
       "FrameNum": 9,
@@ -395,8 +370,7 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": "ask for the correct mantra for the virtue meditated upon",
-      "FIELD10": ""
+      "Comment": "ask for the correct mantra for the virtue meditated upon"
     },
     {
       "FrameNum": 9,
@@ -406,8 +380,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "If bad Mantra then we leave",
-      "FIELD10": ""
+      "Comment": "If bad Mantra then we leave"
     },
     {
       "FrameNum": 9,
@@ -417,8 +390,7 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": "quirk: need to goto next line explicitly for now",
-      "FIELD10": ""
+      "Comment": "quirk: need to goto next line explicitly for now"
     },
     {
       "FrameNum": 10,
@@ -428,8 +400,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 10,
@@ -439,8 +410,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 10,
@@ -450,8 +420,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 10,
@@ -461,8 +430,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 10,
@@ -472,8 +440,7 @@
       "X": 0,
       "Y": 0,
       "Visible": true,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 11,
@@ -483,8 +450,7 @@
       "X": 5,
       "Y": 6,
       "Visible": false,
-      "Comment": "beggar/prayer is all done",
-      "FIELD10": ""
+      "Comment": "beggar/prayer is all done"
     },
     {
       "FrameNum": 11,
@@ -494,8 +460,7 @@
       "X": 5,
       "Y": 6,
       "Visible": true,
-      "Comment": "avatar stands up",
-      "FIELD10": ""
+      "Comment": "avatar stands up"
     },
     {
       "FrameNum": 11,
@@ -505,8 +470,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 12,
@@ -516,8 +480,7 @@
       "X": 5,
       "Y": 7,
       "Visible": true,
-      "Comment": "avatar walks out",
-      "FIELD10": ""
+      "Comment": "avatar walks out"
     },
     {
       "FrameNum": 12,
@@ -527,8 +490,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 12,
@@ -538,8 +500,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 13,
@@ -549,8 +510,7 @@
       "X": 5,
       "Y": 8,
       "Visible": true,
-      "Comment": "avatar walks out",
-      "FIELD10": ""
+      "Comment": "avatar walks out"
     },
     {
       "FrameNum": 13,
@@ -560,8 +520,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 13,
@@ -571,8 +530,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 14,
@@ -582,8 +540,7 @@
       "X": 5,
       "Y": 9,
       "Visible": true,
-      "Comment": "avatar walks out",
-      "FIELD10": ""
+      "Comment": "avatar walks out"
     },
     {
       "FrameNum": 14,
@@ -593,8 +550,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 14,
@@ -604,8 +560,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 15,
@@ -615,8 +570,7 @@
       "X": 5,
       "Y": 10,
       "Visible": true,
-      "Comment": "avatar walks out",
-      "FIELD10": ""
+      "Comment": "avatar walks out"
     },
     {
       "FrameNum": 15,
@@ -626,8 +580,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 15,
@@ -637,8 +590,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 16,
@@ -648,8 +600,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "avatar walks out",
-      "FIELD10": ""
+      "Comment": "avatar walks out"
     },
     {
       "FrameNum": 16,
@@ -659,8 +610,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "walking in grass",
-      "FIELD10": ""
+      "Comment": "walking in grass"
     },
     {
       "FrameNum": 16,
@@ -670,8 +620,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 17,
@@ -681,8 +630,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "end of scene1",
-      "FIELD10": ""
+      "Comment": "end of scene1"
     },
     {
       "FrameNum": 100,
@@ -692,8 +640,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Jumped to if BadMantra",
-      "FIELD10": ""
+      "Comment": "Jumped to if BadMantra"
     },
     {
       "FrameNum": 100,
@@ -703,8 +650,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 101,
@@ -714,8 +660,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine",
-      "FIELD10": ""
+      "Comment": "Leave Shrine"
     },
     {
       "FrameNum": 200,
@@ -725,8 +670,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Jumped to if ShrineStatus.QuestNotStarted",
-      "FIELD10": ""
+      "Comment": "Jumped to if ShrineStatus.QuestNotStarted"
     },
     {
       "FrameNum": 200,
@@ -736,8 +680,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 201,
@@ -747,8 +690,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 202,
@@ -758,8 +700,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Cool little sound!",
-      "FIELD10": ""
+      "Comment": "Cool little sound!"
     },
     {
       "FrameNum": 203,
@@ -769,8 +710,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 204,
@@ -780,8 +720,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 205,
@@ -791,8 +730,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine",
-      "FIELD10": ""
+      "Comment": "Leave Shrine"
     },
     {
       "FrameNum": 300,
@@ -802,8 +740,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedNoCodex",
-      "FIELD10": ""
+      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedNoCodex"
     },
     {
       "FrameNum": 301,
@@ -813,8 +750,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 302,
@@ -824,8 +760,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Cool little sound!",
-      "FIELD10": ""
+      "Comment": "Cool little sound!"
     },
     {
       "FrameNum": 303,
@@ -835,8 +770,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Invert the Colours",
-      "FIELD10": ""
+      "Comment": "Invert the Colours"
     },
     {
       "FrameNum": 304,
@@ -846,8 +780,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Hold Tight",
-      "FIELD10": ""
+      "Comment": "Hold Tight"
     },
     {
       "FrameNum": 305,
@@ -857,8 +790,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Uninvert Colors",
-      "FIELD10": ""
+      "Comment": "Uninvert Colors"
     },
     {
       "FrameNum": 305,
@@ -868,8 +800,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Stop the no longer cool sound...",
-      "FIELD10": ""
+      "Comment": "Stop the no longer cool sound..."
     },
     {
       "FrameNum": 306,
@@ -879,8 +810,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Start the rumble!",
-      "FIELD10": ""
+      "Comment": "Start the rumble!"
     },
     {
       "FrameNum": 306,
@@ -890,8 +820,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Earthquake!",
-      "FIELD10": ""
+      "Comment": "Earthquake!"
     },
     {
       "FrameNum": 307,
@@ -901,8 +830,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Hold Tight for EarthQuake",
-      "FIELD10": ""
+      "Comment": "Hold Tight for EarthQuake"
     },
     {
       "FrameNum": 308,
@@ -912,8 +840,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Earthquake is over...",
-      "FIELD10": ""
+      "Comment": "Earthquake is over..."
     },
     {
       "FrameNum": 308,
@@ -923,8 +850,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Earthquake rumble is over!",
-      "FIELD10": ""
+      "Comment": "Earthquake rumble is over!"
     },
     {
       "FrameNum": 309,
@@ -934,8 +860,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Boost stats depending on which shrine they are at",
-      "FIELD10": ""
+      "Comment": "Boost stats depending on which shrine they are at"
     },
     {
       "FrameNum": 310,
@@ -945,8 +870,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 311,
@@ -956,8 +880,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine",
-      "FIELD10": ""
+      "Comment": "Leave Shrine"
     },
     {
       "FrameNum": 400,
@@ -967,8 +890,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedWithCodex or Jumped to if ShrineStatus.ShrineCompleted",
-      "FIELD10": ""
+      "Comment": "Jumped to if ShrineStatus.ShrineOrdainedWithCodex or Jumped to if ShrineStatus.ShrineCompleted"
     },
     {
       "FrameNum": 400,
@@ -978,8 +900,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "would ask - Offer how many hundredweights gold?",
-      "FIELD10": ""
+      "Comment": "would ask - Offer how many hundredweights gold?"
     },
     {
       "FrameNum": 401,
@@ -989,8 +910,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Add +1 Karma for each 100gp",
-      "FIELD10": ""
+      "Comment": "Add +1 Karma for each 100gp"
     },
     {
       "FrameNum": 402,
@@ -1000,8 +920,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine",
-      "FIELD10": ""
+      "Comment": "Leave Shrine"
     },
     {
       "FrameNum": 402,
@@ -1011,8 +930,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Didn't donate any money",
-      "FIELD10": " so we just leave"
+      "Comment": "Did not donate any money so we just leave"
     },
     {
       "FrameNum": 403,
@@ -1022,8 +940,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine",
-      "FIELD10": ""
+      "Comment": "Leave Shrine"
     },
     {
       "FrameNum": 450,
@@ -1033,8 +950,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 451,
@@ -1044,8 +960,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine",
-      "FIELD10": ""
+      "Comment": "Leave Shrine"
     },
     {
       "FrameNum": 460,
@@ -1055,8 +970,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Cool little sound!",
-      "FIELD10": ""
+      "Comment": "Cool little sound!"
     },
     {
       "FrameNum": 460,
@@ -1066,8 +980,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Invert the Colours",
-      "FIELD10": ""
+      "Comment": "Invert the Colours"
     },
     {
       "FrameNum": 461,
@@ -1077,8 +990,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Hold Tight",
-      "FIELD10": ""
+      "Comment": "Hold Tight"
     },
     {
       "FrameNum": 462,
@@ -1088,8 +1000,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Uninvert Colors",
-      "FIELD10": ""
+      "Comment": "Uninvert Colors"
     },
     {
       "FrameNum": 462,
@@ -1099,8 +1010,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Stop the no longer cool sound...",
-      "FIELD10": ""
+      "Comment": "Stop the no longer cool sound..."
     },
     {
       "FrameNum": 462,
@@ -1110,8 +1020,7 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": ""
     },
     {
       "FrameNum": 463,
@@ -1121,32 +1030,749 @@
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Leave Shrine",
-      "FIELD10": ""
+      "Comment": "Leave Shrine"
     }
   ],
   "2": [
     {
       "FrameNum": 0,
-      "Command": "OutputModalText",
-      "StrParam": "Codex oof!",
+      "Command": "Comment",
+      "StrParam": "",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "",
-      "FIELD10": ""
+      "Comment": "---- WILL NEED TO ADD A BRANCH FOR NO QUEST"
+    },
+    {
+      "FrameNum": 0,
+      "Command": "CreateMapunit",
+      "StrParam": "avatar",
+      "IntParam": 332,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
     },
     {
       "FrameNum": 1,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 1,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Heard off camera"
+    },
+    {
+      "FrameNum": 1,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 2,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 2,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Heard off camera"
+    },
+    {
+      "FrameNum": 2,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 3,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 10,
+      "Visible": false,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 3,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Heard off camera"
+    },
+    {
+      "FrameNum": 3,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 4,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 10,
+      "Visible": true,
+      "Comment": "avatar enters on camera"
+    },
+    {
+      "FrameNum": 4,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 4,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 5,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 9,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 5,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 5,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 6,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 8,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 6,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 6,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 7,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 7,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 7,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 7,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 8,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 6,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 8,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 8,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 9,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 5,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 9,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 9,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 10,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 4,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 10,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 10,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 11,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 3,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 11,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 11,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 12,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 100,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Go to the main routine"
+    },
+    {
+      "FrameNum": 100,
+      "Command": "OutputModalText",
+      "StrParam": "The Codex of Ultima Wisdom lies before thee...",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 101,
+      "Command": "OutputModalText",
+      "StrParam": "The book is open to the page thou dost seek",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 102,
+      "Command": "OutputModalText",
+      "StrParam": "Upon the hallowed page thou dost read:",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 103,
+      "Command": "OutputModalText",
+      "StrParam": "_CodexVirtueText",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 104,
+      "Command": "ScreenEffect",
+      "StrParam": "InvertColors",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Invert the Colours"
+    },
+    {
+      "FrameNum": 104,
+      "Command": "SoundEffect",
+      "StrParam": "EarthQuake",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Start the rumble!"
+    },
+    {
+      "FrameNum": 104,
+      "Command": "ScreenEffect",
+      "StrParam": "ShakeScreen",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Earthquake!"
+    },
+    {
+      "FrameNum": 105,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 3000,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Hold Tight"
+    },
+    {
+      "FrameNum": 106,
+      "Command": "ScreenEffect",
+      "StrParam": "InvertColors",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Uninvert Colors"
+    },
+    {
+      "FrameNum": 106,
+      "Command": "SoundEffect",
+      "StrParam": "EarthQuake",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Start the rumble!"
+    },
+    {
+      "FrameNum": 106,
+      "Command": "ScreenEffect",
+      "StrParam": "ShakeScreen",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Earthquake!"
+    },
+    {
+      "FrameNum": 107,
+      "Command": "OutputModalText",
+      "StrParam": "A STRANGE WIND CAUSES THE PAGE TO TURN!",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 108,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 200,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Go to leaving section"
+    },
+    {
+      "FrameNum": 200,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 4,
+      "Visible": true,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 201,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leaving"
+    },
+    {
+      "FrameNum": 201,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 202,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 5,
+      "Visible": true,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 202,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leaving"
+    },
+    {
+      "FrameNum": 202,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 203,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 6,
+      "Visible": true,
+      "Comment": "off camera"
+    },
+    {
+      "FrameNum": 203,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leaving"
+    },
+    {
+      "FrameNum": 203,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 204,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 7,
+      "Visible": true,
+      "Comment": "avatar enters on camera"
+    },
+    {
+      "FrameNum": 204,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leaving"
+    },
+    {
+      "FrameNum": 204,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 205,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 8,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 205,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leaving"
+    },
+    {
+      "FrameNum": 205,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 206,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 9,
+      "Visible": true,
+      "Comment": "moves forward"
+    },
+    {
+      "FrameNum": 206,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Leaving"
+    },
+    {
+      "FrameNum": 206,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 207,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 10,
+      "Visible": true,
+      "Comment": "Leaving"
+    },
+    {
+      "FrameNum": 207,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 207,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 208,
+      "Command": "MoveMapunit",
+      "StrParam": "avatar",
+      "IntParam": 0,
+      "X": 5,
+      "Y": 11,
+      "Visible": true,
+      "Comment": "Leaving"
+    },
+    {
+      "FrameNum": 208,
+      "Command": "SoundEffect",
+      "StrParam": "WalkOnGrass",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "walking in grass"
+    },
+    {
+      "FrameNum": 208,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 500,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 209,
       "Command": "EndSequence",
       "StrParam": "",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "end of scene1",
-      "FIELD10": ""
+      "Comment": "end of scene2"
     }
   ]
 }

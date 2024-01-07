@@ -5,6 +5,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,0,Comment,,0,0,0,false,"---- Shrine of Virtue Cut Scene"
 1,0,Output,"<br>Thou dost approach the tranquil Shrine...",0,0,0,false,""
 1,0,CreateMapunit,avatar,332,5,10,false,"off camera"
+1,0,CreateMapunit,avatar,65,5,2,true,"Codex of Ultimate Wisdom"
 1,1,MoveMapunit,avatar,0,5,10,false,"off camera"
 1,1,SoundEffect,WalkOnGrass,1,0,0,false,"Heard off camera"
 1,1,Pause,,500,0,0,false,""
@@ -90,7 +91,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,400,PromptShrineGold,,0,0,0,false,"would ask - Offer how many hundredweights gold?"
 1,401,BoostKarmaByMoney,,0,0,0,false,Add +1 Karma for each 100gp
 1,402,GotoIf,HasNotEnoughMoney,450,0,0,false,Leave Shrine
-1,402,GotoIf,GaveNoMoney,11,0,0,false,Didn't donate any money, so we just leave
+1,402,GotoIf,GaveNoMoney,11,0,0,false,Did not donate any money so we just leave
 1,403,Goto,,460,0,0,false,Leave Shrine
 1,450,OutputModalText,"Thou hast not that much gold!",0,0,0,false,
 1,451,Goto,,11,0,0,false,Leave Shrine
@@ -99,7 +100,79 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,461,Pause,,1500,0,0,false,"Hold Tight"
 1,462,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
 1,462,SoundEffect,HighPitchedYay,0,0,0,false,"Stop the no longer cool sound..."
-1,462,OutputModalText,"Your karma has improved!",0,0,0,false,
+1,462,OutputModalText,"Your karma has improved!",0,0,0,false
 1,463,Goto,,11,0,0,false,Leave Shrine
-2,0,OutputModalText,"Codex oof!",0,0,0,false,
-2,1,EndSequence,,0,0,0,false,end of scene2
+2,0,Comment,,0,0,0,false,"---- WILL NEED TO ADD A BRANCH FOR NO QUEST"
+2,0,CreateMapunit,avatar,332,5,10,false,"off camera"
+2,1,MoveMapunit,avatar,0,5,10,false,"off camera"
+2,1,SoundEffect,WalkOnGrass,1,0,0,false,"Heard off camera"
+2,1,Pause,,500,0,0,false,""
+2,2,MoveMapunit,avatar,0,5,10,false,"off camera"
+2,2,SoundEffect,WalkOnGrass,1,0,0,false,"Heard off camera"
+2,2,Pause,,500,0,0,false,""
+2,3,MoveMapunit,avatar,0,5,10,false,"off camera"
+2,3,SoundEffect,WalkOnGrass,1,0,0,false,"Heard off camera"
+2,3,Pause,,500,0,0,false,""
+2,4,MoveMapunit,avatar,0,5,10,true,"avatar enters on camera"
+2,4,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,4,Pause,,500,0,0,false,""
+2,5,MoveMapunit,avatar,0,5,9,true,"moves forward"
+2,5,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,5,Pause,,500,0,0,false,""
+2,6,MoveMapunit,avatar,0,5,8,true,"moves forward"
+2,6,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,6,Pause,,500,0,0,false,""
+2,7,MoveMapunit,avatar,0,5,7,true,"moves forward"
+2,7,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,7,Pause,,500,0,0,false,""
+2,8,MoveMapunit,avatar,0,5,6,true,"moves forward"
+2,8,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,8,Pause,,500,0,0,false,""
+2,9,MoveMapunit,avatar,0,5,5,true,"moves forward"
+2,9,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,9,Pause,,500,0,0,false,""
+2,10,MoveMapunit,avatar,0,5,4,true,"moves forward"
+2,10,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,10,Pause,,500,0,0,false,""
+2,11,MoveMapunit,avatar,0,5,3,true,"moves forward"
+2,11,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,11,Pause,,500,0,0,false,""
+2,12,Goto,,100,0,0,false,"Go to the main routine"
+2,100,OutputModalText,"The Codex of Ultima Wisdom lies before thee...",0,0,0,false
+2,101,OutputModalText,"The book is open to the page thou dost seek",0,0,0,false
+2,102,OutputModalText,"Upon the hallowed page thou dost read:",0,0,0,false
+2,103,OutputModalText,_CodexVirtueText,0,0,0,false,
+2,104,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
+2,104,SoundEffect,EarthQuake,1,0,0,false,"Start the rumble!"
+2,104,ScreenEffect,ShakeScreen,1,0,0,false,"Earthquake!"
+2,105,Pause,,3000,0,0,false,"Hold Tight"
+2,106,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
+2,106,SoundEffect,EarthQuake,0,0,0,false,"Start the rumble!"
+2,106,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake!"
+2,107,OutputModalText,"A STRANGE WIND CAUSES THE PAGE TO TURN!",0,0,0,false
+2,108,Goto,,200,0,0,false,"Go to leaving section"
+2,200,MoveMapunit,avatar,0,5,4,true,"off camera"
+2,201,SoundEffect,WalkOnGrass,1,0,0,false,"Leaving"
+2,201,Pause,,500,0,0,false,""
+2,202,MoveMapunit,avatar,0,5,5,true,"off camera"
+2,202,SoundEffect,WalkOnGrass,1,0,0,false,"Leaving"
+2,202,Pause,,500,0,0,false,""
+2,203,MoveMapunit,avatar,0,5,6,true,"off camera"
+2,203,SoundEffect,WalkOnGrass,1,0,0,false,"Leaving"
+2,203,Pause,,500,0,0,false,""
+2,204,MoveMapunit,avatar,0,5,7,true,"avatar enters on camera"
+2,204,SoundEffect,WalkOnGrass,1,0,0,false,"Leaving"
+2,204,Pause,,500,0,0,false,""
+2,205,MoveMapunit,avatar,0,5,8,true,"moves forward"
+2,205,SoundEffect,WalkOnGrass,1,0,0,false,"Leaving"
+2,205,Pause,,500,0,0,false,""
+2,206,MoveMapunit,avatar,0,5,9,true,"moves forward"
+2,206,SoundEffect,WalkOnGrass,1,0,0,false,"Leaving"
+2,206,Pause,,500,0,0,false,""
+2,207,MoveMapunit,avatar,0,5,10,true,"Leaving"
+2,207,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,207,Pause,,500,0,0,false,""
+2,208,MoveMapunit,avatar,0,5,11,true,"Leaving"
+2,208,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
+2,208,Pause,,500,0,0,false,""
+2,209,EndSequence,,0,0,0,false,end of scene2

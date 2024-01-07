@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Ultima5Redux.PlayerCharacters;
 
+// honor = 81, 207
+
 namespace Ultima5Redux.References.Maps {
     public class ShrineReference {
         // SHRINE_X_COORDS
