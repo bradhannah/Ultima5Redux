@@ -98,6 +98,7 @@ namespace Ultima5Redux
             private set => _theShrineStates = value;
         }
 
+
         /// Legacy save game state
         [IgnoreDataMember] internal readonly ImportedGameState ImportedGameState;
 

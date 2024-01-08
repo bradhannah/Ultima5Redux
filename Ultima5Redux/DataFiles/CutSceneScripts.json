@@ -855,7 +855,7 @@
     {
       "FrameNum": 310,
       "Command": "ChangeShrineState",
-      "StrParam": "ShrineStatus_ShrineCompleted",
+      "StrParam": "ShrineCompleted",
       "IntParam": 0,
       "X": 0,
       "Y": 0,
@@ -1713,6 +1713,16 @@
       "Y": 0,
       "Visible": false,
       "Comment": "You have a shrine that is not ordained!"
+    },
+    {
+      "FrameNum": 300,
+      "Command": "ChangeShrineState",
+      "StrParam": "ShrineOrdainedWithCodex",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "This will select one AND set it in the state"
     },
     {
       "FrameNum": 300,

@@ -49,6 +49,17 @@ namespace Ultima5Redux.State {
         [JsonConstructor] public ShrineStates() {
         }
 
+        public ShrineState GetNextOrdainedButNotWithCodex() {
+            return _shrines.Values.FirstOrDefault(shrine =>
+                shrine.TheShrineStatus == ShrineState.ShrineStatus.ShrineOrdainedNoCodex);
+        }
+
+        public ShrineState GetNextOrdainedWithCodex() {
+            return _shrines.Values.FirstOrDefault(shrine =>
+                shrine.TheShrineStatus == ShrineState.ShrineStatus.ShrineOrdainedWithCodex);
+        }
+
+        
         public ShrineState GetShrineStateByVirtue(VirtueReference.VirtueType virtueType) => _shrines[virtueType];
 
         public ShrineStates(List<bool> shrinesOrdained, List<bool> shrinesWithCodexVisited,

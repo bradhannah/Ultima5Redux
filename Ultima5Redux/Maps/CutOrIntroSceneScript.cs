@@ -145,9 +145,15 @@ namespace Ultima5Redux.Maps
                         break;
                     case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.OutputModalText:
                         if (scriptLine.StrParam.StartsWith("_")) {
-                            if (scriptLine.StrParam == "_GoToCodex") {
-                                if (shrineReference != null)
-                                    scriptLine.StrParam = shrineReference.GetGoToCodexInstruction();
+                            switch (scriptLine.StrParam) {
+                                case "_GoToCodex": {
+                                    if (shrineReference != null)
+                                        scriptLine.StrParam = shrineReference.GetGoToCodexInstruction();
+                                    break;
+                                }
+                                case "_CodexVirtueText":
+                                    scriptLine.StrParam = shrineReference?.GetCodexWisdom() ?? "No Shrine!?";
+                                    break;
                             }
                         }
                         turnResults.PushTurnResult(new OutputModalText(scriptLine));

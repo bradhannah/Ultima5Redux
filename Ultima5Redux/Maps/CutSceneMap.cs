@@ -81,10 +81,17 @@ namespace Ultima5Redux.Maps
                     // change it man
                     var newShrineStatus =
                         (ShrineState.ShrineStatus)Enum.Parse(typeof(ShrineState.ShrineStatus), scriptLine.StrParam);
-                    //ChangeShrineState changeShrineState = new (scriptLine, ShrineCutSceneState.CurrentShrine, newShrineStatus)
-                    ShrineState shrineState = GetShrineState(ShrineCutSceneState.CurrentShrine
-                        .VirtueRef.Virtue);
-                    shrineState.TheShrineStatus = newShrineStatus;
+                    if (TheSingleCutOrIntroSceneMapReference.TheCutOrIntroSceneMapType ==
+                        SingleCutOrIntroSceneMapReference.CutOrIntroSceneMapType.ShrineOfTheCodexInterior) {
+                        // we are in codex, so we will select the appropriate shrine
+                        ShrineState shrineState = GetNextToBeOrdainedWithCodexShrine();
+                        shrineState.TheShrineStatus = newShrineStatus;
+                    }
+                    else {
+                        ShrineState shrineState = GetShrineState(ShrineCutSceneState.CurrentShrine
+                            .VirtueRef.Virtue);
+                        shrineState.TheShrineStatus = newShrineStatus;
+                    }
 
                     break;
                 case CutOrIntroSceneScriptLine.CutOrIntroSceneScriptLineCommand.CreateMapunit:
@@ -154,6 +161,11 @@ namespace Ultima5Redux.Maps
             return new ScriptLineResult(ScriptLineResult.Result.Continue);
         }
 
+        private static ShrineState GetNextToBeOrdainedWithCodexShrine() {
+            ShrineState nextShrine = GameStateReference.State.TheShrineStates.GetNextOrdainedButNotWithCodex();
+            return nextShrine ?? GameStateReference.State.TheShrineStates.GetNextOrdainedWithCodex();
+        }
+        
         private ShrineState GetShrineState(VirtueReference.VirtueType virtueType) =>
             ShrineCutSceneState?.CurrentShrine != null
                 ? GameStateReference.State.TheShrineStates.GetShrineStateByVirtue(virtueType)

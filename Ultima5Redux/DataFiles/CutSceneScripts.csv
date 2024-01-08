@@ -84,7 +84,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,308,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake is over..."
 1,308,SoundEffect,EarthQuake,0,0,0,false,"Earthquake rumble is over!"
 1,309,BoostStats,,1,0,0,false,"Boost stats depending on which shrine they are at"
-1,310,ChangeShrineState,ShrineStatus_ShrineCompleted,0,0,0,false
+1,310,ChangeShrineState,ShrineCompleted,0,0,0,false
 1,311,Goto,,11,0,0,false,Leave Shrine
 1,400,NoOp,,0,0,0,false,Jumped to if ShrineStatus.ShrineOrdainedWithCodex or Jumped to if ShrineStatus.ShrineCompleted
 1,400,PromptShrineGold,,0,0,0,false,"would ask - Offer how many hundredweights gold?"
@@ -170,6 +170,7 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 2,208,Pause,,500,0,0,false,""
 2,209,EndSequence,,0,0,0,false,end of scene2
 2,300,Comment,,0,0,0,false,"You have a shrine that is not ordained!"
+2,300,ChangeShrineState,ShrineOrdainedWithCodex,0,0,0,false,"This will select one AND set it in the state"
 2,300,OutputModalText,_CodexVirtueText,0,0,0,false,
 2,301,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
 2,301,SoundEffect,EarthQuake,1,0,0,false,"Start the rumble!"
