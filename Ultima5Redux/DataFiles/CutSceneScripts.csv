@@ -171,16 +171,16 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 2,209,EndSequence,,0,0,0,false,end of scene2
 2,300,Comment,,0,0,0,false,"You have a shrine that is not ordained!"
 2,300,ChangeShrineState,ShrineOrdainedWithCodex,0,0,0,false,"This will select one AND set it in the state"
-2,300,OutputModalText,_CodexVirtueText,0,0,0,false,
-2,301,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
-2,301,SoundEffect,EarthQuake,1,0,0,false,"Start the rumble!"
-2,301,ScreenEffect,ShakeScreen,1,0,0,false,"Earthquake!"
-2,302,Pause,,3000,0,0,false,"Hold Tight"
-2,303,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
-2,303,SoundEffect,EarthQuake,0,0,0,false,"Start the rumble!"
-2,303,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake!"
-2,304,OutputModalText,"A STRANGE WIND CAUSES THE PAGE TO TURN!",0,0,0,false
-2,305,Goto,,200,0,0,false,"Go to leaving section"
+2,301,OutputModalText,_CodexVirtueText,0,0,0,false,
+2,302,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
+2,302,SoundEffect,EarthQuake,1,0,0,false,"Start the rumble!"
+2,302,ScreenEffect,ShakeScreen,1,0,0,false,"Earthquake!"
+2,303,Pause,,3000,0,0,false,"Hold Tight"
+2,304,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
+2,304,SoundEffect,EarthQuake,0,0,0,false,"Start the rumble!"
+2,304,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake!"
+2,305,OutputModalText,"A STRANGE WIND CAUSES THE PAGE TO TURN!",0,0,0,false
+2,306,Goto,,200,0,0,false,"Go to leaving section"
 2,500,Comment,,0,0,0,false,"You shouldn't be here!"
 2,500,OutputModalText,"HOW DID YOU GET HERE?",0,0,0,false,"Let them know this is not right!"
 2,501,Goto,,200,0,0,false,"time to leave"

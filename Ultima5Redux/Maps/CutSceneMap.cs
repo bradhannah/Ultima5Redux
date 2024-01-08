@@ -54,6 +54,8 @@ namespace Ultima5Redux.Maps
 
             CurrentMapUnits ??= new MapUnitCollection();
             CurrentMapUnits.Clear();
+
+            ShrineCutSceneState = new ShrineCutSceneState();
         }
 
         private readonly Dictionary<string, CutSceneNonPlayerCharacter> _mapUnitsByIdentifier = new();
@@ -86,6 +88,8 @@ namespace Ultima5Redux.Maps
                         // we are in codex, so we will select the appropriate shrine
                         ShrineState shrineState = GetNextToBeOrdainedWithCodexShrine();
                         shrineState.TheShrineStatus = newShrineStatus;
+                        ShrineCutSceneState.CurrentShrine =
+                            GameReferences.Instance.ShrineReferences.GetShrineReferenceByVirtue(shrineState.VirtueType);
                     }
                     else {
                         ShrineState shrineState = GetShrineState(ShrineCutSceneState.CurrentShrine

@@ -1725,7 +1725,7 @@
       "Comment": "This will select one AND set it in the state"
     },
     {
-      "FrameNum": 300,
+      "FrameNum": 301,
       "Command": "OutputModalText",
       "StrParam": "_CodexVirtueText",
       "IntParam": 0,
@@ -1735,7 +1735,7 @@
       "Comment": ""
     },
     {
-      "FrameNum": 301,
+      "FrameNum": 302,
       "Command": "ScreenEffect",
       "StrParam": "InvertColors",
       "IntParam": 1,
@@ -1745,7 +1745,7 @@
       "Comment": "Invert the Colours"
     },
     {
-      "FrameNum": 301,
+      "FrameNum": 302,
       "Command": "SoundEffect",
       "StrParam": "EarthQuake",
       "IntParam": 1,
@@ -1755,7 +1755,7 @@
       "Comment": "Start the rumble!"
     },
     {
-      "FrameNum": 301,
+      "FrameNum": 302,
       "Command": "ScreenEffect",
       "StrParam": "ShakeScreen",
       "IntParam": 1,
@@ -1765,7 +1765,7 @@
       "Comment": "Earthquake!"
     },
     {
-      "FrameNum": 302,
+      "FrameNum": 303,
       "Command": "Pause",
       "StrParam": "",
       "IntParam": 3000,
@@ -1775,7 +1775,7 @@
       "Comment": "Hold Tight"
     },
     {
-      "FrameNum": 303,
+      "FrameNum": 304,
       "Command": "ScreenEffect",
       "StrParam": "InvertColors",
       "IntParam": 0,
@@ -1785,7 +1785,7 @@
       "Comment": "Uninvert Colors"
     },
     {
-      "FrameNum": 303,
+      "FrameNum": 304,
       "Command": "SoundEffect",
       "StrParam": "EarthQuake",
       "IntParam": 0,
@@ -1795,7 +1795,7 @@
       "Comment": "Start the rumble!"
     },
     {
-      "FrameNum": 303,
+      "FrameNum": 304,
       "Command": "ScreenEffect",
       "StrParam": "ShakeScreen",
       "IntParam": 0,
@@ -1805,7 +1805,7 @@
       "Comment": "Earthquake!"
     },
     {
-      "FrameNum": 304,
+      "FrameNum": 305,
       "Command": "OutputModalText",
       "StrParam": "A STRANGE WIND CAUSES THE PAGE TO TURN!",
       "IntParam": 0,
@@ -1815,7 +1815,7 @@
       "Comment": ""
     },
     {
-      "FrameNum": 305,
+      "FrameNum": 306,
       "Command": "Goto",
       "StrParam": "",
       "IntParam": 200,

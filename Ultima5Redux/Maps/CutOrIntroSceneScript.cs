@@ -152,7 +152,7 @@ namespace Ultima5Redux.Maps
                                     break;
                                 }
                                 case "_CodexVirtueText":
-                                    scriptLine.StrParam = shrineReference?.GetCodexWisdom() ?? "No Shrine!?";
+                                    scriptLine.StrParam = shrineReference?.GetCodexWisdom() ?? "Oof Shrine!?";
                                     break;
                             }
                         }
