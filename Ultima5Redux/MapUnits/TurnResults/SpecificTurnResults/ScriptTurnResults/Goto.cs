@@ -11,9 +11,10 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults.ScriptTurnResult
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum GotoCondition {
             None, BadMantra, ShrineStatus_QuestNotStarted, ShrineStatus_ShrineOrdainedNoCodex,
-            ShrineStatus_ShrineOrdainedWithCodex, ShrineStatus_ShrineCompleted, HasNotEnoughMoney, GaveNoMoney
+            ShrineStatus_ShrineOrdainedWithCodex, ShrineStatus_ShrineCompleted, HasNotEnoughMoney, GaveNoMoney,
+            ShrineStatus_QuestNotStarted_All, ShrineStatus_ShrineOrdainedNoCodex_Any,
+            ShrineStatus_ShrineOrdainedWithCodex_Any, ShrineStatus_ShrineCompleted_All
         }
-
 
         public Goto(CutOrIntroSceneScriptLine scriptLine) :
             base(TurnResultType.Script_GotoIf, TurnResulActionType.ActionRequired, scriptLine) {

@@ -63,16 +63,6 @@
       "Comment": "off camera"
     },
     {
-      "FrameNum": 0,
-      "Command": "CreateMapunit",
-      "StrParam": "avatar",
-      "IntParam": 65,
-      "X": 5,
-      "Y": 2,
-      "Visible": true,
-      "Comment": "Codex of Ultimate Wisdom"
-    },
-    {
       "FrameNum": 1,
       "Command": "MoveMapunit",
       "StrParam": "avatar",
@@ -1425,104 +1415,44 @@
       "Comment": ""
     },
     {
-      "FrameNum": 103,
-      "Command": "OutputModalText",
-      "StrParam": "_CodexVirtueText",
-      "IntParam": 0,
+      "FrameNum": 102,
+      "Command": "GotoIf",
+      "StrParam": "ShrineStatus_QuestNotStarted_All",
+      "IntParam": 500,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": ""
+      "Comment": "If none have started - then you shouldn't be here!"
     },
     {
-      "FrameNum": 104,
-      "Command": "ScreenEffect",
-      "StrParam": "InvertColors",
-      "IntParam": 1,
+      "FrameNum": 102,
+      "Command": "GotoIf",
+      "StrParam": "ShrineStatus_ShrineOrdainedNoCodex_Any",
+      "IntParam": 300,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Invert the Colours"
+      "Comment": "You can ordain a quest and change to ShrineOrdainedWithCodex"
     },
     {
-      "FrameNum": 104,
-      "Command": "SoundEffect",
-      "StrParam": "EarthQuake",
-      "IntParam": 1,
+      "FrameNum": 102,
+      "Command": "GotoIf",
+      "StrParam": "ShrineStatus_ShrineOrdainedWithCodex_Any",
+      "IntParam": 300,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Start the rumble!"
+      "Comment": "Just repeat what you said before"
     },
     {
-      "FrameNum": 104,
-      "Command": "ScreenEffect",
-      "StrParam": "ShakeScreen",
-      "IntParam": 1,
+      "FrameNum": 102,
+      "Command": "GotoIf",
+      "StrParam": "ShrineStatus_ShrineCompleted_All",
+      "IntParam": 500,
       "X": 0,
       "Y": 0,
       "Visible": false,
-      "Comment": "Earthquake!"
-    },
-    {
-      "FrameNum": 105,
-      "Command": "Pause",
-      "StrParam": "",
-      "IntParam": 3000,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": "Hold Tight"
-    },
-    {
-      "FrameNum": 106,
-      "Command": "ScreenEffect",
-      "StrParam": "InvertColors",
-      "IntParam": 0,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": "Uninvert Colors"
-    },
-    {
-      "FrameNum": 106,
-      "Command": "SoundEffect",
-      "StrParam": "EarthQuake",
-      "IntParam": 0,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": "Start the rumble!"
-    },
-    {
-      "FrameNum": 106,
-      "Command": "ScreenEffect",
-      "StrParam": "ShakeScreen",
-      "IntParam": 0,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": "Earthquake!"
-    },
-    {
-      "FrameNum": 107,
-      "Command": "OutputModalText",
-      "StrParam": "A STRANGE WIND CAUSES THE PAGE TO TURN!",
-      "IntParam": 0,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": ""
-    },
-    {
-      "FrameNum": 108,
-      "Command": "Goto",
-      "StrParam": "",
-      "IntParam": 200,
-      "X": 0,
-      "Y": 0,
-      "Visible": false,
-      "Comment": "Go to leaving section"
+      "Comment": "If all are complete - then you should not be able to pass guardians!"
     },
     {
       "FrameNum": 200,
@@ -1773,6 +1703,146 @@
       "Y": 0,
       "Visible": false,
       "Comment": "end of scene2"
+    },
+    {
+      "FrameNum": 300,
+      "Command": "Comment",
+      "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "You have a shrine that is not ordained!"
+    },
+    {
+      "FrameNum": 300,
+      "Command": "OutputModalText",
+      "StrParam": "_CodexVirtueText",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 301,
+      "Command": "ScreenEffect",
+      "StrParam": "InvertColors",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Invert the Colours"
+    },
+    {
+      "FrameNum": 301,
+      "Command": "SoundEffect",
+      "StrParam": "EarthQuake",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Start the rumble!"
+    },
+    {
+      "FrameNum": 301,
+      "Command": "ScreenEffect",
+      "StrParam": "ShakeScreen",
+      "IntParam": 1,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Earthquake!"
+    },
+    {
+      "FrameNum": 302,
+      "Command": "Pause",
+      "StrParam": "",
+      "IntParam": 3000,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Hold Tight"
+    },
+    {
+      "FrameNum": 303,
+      "Command": "ScreenEffect",
+      "StrParam": "InvertColors",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Uninvert Colors"
+    },
+    {
+      "FrameNum": 303,
+      "Command": "SoundEffect",
+      "StrParam": "EarthQuake",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Start the rumble!"
+    },
+    {
+      "FrameNum": 303,
+      "Command": "ScreenEffect",
+      "StrParam": "ShakeScreen",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Earthquake!"
+    },
+    {
+      "FrameNum": 304,
+      "Command": "OutputModalText",
+      "StrParam": "A STRANGE WIND CAUSES THE PAGE TO TURN!",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": ""
+    },
+    {
+      "FrameNum": 305,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 200,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Go to leaving section"
+    },
+    {
+      "FrameNum": 500,
+      "Command": "Comment",
+      "StrParam": "",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "You shouldn't be here!"
+    },
+    {
+      "FrameNum": 500,
+      "Command": "OutputModalText",
+      "StrParam": "HOW DID YOU GET HERE?",
+      "IntParam": 0,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "Let them know this is not right!"
+    },
+    {
+      "FrameNum": 501,
+      "Command": "Goto",
+      "StrParam": "",
+      "IntParam": 200,
+      "X": 0,
+      "Y": 0,
+      "Visible": false,
+      "Comment": "time to leave"
     }
   ]
 }

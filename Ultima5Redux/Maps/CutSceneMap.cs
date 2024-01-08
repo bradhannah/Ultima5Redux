@@ -160,14 +160,23 @@ namespace Ultima5Redux.Maps
                 : null;
 
         private int ProcessGoto(Goto gotoResult) {
-            if ((gotoResult.TheGotoCondition.ToString().StartsWith("ShrineStatus_") && ShrineCutSceneState == null) ||
-                ShrineCutSceneState.CurrentShrine == null) {
+            string gotoConditionStr = gotoResult.TheGotoCondition.ToString();
+            bool bStartsValidPrefix = gotoConditionStr.StartsWith("ShrineStatus_");
+            bool bEndRequiresNoShrine = gotoConditionStr.ToLower().EndsWith("_any") ||
+                                        gotoConditionStr.ToLower().EndsWith("_all");
+
+            ShrineState shrineState = null;
+            // TODO: ewwww
+            if (bStartsValidPrefix && bEndRequiresNoShrine) {
+                _ = "";
+            }
+            else if ((bStartsValidPrefix && ShrineCutSceneState == null) || ShrineCutSceneState.CurrentShrine == null) {
                 throw new Ultima5ReduxException(
                     "For ShrineStatus_ type GotoCondition, expected shrine state to have already been tracked.");
             }
-
-            ShrineState shrineState = GetShrineState(ShrineCutSceneState.CurrentShrine
-                .VirtueRef.Virtue);
+            else {
+                shrineState = GetShrineState(ShrineCutSceneState.CurrentShrine.VirtueRef.Virtue);
+            }
 
             switch (gotoResult.TheGotoCondition) {
                 case Goto.GotoCondition.None:
@@ -176,7 +185,6 @@ namespace Ultima5Redux.Maps
                     if (ShrineCutSceneState.GoldDonationState == GoldDonationState.ZeroGoldDonated) {
                         return gotoResult.LineNumber;
                     }
-
                     break;
                 case Goto.GotoCondition.HasNotEnoughMoney:
                     // if gold was NOT donated, then we know we didn't have enough
@@ -197,19 +205,32 @@ namespace Ultima5Redux.Maps
                     if (shrineState?.TheShrineStatus == ShrineState.ShrineStatus.ShrineOrdainedNoCodex) {
                         return gotoResult.LineNumber;
                     }
-
                     break;
                 case Goto.GotoCondition.ShrineStatus_ShrineOrdainedWithCodex:
                     if (shrineState?.TheShrineStatus == ShrineState.ShrineStatus.ShrineOrdainedWithCodex) {
                         return gotoResult.LineNumber;
                     }
-
                     break;
                 case Goto.GotoCondition.ShrineStatus_ShrineCompleted:
                     if (shrineState?.TheShrineStatus == ShrineState.ShrineStatus.ShrineCompleted) {
                         return gotoResult.LineNumber;
                     }
-
+                    break;
+                case Goto.GotoCondition.ShrineStatus_QuestNotStarted_All:
+                    if (GameStateReference.State.TheShrineStates.AreNoQuestsStartedYet)
+                        return gotoResult.LineNumber;
+                    break;
+                case Goto.GotoCondition.ShrineStatus_ShrineOrdainedNoCodex_Any:
+                    if (GameStateReference.State.TheShrineStates.AtLeastOneOrdainedNoCodex)
+                        return gotoResult.LineNumber;
+                    break;
+                case Goto.GotoCondition.ShrineStatus_ShrineOrdainedWithCodex_Any:
+                    if (GameStateReference.State.TheShrineStates.AtLeastOneOrdainedWithCodex)
+                        return gotoResult.LineNumber;
+                    break;
+                case Goto.GotoCondition.ShrineStatus_ShrineCompleted_All:
+                    if (GameStateReference.State.TheShrineStates.AllShrinesCompleted)
+                        return gotoResult.LineNumber;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

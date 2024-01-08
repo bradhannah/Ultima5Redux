@@ -5,7 +5,6 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 1,0,Comment,,0,0,0,false,"---- Shrine of Virtue Cut Scene"
 1,0,Output,"<br>Thou dost approach the tranquil Shrine...",0,0,0,false,""
 1,0,CreateMapunit,avatar,332,5,10,false,"off camera"
-1,0,CreateMapunit,avatar,65,5,2,true,"Codex of Ultimate Wisdom"
 1,1,MoveMapunit,avatar,0,5,10,false,"off camera"
 1,1,SoundEffect,WalkOnGrass,1,0,0,false,"Heard off camera"
 1,1,Pause,,500,0,0,false,""
@@ -141,16 +140,10 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 2,100,OutputModalText,"The Codex of Ultima Wisdom lies before thee...",0,0,0,false
 2,101,OutputModalText,"The book is open to the page thou dost seek",0,0,0,false
 2,102,OutputModalText,"Upon the hallowed page thou dost read:",0,0,0,false
-2,103,OutputModalText,_CodexVirtueText,0,0,0,false,
-2,104,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
-2,104,SoundEffect,EarthQuake,1,0,0,false,"Start the rumble!"
-2,104,ScreenEffect,ShakeScreen,1,0,0,false,"Earthquake!"
-2,105,Pause,,3000,0,0,false,"Hold Tight"
-2,106,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
-2,106,SoundEffect,EarthQuake,0,0,0,false,"Start the rumble!"
-2,106,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake!"
-2,107,OutputModalText,"A STRANGE WIND CAUSES THE PAGE TO TURN!",0,0,0,false
-2,108,Goto,,200,0,0,false,"Go to leaving section"
+2,102,GotoIf,ShrineStatus_QuestNotStarted_All,500,0,0,false,"If none have started - then you shouldn't be here!"
+2,102,GotoIf,ShrineStatus_ShrineOrdainedNoCodex_Any,300,0,0,false,"You can ordain a quest and change to ShrineOrdainedWithCodex" 
+2,102,GotoIf,ShrineStatus_ShrineOrdainedWithCodex_Any,300,0,0,false,"Just repeat what you said before"
+2,102,GotoIf,ShrineStatus_ShrineCompleted_All,500,0,0,false,"If all are complete - then you should not be able to pass guardians!"
 2,200,MoveMapunit,avatar,0,5,4,true,"off camera"
 2,201,SoundEffect,WalkOnGrass,1,0,0,false,"Leaving"
 2,201,Pause,,500,0,0,false,""
@@ -176,3 +169,17 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 2,208,SoundEffect,WalkOnGrass,1,0,0,false,"walking in grass"
 2,208,Pause,,500,0,0,false,""
 2,209,EndSequence,,0,0,0,false,end of scene2
+2,300,Comment,,0,0,0,false,"You have a shrine that is not ordained!"
+2,300,OutputModalText,_CodexVirtueText,0,0,0,false,
+2,301,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
+2,301,SoundEffect,EarthQuake,1,0,0,false,"Start the rumble!"
+2,301,ScreenEffect,ShakeScreen,1,0,0,false,"Earthquake!"
+2,302,Pause,,3000,0,0,false,"Hold Tight"
+2,303,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
+2,303,SoundEffect,EarthQuake,0,0,0,false,"Start the rumble!"
+2,303,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake!"
+2,304,OutputModalText,"A STRANGE WIND CAUSES THE PAGE TO TURN!",0,0,0,false
+2,305,Goto,,200,0,0,false,"Go to leaving section"
+2,500,Comment,,0,0,0,false,"You shouldn't be here!"
+2,500,OutputModalText,"HOW DID YOU GET HERE?",0,0,0,false,"Let them know this is not right!"
+2,501,Goto,,200,0,0,false,"time to leave"

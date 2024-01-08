@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.State {
     [DataContract] public class ShrineState {
-        public enum ShrineStatus { QuestNotStarted, ShrineOrdainedNoCodex, ShrineOrdainedWithCodex, ShrineCompleted }
+        public enum ShrineStatus {
+            QuestNotStarted = 0, ShrineOrdainedNoCodex = 1, ShrineOrdainedWithCodex = 2, ShrineCompleted = 3
+        }
 
         // [DataMember] public bool ShrineQuestCompleted { get; set; }
         [DataMember] public ShrineStatus TheShrineStatus { get; set; }
@@ -63,5 +66,17 @@ namespace Ultima5Redux.State {
                 _shrines.Add(virtue, shrineState);
             }
         }
+
+        public bool AreNoQuestsStartedYet =>
+            _shrines.All(s => s.Value.TheShrineStatus == ShrineState.ShrineStatus.QuestNotStarted);
+
+        public bool AtLeastOneOrdainedNoCodex =>
+            _shrines.Any(s => s.Value.TheShrineStatus == ShrineState.ShrineStatus.ShrineOrdainedNoCodex);
+
+        public bool AtLeastOneOrdainedWithCodex =>
+            _shrines.Any(s => s.Value.TheShrineStatus == ShrineState.ShrineStatus.ShrineOrdainedWithCodex);
+
+        public bool AllShrinesCompleted =>
+            _shrines.All(s => s.Value.TheShrineStatus == ShrineState.ShrineStatus.ShrineCompleted);
     }
 }
