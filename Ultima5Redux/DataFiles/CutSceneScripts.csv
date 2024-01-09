@@ -143,7 +143,8 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 2,102,GotoIf,ShrineStatus_QuestNotStarted_All,500,0,0,false,"If none have started - then you shouldn't be here!"
 2,102,GotoIf,ShrineStatus_ShrineOrdainedNoCodex_Any,300,0,0,false,"You can ordain a quest and change to ShrineOrdainedWithCodex" 
 2,102,GotoIf,ShrineStatus_ShrineOrdainedWithCodex_Any,300,0,0,false,"Just repeat what you said before"
-2,102,GotoIf,ShrineStatus_ShrineCompleted_All,500,0,0,false,"If all are complete - then you should not be able to pass guardians!"
+2,102,GotoIf,ShrineStatus_ShrineCompleted_All,304,0,0,false,"If all are complete - then you should not be able to pass guardians!"
+2,102,Goto,,500,0,0,false,"You should never get here - but just in case!"
 2,200,MoveMapunit,avatar,0,5,4,true,"off camera"
 2,201,SoundEffect,WalkOnGrass,1,0,0,false,"Leaving"
 2,201,Pause,,500,0,0,false,""
@@ -172,15 +173,20 @@ MapNum,FrameNum,Command,StrParam,IntParam,X,Y,Visible,Comment
 2,300,Comment,,0,0,0,false,"You have a shrine that is not ordained!"
 2,300,ChangeShrineState,ShrineOrdainedWithCodex,0,0,0,false,"This will select one AND set it in the state"
 2,301,OutputModalText,_CodexVirtueText,0,0,0,false,
-2,302,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
-2,302,SoundEffect,EarthQuake,1,0,0,false,"Start the rumble!"
-2,302,ScreenEffect,ShakeScreen,1,0,0,false,"Earthquake!"
-2,303,Pause,,3000,0,0,false,"Hold Tight"
-2,304,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
-2,304,SoundEffect,EarthQuake,0,0,0,false,"Start the rumble!"
-2,304,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake!"
-2,305,OutputModalText,"A STRANGE WIND CAUSES THE PAGE TO TURN!",0,0,0,false
-2,306,Goto,,200,0,0,false,"Go to leaving section"
+2,302,Goto,,200,0,0,false,"If all are complete - then you should not be able to pass guardians!"
+2,304,ScreenEffect,InvertColors,1,0,0,false,"Invert the Colours"
+2,304,SoundEffect,EarthQuake,1,0,0,false,"Start the rumble!"
+2,304,ScreenEffect,ShakeScreen,1,0,0,false,"Earthquake!"
+2,304,Pause,,3000,0,0,false,"Hold Tight"
+2,305,ScreenEffect,InvertColors,0,0,0,false,"Uninvert Colors"
+2,305,SoundEffect,EarthQuake,0,0,0,false,"Start the rumble!"
+2,305,ScreenEffect,ShakeScreen,0,0,0,false,"Earthquake!"
+2,306,OutputModalText,"A STRANGE WIND CAUSES THE PAGE TO TURN!",0,0,0,false
+2,307,OutputModalText,"Beyond Shames egress in the center of the Underworld there is a place of darkness.",0,0,0,false
+2,308,OutputModalText,"Beyond this darkness lies the gate to the core of the world.",0,0,0,false
+2,309,OutputModalText,"When thou art ready thou must call forth VERAMOCOR to unlock the gate and venture past ethereal wards and stealers of souls.",0,0,0,false
+2,310,OutputModalText,"That which the world hath lost, dost awaits thy coming!.",0,0,0,false
+2,311,Goto,,200,0,0,false,"Go to leaving section"
 2,500,Comment,,0,0,0,false,"You shouldn't be here!"
 2,500,OutputModalText,"HOW DID YOU GET HERE?",0,0,0,false,"Let them know this is not right!"
 2,501,Goto,,200,0,0,false,"time to leave"
