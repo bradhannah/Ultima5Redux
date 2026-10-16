@@ -1,32 +1,42 @@
-# Ultima5Redux
-A mostly true to the original Ultima 5 remake in C# using the original U5 data files. 
+# Ultima V Redux has moved!
 
-![Build Statuc](https://github.com/bradhannah/Ultima5Redux/actions/workflows/dotnet.yml/badge.svg)
+## [Continue the adventure at UltimaVRedux →](https://github.com/bradhannah/UltimaVRedux)
 
-### Latest Releases
-Check out the latest release https://github.com/bradhannah/Ultima5Redux/tags!
+Looking for the current game? **[Ultima V Redux](https://github.com/bradhannah/UltimaVRedux)**
+is the actively developed Go recreation of *Ultima V: Warriors of Destiny*,
+with enhanced presentation and quality-of-life improvements.
 
-### Latest Videos
-You can check out the latest and greatest videos here (https://www.youtube.com/channel/UCjhmfLq4eZDwU68tWhUAsIw/videos)!
+If you bookmarked this repository for the earlier C# project, you're in the right
+place to find its successor. **Follow and star the new repository for ongoing development.**
 
-### Latest News
-Latest news can be found at my blog at https://u5redux.wordpress.com/.
+**[Get started / installation](https://github.com/bradhannah/UltimaVRedux/blob/main/docs/INSTALL.md)**
+· **[Explore the project](https://github.com/bradhannah/UltimaVRedux)**
+· **[Report a bug or suggest an improvement](https://github.com/bradhannah/UltimaVRedux/issues/new/choose)**
 
-### OS Specific
+The current game is a **public development preview**. Playing requires files from
+your own copy of the original Ultima V. See the installation guide for setup,
+supported platforms, and current limitations.
 
-## Windows
-1. Download and unzip (`ut5test-w64.zip`). 
-2. Run `Ultima5Redux3D.exe`
+## A new journey through Britannia
 
-It will likely prompt that it doesn't trust it - if you want to play, you're going to have to trust it to play.
+### Explore the world with your companions
 
-## MacOS
-1. Download MacOS version
-2. Untar the Application (`tar xfvz u5test-macos.tar.gz`)
-3. Run the `u5test-macos` application. It will likely ask you to trust it, you're going to have to trust it to play.
+[![Ultima V Redux overworld gameplay, showing the party near a castle and river](screenshots/overworld-gameplay.png)](https://github.com/bradhannah/UltimaVRedux)
 
-## Linux
-1. Download Linux version (`u5test-ogl-linux.tar.gz` (OpenGL) or `u5test-linux.tar.gz` (Vulkan, recommended))
-2. Untar the game (`tar xfvz u5test-*.tar.gz`)
-3. `cd u5test-linux.tar.gz` or `cd u5test-og-linux.tar.gz`
-4. Execute game `./u5test-linux.x86_64` while in a Windowing environment like Gnome or XFCE
+### Journey onward
+
+[![Ultima V Redux title screen and main menu](screenshots/title-screen.png)](https://github.com/bradhannah/UltimaVRedux)
+
+*Screenshots show the Go successor. See its [asset credits](https://github.com/bradhannah/UltimaVRedux/blob/main/ASSET_CREDITS.md) for media attribution and terms.*
+
+## Looking for the original C# project?
+
+The previous C# source and its Git history are preserved on the protected,
+read-only **[legacy-csharp branch](https://github.com/bradhannah/Ultima5Redux/tree/legacy-csharp)**,
+at commit [`a55fab96`](https://github.com/bradhannah/Ultima5Redux/commit/a55fab96d5255a22631cd53f4c39e48a99951514).
+
+That branch retains the original README, solution, tools, tests, and
+[license and copyright notice](https://github.com/bradhannah/Ultima5Redux/blob/legacy-csharp/LICENSE).
+Earlier [tags](https://github.com/bradhannah/Ultima5Redux/tags) remain available.
+This repository is the historical home; current development and new reports belong
+in **[UltimaVRedux](https://github.com/bradhannah/UltimaVRedux)**.
