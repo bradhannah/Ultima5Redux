@@ -19,13 +19,13 @@ supported platforms, and current limitations.
 
 ## A new journey through Britannia
 
-### Explore West Winds by torchlight
-
-[![The party explores the wooded coastline of West Winds by torchlight in Ultima V Redux](screenshots/overworld-gameplay.png)](https://github.com/bradhannah/UltimaVRedux)
-
 ### Journey onward
 
 [![Ultima V Redux title screen and main menu](screenshots/title-screen.png)](https://github.com/bradhannah/UltimaVRedux)
+
+### Explore West Winds by torchlight
+
+[![The party explores the wooded coastline of West Winds by torchlight in Ultima V Redux](screenshots/overworld-gameplay.png)](https://github.com/bradhannah/UltimaVRedux)
 
 *Screenshots show the Go successor. See its [asset credits](https://github.com/bradhannah/UltimaVRedux/blob/main/ASSET_CREDITS.md) for media attribution and terms.*
 
