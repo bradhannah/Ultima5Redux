@@ -19,9 +19,9 @@ supported platforms, and current limitations.
 
 ## A new journey through Britannia
 
-### Explore the world with your companions
+### Explore West Winds by torchlight
 
-[![Ultima V Redux overworld gameplay, showing the party near a castle and river](screenshots/overworld-gameplay.png)](https://github.com/bradhannah/UltimaVRedux)
+[![The party explores the wooded coastline of West Winds by torchlight in Ultima V Redux](screenshots/overworld-gameplay.png)](https://github.com/bradhannah/UltimaVRedux)
 
 ### Journey onward
 
